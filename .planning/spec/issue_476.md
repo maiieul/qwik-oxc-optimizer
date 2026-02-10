@@ -843,6 +843,7 @@ export const Root = ()=>{
 
 ## Conventions Applied
 
+None — passthrough test with no Qwik transformations applied.
 
 ## Function Calls in Output
 

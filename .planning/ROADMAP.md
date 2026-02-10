@@ -13,7 +13,7 @@ This milestone produces a complete behavioral specification of the Qwik optimize
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: OXC AST Utility** - Build Rust crate that parses code with oxc_parser and emits AST JSON (completed 2026-02-10)
-- [ ] **Phase 2: Generate All Spec Files** - Generate all 162 spec files by reading snapshots, test configs, and producing ASTs
+- [x] **Phase 2: Generate All Spec Files** - Generate all 162 spec files by reading snapshots, test configs, and producing ASTs (completed 2026-02-10)
 - [ ] **Phase 3: Verify Completeness** - Verify all 162 specs are complete, consistent in structure, and all conventions documented
 
 ## Phase Details
@@ -45,12 +45,12 @@ Plans:
 **Plans**: 6 plans (all Wave 1 -- fully parallel, no inter-plan dependencies)
 
 Plans:
-- [ ] 02-01-PLAN.md -- Core examples, functional components, QRL handling, utility tests (27 specs)
-- [ ] 02-02-PLAN.md -- QRL extraction, JSX transforms, event handling, spread, bind tests (27 specs)
-- [ ] 02-03-PLAN.md -- Signal helpers, derived signals, props optimization, function wrapping (27 specs)
-- [ ] 02-04-PLAN.md -- Destructuring, captures, dev/prod modes, code stripping (27 specs)
-- [ ] 02-05-PLAN.md -- Transpile options, enums, exports, filenames, integrations (27 specs)
-- [ ] 02-06-PLAN.md -- Edge cases, issue regressions, remaining misc tests (27 specs)
+- [x] 02-01-PLAN.md -- Core examples, functional components, QRL handling, utility tests (27 specs)
+- [x] 02-02-PLAN.md -- QRL extraction, JSX transforms, event handling, spread, bind tests (27 specs)
+- [x] 02-03-PLAN.md -- Signal helpers, derived signals, props optimization, function wrapping (27 specs)
+- [x] 02-04-PLAN.md -- Destructuring, captures, dev/prod modes, code stripping (27 specs)
+- [x] 02-05-PLAN.md -- Transpile options, enums, exports, filenames, integrations (27 specs)
+- [x] 02-06-PLAN.md -- Edge cases, issue regressions, remaining misc tests (27 specs)
 
 Note: Each spec file is independent work -- read a snapshot, read its test config, generate ASTs with the Phase 1 utility, write the markdown. All 6 plans can execute in parallel (Wave 1). Batching is for context window management, not dependency ordering.
 
@@ -79,5 +79,5 @@ Phases execute in numeric order: 1 -> 2 -> 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. OXC AST Utility | 1/1 | ✓ Complete | 2026-02-10 |
-| 2. Generate All Spec Files | 0/6 | Planned | - |
+| 2. Generate All Spec Files | 6/6 | ✓ Complete | 2026-02-10 |
 | 3. Verify Completeness | 0/1 | Not started | - |
