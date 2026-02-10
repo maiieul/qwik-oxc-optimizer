@@ -1,234 +1,329 @@
-# Feature Landscape: Qwik Optimizer Transformations
+# Feature Landscape: OXC Transformer Patterns for Qwik Optimizer Port
 
-**Domain:** SWC-based code optimizer for Qwik framework lazy-loading
+**Domain:** OXC-based AST transformation patterns for code-splitting optimizer
 **Researched:** 2026-02-10
-**Confidence:** HIGH (source code + 163 snapshot tests as primary evidence)
+**Confidence:** MEDIUM-HIGH (verified via OXC docs.rs, GitHub source, official guides; some APIs are pre-1.0 and may shift)
 
 ## Table Stakes
 
-Features that MUST be documented or the spec is incomplete. Missing any of these means the spec cannot describe the optimizer's actual behavior.
+OXC API patterns that the optimizer MUST use. Missing any of these blocks the port entirely.
 
-### 1. Core Segmentation Pipeline
+### 1. AST Traversal via `oxc_traverse`
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| `$()` extraction into lazy-loadable segments | The fundamental transformation -- without this the optimizer does nothing | High | Extracts closures passed to `$()` into separate modules. Generates unique hash-based names like `App_component_div_onClick_i7ekvWH3674`. |
-| `component$` to `componentQrl` conversion | Every Qwik component uses this pattern | Med | Rewrites `component$(fn)` to `componentQrl(qrl(lazyImport, "segmentName"))`. Also handles `useTask$`/`useStyles$`/etc. |
-| `foo$` to `fooQrl` generic hook conversion | Extensible pattern used by all `$`-suffixed APIs | Med | Any `name$()` from the core module becomes `nameQrl(qrl(...))`. Handles `useTask$`, `useBrowserVisibleTask$`, `useStyles$`, `server$`, `serverLoader$`, `serverStuff$`, `serverAuth$`, `sync$`, `event$`, custom inlined functions via `wrap()`. |
-| Segment naming convention | Required for deterministic output and debugging | Med | Pattern: `{filename}_{componentName}_{ctxName}_{hash}`. E.g., `test.tsx_Header_component_J4uyIhaBNR4`. Hash must be consistent across entry strategies and emit modes. |
-| Segment metadata (SegmentAnalysis) | Build tools depend on this metadata | Med | Each segment emits: origin, name, entry, displayName, hash, canonicalFilename, path, extension, parent, ctxKind, ctxName, captures, loc, paramNames, captureNames. |
-| Hash consistency guarantee | Incorrect hashes break lazy loading | High | Hashes must remain identical across all EmitMode (Prod/Dev/Test) and EntryStrategy combinations, and across transpile_ts/transpile_jsx flags. Verified by `consistent_hashes` test. |
+The Qwik optimizer must walk the entire AST to find `$()` calls, `component$` patterns, JSX elements, import declarations, and variable bindings. OXC provides the `Traverse` trait for this.
 
-### 2. Capture Analysis
+| Feature | OXC API | Complexity | Notes |
+|---------|---------|------------|-------|
+| Implement `Traverse` trait | `impl Traverse<'a, State> for QwikTransform` | Med | All transforms implement `Traverse`. Entry points are `enter_*` and `exit_*` methods with `&mut` access to current node and `TraverseCtx` for ancestors/scoping. |
+| Detect `$()` call sites | `enter_call_expression` / `exit_call_expression` | Med | Match `CallExpression` where callee is `$` or ends with `$` (e.g., `component$`). Use `ctx.parent()` / `ctx.ancestor()` to determine context. |
+| Detect JSX elements | `exit_expression` (match `Expression::JSXElement`) | Med | OXC's built-in JSX transformer uses `exit_expression` to catch JSX after children are processed. Same pattern applies. |
+| Detect import declarations | `enter_import_declaration` | Low | Collect imports for rename analysis and to track which `$`-suffixed functions come from `@qwik.dev/core`. |
+| Access parent/ancestor context | `ctx.parent()`, `ctx.ancestor(N)` via `Ancestor` enum | Med | `Ancestor` enum provides read access to all fields of parent nodes EXCEPT the branch being traversed (aliasing safety). Required for determining if a `$()` is inside an export, assignment, etc. |
+| Maintain traversal state | Generic `State` parameter on `Traverse<'a, State>` | Low | Use `State` to accumulate discovered segments, collected imports, capture info, etc. during a single traversal pass. |
+| Invoke traversal | `traverse_mut(traverser, allocator, program, scoping, state)` | Low | Returns `Scoping` (updated scope info). Requires `Scoping` from prior `SemanticBuilder::build()`. |
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Variable capture detection | Segments must know what they close over | High | Identifies all identifiers referenced inside a `$()` closure that are declared outside it. These become `scoped_idents` / `captureNames` in segment metadata. |
-| Capture serialization via `_captures` | Runtime needs to restore captures | Med | Captured variables are passed as the third argument to `qrl()` and restored via `const x = _captures[0]` in the segment body. |
-| Import capture (hoisting) | Segments need their own imports | Med | When a segment references an import from the original module, that import is replicated in the generated segment file. |
-| Function/class capture tracking | Different capture rules for different declarations | Med | Functions, classes, and variables are tracked separately. Functions and classes referenced in segments get captured. |
-| Local vs scoped ident classification | Determines what goes into segment vs stays in parent | Med | `local_idents` stay in the segment, `scoped_idents` are captures from parent scope. |
+**API Pattern:**
+```rust
+struct QwikTransform<'a> {
+    segments: Vec<SegmentData<'a>>,
+    // ... state
+}
 
-### 3. JSX Transformation
+impl<'a> Traverse<'a, TransformState<'a>> for QwikTransform<'a> {
+    fn exit_expression(&mut self, expr: &mut Expression<'a>, ctx: &mut TraverseCtx<'a>) {
+        // Match $() calls, JSX elements, etc.
+    }
+    fn enter_import_declaration(&mut self, decl: &mut ImportDeclaration<'a>, ctx: &mut TraverseCtx<'a>) {
+        // Track imports from @qwik.dev/core
+    }
+}
+```
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| JSX to `_jsxSorted` calls | Primary JSX output format when no spread props | Med | `<div class="x">child</div>` becomes `_jsxSorted("div", varProps, constProps, children, flags, key)`. Separates var props from const props. |
-| JSX to `_jsxSplit` calls | Required when spread props are present | Med | `<div {...props}>` uses `_jsxSplit` with `_getVarProps(props)` and `_getConstProps(props)` helpers. |
-| Event handler naming: `onClick$` to `q-e:click` | DOM event binding convention | Med | In JSX output, `onClick$` becomes `"q-e:click"` attribute. Applied only to native HTML elements, NOT to component elements. |
-| Immutability flags | Performance optimization for rendering | Med | The numeric flags argument (e.g., `3`, `1`, `0`) to `_jsxSorted`/`_jsxSplit` indicates constness of the element. |
-| Automatic key generation (`u6_0`, `u6_1`, ...) | Stable DOM reconciliation | Low | Auto-generated keys for elements that don't have explicit `key` props. Scoped per component. |
-| Fragment handling | JSX fragments must work | Low | `<>...</>` becomes `_jsxSorted(Fragment, ...)` with Fragment imported from `@qwik.dev/core/jsx-runtime`. |
-| `dangerouslySetInnerHTML` handling | Special attribute with unique semantics | Low | Treated as a special case in JSX transformation. |
-| `className` to `class` conversion | React compat for native elements | Low | `className` prop is rewritten to `class` on native HTML elements. Not rewritten on component elements. |
-| `key` prop extraction | Key is a separate argument, not a prop | Low | `key={expr}` is extracted from props and passed as a separate argument to `_jsxSorted`. |
+**Confidence:** HIGH -- `Traverse` trait pattern confirmed via docs.rs, OXC transformer source (jsx_impl.rs, annotations.rs), and crates.io documentation.
 
-### 4. Derived Signal Optimization
+### 2. AST Mutation (Replace, Wrap, Remove)
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| `_wrapProp` for direct signal/store access | Fine-grained reactivity for props | High | When a prop value is `signal.value` or `store.path`, wraps with `_wrapProp(signal)` or `_wrapProp(store, "path")` to enable reactive tracking. |
-| `_fnSignal` for computed expressions | Inline reactive computations | High | When a prop value is a computed expression involving signals/stores (e.g., `12 + signal.value`), generates a hoisted function: `const _hf0 = (p0) => 12 + p0.value` with string representation `"12+p0.value"`, then `_fnSignal(_hf0, [signal], _hf0_str)`. |
-| Var props vs const props separation | Enables runtime optimization of static vs dynamic props | High | Props are classified: static/const values go to `constProps` (2nd arg), dynamic/reactive values go to `varProps` (1st arg). Classification uses `is_const_expr` analysis. |
-| Signal detection in children | Children need same reactive wrapping | Med | Children content like `{signal.value}` or `{store.path}` gets wrapped with `_wrapProp`/`_fnSignal` just like props. |
-| No-inline detection | Some expressions cannot be converted to derived signals | Med | Function calls (`signal.value()`), mixed unknown calls (`signal.value + unknown()`), `mutable()` calls, and mixed types (`signal.value + dep`) fall back to var props without wrapping. |
+The optimizer must replace `component$(fn)` with `componentQrl(qrl(...))`, replace JSX with `_jsxSorted()` calls, remove type annotations, and wrap expressions.
 
-### 5. Props Destructuring Optimization
+| Feature | OXC API | Complexity | Notes |
+|---------|---------|------------|-------|
+| Replace expression in-place | `*expr = new_expression` (direct assignment in `exit_expression`) | Low | Standard pattern: build new `Expression` via `ctx.ast`, assign via `*expr = ...`. Confirmed in OXC JSX transformer (`*expr = self.transform_jsx_element(e, ctx)`). |
+| Take/move existing node out | `expr.take_in(ctx.ast)` or `std::mem::replace` | Low | `TakeIn` trait replaces node with a dummy and returns the original, allowing you to decompose and rebuild. Used by OXC JSX transformer: `match expr.take_in(ctx.ast) { ... }`. |
+| Remove statements | `stmts.retain_mut(\|stmt\| ...)` in `exit_statements` | Med | OXC TypeScript transformer uses `retain_mut` to filter out type-only declarations. Same pattern for removing stripped exports/contexts. |
+| Insert new statements | `StatementInjector` pattern (store pending insertions, apply in `exit_statements`) | Med | OXC uses `FxHashMap<Address, Vec<AdjacentStatement>>` to queue insertions. Apply in `exit_statements` by draining and rebuilding the statement Vec. Not a public API -- must implement in optimizer. |
+| Wrap expression (e.g., `qrl(...)` around lazy import) | Build new `CallExpression` with original as argument | Med | Use `ctx.ast.expression_call(span, callee, args, false)` where one of the args contains the original expression. |
+| Add `/*#__PURE__*/` annotations | `ctx.ast.expression_call_with_pure(..., true)` | Low | `AstBuilder::expression_call_with_pure` has a `pure: bool` parameter that adds the annotation. Confirmed in docs.rs. |
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Simple destructuring to `_rawProps` access | Enables signal-level prop tracking | High | `component$(({count, stuff: hey}) => ...)` becomes `component$((_rawProps) => { ... _rawProps.count ... _rawProps.stuff ... })`. Props accessed as `_rawProps.propName`. |
-| Default value preservation | Destructuring defaults must work | Med | `{some = 1+2}` becomes `_rawProps.some ?? 3` (pre-computed constant). |
-| Rest props via `_restProps` | Spread/rest patterns need runtime support | Med | `{count, ...rest}` generates `const rest = _restProps(_rawProps, ["count", ...])`. |
-| Non-optimizable destructuring fallthrough | Complex patterns bail out | Med | Nested destructuring like `{stuff: {hey}}` or function-call defaults like `{stuff = hola()}` do NOT get the optimization -- original destructuring preserved. |
-| Colon-keyed props (`bind:value`) | Two-way binding syntax needs special handling | Med | `props['bind:value']` destructuring is preserved through the optimization. |
+**Key insight:** OXC mutations happen in `exit_*` methods (post-order) so children are already processed. This matters because the Qwik optimizer must process nested `$()` calls (inner segments before outer segments).
 
-### 6. Entry Strategies
+**Confidence:** HIGH -- replacement via `*expr = ...` and `take_in` confirmed in OXC JSX transformer source code. Statement filtering via `retain_mut` confirmed in TypeScript annotations transformer.
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| `Segment` strategy (one file per segment) | Default strategy, each `$()` gets its own file | Low | `PerSegmentStrategy` -- every segment becomes a separate entry point. |
-| `Inline` strategy (all in one file) | Used for dev/SSR bundling | Low | `InlineStrategy` -- all segments stay in the parent module using `inlinedQrl()` instead of `qrl()` with dynamic imports. |
-| `Hoist` strategy (same as Inline) | Alias behavior for Inline | Low | Mapped to same `InlineStrategy` as Inline. |
-| `Single` strategy (all segments in one bundle) | Simplest bundling approach | Low | `SingleStrategy` -- all segments go into one shared entry. |
-| `Component` strategy (segments grouped by component) | Groups related segments | Med | `PerComponentStrategy` -- segments within same component share an entry file named `{origin}_entry_{rootComponent}`. |
-| `Smart` strategy (context-aware grouping) | Production optimization | Med | `SmartStrategy` -- event handlers without captured variables get their own files; everything else grouped by component. Top-level QRLs get separate files. |
-| `Hook` strategy (alias for Segment) | Legacy alias | Low | Maps to `PerSegmentStrategy`. |
+### 3. AST Node Construction via `AstBuilder`
 
-### 7. Emit Modes
+The optimizer must construct entirely new AST nodes: `qrl()` calls, `inlinedQrl()` calls, `_jsxSorted()` calls, lazy import declarations, export declarations for segments, `_captures` member expressions, and more.
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| `Prod` mode | Production builds: `qrl()` calls, no dev info | Med | Uses `qrl()` for segment references. No source location metadata. |
-| `Dev` mode | Development builds: `qrlDEV()` with source locations | Med | Uses `qrlDEV()` with `{file, lo, hi, displayName}` metadata. JSX elements get `{fileName, lineNumber, columnNumber}` debug info. |
-| `Test` mode | Test builds: similar to Prod but no const replacement | Low | Like Prod but skips `ConstReplacerVisitor`. |
-| `Lib` mode | Library builds: skip most transforms | Low | Skips QwikTransform entirely. Only runs TS/JSX transpilation, rename imports, and resolution. |
+| Feature | OXC API | Complexity | Notes |
+|---------|---------|------------|-------|
+| Access builder during traversal | `ctx.ast` (the `AstBuilder<'a>` on `TraverseCtx`) | Low | Always available during traversal. All node construction goes through this. |
+| Build call expressions | `ctx.ast.expression_call(span, callee, args, optional)` | Med | For `qrl(import_fn, "segmentName")`, `componentQrl(qrl_expr)`, `_jsxSorted(tag, varProps, constProps, children, flags, key)`. |
+| Build identifier references | `ctx.ast.expression_identifier(span, name)` | Low | For referencing `qrl`, `componentQrl`, `_jsxSorted`, `_captures`, etc. |
+| Build string literals | `ctx.ast.expression_string_literal(span, value, raw)` | Low | For segment names in `qrl()` calls, event handler names, CSS strings in `useStyles$`. |
+| Build arrow functions | `ctx.ast.expression_arrow_function_with_scope_id_and_pure_and_pife(...)` | High | For lazy import functions: `() => import("./segment_file")`. Requires scope ID from semantic analysis. |
+| Build import declarations | `ctx.ast.import_declaration(span, specifiers, source, ...)` | Med | For synthetic imports in generated segment files. |
+| Build export declarations | `ctx.ast.plain_export_named_declaration_declaration(span, decl)` | Med | For `export const SegmentName = () => { ... }` in segment files. |
+| Build variable declarations | `ctx.ast.declaration_variable(span, kind, declarators, false)` | Med | For `const i_HASH = () => import("./...")` lazy import variables. |
+| Build member expressions | `ctx.ast.expression_member(...)` / static member | Med | For `_captures[0]`, `_rawProps.propName`, `signal.value` patterns. |
+| Build array expressions | `ctx.ast.expression_array(span, elements, trailing_comma)` | Low | For capture arrays passed as third argument to `qrl()`. |
+| Allocate vectors | `ctx.ast.vec()`, `ctx.ast.vec1(item)`, `ctx.ast.vec_from_iter(iter)` | Low | All child lists (arguments, statements, specifiers) are `Vec<'a, T>` arena-allocated. |
+| Allocate strings | `ctx.ast.atom("string_value")` | Low | All string data in AST nodes is `Atom<'a>` arena-allocated. |
 
-### 8. Code Stripping
+**Productivity tool:** [js_to_oxc](https://github.com/KermanX/js_to_oxc) converts JS source to OXC AstBuilder Rust code. Supports `$`-prefixed holes for dynamic values. Use this to generate the boilerplate for complex output patterns like `qrl()` calls and `_jsxSorted()` calls, then parameterize the holes.
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| `strip_exports` (named export removal) | Server-only exports removed from client bundles | Med | Specified exports (e.g., `onGet`) are replaced with throwing stubs: `export const onGet = () => { throw "Symbol removed by Qwik Optimizer..." }`. Unused imports are cleaned up by DCE. |
-| `strip_ctx_name` (context-based stripping) | Remove server-only `$()` calls from client | High | E.g., `strip_ctx_name: ["server"]` removes all `server$()`, `serverLoader$()`, `serverStuff$()` calls. Replaced with `_noopQrl("hash")` to preserve the QRL reference shape while eliminating the implementation. |
-| `strip_event_handlers` (event handler removal) | Server builds don't need client event handlers | Med | When true, removes all `onClick$`, `onInput$`, etc. event handler QRLs from JSX output. Used in server-side rendering builds. |
-| `isServer`/`isBrowser`/`isDev` const replacement | Dead code elimination for platform-specific code | Med | `isServer` replaced with `true`/`false` literal based on `is_server` config. `isBrowser` replaced with inverse. `isDev` replaced based on emit mode. Enables DCE to remove dead branches. |
+**Confidence:** HIGH -- AstBuilder API confirmed via docs.rs and ast_builder_impl.rs source. `ctx.ast` access during traversal confirmed via multiple transformer source files.
 
-### 9. Import Management
+### 4. Semantic Analysis via `oxc_semantic`
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| `@builder.io/qwik` to `@qwik.dev/core` rename | Migration support | Low | `RenameTransform` rewrites all `@builder.io/qwik*` imports to `@qwik.dev/*` equivalents. Also handles `@builder.io/qwik-city` to `@qwik.dev/router` and `@builder.io/qwik-react` to `@qwik.dev/react`. |
-| Synthetic import generation | Segments need their own imports | Med | Generated segment files get imports for `qrl`, `_captures`, `_jsxSorted`, `_fnSignal`, `_wrapProp`, `componentQrl`, `inlinedQrl`, etc. from `@qwik.dev/core`. |
-| Dynamic import generation for segments | Lazy loading mechanism | Med | Parent modules generate lazy import functions: `const i_HASH = () => import("./segment_file")`. |
-| Import assertion preservation | `assert { type: "json" }` syntax | Low | Import assertions are preserved through transformation. |
-| Explicit extensions option | Some bundlers need file extensions | Low | When `explicit_extensions: true`, generated import paths include `.js`/`.tsx` extensions. |
-| Relative path normalization | Cross-platform path handling | Low | Windows backslash paths converted to forward slashes. Paths normalized relative to `src_dir`. |
+The optimizer must perform capture analysis: determining which variables referenced inside a `$()` closure are declared outside it. This requires scope and binding resolution.
 
-### 10. Side Effect Analysis and Cleanup
+| Feature | OXC API | Complexity | Notes |
+|---------|---------|------------|-------|
+| Build semantic info | `SemanticBuilder::new().build(&program)` | Low | Run after parsing, before traversal. Produces `Semantic` with scoping, symbol table, reference tracking. |
+| Get Scoping for traversal | `semantic.into_scoping()` | Low | `traverse_mut()` requires `Scoping` as input. |
+| Find all references to a symbol | `scoping.get_resolved_references(symbol_id)` | Med | Returns iterator of `Reference` structs with node IDs and flags (read/write). |
+| Get symbol's declaring scope | `scoping.symbol_scope_id(symbol_id)` | Low | Returns `ScopeId` where the symbol was declared. |
+| Walk scope ancestry | `scoping.scope_ancestors(scope_id)` | Low | Iterator of ancestor scope IDs including the scope itself. |
+| Find binding in scope chain | `scoping.find_binding(scope_id, name)` | Low | Walks up scope tree looking for a name. Returns `Option<SymbolId>`. |
+| Detect closure capture | Compare `symbol_scope_id(sym)` vs reference scope | High | If a reference's scope is a descendant of the symbol's scope but NOT the same scope, the reference is a capture. Core algorithm for Qwik capture analysis. |
+| Check if symbol is mutated | `scoping.symbol_is_mutated(symbol_id)` | Low | Useful for immutability analysis in derived signal optimization. |
+| Iterate bindings in scope | `scoping.iter_bindings_in(scope_id)` | Low | List all symbols declared in a scope. Useful for collecting local vs captured identifiers. |
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Tree shaking (Treeshaker) | Client bundles should not include server-only code | High | Two-phase: (1) `CleanMarker` marks top-level `new` and `call` expressions before simplification, (2) `CleanSideEffects` removes unmarked expressions after simplification (those that were assigned to removed variables). Only runs on client (`!is_server`). |
-| Side effect import addition (SideEffectVisitor) | Inline strategy needs all imports present | Med | For Inline/Hoist strategies, adds missing side-effect imports (relative imports from `src_dir` that are in global imports but not in the current module). |
-| DCE via SWC simplifier | Dead code after const replacement | Med | Runs `simplify::simplifier` with DCE config. `preserve_imports_with_side_effects: false` enables aggressive import removal. |
-| `#__PURE__` annotations | Enables tree shaking in downstream bundlers | Low | `componentQrl()`, `qrl()`, `_jsxSorted()` calls are annotated with `/*#__PURE__*/` comments so bundlers can safely remove unused results. |
+**Capture analysis algorithm using OXC semantic:**
+```rust
+fn find_captures(
+    closure_scope: ScopeId,
+    scoping: &Scoping,
+) -> Vec<SymbolId> {
+    let mut captures = Vec::new();
+    // Walk all references in the closure's scope and descendants
+    for sym_id in scoping.iter_bindings_in(closure_scope) {
+        // These are local -- not captures
+    }
+    // For each reference that resolves to a symbol declared
+    // in an ancestor scope of the closure: it's a capture
+    // ... (requires traversing the AST within the closure scope)
+    captures
+}
+```
 
-### 11. Input Binding Transformation
+**Confidence:** HIGH -- Scoping API confirmed via docs.rs documentation. `get_resolved_references`, `symbol_scope_id`, `scope_ancestors`, `find_binding` all documented with clear types.
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| `bind:value` to signal binding | Two-way data binding for inputs | Med | `<input bind:value={signal} />` generates both a value prop and an `onInput$` handler that updates the signal. Merges with existing `onInput$` handlers. |
-| `bind:checked` to signal binding | Checkbox two-way binding | Med | Same as `bind:value` but for checkbox `checked` property. |
-| `bind:*` generic handling | Extensible binding syntax | Low | Other `bind:*` attributes treated as regular props (e.g., `bind:stuff`). |
-| Bind + existing handler merging | Both user handler and binding handler must fire | Med | When both `bind:value` and `onInput$` are present, they are merged into an array of handlers. Order-independent (works regardless of which comes first in JSX). |
+### 5. Code Generation via `oxc_codegen`
 
-### 12. Synchronous QRL (sync$)
+The optimizer must produce JavaScript source code from modified ASTs -- both the transformed main module and each extracted segment module.
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| `sync$` serialization | Synchronous event handlers for perf-critical cases | Med | `sync$((event, target) => event.preventDefault())` is serialized to a string representation. Comments are stripped. Supports function expressions and arrow functions. |
+| Feature | OXC API | Complexity | Notes |
+|---------|---------|------------|-------|
+| Generate JS from AST | `Codegen::new().build(&program)` | Low | Returns `CodegenReturn { code: String, map: Option<SourceMap>, legal_comments: Vec<Comment> }`. |
+| Enable source maps | `CodegenOptions { source_map_path: Some(path) }` | Low | Set `source_map_path` to get `map: Some(SourceMap)` in the return. |
+| Provide original source text | `.with_source_text(original_source)` | Low | Required for accurate source map generation -- the codegen needs the original text to compute mappings. |
+| Provide scoping for mangling | `.with_scoping(scoping)` | Low | Optional; enables identifier renaming if desired. Not needed for basic codegen. |
+| Minified output | `CodegenOptions { minify: true }` (if available) | Low | Check CodegenOptions for minification flag. Likely available given OXC's minifier. |
+| Print single expression | `codegen.print_expression(expr)` | Low | For `sync$` serialization where a single expression needs to be stringified. |
+
+**Critical pattern for Qwik optimizer:** The optimizer produces MULTIPLE output modules from a single input. Each output module (main module + N segment modules) must be a separately constructed `Program<'a>` that gets independently codegen'd. This means:
+
+1. Parse input -> `Program<'a>`
+2. Run semantic analysis
+3. Traverse and collect segment data
+4. For each segment: construct a NEW `Program<'a>` with the segment's body, imports, exports
+5. Codegen each `Program` independently
+6. Return all `CodegenReturn` values as the `TransformOutput`
+
+**Confidence:** HIGH -- `Codegen::new().build(&program)` confirmed via docs.rs with full example. `CodegenReturn` fields confirmed. Source map option confirmed.
+
+### 6. Source Map Production
+
+Each output module needs a source map mapping back to the original input source.
+
+| Feature | OXC API | Complexity | Notes |
+|---------|---------|------------|-------|
+| Per-module source maps | `Codegen::new().with_options(CodegenOptions { source_map_path: Some(...) }).with_source_text(src).build(&program)` | Med | Each segment `Program` gets its own codegen with source maps enabled. |
+| Source map composition | `ConcatSourceMapBuilder` from `oxc_sourcemap` | High | If doing multi-pass transforms (e.g., TS transpile then Qwik transform), source maps from each pass must be chained. |
+| Source map serialization | `source_map.to_json_string()` (likely method) | Low | Convert `SourceMap` to JSON string for output in `TransformOutput`. |
+| Span preservation | Carry original spans through AST construction | High | When building new AST nodes, use spans from the original source code so codegen can produce correct source map mappings. If spans are `SPAN` (0,0), source maps will not map correctly. |
+
+**Key challenge:** When building new `Program<'a>` nodes for segments, the spans in the constructed AST must point back to the original source positions for source maps to work. This means: when extracting a closure body from the input AST and moving it to a segment's `Program`, preserve the original spans.
+
+**Confidence:** MEDIUM -- `CodegenReturn.map` confirmed as `Option<SourceMap>`. `ConcatSourceMapBuilder` exists in `oxc_sourcemap` but exact composition API needs verification during implementation. Span preservation strategy is based on how OXC's own transformer handles this (they preserve original spans when possible).
+
+### 7. Multi-Module Output (Code Splitting)
+
+The optimizer splits one input file into multiple output modules. This is the most architecturally significant pattern.
+
+| Feature | OXC API | Complexity | Notes |
+|---------|---------|------------|-------|
+| Build separate `Program` per segment | `AstBuilder::new(allocator)` outside traversal | High | Each segment module is a new `Program` with its own body, imports, exports. Must be constructed AFTER traversal collects segment data. |
+| Allocator lifetime management | One `Allocator` per output module, OR share the input allocator | High | Arena allocator owns all AST memory. If sharing one allocator, all Programs share the same arena (simple, more memory). If separate allocators, each Program is independent (cleaner, but cannot share nodes). |
+| Program construction | `AstBuilder::program(span, source_type, hashbang, directives, body)` (likely) | Med | The exact API for constructing a `Program` from scratch needs verification. Build the body as `Vec<'a, Statement>`. |
+| Import hoisting for segments | Build `ImportDeclaration` nodes manually | Med | Captured imports from the original module must be recreated as new `ImportDeclaration` nodes in the segment's `Program`. |
+| Export wrapping for segments | Build `ExportNamedDeclaration` around segment body | Med | Each segment exports its entry function: `export const SegmentName = () => { ... }`. |
+
+**Recommended architecture:**
+1. **Pass 1 (Traverse):** Walk input AST, collect all segment data (closure bodies, captures, imports needed) into a Vec of segment descriptors. Mutate the main module's AST in-place (replace `component$(fn)` with `componentQrl(qrl(...))`).
+2. **Pass 2 (Build segments):** For each segment descriptor, construct a new `Program<'a>` with the appropriate imports, export declaration, and function body.
+3. **Pass 3 (Codegen):** Run `Codegen::build` on the main module and each segment `Program` independently.
+
+**Confidence:** MEDIUM -- This is the novel part with no direct OXC precedent. OXC transformers modify in-place; they do not split one file into many. The pattern must be invented for this optimizer. The underlying APIs (AstBuilder, Codegen) are confirmed; the composition pattern is new.
 
 ## Differentiators
 
-Nice-to-have documentation. Valuable but the spec can function without these being fully specified.
+Features that enhance the optimizer but are not strictly required for basic functionality.
 
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| Custom inlined functions via `wrap()` | Allows user-defined `$`-suffixed APIs (e.g., `useMemo$`) | Med | `export const useMemo$ = wrap(useMemoQrl)` teaches the optimizer to treat `useMemo$` like a built-in. Diagnostic emitted if `wrap()` call not found. |
-| `preserve_filenames` option | Debugging-friendly output | Low | When true, keeps original filenames instead of generating hash-based names. |
-| `scope` option | Scoping for isolated builds | Low | Passed through to transform but minimally documented in tests. |
-| `core_module` customization | Using optimizer with non-standard Qwik package names | Low | Defaults to `@qwik.dev/core`, can be overridden. |
-| `dev_path` for source mapping | Alternative dev paths for dev mode source locations | Low | Allows `qrlDEV` file paths to use a different base path than the actual file path. |
-| `_noopQrl` for stripped segments | Preserves QRL shape without implementation | Low | When a `$()` call is stripped (via `strip_ctx_name`), replaced with `_noopQrl("hash")` / `_noopQrlDEV("hash", {devInfo})` to maintain the API contract. |
-| Parsed/pre-compiled QRL passthrough | Already-compiled QRLs are not re-transformed | Low | `inlinedQrl(fn, "hash")` patterns are recognized and not double-transformed. Null QRLs (`inlinedQrl(null, "hash")`) are ignored. |
-| Source map generation | Debugging support | Med | Each segment and the main module get their own source maps. Maps are generated via SWC's codegen. |
-| TS enum handling | TypeScript enums need special treatment | Low | When `transpile_ts: true`, enums are transpiled before the optimizer runs. When false, they pass through. |
-| `@jsxImportSource` comment handling | React/Preact compat | Low | `/* @jsxImportSource react */` comment suppresses Qwik JSX transformation for that file. |
-| Windows path normalization | Cross-platform development | Low | All backslashes converted to forward slashes in module paths. Verified by `support_windows_paths` test. |
+| Feature | OXC API | Complexity | Notes |
+|---------|---------|------------|-------|
+| Single-pass traversal for all transforms | Compose multiple `Traverse` impls | Med | OXC's transformer runs TS removal, JSX transform, and lowering in a single traversal pass. The Qwik optimizer could similarly handle `$()` extraction, JSX transform, props destructuring, and signal analysis in one pass -- but ONLY if ordering constraints allow it. |
+| `js_to_oxc` for template generation | External tool: `KermanX/js_to_oxc` | Low | Use the online tool or CLI to generate Rust `AstBuilder` code from JS output templates. Dramatically reduces boilerplate for constructing complex output patterns like `qrl()` calls. |
+| `BoundIdentifier` for safe renaming | `TraverseCtx::generate_uid(name, scope, flags)` | Med | When creating new identifiers (e.g., `_rawProps`, `_hf0`), use `ctx.generate_uid()` to avoid name collisions with existing bindings. Returns `BoundIdentifier` with correct `SymbolId`. |
+| Reusable traverse context | `traverse_mut_with_ctx` + `ReusableTraverseCtx` | Low | If doing multiple traversal passes, reuse the context to avoid re-allocating internal state. |
+| TS transpilation via OXC transformer | `oxc::transformer::Transformer` with `TransformOptions` for TS/JSX | Low | When `transpile_ts: true`, use OXC's built-in TypeScript transformer before running Qwik transform. Avoids reimplementing TS stripping. |
+| JSX transpilation via OXC transformer | `oxc::transformer::Transformer` with JSX options | Low | When `transpile_jsx: true`, use OXC's built-in JSX transformer (React classic or automatic mode) as a post-pass for segments that need JSX transpiled. |
+| Diagnostic emission | Custom error/warning reporting | Low | Use OXC's `OxcDiagnostic` type or custom diagnostics for "QWIK(x): ..." error messages (e.g., invalid segment expressions, missing `wrap()` functions). |
 
 ## Anti-Features
 
-Things to deliberately NOT include in the spec.
+Patterns to explicitly NOT use in the OXC port.
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| Internal SWC AST manipulation details | Implementation detail, not behavioral spec | Document input/output transformations, not the Rust/SWC visitor internals. |
-| Exact source map content | Too volatile, changes with any code change | Spec that source maps ARE generated with correct mappings, not their exact content. |
-| Specific hash values | Hashes depend on content, not a stable API | Spec the hashing properties (consistency, uniqueness) not specific hash outputs. |
-| `MinifyMode::None` behavior specifics | Internal testing mode | Mention it exists, don't spec it in detail. |
-| `EmitMode::Test` internal behavior | Test harness mode, not user-facing | Note it exists as the default test mode; skip detailed spec. |
-| SWC version-specific behavior | May change with SWC upgrades | Spec the transformation intent, not SWC-specific output formatting. |
-| Comment positioning in output | Cosmetic, not semantic | Don't spec where `/*#__PURE__*/` comments appear relative to whitespace. |
-| Module ordering in output | Implementation detail of `TransformOutput` | Spec that modules are produced, not their sort order. |
+| `Visit` / `VisitMut` traits for mutation | Read-only visitors; cannot mutate safely with parent context | Use `Traverse` trait from `oxc_traverse` which provides `TraverseCtx` with ancestor access and scoping |
+| Building AST from string parsing | Parsing strings to create nodes is wasteful and loses span info | Use `AstBuilder` methods to construct nodes programmatically. Reserve parsing for the initial input only. |
+| Sharing AST nodes between Programs | Arena allocator makes cross-allocator references unsound | Clone/rebuild nodes for each output module's `Program`. Use `AstBuilder` to construct fresh nodes with correct spans. |
+| `unsafe` for node replacement | Tempting to use raw pointer tricks for complex mutations | Use `take_in()`, `std::mem::replace`, and `*expr = ...` patterns which OXC explicitly supports |
+| Global mutable state during traversal | Rust borrow checker will fight you | Use the `State` generic on `Traverse<'a, State>` for accumulated data. Use `TraverseCtx` for scoping queries. |
+| Multiple sequential full-AST passes | Performance cost multiplies with each pass | Combine transforms into a single `Traverse` impl where possible. Use `StatementInjector` pattern for deferred insertions. |
+| Constructing `Program` via parsing generated strings | Tempting for complex segment output (parse a string template) | Construct via `AstBuilder`. The `js_to_oxc` tool can generate the builder code from template strings as a dev-time aid. |
 
 ## Feature Dependencies
 
 ```
-Props Destructuring Optimization --> Derived Signal Optimization (signals need prop access rewriting first)
-$() Extraction --> Capture Analysis (must detect captures to generate correct segments)
-Capture Analysis --> Code Movement (segments need to know their captures for import generation)
-Entry Strategy --> Code Movement (determines whether segments become separate files or inlined)
-Emit Mode --> Dev Mode Instrumentation (qrlDEV vs qrl selection)
-Emit Mode --> Const Replacement (Test mode skips const replacement)
-Const Replacement --> DCE / Tree Shaking (const values enable dead branch elimination)
-strip_ctx_name --> _noopQrl generation (stripped segments need placeholder QRLs)
-JSX Transformation --> Event Handler Naming (onClick$ -> q-e:click happens during JSX transform)
-JSX Transformation --> Derived Signal Optimization (signal wrapping happens during JSX prop analysis)
-Var/Const Prop Classification --> _jsxSorted/_jsxSplit selection (spread props trigger _jsxSplit)
-bind:value Transformation --> Event Handler Merging (bind generates handlers that may merge with existing)
-RenameTransform --> Everything else (must run first to normalize import paths)
+Parsing
+  --> Semantic Analysis (requires parsed Program)
+    --> Traverse with Scoping (requires Scoping from semantic)
+      --> $() Detection (enter_call_expression)
+      --> JSX Detection (exit_expression matching JSXElement)
+      --> Import Collection (enter_import_declaration)
+      --> Capture Analysis (scope comparison using Scoping)
+        --> Segment Data Collection (captures + closure body)
+          --> Main Module Mutation (replace component$, generate lazy imports)
+          --> Segment Program Construction (AstBuilder, new Program per segment)
+            --> Codegen for Main Module
+            --> Codegen for Each Segment
+              --> Source Map Generation (per module)
+                --> TransformOutput Assembly
+
+Separately:
+  TS Transpilation (OXC Transformer) --> before Qwik transform
+  JSX Transpilation (OXC Transformer) --> after Qwik transform (on segments)
 ```
 
-## MVP Spec Recommendation
+**Critical ordering constraints:**
+1. **Semantic analysis BEFORE traversal** -- `traverse_mut` requires `Scoping`
+2. **Inner `$()` calls BEFORE outer** -- use `exit_*` (post-order) so nested segments are processed first
+3. **Capture analysis DURING traversal** -- scope info available via `ctx.scoping()`
+4. **Segment construction AFTER traversal** -- cannot build segment Programs while still traversing the input
+5. **TS transpile BEFORE Qwik transform** -- type annotations must be stripped before capture analysis (types are not runtime values)
+6. **JSX transpile AFTER Qwik transform** -- Qwik's JSX transform produces `_jsxSorted` calls, not React `createElement`
 
-### Phase 1: Core Segmentation (must-document-first)
-1. `$()` extraction and segment generation
-2. `component$` / `foo$` to `Qrl` conversion pattern
-3. Capture analysis (scoped_idents, local_idents)
-4. Segment naming and hash generation
-5. Segment metadata (SegmentAnalysis) structure
+## Complexity Assessment per Pattern
 
-### Phase 2: JSX and Reactivity
-6. JSX transformation (`_jsxSorted` / `_jsxSplit`)
-7. Event handler naming (`onClick$` to `q-e:click`)
-8. Derived signal optimization (`_wrapProp` / `_fnSignal`)
-9. Var vs const prop classification
-10. Props destructuring optimization
+| Pattern | Complexity | Risk | Notes |
+|---------|------------|------|-------|
+| Traversal setup (Traverse trait) | Low | Low | Well-documented, many examples in OXC codebase |
+| Expression replacement | Low | Low | Standard `*expr = ...` assignment, proven pattern |
+| AstBuilder node construction | Med | Med | Verbose but mechanical. `js_to_oxc` tool helps. Risk: API may change between OXC versions |
+| Semantic/capture analysis | High | High | Core algorithm must be correct. OXC provides the scope/reference data but the capture detection logic is custom |
+| Statement injection/removal | Med | Med | No public StatementInjector API; must implement the HashMap-based pattern |
+| Multi-module output | High | High | Novel pattern with no OXC precedent. Allocator lifetime management is the key risk |
+| Source map preservation | Med | Med | Span fidelity during AST construction determines source map quality |
+| Source map chaining | High | Med | `ConcatSourceMapBuilder` exists but exact multi-pass composition needs verification |
+| Single-pass optimization | Med | Low | Desirable but not required. Can start with multi-pass and optimize later |
 
-### Phase 3: Build Configuration
-11. Entry strategies (all 7)
-12. Emit modes (Prod/Dev/Lib/Test)
-13. Code stripping (strip_exports, strip_ctx_name, strip_event_handlers)
-14. Const replacement (isServer/isBrowser/isDev)
+## MVP Recommendation
 
-### Phase 4: Supporting Features
-15. Import management (rename, synthetic generation, dynamic imports)
-16. Side effect analysis and cleanup
-17. Input binding transformation (bind:value, bind:checked)
-18. sync$ serialization
-19. Source map generation
+Build the OXC optimizer in this order:
+
+### Phase 1: Traversal + Detection
+1. Set up `Traverse` impl with `enter_call_expression` and `enter_import_declaration`
+2. Detect `$()` / `component$` / `foo$` call sites
+3. Collect import information from `@qwik.dev/core`
+4. **Test:** Input AST is traversed, `$()` calls are identified, no mutations yet
+
+### Phase 2: Semantic + Capture Analysis
+5. Run `SemanticBuilder` before traversal
+6. Implement capture analysis using `Scoping` APIs
+7. Classify local vs captured identifiers for each `$()` closure
+8. **Test:** Capture lists match spec files for all 162 tests
+
+### Phase 3: Main Module Mutation
+9. Replace `component$(fn)` with `componentQrl(qrl(lazy_import, name))`
+10. Generate lazy import declarations (`const i_HASH = () => import("./segment")`)
+11. Rewrite imports (`component$` import removed, `componentQrl` + `qrl` imports added)
+12. **Test:** Main module output matches spec for core test cases
+
+### Phase 4: Segment Module Construction
+13. Build `Program` per segment with imports, export, function body
+14. Handle capture restoration (`const x = _captures[0]`)
+15. Handle import hoisting (re-import what the segment needs)
+16. **Test:** Segment module output matches spec
+
+### Phase 5: Codegen + Source Maps
+17. Run `Codegen::build` on main module and each segment
+18. Enable source map generation via `CodegenOptions`
+19. Assemble `TransformOutput` with all modules and metadata
+20. **Test:** Full end-to-end output matches spec for all 162 tests
+
+### Phase 6: JSX + Advanced Features
+21. JSX to `_jsxSorted`/`_jsxSplit` transformation
+22. Props destructuring optimization
+23. Derived signal optimization (`_wrapProp`, `_fnSignal`)
+24. Entry strategies, emit modes, code stripping
 
 ### Defer
-- Custom inlined functions via `wrap()`: edge case, document after core
-- `@jsxImportSource` handling: React interop, not core Qwik
-- Windows path normalization: infrastructure concern, not transformation spec
-- Parsed QRL passthrough: pre-compiled code handling, secondary concern
+- `sync$` serialization (small scope, can add anytime)
+- `bind:value`/`bind:checked` (isolated feature)
+- Custom inlined functions via `wrap()` (edge case)
+- `@jsxImportSource` handling (React interop)
+- Windows path normalization (infrastructure)
 
 ## Sources
 
-All findings derived directly from source code analysis (HIGH confidence):
+### HIGH Confidence (official docs, source code)
+- [oxc_traverse docs.rs](https://docs.rs/oxc_traverse/latest/oxc_traverse/) -- Traverse trait, TraverseCtx, Ancestor, traverse_mut
+- [oxc_traverse lib.rs (GitHub)](https://github.com/oxc-project/oxc/blob/main/crates/oxc_traverse/src/lib.rs) -- traverse_mut signature, public API
+- [oxc_ast AstBuilder docs.rs](https://docs.rs/oxc_ast/latest/oxc_ast/struct.AstBuilder.html) -- Node construction methods
+- [oxc_ast AstBuilder impl (GitHub)](https://github.com/oxc-project/oxc/blob/main/crates/oxc_ast/src/ast_builder_impl.rs) -- Implementation details
+- [Codegen docs.rs](https://docs.rs/oxc/latest/oxc/codegen/struct.Codegen.html) -- Code generation API, CodegenReturn
+- [CodegenReturn docs.rs](https://docs.rs/oxc/latest/oxc/codegen/struct.CodegenReturn.html) -- { code, map, legal_comments }
+- [oxc_semantic Scoping docs.rs](https://docs.rs/oxc_semantic/latest/oxc_semantic/struct.Scoping.html) -- Symbol/scope/reference query API
+- [OXC Semantic Analysis guide](https://oxc.rs/docs/learn/parser_in_rust/semantic_analysis) -- Scope building, symbol resolution
+- [OXC Transformer usage guide](https://oxc.rs/docs/guide/usage/transformer.html) -- Built-in TS/JSX transforms
+- [OXC JSX transformer source (GitHub)](https://github.com/oxc-project/oxc/blob/main/crates/oxc_transformer/src/jsx/jsx_impl.rs) -- exit_expression pattern, expression_call_with_pure
+- [OXC TS annotations transformer (GitHub)](https://github.com/oxc-project/oxc/blob/main/crates/oxc_transformer/src/typescript/annotations.rs) -- retain_mut for statement removal
+- [OXC StatementInjector source (GitHub)](https://github.com/oxc-project/oxc/blob/main/crates/oxc_transformer/src/common/statement_injector.rs) -- HashMap-based injection pattern
 
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/lib.rs` -- Module list, public API, TransformModulesOptions
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/test.rs` -- 163 test cases covering all transformations (5388 lines)
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/parse.rs` -- Transformation pipeline order, EmitMode/MinifyMode definitions
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/transform.rs` -- Core QwikTransform, SegmentKind, SegmentData, prop classification
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/entry_strategy.rs` -- All 7 entry strategies and their grouping logic
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/const_replace.rs` -- isServer/isBrowser/isDev replacement
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/filter_exports.rs` -- strip_exports implementation (throwing stub)
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/clean_side_effects.rs` -- Treeshaker two-phase approach
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/add_side_effect.rs` -- SideEffectVisitor for import hoisting
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/code_move.rs` -- Segment file generation, capture restoration
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/inlined_fn.rs` -- `_fnSignal` generation for computed props
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/props_destructuring.rs` -- Props optimization (destructuring to raw props)
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/rename_imports.rs` -- @builder.io to @qwik.dev migration
-- `/Users/jackshelton/dev/open-source/qwik-optimizer/swc-optimizer/core/src/snapshots/` -- 160+ snapshot files verifying exact output
+### MEDIUM Confidence (GitHub issues, community tools)
+- [oxc_sourcemap docs.rs](https://docs.rs/oxc_sourcemap/latest/oxc_sourcemap/) -- SourceMap, SourceMapBuilder, ConcatSourceMapBuilder
+- [Statement replacement discussion (GitHub #5359)](https://github.com/oxc-project/oxc/issues/5359) -- move_expression, TakeIn, replacement patterns
+- [Statement helper discussion (GitHub #6993)](https://github.com/oxc-project/oxc/issues/6993) -- insert/delete/replace status, closed as not planned
+- [Statement insertion discussion (GitHub #4767)](https://github.com/oxc-project/oxc/issues/4767) -- exit_statements drain pattern
+- [js_to_oxc tool (GitHub)](https://github.com/KermanX/js_to_oxc) -- JS-to-AstBuilder code generation, hole system
+
+### LOW Confidence (needs verification during implementation)
+- Multi-module output pattern (no OXC precedent, architecture must be invented)
+- Source map chaining across TS-transpile + Qwik-transform passes
+- Exact `Program` construction API via AstBuilder (verify method signature)
+- Allocator sharing strategy for multiple output Programs
+
+---
+*Feature landscape for: OXC transformer patterns for Qwik optimizer port*
+*Researched: 2026-02-10*
