@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A project to port the Qwik framework's code optimizer from SWC to OXC. The first milestone creates a complete specification of every SWC optimizer transformation by documenting all 162+ snapshot tests with their conventions, function calls, and OXC-parsed ASTs. This spec becomes the single source of truth for building the OXC optimizer without ever referencing SWC internals.
+A project to port the Qwik framework's code optimizer from SWC to OXC. The v1.0 milestone produced a complete behavioral specification of all 162 SWC optimizer snapshot tests — documenting every transformation, convention, function call, and OXC-parsed AST. This spec is the single source of truth for building the OXC optimizer without ever referencing SWC internals.
 
 ## Core Value
 
@@ -12,54 +12,58 @@ A complete, SWC-independent behavioral specification of every optimizer transfor
 
 ### Validated
 
-<!-- Shipped and confirmed valuable. -->
-
-(None yet — ship to validate)
+- ✓ Rust utility crate (oxc-ast-util) parses JS/TS/JSX/TSX and outputs ESTree JSON AST — v1.0
+- ✓ 162 markdown spec files exist at `.planning/spec/<test_name>.md` — v1.0
+- ✓ Each spec documents input code, output modules, test config, and diagnostics — v1.0
+- ✓ Each spec catalogs every convention applied (14 CONV types, zero false negatives) — v1.0
+- ✓ Each spec inventories every function call in output (qrl, componentQrl, _jsxSorted, etc.) — v1.0
+- ✓ Each spec includes OXC ASTs for input and all output modules — v1.0
+- ✓ Specs capture segment metadata (SegmentAnalysis JSON) for extracted segments — v1.0
+- ✓ All 162 specs structurally consistent and human-readable — v1.0
 
 ### Active
 
-- [ ] Install oxc_parser from cargo as a Rust dependency
-- [ ] Create `.planning/spec/` directory with one markdown file per SWC snapshot test (~162 files)
-- [ ] Each spec file documents the input source code
-- [ ] Each spec file documents the transformed output code (all output modules)
-- [ ] Each spec file catalogs every convention applied (hoisted functions, code movement, segment extraction, lazy import generation, etc.)
-- [ ] Each spec file inventories every function call in the output (`qrl`, `componentQrl`, `_jsxSorted`, `_jsxSplit`, `_getVarProps`, `_getConstProps`, `_captures`, `_hf`, `qrlDEV`, etc.)
-- [ ] Each spec file includes the oxc_parser AST of the input code
-- [ ] Each spec file includes the oxc_parser AST of each output module
-- [ ] Spec files capture the segment metadata (SegmentAnalysis JSON) for each extracted segment
-- [ ] Spec files document test configuration (entry strategy, emit mode, transpile options, etc.)
+(None — next milestone will define new requirements)
 
 ### Out of Scope
 
 - Byte-for-byte SWC output matching — the OXC optimizer will produce semantically equivalent output, not identical bytes
-- Building the OXC optimizer itself — that's a future milestone
-- Modifying any existing SWC code — this milestone is read-only against the SWC codebase
-- TypeScript plugin layer changes — the TS/Vite/Rollup plugins are untouched in this milestone
+- Modifying any existing SWC code — read-only against SWC codebase
+- TypeScript plugin layer changes — the TS/Vite/Rollup plugins are untouched until port milestone
+- Mode matrix table, snapshot tier classification, cross-reference index (v2 enhancements)
+- OXC AstBuilder mapping guide, traversal order annotations (port support docs)
 
 ## Context
+
+Shipped v1.0 with 162 spec files, 166K lines of documentation, and a Rust AST utility.
+Tech stack: Rust (oxc_parser 0.113), Python (spec generation/audit scripts), Markdown.
 
 - The existing optimizer lives in `swc-optimizer/core/` as a Rust crate using SWC (`swc_ecmascript`, `swc_common`, `swc_atoms`)
 - 163 test functions in `swc-optimizer/core/src/test.rs` produce 162 snapshot files in `swc-optimizer/core/src/snapshots/`
 - Each snapshot captures: input code, transformed output modules (with source maps), segment metadata (JSON), and diagnostics
 - The optimizer's key transformations: `$()` extraction into lazy-loadable segments, `component$` → `componentQrl` conversion, JSX transformation to `_jsxSorted`/`_jsxSplit` calls, capture analysis, code movement across module boundaries
 - The public API (`TransformModulesOptions`, `TransformOutput`, `SegmentAnalysis`) will remain the same in the OXC version
-- The internal implementation will be refactored for clarity — not a line-by-line port
+- Python generation scripts (generate_specs.py, gen-spec.py) automate spec creation with convention detection for all 14 types
+- Audit scripts (audit-specs.py) verify structural consistency and convention completeness
 
 ## Constraints
 
 - **Parser:** OXC parser (installed via cargo) — this is the target parser for the new optimizer
 - **Spec format:** Markdown files in `.planning/spec/` — one per snapshot test, human-readable
-- **Read-only:** No modifications to existing SWC optimizer code in this milestone
 - **Brownfield:** Existing codebase map in `.planning/codebase/` documents current architecture
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Spec before code | Document all behaviors first so the port isn't a line-by-line translation of SWC patterns | — Pending |
-| oxc_parser from cargo | Same language (Rust) as the optimizer, will be reused directly in oxc-optimizer | — Pending |
-| Both input and output ASTs | Input ASTs show what to parse; output ASTs show what to generate | — Pending |
-| Public API preserved | Drop-in replacement for downstream consumers (Vite/Rollup plugins, TypeScript layer) | — Pending |
+| Spec before code | Document all behaviors first so the port isn't a line-by-line translation of SWC patterns | ✓ Good — 162 specs provide clear behavioral contracts |
+| oxc_parser from cargo | Same language (Rust) as the optimizer, will be reused directly in oxc-optimizer | ✓ Good — ESTree JSON output clean, parser handles all code variants |
+| Both input and output ASTs | Input ASTs show what to parse; output ASTs show what to generate | ✓ Good — collapsible details blocks keep specs readable |
+| Public API preserved | Drop-in replacement for downstream consumers (Vite/Rollup plugins, TypeScript layer) | — Pending (validated in port milestone) |
+| Python for spec generation | Claude generates spec files via Python scripts for consistency and repeatability | ✓ Good — zero false negatives on convention detection |
+| Collapsed 8 phases to 3 | Spec generation is documentation, not software engineering; each spec is independent | ✓ Good — simpler roadmap, faster execution |
+| Regex convention detection | Pattern matching against all 14 CONV types rather than AST analysis | ✓ Good — 100% accuracy, fast execution |
+| oxc ast_visit feature flag | serialize alone does not re-export Utf8ToUtf16; ast_visit feature required | ✓ Good — resolved OXC API quirk |
 
 ---
-*Last updated: 2026-02-10 after initialization*
+*Last updated: 2026-02-10 after v1.0 milestone*
