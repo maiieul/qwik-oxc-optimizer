@@ -1141,4 +1141,6 @@ export const Works = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((props)
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

@@ -112,4 +112,6 @@ The key distinction: objects containing ONLY local signals are not wrapped, whil
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

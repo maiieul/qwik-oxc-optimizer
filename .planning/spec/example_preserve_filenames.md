@@ -37,7 +37,7 @@ export const App = component$((props) => {
 
 ## Output
 
-### Module: test.tsx (main module -- single output)
+### Module: test.tsx
 
 ```typescript
 import { componentQrl } from "@qwik.dev/core";

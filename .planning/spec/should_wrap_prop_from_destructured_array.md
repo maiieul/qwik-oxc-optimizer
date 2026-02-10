@@ -65,7 +65,7 @@ export default component$(() => {
 
 ## Output
 
-### Module: test.js (main)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -237,4 +237,6 @@ export const Input_component_9metqqaxlN8 = (props)=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

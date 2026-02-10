@@ -36,7 +36,7 @@ export const App = component$((props) => {
 
 ## Output
 
-### Module: test.js (main module -- single output)
+### Module: test.js
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";

@@ -2015,4 +2015,6 @@ export const STYLES = ".red { color: red; }";
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

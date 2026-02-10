@@ -818,4 +818,6 @@ export const Issue3795 = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(()=
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

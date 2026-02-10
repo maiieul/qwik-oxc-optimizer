@@ -63,7 +63,7 @@ export const NoWorks3 = component$(({count, stuff = hola()}) => {
 
 ## Output
 
-### Module: test.js (main, Inline -- single module)
+### Module: test.js
 
 ```javascript
 import { _restProps } from "@qwik.dev/core";
@@ -157,4 +157,6 @@ export const NoWorks3 = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(({ c
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

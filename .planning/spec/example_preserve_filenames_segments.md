@@ -40,7 +40,7 @@ export const foo = () => console.log('foo');
 
 ## Output
 
-### Module: test.tsx (main module)
+### Module: test.tsx
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";

@@ -2,7 +2,9 @@
 
 ## Test Configuration
 
-All defaults (Entry Strategy: Segment, Mode: Test, no transpilation)
+| Option | Value |
+|--------|-------|
+| *(all defaults)* | |
 
 ## Input
 
@@ -350,7 +352,7 @@ export const Header = component$(() => {
 
 ## Output
 
-### Module: test.tsx_Header_component_J4uyIhaBNR4.tsx [ENTRY POINT]
+### Module: test.tsx_Header_component_J4uyIhaBNR4.tsx (ENTRY POINT)
 
 ```tsx
 import { qrl } from "@qwik.dev/core";
@@ -911,7 +913,7 @@ export const Header = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_J4uyIhaBNR4
 
 </details>
 
-### Module: test.tsx_Header_component_div_onClick_i7ekvWH3674.tsx [ENTRY POINT]
+### Module: test.tsx_Header_component_div_onClick_i7ekvWH3674.tsx (ENTRY POINT)
 
 ```tsx
 export const Header_component_div_onClick_i7ekvWH3674 = (ctx)=>console.log(ctx);
@@ -1076,4 +1078,6 @@ export const Header_component_div_onClick_i7ekvWH3674 = (ctx)=>console.log(ctx);
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

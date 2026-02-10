@@ -756,7 +756,7 @@ const Header = $((decl1, {decl2}, [decl3]) => {
 
 ## Output
 
-### Module: project/test.tsx_Header_WlR3xnI6u38.tsx [ENTRY POINT]
+### Module: project/test.tsx_Header_WlR3xnI6u38.tsx (ENTRY POINT)
 
 ```tsx
 export const Header_WlR3xnI6u38 = (decl1, { decl2 }, [decl3])=>{
@@ -1571,4 +1571,6 @@ const i_WlR3xnI6u38 = ()=>import("./test.tsx_Header_WlR3xnI6u38");
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

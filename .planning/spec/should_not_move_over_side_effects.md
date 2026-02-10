@@ -56,7 +56,7 @@ AST omitted for brevity. Parse with: `cat <<'EOF' | ./oxc-ast-util/target/releas
 
 ## Conventions Applied
 
-**None** -- This test verifies the optimizer preserves statement ordering for code with side effects. Only TypeScript annotations are removed. The `$` in identifiers is part of the name, not Qwik syntax.
+*No optimizer conventions detected in output.*
 
 **Key behavior:** `const idx = roots.length` must stay before `roots.push(...)` because push modifies length.
 

@@ -82,7 +82,7 @@ export const App_component_Fragment_Div_onEvent_zrFduYbT3xM = ()=>console.log('s
 }
 ```
 
-### Module: test.js (main)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -251,4 +251,6 @@ export const App_component_remove_pU6yOC5P6sY = (id)=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

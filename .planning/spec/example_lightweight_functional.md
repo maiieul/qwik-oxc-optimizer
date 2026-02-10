@@ -2,7 +2,9 @@
 
 ## Test Configuration
 
-All defaults (Entry Strategy: Segment, Mode: Test, no transpilation)
+| Option | Value |
+|--------|-------|
+| *(all defaults)* | |
 
 ## Input
 
@@ -914,7 +916,7 @@ export const ButtonArrow = ({text, color}) => {
 
 ## Output
 
-### Module: test.tsx_Foo_component_HTDRsvUbLiE.tsx [ENTRY POINT]
+### Module: test.tsx_Foo_component_HTDRsvUbLiE.tsx (ENTRY POINT)
 
 ```tsx
 import { Button } from "./test";
@@ -1244,7 +1246,7 @@ export const Foo_component_HTDRsvUbLiE = (props)=>{
 }
 ```
 
-### Module: test.tsx_Button_button_q_e_click_6YaNiKLqRnQ.tsx [ENTRY POINT]
+### Module: test.tsx_Button_button_q_e_click_6YaNiKLqRnQ.tsx (ENTRY POINT)
 
 ```tsx
 import { _captures } from "@qwik.dev/core";
@@ -2461,7 +2463,7 @@ export const ButtonArrow = (_rawProps)=>{
 
 </details>
 
-### Module: test.tsx_ButtonArrow_button_q_e_click_rEE0GCaea7M.tsx [ENTRY POINT]
+### Module: test.tsx_ButtonArrow_button_q_e_click_rEE0GCaea7M.tsx (ENTRY POINT)
 
 ```tsx
 import { _captures } from "@qwik.dev/core";
@@ -2764,4 +2766,6 @@ export const ButtonArrow_button_q_e_click_rEE0GCaea7M = ()=>{
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

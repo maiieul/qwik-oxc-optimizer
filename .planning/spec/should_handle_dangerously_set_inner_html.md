@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -757,7 +757,7 @@ import { component$ } from "@qwik.dev/core";
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -938,7 +938,7 @@ const i_4ryKJTOKjWE = ()=>import("./test.tsx_Cmp_component_4ryKJTOKjWE");
 
 </details>
 
-### Module: `test.tsx_Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8.js` (ENTRY POINT)
+### Module: test.tsx_Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -1144,7 +1144,7 @@ export const Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8 = ()=>{
 }
 ```
 
-### Module: `test.tsx_Cmp_component_4ryKJTOKjWE.js` (ENTRY POINT)
+### Module: test.tsx_Cmp_component_4ryKJTOKjWE.js (ENTRY POINT)
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";

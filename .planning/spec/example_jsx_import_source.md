@@ -4,9 +4,9 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
-| Explicit Extensions | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
+| Explicit Extensions | True |
 
 ## Input
 
@@ -406,7 +406,7 @@ export const App2 = qwikify$(() => (
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 /* @jsxImportSource react */ import { qwikifyQrl } from "./qwikfy";
@@ -770,7 +770,7 @@ export const App2 = qwikifyQrl(/*#__PURE__*/ qrl(i_RKJW7oCMdS4, "App2_qwikify_RK
 
 </details>
 
-### Module: `test.tsx_App2_qwikify_RKJW7oCMdS4.js` (ENTRY POINT)
+### Module: test.tsx_App2_qwikify_RKJW7oCMdS4.js (ENTRY POINT)
 
 ```javascript
 import { jsx as _jsx } from "react/jsx-runtime";

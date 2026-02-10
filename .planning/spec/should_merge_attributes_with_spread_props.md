@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -228,7 +228,7 @@ import { component$ } from '@qwik.dev/core';
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -409,7 +409,7 @@ export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test
 
 </details>
 
-### Module: `test.tsx_test_component_LUXeXe0DQrg.js` (ENTRY POINT)
+### Module: test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)
 
 ```javascript
 import { _fnSignal } from "@qwik.dev/core";

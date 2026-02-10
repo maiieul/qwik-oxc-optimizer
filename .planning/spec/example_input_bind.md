@@ -4,10 +4,10 @@
 
 | Option | Value |
 |--------|-------|
-| Entry Strategy | `Inline` |
-| Mode | `Prod` |
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Entry Strategy | Inline |
+| Mode | Prod |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -677,7 +677,7 @@ export const Greeter = component$(() => {
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";

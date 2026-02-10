@@ -386,7 +386,7 @@ const Header = component$(() => {
 
 ## Output
 
-### Module: test.tsx_Header_component_J4uyIhaBNR4.tsx [ENTRY POINT]
+### Module: test.tsx_Header_component_J4uyIhaBNR4.tsx (ENTRY POINT)
 
 ```tsx
 import { useStore } from "@qwik.dev/core";
@@ -1113,4 +1113,6 @@ const Header = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_J4uyIhaBNR4, "Head
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

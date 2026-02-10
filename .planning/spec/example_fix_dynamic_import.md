@@ -42,7 +42,7 @@ export const Header = component$(() => {
 
 ## Output
 
-### Module: project/folder/test.tsx (main module)
+### Module: project/folder/test.tsx
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";

@@ -2,7 +2,9 @@
 
 ## Test Configuration
 
-All defaults (Entry Strategy: Segment, Mode: Test, no transpilation)
+| Option | Value |
+|--------|-------|
+| *(all defaults)* | |
 
 ## Input
 
@@ -211,7 +213,7 @@ export const sym1 = $((ctx) => console.log("1"));
 
 ## Output
 
-### Module: test.tsx_sym1_aXUrPXX5Lak.tsx [ENTRY POINT]
+### Module: test.tsx_sym1_aXUrPXX5Lak.tsx (ENTRY POINT)
 
 ```tsx
 export const sym1_aXUrPXX5Lak = (ctx)=>console.log("1");
@@ -554,4 +556,6 @@ export const sym1 = /*#__PURE__*/ qrl(i_aXUrPXX5Lak, "sym1_aXUrPXX5Lak");
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

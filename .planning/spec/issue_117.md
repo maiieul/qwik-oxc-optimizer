@@ -276,7 +276,7 @@ export const cache = patternCache[cacheKey] || (patternCache[cacheKey] = {});
 
 ## Conventions Applied
 
-None — passthrough test with no Qwik transformations applied.
+*No optimizer conventions detected in output.*
 
 ## Function Calls in Output
 
@@ -285,4 +285,6 @@ None — passthrough test with no Qwik transformations applied.
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

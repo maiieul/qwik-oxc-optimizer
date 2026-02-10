@@ -208,7 +208,7 @@ export const App = () => {
 
 ## Output
 
-### Module: `test.tsx`
+### Module: test.tsx
 
 ```tsx
 // don't transpile jsx with non-plain-object props

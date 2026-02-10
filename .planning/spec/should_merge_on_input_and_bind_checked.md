@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -381,7 +381,7 @@ export const FieldInput = component$(() => {
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -584,7 +584,7 @@ export const FieldInput = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_V4XAtJS
 
 </details>
 
-### Module: `test.tsx_FieldInput_component_V4XAtJSTRKg.js` (ENTRY POINT)
+### Module: test.tsx_FieldInput_component_V4XAtJSTRKg.js (ENTRY POINT)
 
 ```javascript
 import { _chk } from "@qwik.dev/core";
@@ -1112,7 +1112,7 @@ export const FieldInput_component_V4XAtJSTRKg = ()=>{
 }
 ```
 
-### Module: `test.tsx_FieldInput_component_input_q_e_input_wqR1xEjZjf4.js` (ENTRY POINT)
+### Module: test.tsx_FieldInput_component_input_q_e_input_wqR1xEjZjf4.js (ENTRY POINT)
 
 ```javascript
 export const FieldInput_component_input_q_e_input_wqR1xEjZjf4 = ()=>{

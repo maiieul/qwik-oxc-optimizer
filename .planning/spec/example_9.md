@@ -2,7 +2,9 @@
 
 ## Test Configuration
 
-All defaults (Entry Strategy: Segment, Mode: Test, no transpilation)
+| Option | Value |
+|--------|-------|
+| *(all defaults)* | |
 
 ## Input
 
@@ -751,7 +753,7 @@ const Header = $((decl1, {decl2}, [decl3]) => {
 
 ## Output
 
-### Module: test.tsx_Header_WjUaUQN7Oxg.tsx [ENTRY POINT]
+### Module: test.tsx_Header_WjUaUQN7Oxg.tsx (ENTRY POINT)
 
 ```tsx
 export const Header_WjUaUQN7Oxg = (decl1, { decl2 }, [decl3])=>{
@@ -1242,4 +1244,6 @@ const i_WjUaUQN7Oxg = ()=>import("./test.tsx_Header_WjUaUQN7Oxg");
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

@@ -37,7 +37,7 @@ export default component$(() => {
 
 ## Output
 
-### Module: src/routes/_repl/[id]/[[...slug]].js (main module)
+### Module: src/routes/_repl/[id]/[[...slug]].js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";

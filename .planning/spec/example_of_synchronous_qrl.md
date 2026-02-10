@@ -780,7 +780,7 @@ export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test
 
 </details>
 
-### Module: test.tsx_test_component_LUXeXe0DQrg.js [ENTRY POINT]
+### Module: test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)
 
 ```javascript
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
@@ -1521,4 +1521,6 @@ export const test_component_LUXeXe0DQrg = ()=>{
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

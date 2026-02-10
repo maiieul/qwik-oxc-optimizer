@@ -114,7 +114,7 @@ export const test_component_LUXeXe0DQrg = ()=>{
 }
 ```
 
-### Module: test.ts (main)
+### Module: test.ts
 
 ```typescript
 import { componentQrl } from "@qwik.dev/core";
@@ -161,4 +161,6 @@ export { useFoo as _auto_useFoo };
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

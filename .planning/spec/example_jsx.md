@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -1145,7 +1145,7 @@ export const Foo = component$((props) => {
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";
@@ -1867,7 +1867,7 @@ export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "
 
 </details>
 
-### Module: `test.tsx_Foo_component_HTDRsvUbLiE.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)
 
 ```javascript
 import { qrl } from "@qwik.dev/core";
@@ -2094,7 +2094,7 @@ export const Foo_component_HTDRsvUbLiE = (props)=>{
 }
 ```
 
-### Module: `test.tsx_Foo_component_1_DvU6FitWglY.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_1_DvU6FitWglY.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";

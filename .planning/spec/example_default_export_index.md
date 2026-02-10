@@ -35,7 +35,7 @@ export default component$(() => {
 
 ## Output
 
-### Module: src/components/mongo/index.tsx (main module -- single output)
+### Module: src/components/mongo/index.tsx
 
 ```tsx
 import { componentQrl } from "@qwik.dev/core";

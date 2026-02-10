@@ -109,7 +109,7 @@ export const App_component_Cmp_p_q_e_click_Yl4ybrJWrt4 = ()=>console.log('warn')
 }
 ```
 
-### Module: test.ts (main module)
+### Module: test.ts
 
 ```typescript
 import { componentQrl } from "@qwik.dev/core";

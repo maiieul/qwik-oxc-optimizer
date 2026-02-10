@@ -30,7 +30,7 @@ export default component$((props) => {
 
 ## Output
 
-### Module: test.js (main)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -110,4 +110,6 @@ export const test_component_LUXeXe0DQrg = (props)=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

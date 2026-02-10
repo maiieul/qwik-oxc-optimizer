@@ -86,7 +86,7 @@ export const Header_component_UVBJuFYfvDo = ()=>{
 }
 ```
 
-### Module: project/test.jsx (main module)
+### Module: project/test.jsx
 
 ```jsx
 import { componentQrl } from "@qwik.dev/core";

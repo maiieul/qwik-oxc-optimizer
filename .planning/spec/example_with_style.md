@@ -2,7 +2,9 @@
 
 ## Test Configuration
 
-All defaults (Entry Strategy: Segment, Mode: Test, no transpilation)
+| Option | Value |
+|--------|-------|
+| *(all defaults)* | |
 
 ## Input
 
@@ -313,7 +315,7 @@ export const Foo = component$(() => {
 
 ## Output
 
-### Module: test.tsx_Foo_component_useStyles_pV9TSCBIhw8.tsx [ENTRY POINT]
+### Module: test.tsx_Foo_component_useStyles_pV9TSCBIhw8.tsx (ENTRY POINT)
 
 ```tsx
 export const Foo_component_useStyles_pV9TSCBIhw8 = '.class {}';
@@ -399,7 +401,7 @@ export const Foo_component_useStyles_pV9TSCBIhw8 = '.class {}';
 }
 ```
 
-### Module: test.tsx_Foo_component_HTDRsvUbLiE.tsx [ENTRY POINT]
+### Module: test.tsx_Foo_component_HTDRsvUbLiE.tsx (ENTRY POINT)
 
 ```tsx
 import { qrl } from "@qwik.dev/core";
@@ -1035,4 +1037,6 @@ export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

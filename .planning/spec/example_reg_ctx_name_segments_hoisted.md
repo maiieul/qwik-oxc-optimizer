@@ -38,7 +38,7 @@ const STYLES = '.class {}';
 
 ## Output
 
-### Module: test.js (main module -- single output with hoisted segments)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";

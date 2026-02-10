@@ -2,7 +2,9 @@
 
 ## Test Configuration
 
-All defaults (Entry Strategy: Segment, Mode: Test, no transpilation)
+| Option | Value |
+|--------|-------|
+| *(all defaults)* | |
 
 ## Input
 
@@ -471,7 +473,7 @@ const renderHeader = component($(() => {
 
 ## Output
 
-### Module: test.tsx_renderHeader_zBbHWn4e8Cg.tsx [ENTRY POINT]
+### Module: test.tsx_renderHeader_zBbHWn4e8Cg.tsx (ENTRY POINT)
 
 ```tsx
 import { qrl } from "@qwik.dev/core";
@@ -741,7 +743,7 @@ export const renderHeader_zBbHWn4e8Cg = ()=>{
 }
 ```
 
-### Module: test.tsx_renderHeader_component_U6Kkv07sbpQ.tsx [ENTRY POINT]
+### Module: test.tsx_renderHeader_component_U6Kkv07sbpQ.tsx (ENTRY POINT)
 
 ```tsx
 export const renderHeader_component_U6Kkv07sbpQ = ()=>{
@@ -1256,7 +1258,7 @@ const renderHeader = component(/*#__PURE__*/ qrl(i_U6Kkv07sbpQ, "renderHeader_co
 
 </details>
 
-### Module: test.tsx_renderHeader_div_onClick_fV2uzAL99u4.tsx [ENTRY POINT]
+### Module: test.tsx_renderHeader_div_onClick_fV2uzAL99u4.tsx (ENTRY POINT)
 
 ```tsx
 export const renderHeader_div_onClick_fV2uzAL99u4 = (ctx)=>console.log(ctx);
@@ -1419,4 +1421,6 @@ export const renderHeader_div_onClick_fV2uzAL99u4 = (ctx)=>console.log(ctx);
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

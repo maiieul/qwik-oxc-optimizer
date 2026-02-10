@@ -67,7 +67,7 @@ export const _404_component_div_q_e_click_aMLnLWtkRhc = ()=>console.log(mongodb)
 }
 ```
 
-### Module: src/components/mongo/404.tsx (main module)
+### Module: src/components/mongo/404.tsx
 
 ```tsx
 import { componentQrl } from "@qwik.dev/core";

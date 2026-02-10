@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -771,7 +771,7 @@ const Foo = component$(function() {
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -952,7 +952,7 @@ const i_HTDRsvUbLiE = ()=>import("./test.tsx_Foo_component_HTDRsvUbLiE");
 
 </details>
 
-### Module: `test.tsx_Foo_component_HTDRsvUbLiE.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";
@@ -1408,7 +1408,7 @@ export const Foo_component_HTDRsvUbLiE = function() {
 }
 ```
 
-### Module: `test.tsx_Foo_component_Inner_component_AuJ9mTBx5YA.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_Inner_component_AuJ9mTBx5YA.js (ENTRY POINT)
 
 ```javascript
 import { _fnSignal } from "@qwik.dev/core";
@@ -2086,7 +2086,7 @@ export const Foo_component_Inner_component_AuJ9mTBx5YA = function(props) {
 }
 ```
 
-### Module: `test.tsx_Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY = (_, _1, item)=>console.log(item.value.id);

@@ -45,7 +45,7 @@ export const App = component$(() => {
 
 ## Output
 
-### Module: test.js (main module)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";

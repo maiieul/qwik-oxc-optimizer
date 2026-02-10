@@ -41,7 +41,7 @@ export const Cmp = component$(() => {
 
 ## Output
 
-### Module: test.js (main)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -135,4 +135,6 @@ export const Cmp_component_Fragment_button_q_e_click_veAZ2ow0cnM = ()=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

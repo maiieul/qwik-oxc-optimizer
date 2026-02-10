@@ -67,7 +67,7 @@ export const App = component$((props) => {
 
 ## Output
 
-### Module: test.js (main, Inline -- single module)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -149,4 +149,6 @@ export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(App_compo
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

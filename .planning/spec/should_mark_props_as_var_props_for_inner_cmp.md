@@ -56,7 +56,7 @@ export const ModelImg = component$<ModelProps>((props) => {
 
 ## Output
 
-### Module: test.js (main)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -175,4 +175,6 @@ export const Image_component_CS20HgBlRYI = (props)=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

@@ -41,7 +41,7 @@ export const App = component$(() => {
 
 ## Output
 
-### Module: test.tsx (main module)
+### Module: test.tsx
 
 ```tsx
 import { componentQrl } from "@qwik.dev/core";

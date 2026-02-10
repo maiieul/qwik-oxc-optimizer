@@ -106,7 +106,7 @@ export const Counter_component_zTmRHlL09Gg = ()=>{
 }
 ```
 
-### Module: test.ts (main)
+### Module: test.ts
 
 ```typescript
 import { componentQrl } from "@qwik.dev/core";
@@ -147,4 +147,6 @@ export const Counter = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_zTmRHlL09G
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

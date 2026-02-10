@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -1176,7 +1176,7 @@ export const RouterHead = component$(() => {
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -1381,7 +1381,7 @@ const i_DPA76mgIou0 = ()=>import("./test.tsx_RouterHead_component_DPA76mgIou0");
 
 </details>
 
-### Module: `test.tsx_RouterHead_component_DPA76mgIou0.js` (ENTRY POINT)
+### Module: test.tsx_RouterHead_component_DPA76mgIou0.js (ENTRY POINT)
 
 ```javascript
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";

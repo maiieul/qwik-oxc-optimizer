@@ -4,9 +4,9 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
-| Explicit Extensions | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
+| Explicit Extensions | True |
 
 ## Input
 
@@ -831,7 +831,7 @@ export const App2 = component$(() => {
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -1034,7 +1034,7 @@ export const App2 = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_3yveMqbQ3Fs, 
 
 </details>
 
-### Module: `test.tsx_App2_component_3yveMqbQ3Fs.js` (ENTRY POINT)
+### Module: test.tsx_App2_component_3yveMqbQ3Fs.js (ENTRY POINT)
 
 ```javascript
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";

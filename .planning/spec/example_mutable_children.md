@@ -4,10 +4,10 @@
 
 | Option | Value |
 |--------|-------|
-| Entry Strategy | `Hoist` |
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
-| Explicit Extensions | `True` |
+| Entry Strategy | Hoist |
+| Transpile Ts | True |
+| Transpile Jsx | True |
+| Explicit Extensions | True |
 
 ## Input
 
@@ -3436,7 +3436,7 @@ export const AppStatic = component$((props: Stuff) => {
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";

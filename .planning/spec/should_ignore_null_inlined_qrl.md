@@ -241,4 +241,6 @@ inlinedQrl(null, 'some_hash');
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

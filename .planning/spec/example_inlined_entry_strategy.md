@@ -1650,4 +1650,6 @@ export const Child = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(()=>{
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

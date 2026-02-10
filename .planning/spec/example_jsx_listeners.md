@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -1221,7 +1221,7 @@ export const Foo = component$(() => {
 
 ## Output
 
-### Module: `test.tsx_Foo_component_div_host_onDocumentScroll_Zip7mifsjRY.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_host_onDocumentScroll_Zip7mifsjRY.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_host_onDocumentScroll_Zip7mifsjRY = ()=>console.log('host:onDocument:scroll');
@@ -1338,7 +1338,7 @@ export const Foo_component_div_host_onDocumentScroll_Zip7mifsjRY = ()=>console.l
 }
 ```
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -1572,7 +1572,7 @@ export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "
 
 </details>
 
-### Module: `test.tsx_Foo_component_HTDRsvUbLiE.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)
 
 ```javascript
 import { qrl } from "@qwik.dev/core";
@@ -1774,7 +1774,7 @@ export const Foo_component_HTDRsvUbLiE = ()=>{
 }
 ```
 
-### Module: `test.tsx_Foo_component_div_host_onClick_cPEH970JbEY.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_host_onClick_cPEH970JbEY.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_host_onClick_cPEH970JbEY = ()=>console.log('host:onClick$');
@@ -1891,7 +1891,7 @@ export const Foo_component_div_host_onClick_cPEH970JbEY = ()=>console.log('host:
 }
 ```
 
-### Module: `test.tsx_Foo_component_1_DvU6FitWglY.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_1_DvU6FitWglY.js (ENTRY POINT)
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";
@@ -3152,7 +3152,7 @@ export const Foo_component_1_DvU6FitWglY = ()=>{
 }
 ```
 
-### Module: `test.tsx_Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg = ()=>console.log('host:onWindow:scroll');
@@ -3269,7 +3269,7 @@ export const Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg = ()=>console
 }
 ```
 
-### Module: `test.tsx_Foo_component_div_custom_pyHnxab17ms.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_custom_pyHnxab17ms.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_custom_pyHnxab17ms = ()=>console.log('custom');
@@ -3386,7 +3386,7 @@ export const Foo_component_div_custom_pyHnxab17ms = ()=>console.log('custom');
 }
 ```
 
-### Module: `test.tsx_Foo_component_div_q_e_document_scroll_6qyBttefepU.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_q_e_document_scroll_6qyBttefepU.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_q_e_document_scroll_6qyBttefepU = ()=>console.log('onDocument-sCroll');
@@ -3503,7 +3503,7 @@ export const Foo_component_div_q_e_document_scroll_6qyBttefepU = ()=>console.log
 }
 ```
 
-### Module: `test.tsx_Foo_component_div_q_e_c_lick_kX5SiYdz650.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_q_e_c_lick_kX5SiYdz650.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_q_e_c_lick_kX5SiYdz650 = ()=>console.log('on-cLick$');
@@ -3620,7 +3620,7 @@ export const Foo_component_div_q_e_c_lick_kX5SiYdz650 = ()=>console.log('on-cLic
 }
 ```
 
-### Module: `test.tsx_Foo_component_handler_H10xZtD0e7w.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_handler_H10xZtD0e7w.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_handler_H10xZtD0e7w = ()=>console.log('reused');
@@ -3737,7 +3737,7 @@ export const Foo_component_handler_H10xZtD0e7w = ()=>console.log('reused');
 }
 ```
 
-### Module: `test.tsx_Foo_component_div_q_e_documentscroll_0FSbGzUROso.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_q_e_documentscroll_0FSbGzUROso.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_q_e_documentscroll_0FSbGzUROso = ()=>console.log('onDocumentScroll');
@@ -3854,7 +3854,7 @@ export const Foo_component_div_q_e_documentscroll_0FSbGzUROso = ()=>console.log(
 }
 ```
 
-### Module: `test.tsx_Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0 = ()=>console.log('onWindowScroll');
@@ -3971,7 +3971,7 @@ export const Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0 = ()=>console.lo
 }
 ```
 
-### Module: `test.tsx_Foo_component_div_q_e_document_scroll_1_wphyTkeintI.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_q_e_document_scroll_1_wphyTkeintI.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_q_e_document_scroll_1_wphyTkeintI = ()=>console.log('onDocument-scroLL');
@@ -4088,7 +4088,7 @@ export const Foo_component_div_q_e_document_scroll_1_wphyTkeintI = ()=>console.l
 }
 ```
 
-### Module: `test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg.js` (ENTRY POINT)
+### Module: test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg.js (ENTRY POINT)
 
 ```javascript
 export const Foo_component_div_q_e_click_YEa2A5ADUOg = ()=>console.log('onClick$');

@@ -2666,7 +2666,7 @@ export const Parent_component_0TaiDayHrlo = ()=>{
 }
 ```
 
-### Module: test.tsx_Child_component_div_q_e_click_cROa4sult1s.js [ENTRY POINT]
+### Module: test.tsx_Child_component_div_q_e_click_cROa4sult1s.js (ENTRY POINT)
 
 ```javascript
 export const Child_component_div_q_e_click_cROa4sult1s = ()=>console.log('child');
@@ -3387,7 +3387,7 @@ export const Child_component_9GyF01GDKqw = ()=>{
 }
 ```
 
-### Module: test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA.js [ENTRY POINT]
+### Module: test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA.js (ENTRY POINT)
 
 ```javascript
 export const Parent_component_div_q_e_click_zM9okM0TYrA = ()=>console.log('parent');
@@ -3536,4 +3536,6 @@ export const Parent_component_div_q_e_click_zM9okM0TYrA = ()=>console.log('paren
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

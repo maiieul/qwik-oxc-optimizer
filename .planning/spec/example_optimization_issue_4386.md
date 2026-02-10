@@ -691,4 +691,6 @@ export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(()=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

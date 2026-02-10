@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -1906,7 +1906,7 @@ export const App = component$(() => {
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -2109,7 +2109,7 @@ export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "
 
 </details>
 
-### Module: `test.tsx_App_component_div_tr_td_a_q_e_click_1_40fnSAlYI48.js` (ENTRY POINT)
+### Module: test.tsx_App_component_div_tr_td_a_q_e_click_1_40fnSAlYI48.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -2543,7 +2543,7 @@ export const App_component_div_tr_td_a_q_e_click_1_40fnSAlYI48 = (_, _1, row)=>{
 }
 ```
 
-### Module: `test.tsx_App_component_ckEPmXZlub0.js` (ENTRY POINT)
+### Module: test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)
 
 ```javascript
 import { _fnSignal } from "@qwik.dev/core";
@@ -4330,7 +4330,7 @@ export const App_component_ckEPmXZlub0 = ()=>{
 }
 ```
 
-### Module: `test.tsx_App_component_div_tr_td_a_q_e_click_lgbZkJXyLtg.js` (ENTRY POINT)
+### Module: test.tsx_App_component_div_tr_td_a_q_e_click_lgbZkJXyLtg.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";

@@ -1172,4 +1172,6 @@ export const test_component_LUXeXe0DQrg = ()=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

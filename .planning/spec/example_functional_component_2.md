@@ -1453,7 +1453,7 @@ export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "
 
 </details>
 
-### Module: test.tsx_App_component_ckEPmXZlub0.js [ENTRY POINT]
+### Module: test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";
@@ -2413,7 +2413,7 @@ export const App_component_ckEPmXZlub0 = (props)=>{
 }
 ```
 
-### Module: test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8.js [ENTRY POINT]
+### Module: test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -2815,7 +2815,7 @@ export const App_component_div_button_q_e_click_UB6Fs5a3bd8 = (_, _1, btn)=>{
 }
 ```
 
-### Module: test.tsx_App_component_div_q_e_click_mi4E1piTWe8.js [ENTRY POINT]
+### Module: test.tsx_App_component_div_q_e_click_mi4E1piTWe8.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -3079,4 +3079,6 @@ export const App_component_div_q_e_click_mi4E1piTWe8 = ()=>{
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

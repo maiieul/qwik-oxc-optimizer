@@ -125,7 +125,7 @@ export const App_component_ckEPmXZlub0 = ()=>{
 }
 ```
 
-### Module: test.ts (main module)
+### Module: test.ts
 
 ```typescript
 import { qwikifyQrl } from "@qwik.dev/react";

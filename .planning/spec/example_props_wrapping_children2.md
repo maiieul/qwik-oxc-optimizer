@@ -118,4 +118,6 @@ Additional behaviors:
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

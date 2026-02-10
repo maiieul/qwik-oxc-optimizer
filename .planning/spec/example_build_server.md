@@ -1339,7 +1339,7 @@ export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "
 
 </details>
 
-### Module: test.tsx_App_component_ckEPmXZlub0.tsx [ENTRY POINT]
+### Module: test.tsx_App_component_ckEPmXZlub0.tsx (ENTRY POINT)
 
 ```tsx
 import { mongodb } from "mondodb";
@@ -1726,4 +1726,6 @@ export const s_ckEPmXZlub0 = ()=>{
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

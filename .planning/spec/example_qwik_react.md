@@ -113,7 +113,7 @@ export const qwikifyQrl_component_zH94hIe0Ick = (props)=>{
 }
 ```
 
-### Module: ../node_modules/@qwik.dev/react/index.qwik.mjs (main module)
+### Module: ../node_modules/@qwik.dev/react/index.qwik.mjs
 
 ```javascript
 import { qrl } from "@qwik.dev/core";

@@ -4,12 +4,12 @@
 
 | Option | Value |
 |--------|-------|
-| Mode | `Dev` |
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
-| Explicit Extensions | `True` |
-| Filename | `project/index.tsx` |
-| Src Dir | `/src/project` |
+| Mode | Dev |
+| Transpile Ts | True |
+| Transpile Jsx | True |
+| Explicit Extensions | True |
+| Filename | project/index.tsx |
+| Src Dir | /src/project |
 
 ## Input
 
@@ -586,7 +586,7 @@ export const App = component$((props: Stuff) => {
 
 ## Output
 
-### Module: `project/index.js`
+### Module: project/index.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -889,7 +889,7 @@ export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrlDEV(i_KGLYFBhvJc0
 
 </details>
 
-### Module: `project/index.tsx_App_component_KGLYFBhvJc0.js` (ENTRY POINT)
+### Module: project/index.tsx_App_component_KGLYFBhvJc0.js (ENTRY POINT)
 
 ```javascript
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";

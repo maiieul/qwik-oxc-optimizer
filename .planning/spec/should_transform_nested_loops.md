@@ -2740,4 +2740,6 @@ export const Foo_component_div_div_p_q_e_click_PjMbeUzoAMk = (_, _1, item)=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

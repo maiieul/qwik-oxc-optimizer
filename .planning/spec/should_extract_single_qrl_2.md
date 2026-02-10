@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -1027,7 +1027,7 @@ import { component$, useStore, useSignal } from '@qwik.dev/core';
 
 ## Output
 
-### Module: `test.tsx_Parent_component_div_button_q_e_click_5khsVRINUws.js` (ENTRY POINT)
+### Module: test.tsx_Parent_component_div_button_q_e_click_5khsVRINUws.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -1250,7 +1250,7 @@ export const Parent_component_div_button_q_e_click_5khsVRINUws = ()=>{
 }
 ```
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -1431,7 +1431,7 @@ const i_0TaiDayHrlo = ()=>import("./test.tsx_Parent_component_0TaiDayHrlo");
 
 </details>
 
-### Module: `test.tsx_Parent_component_0TaiDayHrlo.js` (ENTRY POINT)
+### Module: test.tsx_Parent_component_0TaiDayHrlo.js (ENTRY POINT)
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";
@@ -2508,7 +2508,7 @@ export const Parent_component_0TaiDayHrlo = ()=>{
 }
 ```
 
-### Module: `test.tsx_Parent_component_div_button_q_e_click_1_rAeuW6OvuXM.js` (ENTRY POINT)
+### Module: test.tsx_Parent_component_div_button_q_e_click_1_rAeuW6OvuXM.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";

@@ -624,4 +624,6 @@ export const Greeter = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_0jjOvx068y
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

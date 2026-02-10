@@ -4,8 +4,8 @@
 
 | Option | Value |
 |--------|-------|
-| Transpile Ts | `True` |
-| Transpile Jsx | `True` |
+| Transpile Ts | True |
+| Transpile Jsx | True |
 
 ## Input
 
@@ -561,7 +561,7 @@ import { component$ } from '@qwik.dev/core';
 
 ## Output
 
-### Module: `test.js`
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -742,7 +742,7 @@ const i_ndbrzxiyG3g = ()=>import("./test.tsx_ManyEventsComponent_component_ndbrz
 
 </details>
 
-### Module: `test.tsx_ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA.js` (ENTRY POINT)
+### Module: test.tsx_ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA.js (ENTRY POINT)
 
 ```javascript
 export const ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA = ()=>{};
@@ -831,7 +831,7 @@ export const ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA = 
 }
 ```
 
-### Module: `test.tsx_ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs.js` (ENTRY POINT)
+### Module: test.tsx_ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs.js (ENTRY POINT)
 
 ```javascript
 export const ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs = ()=>{};
@@ -920,7 +920,7 @@ export const ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs = ()
 }
 ```
 
-### Module: `test.tsx_ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY.js` (ENTRY POINT)
+### Module: test.tsx_ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY.js (ENTRY POINT)
 
 ```javascript
 export const ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY = ()=>{};
@@ -1009,7 +1009,7 @@ export const ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY = ()=
 }
 ```
 
-### Module: `test.tsx_ManyEventsComponent_component_ndbrzxiyG3g.js` (ENTRY POINT)
+### Module: test.tsx_ManyEventsComponent_component_ndbrzxiyG3g.js (ENTRY POINT)
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";
@@ -1963,7 +1963,7 @@ export const ManyEventsComponent_component_ndbrzxiyG3g = ()=>{
 }
 ```
 
-### Module: `test.tsx_ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0.js` (ENTRY POINT)
+### Module: test.tsx_ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0.js (ENTRY POINT)
 
 ```javascript
 export const ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0 = ()=>{};
@@ -2052,7 +2052,7 @@ export const ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v
 }
 ```
 
-### Module: `test.tsx_ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs.js` (ENTRY POINT)
+### Module: test.tsx_ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs.js (ENTRY POINT)
 
 ```javascript
 export const ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs = ()=>{};
@@ -2141,7 +2141,7 @@ export const ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs = ()
 }
 ```
 
-### Module: `test.tsx_ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg.js` (ENTRY POINT)
+### Module: test.tsx_ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg.js (ENTRY POINT)
 
 ```javascript
 export const ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg = ()=>{};
@@ -2230,7 +2230,7 @@ export const ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg = ()
 }
 ```
 
-### Module: `test.tsx_ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles.js` (ENTRY POINT)
+### Module: test.tsx_ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles.js (ENTRY POINT)
 
 ```javascript
 export const ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles = ()=>{};

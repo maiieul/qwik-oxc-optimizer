@@ -1408,7 +1408,7 @@ export const Lightweight = (props)=>{
 
 </details>
 
-### Module: test.tsx_App_component_useMemo_6Sc9KVki3Y0.js [ENTRY POINT]
+### Module: test.tsx_App_component_useMemo_6Sc9KVki3Y0.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -1628,7 +1628,7 @@ export const App_component_useMemo_6Sc9KVki3Y0 = ()=>{
 }
 ```
 
-### Module: test.tsx_Lightweight_useMemo_UIcxVTQF1a8.js [ENTRY POINT]
+### Module: test.tsx_Lightweight_useMemo_UIcxVTQF1a8.js (ENTRY POINT)
 
 ```javascript
 export const Lightweight_useMemo_UIcxVTQF1a8 = ()=>{
@@ -1771,7 +1771,7 @@ export const Lightweight_useMemo_UIcxVTQF1a8 = ()=>{
 }
 ```
 
-### Module: test.tsx_App_component_ckEPmXZlub0.js [ENTRY POINT]
+### Module: test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)
 
 ```javascript
 import { qrl } from "@qwik.dev/core";
@@ -2237,7 +2237,7 @@ export const App_component_ckEPmXZlub0 = (props)=>{
 }
 ```
 
-### Module: test.tsx_App_component_1_w0t0o3QMovU.js [ENTRY POINT]
+### Module: test.tsx_App_component_1_w0t0o3QMovU.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -2583,4 +2583,6 @@ export const App_component_1_w0t0o3QMovU = ()=>{
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

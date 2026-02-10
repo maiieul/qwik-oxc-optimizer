@@ -32,7 +32,7 @@
 
 ## Output
 
-### Module: ../node_modules/@qwik.dev/router/index.qwik.mjs (main module -- single output)
+### Module: ../node_modules/@qwik.dev/router/index.qwik.mjs
 
 *~850 lines of transformed output. All code stays inline (Smart + Lib mode). Key transformations:*
 

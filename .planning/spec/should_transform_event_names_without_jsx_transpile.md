@@ -71,7 +71,7 @@ export const Greeter_component_div_div_q_e_click_1_s7p0zjWZpqo = ()=>{};
 }
 ```
 
-### Module: test.tsx (main)
+### Module: test.tsx
 
 ```tsx
 import { componentQrl } from "@qwik.dev/core";
@@ -196,4 +196,6 @@ export const Greeter_component_n7HuG2hhU0Q = ()=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

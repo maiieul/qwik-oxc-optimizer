@@ -1675,4 +1675,6 @@ export const Greeter_component_n7HuG2hhU0Q = ()=>{
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

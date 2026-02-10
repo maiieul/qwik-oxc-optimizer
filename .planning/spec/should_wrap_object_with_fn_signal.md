@@ -33,7 +33,7 @@ export default component$((props) => {
 
 ## Output
 
-### Module: test.js (main)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";
@@ -101,4 +101,6 @@ This distinction is critical: assigned-from-prop variables lose their reactivity
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

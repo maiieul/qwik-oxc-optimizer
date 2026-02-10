@@ -34,7 +34,7 @@ export const Works = component$((props) => {
 
 ## Output
 
-### Module: test.js (main module -- single output)
+### Module: test.js
 
 ```javascript
 import { componentQrl } from "@qwik.dev/core";

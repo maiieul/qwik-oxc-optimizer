@@ -1667,4 +1667,6 @@ export const Issue3742 = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(Iss
 
 ## Diagnostics
 
-None (`[]`)
+```json
+[]
+```

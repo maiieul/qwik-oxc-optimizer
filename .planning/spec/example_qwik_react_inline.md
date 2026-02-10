@@ -28,7 +28,7 @@
 
 ## Output
 
-### Module: ../node_modules/@qwik.dev/react/index.qwik.mjs (main module -- single output)
+### Module: ../node_modules/@qwik.dev/react/index.qwik.mjs
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";

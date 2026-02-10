@@ -1442,7 +1442,7 @@ export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "
 
 </details>
 
-### Module: test.tsx_App_component_ckEPmXZlub0.js [ENTRY POINT]
+### Module: test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)
 
 ```javascript
 import { qrl } from "@qwik.dev/core";
@@ -2239,7 +2239,7 @@ export const App_component_ckEPmXZlub0 = ({ count, rest: [I2, { I3, v1: [I4], I5
 }
 ```
 
-### Module: test.tsx_App_component_div_q_e_click_mi4E1piTWe8.js [ENTRY POINT]
+### Module: test.tsx_App_component_div_q_e_click_mi4E1piTWe8.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -2488,7 +2488,7 @@ export const App_component_div_q_e_click_mi4E1piTWe8 = ()=>{
 }
 ```
 
-### Module: test.tsx_App_component_1_w0t0o3QMovU.js [ENTRY POINT]
+### Module: test.tsx_App_component_1_w0t0o3QMovU.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -3522,4 +3522,6 @@ export const App_component_1_w0t0o3QMovU = ()=>{
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

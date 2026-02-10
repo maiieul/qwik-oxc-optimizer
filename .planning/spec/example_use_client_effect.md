@@ -606,7 +606,7 @@ export const Child = component$(() => {
 
 ## Output
 
-### Module: test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA.js [ENTRY POINT]
+### Module: test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA.js (ENTRY POINT)
 
 ```javascript
 import { _captures } from "@qwik.dev/core";
@@ -1118,7 +1118,7 @@ export const Child = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_9GyF01GDKqw,
 
 </details>
 
-### Module: test.tsx_Child_component_9GyF01GDKqw.js [ENTRY POINT]
+### Module: test.tsx_Child_component_9GyF01GDKqw.js (ENTRY POINT)
 
 ```javascript
 import { _jsxSorted } from "@qwik.dev/core";
@@ -1659,4 +1659,6 @@ export const Child_component_9GyF01GDKqw = ()=>{
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```

@@ -2,7 +2,9 @@
 
 ## Test Configuration
 
-All defaults (Entry Strategy: Segment, Mode: Test, no transpilation)
+| Option | Value |
+|--------|-------|
+| *(all defaults)* | |
 
 ## Input
 
@@ -32,7 +34,7 @@ AST generation failed (parser panic)
 
 ## Output
 
-### Module: test.tsx_App_Header_component_B9F3YeqcO1w.tsx [ENTRY POINT]
+### Module: test.tsx_App_Header_component_B9F3YeqcO1w.tsx (ENTRY POINT)
 
 ```tsx
 import { qrl } from "@qwik.dev/core";
@@ -350,7 +352,7 @@ export const App_Header_component_B9F3YeqcO1w = ()=>{
 }
 ```
 
-### Module: test.tsx_App_Header_component_div_onClick_aO7uI7Iw6oQ.tsx [ENTRY POINT]
+### Module: test.tsx_App_Header_component_div_onClick_aO7uI7Iw6oQ.tsx (ENTRY POINT)
 
 ```tsx
 export const App_Header_component_div_onClick_aO7uI7Iw6oQ = (ctx)=>console.log(ctx);
@@ -818,4 +820,6 @@ export const App = ()=>{
 
 ## Diagnostics
 
-No diagnostics.
+```json
+[]
+```
