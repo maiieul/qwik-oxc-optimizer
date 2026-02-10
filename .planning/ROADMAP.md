@@ -53,12 +53,12 @@ Plans:
   3. A Rust program compiles and runs, using OXC Traverse to detect `$()` call sites in spec input files and reporting correct locations
   4. A Rust program compiles and runs, using oxc_semantic to perform capture analysis against spec files with known capture lists and producing matching results
   5. A Rust program compiles and runs, splitting one input Program into a main module + segment module(s), producing valid JavaScript output for both via oxc_codegen with source maps
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
+- [ ] 05-01-PLAN.md -- Capture analysis and multi-module output API mapping documents (APIM-03, APIM-06)
+- [ ] 05-02-PLAN.md -- POC workspace setup, $() detection POC, and capture analysis POC (POC-01, POC-02)
+- [ ] 05-03-PLAN.md -- Multi-module output POC and source map generation POC (POC-03, POC-04)
 
 ### Phase 6: Secondary Patterns & Cross-Reference
 **Goal**: Every remaining transformation pattern is mapped to OXC APIs, and all 14 CONV types have a complete cross-reference to specific API patterns -- achieving full coverage of the 162-spec surface area
@@ -92,4 +92,4 @@ Phases execute in numeric order: 4 -> 5 -> 6
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-10 (Phase 4 complete)*
+*Last updated: 2026-02-10 (Phase 5 planned)*
