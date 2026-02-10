@@ -22,7 +22,7 @@ Full details: `milestones/v1.0-ROADMAP.md`
 
 **Milestone Goal:** Deeply research OXC APIs and Rust libraries to map every spec transformation pattern to concrete implementation approaches, producing API mapping guides, working proof-of-concept Rust programs, and an architectural blueprint -- so the port milestone (v3.0) can proceed with zero guesswork.
 
-- [ ] **Phase 4: Core API Mapping & Architecture** - Map foundational transformation patterns to OXC APIs and design the optimizer crate architecture
+- [x] **Phase 4: Core API Mapping & Architecture** - Map foundational transformation patterns to OXC APIs and design the optimizer crate architecture -- completed 2026-02-10
 - [ ] **Phase 5: Deep Research & Proof of Concept** - Investigate complex patterns (capture analysis, multi-module output) and validate with working Rust programs
 - [ ] **Phase 6: Secondary Patterns & Cross-Reference** - Map remaining transformation patterns (JSX, source maps, signals, entry strategy) and produce complete CONV cross-reference
 
@@ -40,8 +40,8 @@ Full details: `milestones/v1.0-ROADMAP.md`
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md -- OXC API mapping guide for $-extraction, qrl wrapping, and import rewriting (APIM-01, APIM-02, APIM-05)
-- [ ] 04-02-PLAN.md -- Architecture blueprint: module layout, public API, data flow, test harness, Cargo.toml (ARCH-01 through ARCH-05)
+- [x] 04-01-PLAN.md -- OXC API mapping guide for $-extraction, qrl wrapping, and import rewriting (APIM-01, APIM-02, APIM-05)
+- [x] 04-02-PLAN.md -- Architecture blueprint: module layout, public API, data flow, test harness, Cargo.toml (ARCH-01 through ARCH-05)
 
 ### Phase 5: Deep Research & Proof of Concept
 **Goal**: The hardest research questions (capture analysis, multi-module output) are answered with working Rust programs that run against real spec files and produce correct results
@@ -86,10 +86,10 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 1. OXC AST Utility | v1.0 | 1/1 | Complete | 2026-02-10 |
 | 2. Generate All Spec Files | v1.0 | 6/6 | Complete | 2026-02-10 |
 | 3. Verify Completeness | v1.0 | 2/2 | Complete | 2026-02-10 |
-| 4. Core API Mapping & Architecture | v2.0 | 0/2 | Not started | - |
+| 4. Core API Mapping & Architecture | v2.0 | 2/2 | Complete | 2026-02-10 |
 | 5. Deep Research & Proof of Concept | v2.0 | 0/3 | Not started | - |
 | 6. Secondary Patterns & Cross-Reference | v2.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-10 (v2.0 phases added)*
+*Last updated: 2026-02-10 (Phase 4 complete)*
