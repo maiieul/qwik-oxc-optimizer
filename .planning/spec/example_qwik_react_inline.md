@@ -66,6 +66,7 @@ export { filterProps as _auto_filterProps };
 ## Conventions Applied
 
 - **[CONV-01] QRL Calls**: `inlinedQrl()` preserved from input (Inline strategy)
+- **[CONV-02] Dollar-to-Qrl**: `componentQrl`, `useTaskQrl` present in output (preserved from pre-compiled input)
 - **[CONV-03] JSX Transforms**: `jsx()` from input transformed to `_jsxSorted()` calls
 - **[CONV-05] Capture Patterns**: Capture arrays in inlinedQrl third argument preserved
 - **[CONV-07] PURE Annotations**: `/*#__PURE__*/` added on componentQrl and inlinedQrl calls

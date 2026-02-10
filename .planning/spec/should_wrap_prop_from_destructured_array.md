@@ -215,6 +215,7 @@ export const Input_component_9metqqaxlN8 = (props)=>{
 - **[CONV-06] Lazy Imports**: Lazy imports for all segments
 - **[CONV-07] PURE Annotations**: `/*#__PURE__*/` on framework calls
 - **[CONV-08] Segment Extraction**: 5 segments total
+- **[CONV-14] Hoisted Functions**: `const _hf0 = (p0)=>p0.errors.test` and `const _hf1 = (p0)=>p0.store5.errors.test` hoisted as reusable accessor functions for `_fnSignal`
 
 **Key behavior**: The optimizer tracks store origins through various destructuring patterns:
 - `const [store, math] = [useStore(...), ...]` -- `store` recognized as store

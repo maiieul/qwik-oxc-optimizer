@@ -160,6 +160,7 @@ export const Image_component_CS20HgBlRYI = (props)=>{
 - **[CONV-06] Lazy Imports**: Lazy imports for all 3 component segments and useResource segment
 - **[CONV-07] PURE Annotations**: `/*#__PURE__*/` on all framework calls
 - **[CONV-08] Segment Extraction**: 4 entry point modules: Image component, ModelImg component, useResource handler
+- **[CONV-11] Props Destructuring**: `({ track })` parameter in useResource handler renamed to `_rawProps` (the destructured param object is replaced with a raw props reference)
 
 **Key behavior**: The `Image` component has `src` as a var prop (`{src: \`${props.src}\`}`) because template literals with prop access are considered dynamic. The `Resource` component receives `onRejected` and `onResolved` as inline arrow functions (not extracted) because they are passed as const props. The `useResource$` callback captures `props` and renames its own parameter to `_rawProps` (the track/cleanup parameter object).
 
