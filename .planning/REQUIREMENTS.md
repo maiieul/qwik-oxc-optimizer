@@ -1,4 +1,4 @@
-# Requirements: Qwik Optimizer — OXC API Research & Architecture
+# Requirements: Qwik Optimizer -- OXC API Research & Architecture
 
 **Defined:** 2026-02-10
 **Core Value:** A complete, SWC-independent behavioral specification of every optimizer transformation so the OXC port can be built from spec, not from reverse-engineering SWC code
@@ -31,7 +31,7 @@ Requirements for v2.0 OXC API Research & Architecture milestone. Each maps to ro
 
 - [ ] **ARCH-01**: Complete crate module layout with dependency ordering between modules
 - [ ] **ARCH-02**: Public API design (TransformModulesOptions, TransformOutput, SegmentAnalysis) mapped to OXC internals
-- [ ] **ARCH-03**: Data flow specification from parse → analyze → emit → codegen with type signatures
+- [ ] **ARCH-03**: Data flow specification from parse -> analyze -> emit -> codegen with type signatures
 - [ ] **ARCH-04**: Test strategy for validating output against 162 spec files (harness design, comparison approach)
 - [ ] **ARCH-05**: Cargo.toml specification with exact dependencies, feature flags, and edition/MSRV
 
@@ -53,7 +53,7 @@ Requirements for v2.0 OXC API Research & Architecture milestone. Each maps to ro
 
 | Feature | Reason |
 |---------|--------|
-| Writing actual optimizer code | This is a research milestone — implementation is v3.0 |
+| Writing actual optimizer code | This is a research milestone -- implementation is v3.0 |
 | Modifying the 162 spec files | Specs are locked as the source of truth from v1.0 |
 | Vite/Rollup plugin integration | Plugin layer untouched until after optimizer port |
 | Performance benchmarking | Premature before implementation exists |
@@ -86,8 +86,8 @@ Requirements for v2.0 OXC API Research & Architecture milestone. Each maps to ro
 **Coverage:**
 - v2.0 requirements: 19 total
 - Mapped to phases: 19
-- Unmapped: 0 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-10*
-*Last updated: 2026-02-10 after initial definition*
+*Last updated: 2026-02-10 after roadmap creation*
