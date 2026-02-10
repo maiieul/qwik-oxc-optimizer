@@ -66,10 +66,11 @@ example_1, example_2, example_3, example_4, example_5, example_6, example_7, exa
   2. Every spec file contains all required sections (test config, input code, input AST, output modules, segment metadata, conventions, function calls, diagnostics)
   3. No spec file is missing conventions that are present in its snapshot output
   4. Spec files are structurally consistent (same heading hierarchy, same section order)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Audit all 162 spec files for completeness and structural consistency
+- [ ] 03-01-PLAN.md -- Build audit + fix scripts, normalize all 162 spec files for structural consistency
+- [ ] 03-02-PLAN.md -- Fix semantic gaps (missing AST details, CONV-10, segment metadata), final verification
 
 ## Progress
 
@@ -80,4 +81,4 @@ Phases execute in numeric order: 1 -> 2 -> 3
 |-------|----------------|--------|-----------|
 | 1. OXC AST Utility | 1/1 | ✓ Complete | 2026-02-10 |
 | 2. Generate All Spec Files | 6/6 | ✓ Complete | 2026-02-10 |
-| 3. Verify Completeness | 0/1 | Not started | - |
+| 3. Verify Completeness | 0/2 | Not started | - |
