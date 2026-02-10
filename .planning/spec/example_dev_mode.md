@@ -24,6 +24,13 @@ export const App = component$(() => {
 });
 ```
 
+<details>
+<summary>Input AST (OXC)</summary>
+
+AST omitted for brevity. Parse with: `cat <<'EOF' | ./oxc-ast-util/target/release/oxc-ast-util tsx`
+
+</details>
+
 ## Output
 
 ### Module: test.js
@@ -39,6 +46,13 @@ export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrlDEV(i_ckEPmXZlub0
     displayName: "test.tsx_App_component"
 }));
 ```
+
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
 
 ### Module: test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)
 
@@ -67,6 +81,13 @@ export const App_component_ckEPmXZlub0 = ()=>{
 };
 ```
 
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
+
 #### Segment Metadata
 ```json
 {
@@ -91,6 +112,13 @@ export const App_component_ckEPmXZlub0 = ()=>{
 ```javascript
 export const App_component_Cmp_p_q_e_click_Yl4ybrJWrt4 = ()=>console.log('warn');
 ```
+
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
 
 #### Segment Metadata
 ```json

@@ -24,6 +24,13 @@ export const App = component$(() => {
 });
 ```
 
+<details>
+<summary>Input AST (OXC)</summary>
+
+AST omitted for brevity. Parse with: `cat <<'EOF' | ./oxc-ast-util/target/release/oxc-ast-util tsx`
+
+</details>
+
 ## Output
 
 ### Module: test.js
@@ -57,6 +64,13 @@ export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrlDEV(()=>{
     displayName: "test.tsx_App_component"
 }));
 ```
+
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
 
 ## Conventions Applied
 

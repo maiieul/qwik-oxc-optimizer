@@ -35,6 +35,13 @@ export const { onRequest, logout, getSession, signup } = auth$({
 });
 ```
 
+<details>
+<summary>Input AST (OXC)</summary>
+
+AST omitted for brevity. Parse with: `cat <<'EOF' | ./oxc-ast-util/target/release/oxc-ast-util tsx`
+
+</details>
+
 ## Output
 
 ### Module: test.js
@@ -48,6 +55,13 @@ const i_qVqpX2a0p9Y = ()=>import("./test.tsx_serverAuth_qVqpX2a0p9Y");
 export const { onRequest, logout, getSession, signup } = serverAuthQrl(/*#__PURE__*/ qrl(i_qVqpX2a0p9Y, "serverAuth_qVqpX2a0p9Y"));
 export const { onRequest, logout, getSession, signup } = authQrl(/*#__PURE__*/ qrl(i_GU0aY5QCETY, "auth_GU0aY5QCETY"));
 ```
+
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
 
 ### Module: test.tsx_serverAuth_qVqpX2a0p9Y.js (ENTRY POINT)
 
@@ -64,6 +78,32 @@ export const serverAuth_qVqpX2a0p9Y = {
 };
 ```
 
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
+
+#### Segment Metadata
+```json
+{
+  "origin": "test.tsx",
+  "name": "serverAuth_qVqpX2a0p9Y",
+  "entry": null,
+  "displayName": "test.tsx_serverAuth",
+  "hash": "qVqpX2a0p9Y",
+  "canonicalFilename": "test.tsx_serverAuth_qVqpX2a0p9Y",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "serverAuth$",
+  "captures": false,
+  "loc": [268, 577]
+}
+```
+
 ### Module: test.tsx_auth_GU0aY5QCETY.js (ENTRY POINT)
 
 ```javascript
@@ -77,6 +117,32 @@ export const auth_GU0aY5QCETY = {
         Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET })
     ]
 };
+```
+
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
+
+#### Segment Metadata
+```json
+{
+  "origin": "test.tsx",
+  "name": "auth_GU0aY5QCETY",
+  "entry": null,
+  "displayName": "test.tsx_auth",
+  "hash": "GU0aY5QCETY",
+  "canonicalFilename": "test.tsx_auth_GU0aY5QCETY",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "auth$",
+  "captures": false,
+  "loc": [644, 945]
+}
 ```
 
 ## Conventions Applied

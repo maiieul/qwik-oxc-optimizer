@@ -27,6 +27,13 @@ export const Foo = component$(({foo}) => {
 })
 ```
 
+<details>
+<summary>Input AST (OXC)</summary>
+
+AST omitted for brevity. Parse with: `cat <<'EOF' | ./oxc-ast-util/target/release/oxc-ast-util tsx`
+
+</details>
+
 ## Output
 
 ### Module: test.tsx
@@ -38,6 +45,13 @@ const i_HTDRsvUbLiE = ()=>import("./test.tsx_Foo_component_HTDRsvUbLiE");
 export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"));
 ```
 
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
+
 ### Module: test.tsx_Foo_component_HTDRsvUbLiE.tsx (ENTRY POINT)
 
 ```tsx
@@ -46,6 +60,13 @@ export const Foo_component_HTDRsvUbLiE = (_rawProps)=>{
     return <div/>;
 };
 ```
+
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
 
 #### Segment Metadata
 ```json

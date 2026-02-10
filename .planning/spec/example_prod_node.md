@@ -26,6 +26,13 @@ export const Foo = component$(() => {
 });
 ```
 
+<details>
+<summary>Input AST (OXC)</summary>
+
+AST omitted for brevity. Parse with: `cat <<'EOF' | ./oxc-ast-util/target/release/oxc-ast-util tsx`
+
+</details>
+
 ## Output
 
 ### Module: test.tsx
@@ -36,6 +43,13 @@ import { qrl } from "@qwik.dev/core";
 const i_HTDRsvUbLiE = ()=>import("./test.tsx_Foo_component_HTDRsvUbLiE");
 export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "s_HTDRsvUbLiE"));
 ```
+
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
 
 ### Module: test.tsx_Foo_component_HTDRsvUbLiE.tsx (ENTRY POINT)
 
@@ -52,6 +66,13 @@ export const s_HTDRsvUbLiE = ()=>{
 		</div>;
 };
 ```
+
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
 
 #### Segment Metadata
 ```json
@@ -78,17 +99,38 @@ export const s_HTDRsvUbLiE = ()=>{
 export const s_vKrX4PmH2aM = ()=>console.log('first');
 ```
 
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
+
 ### Module: test.tsx_Foo_component_div_div_q_e_click_1_VSoqbTjzr4w.tsx (ENTRY POINT)
 
 ```tsx
 export const s_VSoqbTjzr4w = ()=>console.log('second');
 ```
 
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
+
 ### Module: test.tsx_Foo_component_div_div_q_e_click_2_n19LdlqL6To.tsx (ENTRY POINT)
 
 ```tsx
 export const s_n19LdlqL6To = ()=>console.log('third');
 ```
+
+<details>
+<summary>Output AST (OXC)</summary>
+
+AST omitted for brevity.
+
+</details>
 
 ## Conventions Applied
 
