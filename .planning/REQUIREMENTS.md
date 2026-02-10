@@ -28,7 +28,7 @@ Requirements for 162 spec files documenting every SWC snapshot test. Each maps t
 ### Conventions Coverage
 
 - [ ] **CONV-01**: Specs identify `qrl()` / `qrlDEV()` / `inlinedQrl()` calls
-- [ ] **CONV-02**: Specs identify `component$` → `componentQrl` and other `foo$` → `fooQrl` conversions
+- [ ] **CONV-02**: Specs identify `component$` -> `componentQrl` and other `foo$` -> `fooQrl` conversions
 - [ ] **CONV-03**: Specs identify JSX transformation calls (`_jsxSorted`, `_jsxSplit`, `_jsxQ`)
 - [ ] **CONV-04**: Specs identify signal/reactivity helpers (`_wrapProp`, `_wrapSignal`, `_fnSignal`, `_getVarProps`, `_getConstProps`)
 - [ ] **CONV-05**: Specs identify capture patterns (`_captures[N]` references, capture arrays in qrl 3rd arg)
@@ -36,7 +36,7 @@ Requirements for 162 spec files documenting every SWC snapshot test. Each maps t
 - [ ] **CONV-07**: Specs identify `#__PURE__` annotations
 - [ ] **CONV-08**: Specs identify segment extraction (code moved to separate output module)
 - [ ] **CONV-09**: Specs identify code stripping patterns (`strip_exports` stubs, `_noopQrl`)
-- [ ] **CONV-10**: Specs identify const replacement (`isServer`/`isBrowser`/`isDev` → literal)
+- [ ] **CONV-10**: Specs identify const replacement (`isServer`/`isBrowser`/`isDev` -> literal)
 - [ ] **CONV-11**: Specs identify props destructuring optimization (`_rawProps`, `_restProps`)
 - [ ] **CONV-12**: Specs identify input binding transformation (`bind:value`, `bind:checked`)
 - [ ] **CONV-13**: Specs identify `sync$` serialization patterns
@@ -69,9 +69,9 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Feature | Reason |
 |---------|--------|
-| Building the OXC optimizer | Future milestone — this milestone is spec-only |
+| Building the OXC optimizer | Future milestone -- this milestone is spec-only |
 | Modifying SWC code | Read-only against existing codebase |
-| Source map content in specs | Too volatile — note existence only |
+| Source map content in specs | Too volatile -- note existence only |
 | Exact hash value documentation | Hashes depend on content; spec documents hashing properties not values |
 | TypeScript plugin layer changes | TS/Vite/Rollup plugins untouched in this milestone |
 | Standalone CLI tool | Claude generates specs directly; small Rust utility only for AST generation |
@@ -80,44 +80,46 @@ Deferred to future release. Tracked but not in current roadmap.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
+**Requirement mapping note:** All SPEC and CONV requirements define the structure and content of every spec file. They are satisfied in Phase 2 as the 162 spec files are generated. QUAL-01 through QUAL-03 are maintained during generation. QUAL-04 (all 162 complete and consistent) is verified in Phase 3.
+
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| SPEC-01 | — | Pending |
-| SPEC-02 | — | Pending |
-| SPEC-03 | — | Pending |
-| SPEC-04 | — | Pending |
-| SPEC-05 | — | Pending |
-| SPEC-06 | — | Pending |
-| SPEC-07 | — | Pending |
-| SPEC-08 | — | Pending |
-| SPEC-09 | — | Pending |
-| SPEC-10 | — | Pending |
-| CONV-01 | — | Pending |
-| CONV-02 | — | Pending |
-| CONV-03 | — | Pending |
-| CONV-04 | — | Pending |
-| CONV-05 | — | Pending |
-| CONV-06 | — | Pending |
-| CONV-07 | — | Pending |
-| CONV-08 | — | Pending |
-| CONV-09 | — | Pending |
-| CONV-10 | — | Pending |
-| CONV-11 | — | Pending |
-| CONV-12 | — | Pending |
-| CONV-13 | — | Pending |
-| CONV-14 | — | Pending |
-| QUAL-01 | — | Pending |
-| QUAL-02 | — | Pending |
-| QUAL-03 | — | Pending |
-| QUAL-04 | — | Pending |
+| INFRA-01 | Phase 1 | Pending |
+| INFRA-02 | Phase 1 | Pending |
+| SPEC-01 | Phase 2 | Pending |
+| SPEC-02 | Phase 2 | Pending |
+| SPEC-03 | Phase 2 | Pending |
+| SPEC-04 | Phase 2 | Pending |
+| SPEC-05 | Phase 2 | Pending |
+| SPEC-06 | Phase 2 | Pending |
+| SPEC-07 | Phase 2 | Pending |
+| SPEC-08 | Phase 2 | Pending |
+| SPEC-09 | Phase 2 | Pending |
+| SPEC-10 | Phase 2 | Pending |
+| CONV-01 | Phase 2 | Pending |
+| CONV-02 | Phase 2 | Pending |
+| CONV-03 | Phase 2 | Pending |
+| CONV-04 | Phase 2 | Pending |
+| CONV-05 | Phase 2 | Pending |
+| CONV-06 | Phase 2 | Pending |
+| CONV-07 | Phase 2 | Pending |
+| CONV-08 | Phase 2 | Pending |
+| CONV-09 | Phase 2 | Pending |
+| CONV-10 | Phase 2 | Pending |
+| CONV-11 | Phase 2 | Pending |
+| CONV-12 | Phase 2 | Pending |
+| CONV-13 | Phase 2 | Pending |
+| CONV-14 | Phase 2 | Pending |
+| QUAL-01 | Phase 2 | Pending |
+| QUAL-02 | Phase 2 | Pending |
+| QUAL-03 | Phase 2 | Pending |
+| QUAL-04 | Phase 3 | Pending |
 
 **Coverage:**
 - v1 requirements: 30 total
-- Mapped to phases: 0
-- Unmapped: 30
+- Mapped to phases: 30
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-10*
-*Last updated: 2026-02-10 after adjustment — removed CLI tool, simplified to direct spec generation*
+*Last updated: 2026-02-10 after roadmap revision -- 10 phases collapsed to 3, all 30 requirements remapped*
