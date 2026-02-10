@@ -1,0 +1,7 @@
+[package]
+name = "oxc-ast-util"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+oxc = { version = "0.113", features = ["serialize", "ast_visit"] }
