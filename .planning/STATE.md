@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 5 of 6 (Deep Research & Proof of Concept)
-Plan: 1 of 3 in current phase -- COMPLETE
-Status: Plan 05-01 complete, ready for Plan 05-02
-Last activity: 2026-02-10 -- Completed 05-01 capture analysis + multi-module output mapping
+Plan: 3 of 3 in current phase -- COMPLETE
+Status: Phase 5 complete, all 3 plans done. Ready for Phase 6.
+Last activity: 2026-02-10 -- Completed 05-03 multi-module output + source maps POCs
 
-Progress: [████████████████████░░░░░░░░░░] 12/16 plans (75% overall, 42% v2.0)
+Progress: [██████████████████████████░░░░] 14/16 plans (87% overall, 71% v2.0)
 
 ## Performance Metrics
 
@@ -24,14 +24,16 @@ Progress: [████████████████████░░░
 - Total execution time: 1.42 hours
 
 **v2.0:**
-- Total plans completed: 3
-- Plans remaining: 4
+- Total plans completed: 5
+- Plans remaining: 2
 
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 04    | 01   | 4min     | 1     | 1     |
 | 04    | 02   | 6min     | 2     | 1     |
 | 05    | 01   | 8min     | 2     | 2     |
+| 05    | 02   | 10min    | 2     | 2     |
+| 05    | 03   | 12min    | 2     | 3     |
 
 ## Accumulated Context
 
@@ -54,6 +56,11 @@ Recent decisions affecting current work:
 - [05-01]: Reference scope identification via traversal-time mapping (HashMap<ReferenceId, ScopeId>)
 - [05-01]: Capture ordering uses encounter-order during AST traversal of the body
 - [05-01]: Props destructuring pre-transform must run BEFORE capture analysis
+- [05-02]: Scope ID retrieval uses arrow.scope_id.get() not ctx.current_scope_id() (OXC calls enter_* before pushing scope)
+- [05-02]: Expression-arg dollar calls (useStyles$(expr)) use parent scope for capture analysis
+- [05-03]: Segment hash exact values vary by Rust toolchain; validate structure (11-char base64url) not exact match
+- [05-03]: Program span must encompass all preserved child spans for source map generation
+- [05-03]: Segments with preserved spans require Program.source_text = original source
 
 ### Pending Todos
 
@@ -66,5 +73,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed 05-01-PLAN.md (capture analysis + multi-module output mapping). Plans 05-02 and 05-03 remain.
+Stopped at: Completed 05-03-PLAN.md. Phase 5 complete (all 3 plans). Ready for Phase 6.
 Resume file: None
