@@ -19,19 +19,19 @@ Progress: [█████████░] 93%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 5min
-- Total execution time: 0.38 hours
+- Total plans completed: 6
+- Average duration: 9min
+- Total execution time: 0.87 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-oxc-ast-utility | 1 | 3min | 3min |
-| 02-generate-all-spec-files | 3 | 20min | 7min |
+| 02-generate-all-spec-files | 5 | 49min | 10min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 5min, 5min, 10min
+- Last 5 plans: 5min, 5min, 10min, 15min, 16min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -53,6 +53,11 @@ Recent decisions affecting current work:
 - Phase 2 Plan 02: Edge cases validated -- special_jsx (no conventions), example_jsx_import_source (React JSX, not Qwik CONV-03)
 - Phase 2 Plan 06: Used Python batch processing for efficient spec generation -- shell approach too slow for 27 files
 - Phase 2 Plan 06: relative_paths special case handled: dual-input transform_modules API with no ==INPUT== in snapshot
+- [Phase 02-04]: Props destructuring specs (CONV-11) document _rawProps, _restProps, _wrapProp patterns across 8 test cases
+- [Phase 02-04]: Dev/prod mode behavioral differences documented: qrlDEV vs qrl, s_HASH naming, inlinedQrlDEV
+- [Phase 02-04]: Code stripping specs document _noopQrl, _noopQrlDEV, and throw Symbol removed patterns (CONV-09)
+- [Phase 02]: Plan 03: Task 1 files (14) already committed by prior plan executions -- verified zero diff, skipped re-commit
+- [Phase 02]: Plan 03: Hoisted fn parameter ordering varies by source expression order, not fixed props-first rule
 
 ### Pending Todos
 
@@ -65,5 +70,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed 02-06-PLAN.md (27 spec files: edge cases, issues, spread/event/loop)
+Stopped at: Completed 02-04-PLAN.md (retroactive summary: 27 spec files for destructuring, captures, dev/prod, code stripping)
 Resume file: None
