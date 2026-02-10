@@ -4,6 +4,16 @@
 
 A project to port the Qwik framework's code optimizer from SWC to OXC. The v1.0 milestone produced a complete behavioral specification of all 162 SWC optimizer snapshot tests — documenting every transformation, convention, function call, and OXC-parsed AST. This spec is the single source of truth for building the OXC optimizer without ever referencing SWC internals.
 
+## Current Milestone: v2.0 OXC API Research & Architecture
+
+**Goal:** Deeply research OXC APIs and Rust libraries to map every spec transformation pattern to concrete implementation approaches, so the port milestone can proceed with zero guesswork.
+
+**Target features:**
+- Comprehensive OXC API mapping for all transformation categories
+- Deep-dive research on complex patterns (capture analysis, cross-module code movement, source maps)
+- Rust library survey for gaps OXC doesn't cover directly
+- Architectural blueprint for the optimizer crate
+
 ## Core Value
 
 A complete, SWC-independent behavioral specification of every optimizer transformation so the OXC port can be built from spec, not from reverse-engineering SWC code.
@@ -23,15 +33,18 @@ A complete, SWC-independent behavioral specification of every optimizer transfor
 
 ### Active
 
-(None — next milestone will define new requirements)
+- [ ] OXC API mapping for every transformation pattern in the 162 specs
+- [ ] Deep research on complex patterns: capture analysis, cross-module code movement, source maps
+- [ ] Rust library survey for capabilities OXC doesn't provide directly
+- [ ] Architectural blueprint for the oxc-optimizer crate
 
 ### Out of Scope
 
 - Byte-for-byte SWC output matching — the OXC optimizer will produce semantically equivalent output, not identical bytes
 - Modifying any existing SWC code — read-only against SWC codebase
 - TypeScript plugin layer changes — the TS/Vite/Rollup plugins are untouched until port milestone
-- Mode matrix table, snapshot tier classification, cross-reference index (v2 enhancements)
-- OXC AstBuilder mapping guide, traversal order annotations (port support docs)
+- Writing actual optimizer code — this milestone is research only, implementation comes in v3.0
+- Modifying the 162 spec files — specs are locked as the source of truth
 
 ## Context
 
@@ -66,4 +79,4 @@ Tech stack: Rust (oxc_parser 0.113), Python (spec generation/audit scripts), Mar
 | oxc ast_visit feature flag | serialize alone does not re-export Utf8ToUtf16; ast_visit feature required | ✓ Good — resolved OXC API quirk |
 
 ---
-*Last updated: 2026-02-10 after v1.0 milestone*
+*Last updated: 2026-02-10 after v2.0 milestone start*
