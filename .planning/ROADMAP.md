@@ -12,7 +12,7 @@ This milestone produces a complete behavioral specification of the Qwik optimize
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: OXC AST Utility** - Build Rust crate that parses code with oxc_parser and emits AST JSON
+- [x] **Phase 1: OXC AST Utility** - Build Rust crate that parses code with oxc_parser and emits AST JSON (completed 2026-02-10)
 - [ ] **Phase 2: Generate All Spec Files** - Generate all 162 spec files by reading snapshots, test configs, and producing ASTs
 - [ ] **Phase 3: Verify Completeness** - Verify all 162 specs are complete, consistent in structure, and all conventions documented
 
@@ -30,7 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans:** 1 plan
 
 Plans:
-- [ ] 01-01-PLAN.md -- Create oxc-ast-util Rust crate and verify against real Qwik code
+- [x] 01-01-PLAN.md -- Create oxc-ast-util Rust crate and verify against real Qwik code
 
 ### Phase 2: Generate All Spec Files
 **Goal**: All 162 spec files exist, each fully documenting one snapshot test's transformations, conventions, and ASTs
@@ -73,6 +73,6 @@ Phases execute in numeric order: 1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. OXC AST Utility | 0/1 | Not started | - |
+| 1. OXC AST Utility | 1/1 | ✓ Complete | 2026-02-10 |
 | 2. Generate All Spec Files | 0/1 | Not started | - |
 | 3. Verify Completeness | 0/1 | Not started | - |
