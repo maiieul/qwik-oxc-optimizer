@@ -23,7 +23,7 @@ Full details: `milestones/v1.0-ROADMAP.md`
 **Milestone Goal:** Deeply research OXC APIs and Rust libraries to map every spec transformation pattern to concrete implementation approaches, producing API mapping guides, working proof-of-concept Rust programs, and an architectural blueprint -- so the port milestone (v3.0) can proceed with zero guesswork.
 
 - [x] **Phase 4: Core API Mapping & Architecture** - Map foundational transformation patterns to OXC APIs and design the optimizer crate architecture -- completed 2026-02-10
-- [ ] **Phase 5: Deep Research & Proof of Concept** - Investigate complex patterns (capture analysis, multi-module output) and validate with working Rust programs
+- [x] **Phase 5: Deep Research & Proof of Concept** - Investigate complex patterns (capture analysis, multi-module output) and validate with working Rust programs -- completed 2026-02-10
 - [ ] **Phase 6: Secondary Patterns & Cross-Reference** - Map remaining transformation patterns (JSX, source maps, signals, entry strategy) and produce complete CONV cross-reference
 
 ## Phase Details
@@ -56,9 +56,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md -- Capture analysis and multi-module output API mapping documents (APIM-03, APIM-06)
-- [ ] 05-02-PLAN.md -- POC workspace setup, $() detection POC, and capture analysis POC (POC-01, POC-02)
-- [ ] 05-03-PLAN.md -- Multi-module output POC and source map generation POC (POC-03, POC-04)
+- [x] 05-01-PLAN.md -- Capture analysis and multi-module output API mapping documents (APIM-03, APIM-06)
+- [x] 05-02-PLAN.md -- POC workspace setup, $() detection POC, and capture analysis POC (POC-01, POC-02)
+- [x] 05-03-PLAN.md -- Multi-module output POC and source map generation POC (POC-03, POC-04)
 
 ### Phase 6: Secondary Patterns & Cross-Reference
 **Goal**: Every remaining transformation pattern is mapped to OXC APIs, and all 14 CONV types have a complete cross-reference to specific API patterns -- achieving full coverage of the 162-spec surface area
@@ -87,9 +87,9 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 2. Generate All Spec Files | v1.0 | 6/6 | Complete | 2026-02-10 |
 | 3. Verify Completeness | v1.0 | 2/2 | Complete | 2026-02-10 |
 | 4. Core API Mapping & Architecture | v2.0 | 2/2 | Complete | 2026-02-10 |
-| 5. Deep Research & Proof of Concept | v2.0 | 0/3 | Not started | - |
+| 5. Deep Research & Proof of Concept | v2.0 | 3/3 | Complete | 2026-02-10 |
 | 6. Secondary Patterns & Cross-Reference | v2.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-10 (Phase 5 planned)*
+*Last updated: 2026-02-10 (Phase 5 complete)*
