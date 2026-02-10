@@ -37,11 +37,11 @@ Full details: `milestones/v1.0-ROADMAP.md`
   2. A document exists showing how to construct `qrl()` / `inlinedQrl()` wrapper expressions using OXC AstBuilder, with code examples mapping to spec output patterns
   3. A document exists showing how to rewrite imports (remove `component$`, add `componentQrl`) using OXC statement mutation APIs, with before/after examples
   4. A complete crate module layout exists with dependency ordering, public API design (TransformModulesOptions, TransformOutput, SegmentAnalysis), data flow specification with type signatures, test harness design, and Cargo.toml specification
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md -- OXC API mapping guide for $-extraction, qrl wrapping, and import rewriting (APIM-01, APIM-02, APIM-05)
+- [ ] 04-02-PLAN.md -- Architecture blueprint: module layout, public API, data flow, test harness, Cargo.toml (ARCH-01 through ARCH-05)
 
 ### Phase 5: Deep Research & Proof of Concept
 **Goal**: The hardest research questions (capture analysis, multi-module output) are answered with working Rust programs that run against real spec files and produce correct results
