@@ -27,10 +27,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Running the utility with a TypeScript code string (tsx extension) produces valid JSON AST output
   3. The utility reports parse errors in the output rather than crashing on malformed code
   4. The JSON output can be embedded in a markdown `<details>` block without corruption
-**Plans**: TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 01-01: Create Rust crate with oxc + serde_json dependencies and implement parse-to-JSON utility
+- [ ] 01-01-PLAN.md -- Create oxc-ast-util Rust crate and verify against real Qwik code
 
 ### Phase 2: Generate All Spec Files
 **Goal**: All 162 spec files exist, each fully documenting one snapshot test's transformations, conventions, and ASTs
