@@ -5,7 +5,7 @@
 - v1.0 Spec Generation -- Phases 1-3 (shipped 2026-02-10)
 - v2.0 OXC API Research & Architecture -- Phases 4-6 (shipped 2026-02-11)
 - v3.0 OXC Optimizer Port -- Phases 7-13 (shipped 2026-02-11)
-- v4.0 Code Quality Refactor -- Phases 14-19 (in progress)
+- v4.0 Code Quality Refactor -- Phases 14-19 (shipped 2026-02-11)
 
 ## Phases
 
@@ -46,7 +46,7 @@ Full details: `milestones/v3.0-ROADMAP.md`
 
 </details>
 
-### v4.0 Code Quality Refactor (In Progress)
+### v4.0 Code Quality Refactor (Complete)
 
 **Milestone Goal:** Refactor the qwik-optimizer-oxc crate for maintainability -- clean style, remove dead code, fix bugs, extract modules, rewrite boilerplate -- while maintaining or improving 157/162 spec compliance.
 
@@ -55,7 +55,7 @@ Full details: `milestones/v3.0-ROADMAP.md`
 - [x] **Phase 16: Targeted Fixes** - Fix minify_expression_string bug and convert KNOWN_GLOBALS to HashSet -- completed 2026-02-11
 - [x] **Phase 17: Extract JSX Transform** - Move JSX transformation code from transform.rs into its own module -- completed 2026-02-11
 - [x] **Phase 18: const_replace VisitMut Rewrite** - Replace manual AST walking with OXC VisitMut pattern -- completed 2026-02-11
-- [ ] **Phase 19: Spec Compliance Verification** - Confirm all changes preserve or improve 157/162 spec match
+- [x] **Phase 19: Spec Compliance Verification** - Confirm all changes preserve or improve 157/162 spec match -- completed 2026-02-11
 
 ## Phase Details
 
@@ -140,7 +140,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 19-01-PLAN.md -- Full spec compliance run and regression comparison
+- [x] 19-01-PLAN.md -- Full spec compliance run and regression comparison
 
 ## Progress
 
@@ -167,8 +167,8 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 | 16. Targeted Fixes | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 17. Extract JSX Transform | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 18. const_replace VisitMut Rewrite | v4.0 | 1/1 | Complete | 2026-02-11 |
-| 19. Spec Compliance Verification | v4.0 | 0/1 | Not started | - |
+| 19. Spec Compliance Verification | v4.0 | 1/1 | Complete | 2026-02-11 |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 18 complete)*
+*Last updated: 2026-02-11 (Phase 19 complete — v4.0 milestone shipped)*
