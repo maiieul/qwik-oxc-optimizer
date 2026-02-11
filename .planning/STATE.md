@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 13 of 13 (Source Maps & Full Validation)
-Plan: 1 of 4 in current phase -- 13-01 complete
-Status: Source map wiring complete. emit_module() generates v3 source maps via OXC codegen. Main and segment modules receive maps when source_maps=true. 150 unit tests + 5 spec tests + 162/162 spec transforms pass.
-Last activity: 2026-02-11 -- Completed 13-01: Source map wiring
+Plan: 2 of 4 in current phase -- 13-02 complete
+Status: Diagnostic categorization of all 83 module count mismatches. Import alias detection and @builder.io/qwik legacy import recognition added. Module count match: 79/162. 158 unit tests + 6 spec tests pass.
+Last activity: 2026-02-11 -- Completed 13-02: Diagnostic & import alias/core_module fixes
 
-Progress: [################░░░░] 60% (30/31 total plans across all milestones; v3.0 13/14)
+Progress: [#################░░░] 65% (31/31+3 total plans across all milestones; v3.0 14/14+3)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [################░░░░] 60% (30/31 total plans across all miles
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 13
+- Total plans completed: 14
 - Average duration: 12min
-- Total execution time: ~168min
+- Total execution time: ~176min
 
 ## Accumulated Context
 
@@ -89,6 +89,10 @@ Recent decisions affecting current work:
 - Segment source maps from re-parsed string-constructed code (identity-like mappings, not original-position mappings)
 - emit_segment_with_map() replaces normalize_code() for segment codegen with optional source maps
 - emit_module() source_filename parameter sets source map "file" field via CodegenOptions source_map_path
+- alias_map HashMap<String,String> in CollectResult for import alias tracking (local_name -> imported_name)
+- Broad Qwik module recognition: @qwik.dev/*, @builder.io/qwik-*, custom core_module (excluding sub-paths)
+- Collector accepts optional core_module parameter for custom framework package recognition
+- 83 remaining module count mismatches dominated by JSX event handler extraction (onClick$/onInput$ in JSX attributes)
 
 ### Pending Todos
 
@@ -101,5 +105,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 13-01-PLAN.md. Source map wiring complete. Ready for 13-02 (source map validation).
+Stopped at: Completed 13-02-PLAN.md. Diagnostic categorization + alias/core_module fixes. Ready for 13-03 (JSX event handler extraction or next validation step).
 Resume file: None
