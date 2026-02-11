@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 13 of 13 (Source Maps & Full Validation)
-Plan: 2 of 4 in current phase -- 13-02 complete
-Status: Diagnostic categorization of all 83 module count mismatches. Import alias detection and @builder.io/qwik legacy import recognition added. Module count match: 79/162. 158 unit tests + 6 spec tests pass.
-Last activity: 2026-02-11 -- Completed 13-02: Diagnostic & import alias/core_module fixes
+Plan: 3 of 4 in current phase -- 13-03 complete
+Status: strip_exports implemented, Inline/Hoist module fix, JSX event handler segment extraction. Module count match: 148/162 (91.4%). 158 unit tests + 6 spec tests pass.
+Last activity: 2026-02-11 -- Completed 13-03: strip_exports & JSX event handler extraction
 
-Progress: [#################░░░] 65% (31/31+3 total plans across all milestones; v3.0 14/14+3)
+Progress: [##################░░] 70% (31/31+4 total plans across all milestones; v3.0 15/14+4)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [#################░░░] 65% (31/31+3 total plans across all miles
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 14
+- Total plans completed: 15
 - Average duration: 12min
-- Total execution time: ~176min
+- Total execution time: ~201min
 
 ## Accumulated Context
 
@@ -93,6 +93,10 @@ Recent decisions affecting current work:
 - Broad Qwik module recognition: @qwik.dev/*, @builder.io/qwik-*, custom core_module (excluding sub-paths)
 - Collector accepts optional core_module parameter for custom framework package recognition
 - 83 remaining module count mismatches dominated by JSX event handler extraction (onClick$/onInput$ in JSX attributes)
+- In-place AST body mutation for filter_exports (new nodes via AstBuilder lack scope_id causing traverse panics)
+- Skip segment TransformModule creation for Inline/Hoist strategies (SWC produces only main module)
+- JSX event handler segment extraction independent of transpile_jsx flag
+- Lambda-only extraction for $-suffixed JSX attributes (skip identifiers/calls to avoid double-counting)
 
 ### Pending Todos
 
@@ -105,5 +109,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 13-02-PLAN.md. Diagnostic categorization + alias/core_module fixes. Ready for 13-03 (JSX event handler extraction or next validation step).
+Stopped at: Completed 13-03-PLAN.md. strip_exports implemented, Inline/Hoist fix, JSX event handler extraction. 148/162 module count match. Ready for 13-04 (final validation).
 Resume file: None
