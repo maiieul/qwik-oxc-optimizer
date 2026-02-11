@@ -68,11 +68,11 @@ Full details: `milestones/v3.0-ROADMAP.md`
   2. Functions with deeply nested if/else chains use early returns to keep the happy path at the top indentation level
   3. Match arms with unreachable dead branches are cleaned up, formatting is consistent across all 16 source files
   4. All 165 tests still pass after style changes (zero regressions)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 14-01: Strip comments and add early returns across all source files
-- [ ] 14-02: Formatting cleanup and match arm normalization
+- [ ] 14-01-PLAN.md -- Strip unnecessary comments and add early returns across 8 high-comment source files
+- [ ] 14-02-PLAN.md -- Normalize formatting and clean match arms across all 16 source files
 
 ### Phase 15: Dead Code Removal
 **Goal**: No unused code, no duplicate definitions -- every function and constant earns its place
