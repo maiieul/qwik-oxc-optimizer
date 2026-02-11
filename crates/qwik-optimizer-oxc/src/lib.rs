@@ -2006,4 +2006,114 @@ export const App = component$(({fromProps}) => {
             main_code
         );
     }
+
+    #[test]
+    fn test_jsx_bind_value() {
+        // bind:value={signal} -> "value": signal + "q-e:input": inlinedQrl(_val, "_val", [signal])
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const value = useSignal(0);
+    return <input bind:value={value} />;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // Should have value prop
+        assert!(
+            main_code.contains("value"),
+            "Expected value prop: {}",
+            main_code
+        );
+        // Should have q-e:input with _val handler
+        assert!(
+            main_code.contains("_val"),
+            "Expected _val handler: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("inlinedQrl"),
+            "Expected inlinedQrl call: {}",
+            main_code
+        );
+        // Should NOT have bind:value in output
+        assert!(
+            !main_code.contains("bind:value"),
+            "Should NOT have bind:value in output: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_bind_checked() {
+        // bind:checked={signal} -> "checked": signal + "q-e:input": inlinedQrl(_chk, "_chk", [signal])
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const checked = useSignal(false);
+    return <input bind:checked={checked} />;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("_chk"),
+            "Expected _chk handler: {}",
+            main_code
+        );
+        assert!(
+            !main_code.contains("bind:checked"),
+            "Should NOT have bind:checked in output: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_bind_other_passthrough() {
+        // bind:stuff={signal} -> "bind:stuff": signal (passed through as-is)
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const stuff = useSignal();
+    return <input bind:stuff={stuff} />;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // bind:stuff should pass through in const props
+        assert!(
+            main_code.contains("bind:stuff"),
+            "Expected bind:stuff to pass through: {}",
+            main_code
+        );
+        // Should NOT have _val or _chk
+        assert!(
+            !main_code.contains("_val"),
+            "Should NOT have _val for bind:stuff: {}",
+            main_code
+        );
+        assert!(
+            !main_code.contains("_chk"),
+            "Should NOT have _chk for bind:stuff: {}",
+            main_code
+        );
+    }
 }

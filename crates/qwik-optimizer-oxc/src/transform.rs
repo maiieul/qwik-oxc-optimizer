@@ -1515,6 +1515,60 @@ fn escape_string_literal(s: &str) -> String {
     s.replace('\\', "\\\\").replace('"', "\\\"")
 }
 
+/// Extract the identifier name from an expression (if it's a simple identifier).
+fn extract_identifier_name(expr: &Expression<'_>) -> String {
+    match expr {
+        Expression::Identifier(ident) => ident.name.as_str().to_string(),
+        _ => {
+            // Fallback: serialize the expression
+            let mut codegen = oxc::codegen::Codegen::new();
+            codegen.print_expression(expr);
+            codegen.into_source_text()
+        }
+    }
+}
+
+/// Build an inlinedQrl event handler for bind: directives.
+///
+/// Produces: `inlinedQrl(_handler, "_handler", [signal])`
+/// where _handler is _val or _chk, and signal is the bound signal identifier.
+fn build_bind_event_handler<'a>(
+    handler_name: &str,
+    signal_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    let callee = ctx.ast.expression_identifier(SPAN, "inlinedQrl");
+
+    let handler_atom = ctx.ast.atom(handler_name);
+    let handler_str_atom = ctx.ast.atom(handler_name);
+    let signal_atom = ctx.ast.atom(signal_name);
+
+    let mut arguments = ctx.ast.vec_with_capacity(3);
+
+    // Arg 1: _val or _chk identifier
+    arguments.push(Argument::from(ctx.ast.expression_identifier(SPAN, handler_atom)));
+
+    // Arg 2: "_val" or "_chk" string literal
+    arguments.push(Argument::from(
+        ctx.ast.expression_string_literal(SPAN, handler_str_atom, None),
+    ));
+
+    // Arg 3: [signal] captures array
+    let mut elements = ctx.ast.vec_with_capacity(1);
+    elements.push(ArrayExpressionElement::from(
+        ctx.ast.expression_identifier(SPAN, signal_atom),
+    ));
+    arguments.push(Argument::from(ctx.ast.expression_array(SPAN, elements)));
+
+    ctx.ast.expression_call(
+        SPAN,
+        callee,
+        None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+        arguments,
+        false,
+    )
+}
+
 /// Build the tag expression for a JSX element name.
 fn build_tag_expression<'a>(
     name: &JSXElementName<'a>,
@@ -1721,6 +1775,56 @@ fn transform_jsx_element_inner<'a>(
                     };
                     const_props.push((attr_name, value));
                     continue;
+                }
+
+                // Check for bind: directive (CONV-12)
+                if let Some(bind_prop) = attr_name.strip_prefix("bind:") {
+                    let signal_value = if let Some(val) = attr.value {
+                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts)
+                    } else {
+                        ctx.ast.expression_boolean_literal(SPAN, true)
+                    };
+
+                    match bind_prop {
+                        "value" => {
+                            // bind:value={signal} ->
+                            //   "value": signal (const prop)
+                            //   "q-e:input": inlinedQrl(_val, "_val", [signal]) (const prop)
+                            tracker.needs_val = true;
+                            tracker.needs_inlined_qrl = true;
+
+                            // Build inlinedQrl(_val, "_val", [signal])
+                            // We need to clone the signal expression for the captures array.
+                            // Since we can't clone AST nodes, we serialize and re-identify.
+                            let signal_name = extract_identifier_name(&signal_value);
+                            let event_handler = build_bind_event_handler(
+                                "_val", &signal_name, ctx,
+                            );
+                            const_props.push(("value".to_string(), signal_value));
+                            const_props.push(("q-e:input".to_string(), event_handler));
+                            continue;
+                        }
+                        "checked" => {
+                            // bind:checked={signal} ->
+                            //   "checked": signal (const prop)
+                            //   "q-e:input": inlinedQrl(_chk, "_chk", [signal]) (const prop)
+                            tracker.needs_chk = true;
+                            tracker.needs_inlined_qrl = true;
+
+                            let signal_name = extract_identifier_name(&signal_value);
+                            let event_handler = build_bind_event_handler(
+                                "_chk", &signal_name, ctx,
+                            );
+                            const_props.push(("checked".to_string(), signal_value));
+                            const_props.push(("q-e:input".to_string(), event_handler));
+                            continue;
+                        }
+                        _ => {
+                            // bind:other -> pass through as-is in const props
+                            const_props.push((attr_name, signal_value));
+                            continue;
+                        }
+                    }
                 }
 
                 // Regular attribute
