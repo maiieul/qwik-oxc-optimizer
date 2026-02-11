@@ -110,11 +110,10 @@ Plans:
   1. A new `jsx_transform.rs` module exists containing all JSX-specific transformation code (~1,350 lines extracted from transform.rs)
   2. transform.rs delegates to jsx_transform.rs for JSX node handling -- no JSX logic duplicated between the two
   3. All 165 tests still pass after extraction (pure refactor, zero behavior change)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 17-01: Extract JSX transformation code into jsx_transform.rs
-- [ ] 17-02: Wire up delegation and verify tests pass
+- [ ] 17-01-PLAN.md -- Extract JSX transformation free functions into jsx_transform.rs and wire up delegation
 
 ### Phase 18: const_replace VisitMut Rewrite
 **Goal**: const_replace.rs uses OXC's VisitMut pattern instead of manual recursive AST walking
@@ -167,7 +166,7 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 | 14. Style Cleanup | v4.0 | 2/2 | Complete | 2026-02-11 |
 | 15. Dead Code Removal | v4.0 | 2/2 | Complete | 2026-02-11 |
 | 16. Targeted Fixes | v4.0 | 1/1 | Complete | 2026-02-11 |
-| 17. Extract JSX Transform | v4.0 | 0/2 | Not started | - |
+| 17. Extract JSX Transform | v4.0 | 0/1 | Not started | - |
 | 18. const_replace VisitMut Rewrite | v4.0 | 0/2 | Not started | - |
 | 19. Spec Compliance Verification | v4.0 | 0/1 | Not started | - |
 
