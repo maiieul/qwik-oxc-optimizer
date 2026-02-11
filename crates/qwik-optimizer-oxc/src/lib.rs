@@ -2413,4 +2413,184 @@ export const Parent = component$(() => {
             "Without stripping, serverStuff$ should produce normal segments"
         );
     }
+
+    // -----------------------------------------------------------------------
+    // sync$ Serialization Integration Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_sync_dollar_basic() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { sync$, component$ } from '@qwik.dev/core';
+export const App = component$(() => {
+    return <input onClick$={sync$((event) => event.preventDefault())} />;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_ts: true,
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find the component segment module (it contains the JSX output)
+        let component_seg = result
+            .modules
+            .iter()
+            .find(|m| m.is_entry && m.code.contains("_qrlSync"))
+            .expect("Expected component segment with _qrlSync");
+
+        // Should contain _qrlSync call with the function and stringified version
+        assert!(
+            component_seg.code.contains("_qrlSync"),
+            "Expected _qrlSync in component segment: {}",
+            component_seg.code
+        );
+
+        // The stringified version should be minified (no extra whitespace)
+        // Looking for the pattern: _qrlSync(fn, "stringified")
+        assert!(
+            component_seg.code.contains("event.preventDefault()"),
+            "Expected function body in _qrlSync call: {}",
+            component_seg.code
+        );
+
+        // _qrlSync import should be present in segment module
+        assert!(
+            component_seg.code.contains("_qrlSync"),
+            "Expected _qrlSync import in segment: {}",
+            component_seg.code
+        );
+    }
+
+    #[test]
+    fn test_sync_dollar_no_segment_produced() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { sync$, component$ } from '@qwik.dev/core';
+export const App = component$(() => {
+    return <input onClick$={sync$((event) => event.preventDefault())} />;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_ts: true,
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // sync$ should NOT produce a separate segment module
+        let sync_segments: Vec<_> = result
+            .modules
+            .iter()
+            .filter(|m| {
+                m.segment
+                    .as_ref()
+                    .map(|s| s.ctx_name == "sync$")
+                    .unwrap_or(false)
+            })
+            .collect();
+        assert!(
+            sync_segments.is_empty(),
+            "sync$ should NOT produce segment modules, found {}",
+            sync_segments.len()
+        );
+
+        // The main module should NOT have any lazy import for sync$
+        let main_code = &result.modules[0].code;
+        assert!(
+            !main_code.contains("_qrlSync"),
+            "Main module should not contain _qrlSync (it belongs in segment): {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_sync_dollar_with_function_expression() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { sync$, component$ } from '@qwik.dev/core';
+export const App = component$(() => {
+    return <input onClick$={sync$(function(event, target) {
+        // comment should be removed
+        event.preventDefault();
+    })} />;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_ts: true,
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find the component segment module
+        let component_seg = result
+            .modules
+            .iter()
+            .find(|m| m.is_entry && m.code.contains("_qrlSync"))
+            .expect("Expected component segment with _qrlSync");
+
+        // Should contain _qrlSync with function expression
+        assert!(
+            component_seg.code.contains("_qrlSync(function"),
+            "Expected _qrlSync with function expression: {}",
+            component_seg.code
+        );
+
+        // The stringified version should have comments removed
+        // The minified string should NOT contain the comment
+        // Check for the stringified argument which should be compact
+        assert!(
+            component_seg.code.contains("event.preventDefault()"),
+            "Expected function body preserved: {}",
+            component_seg.code
+        );
+    }
+
+    #[test]
+    fn test_sync_dollar_stringified_is_minified() {
+        // Test that the stringified function body is properly minified
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { sync$ } from '@qwik.dev/core';
+export const handler = sync$((event, target) => {
+    event.preventDefault();
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_ts: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+
+        // Should contain _qrlSync in the main module (sync$ used at top level, not inside component$)
+        assert!(
+            main_code.contains("_qrlSync"),
+            "Expected _qrlSync in output: {}",
+            main_code
+        );
+
+        // Should have _qrlSync import
+        assert!(
+            main_code.contains("import { _qrlSync }"),
+            "Expected _qrlSync import: {}",
+            main_code
+        );
+
+        // Should NOT have any segment-related imports (no qrl, no lazy import)
+        // since sync$ doesn't produce segments
+        assert!(
+            !main_code.contains("import { qrl }"),
+            "sync$ should NOT need qrl import: {}",
+            main_code
+        );
+    }
 }

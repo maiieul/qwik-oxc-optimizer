@@ -408,6 +408,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             if let DollarCallKind::Named(ref name) = kind {
                 if name == "sync$" {
                     self.pending_sync_calls.insert(call.span.start);
+                    // Push a capture stack frame so that identifiers inside the sync$ body
+                    // don't leak into the parent's capture tracking. This frame is discarded
+                    // in exit_expression when the sync$ call is processed.
+                    self.capture_stack.push((Vec::new(), HashSet::new()));
                     return;
                 }
             }
@@ -544,6 +548,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         if let Expression::CallExpression(call) = expr {
             // Handle sync$() calls -- replace with _qrlSync(fn, "stringified_fn")
             if self.pending_sync_calls.remove(&call.span.start) {
+                // Pop the capture stack frame we pushed for sync$ to prevent
+                // identifier leakage into parent scope.
+                self.capture_stack.pop();
+
                 let body_expr = if !call.arguments.is_empty() {
                     let placeholder =
                         Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
@@ -563,7 +571,18 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     let replacement = import_rewrite::build_qrl_sync_call(
                         fn_expr, &minified, ctx,
                     );
-                    self.import_tracker.needs_qrl_sync = true;
+
+                    // Only add _qrlSync import to the main module if the call is at
+                    // the top level (not inside a $-body that will be extracted).
+                    // For segment strategy, extracted bodies handle their own imports
+                    // via code_move.rs body content scanning.
+                    let is_segment_strategy = !entry_strategy::should_inline(&self.options.entry_strategy)
+                        && !matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
+                    let inside_dollar_body = !self.capture_stack.is_empty();
+                    if !(is_segment_strategy && inside_dollar_body) {
+                        self.import_tracker.needs_qrl_sync = true;
+                    }
+
                     *expr = replacement;
                 }
                 return;
