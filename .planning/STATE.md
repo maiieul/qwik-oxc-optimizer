@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 ## Current Position
 
-Phase: 7 of 13 (Crate Foundation + Test Harness)
-Plan: 1 of 2 in current phase
-Status: Executing
-Last activity: 2026-02-11 -- Completed 07-01: crate skeleton with 16 modules, public types, stub transform_modules()
+Phase: 7 of 13 (Crate Foundation + Test Harness) -- COMPLETE
+Plan: 2 of 2 in current phase -- COMPLETE
+Status: Phase 7 complete. Ready for Phase 8.
+Last activity: 2026-02-11 -- Completed 07-02: test harness parsing all 162 spec files
 
-Progress: [######░░░░░░░░░░░░░░] 33% (18/31 total plans across all milestones; v3.0 1/14)
+Progress: [#######░░░░░░░░░░░░░] 35% (19/31 total plans across all milestones; v3.0 2/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [######░░░░░░░░░░░░░░] 33% (18/31 total pl
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 1
-- Average duration: 5min
-- Total execution time: 5min
+- Total plans completed: 2
+- Average duration: 5.5min
+- Total execution time: 11min
 
 ## Accumulated Context
 
@@ -46,6 +46,8 @@ Recent decisions affecting current work:
 - CONV-10 must run before CONV-09 (const replacement before stripping)
 - oxc 0.113: parser/traverse always included (not features); codegen/semantic/serialize are features
 - oxc_traverse 0.113 TraverseCtx requires State generic parameter
+- Case-insensitive config key matching for spec parser (Transpile TS vs Transpile Ts)
+- EmitMode::Test mapped to EmitMode::Lib (specs mark Test as default)
 
 ### Pending Todos
 
@@ -58,5 +60,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 07-01-PLAN.md (crate skeleton). Ready for 07-02 (test harness).
+Stopped at: Completed 07-02-PLAN.md (test harness). Phase 7 complete. Ready for Phase 8 (Tier 1: Basic Extraction).
 Resume file: None
