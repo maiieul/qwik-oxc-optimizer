@@ -38,9 +38,6 @@ pub(crate) fn filter_exports<'a>(
 
     for stmt in program.body.iter_mut() {
         match stmt {
-            // export const NAME = ...
-            // export let NAME = ...
-            // export var NAME = ...
             Statement::ExportNamedDeclaration(export_decl) => {
                 if let Some(ref mut decl) = export_decl.declaration {
                     match decl {
@@ -69,7 +66,6 @@ pub(crate) fn filter_exports<'a>(
                     }
                 }
             }
-            // export default ...
             Statement::ExportDefaultDeclaration(export_default) => {
                 if strip_exports.iter().any(|s| s == "default") {
                     replace_default_export_body(
@@ -96,7 +92,6 @@ fn replace_init_body<'a>(
     if let Some(expr) = init {
         match expr {
             Expression::ArrowFunctionExpression(arrow) => {
-                // If the arrow was an expression body, convert to block body
                 arrow.expression = false;
                 let throw_body = build_throw_body(ast);
                 arrow.body = ast.alloc(throw_body);
@@ -106,9 +101,6 @@ fn replace_init_body<'a>(
                 func.body = Some(ast.alloc(throw_body));
             }
             _ => {
-                // For non-function initializers (e.g., `export const X = value`),
-                // we can't easily replace with a throw. The spec only shows
-                // function-valued exports being stripped, so this is a no-op.
             }
         }
     }
@@ -134,8 +126,6 @@ fn replace_default_export_body<'a>(
             func.body = Some(ast.alloc(throw_body));
         }
         _ => {
-            // For expression default exports, we cannot easily replace the body
-            // without creating new AST nodes that lack scope IDs.
         }
     }
 }

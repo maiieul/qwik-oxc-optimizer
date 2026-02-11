@@ -56,7 +56,6 @@ pub(crate) fn analyze_props_destructuring(
 ) -> PropsDestructuringInfo {
     let mut info = PropsDestructuringInfo::default();
 
-    // No parameters -> no transformation needed
     if params.items.is_empty() {
         return info;
     }
@@ -67,7 +66,6 @@ pub(crate) fn analyze_props_destructuring(
         BindingPattern::ObjectPattern(obj_pat) => {
             info.needs_transform = true;
 
-            // Extract properties
             for prop in &obj_pat.properties {
                 let key_name = extract_property_key_name(&prop.key);
                 let local_name = extract_binding_pattern_name(&prop.value);
@@ -77,7 +75,6 @@ pub(crate) fn analyze_props_destructuring(
                 }
             }
 
-            // Extract rest element
             if let Some(rest) = &obj_pat.rest {
                 if let Some(rest_name) = extract_binding_pattern_name(&rest.argument) {
                     info.rest_name = Some(rest_name);
@@ -85,10 +82,8 @@ pub(crate) fn analyze_props_destructuring(
             }
         }
         BindingPattern::BindingIdentifier(_) => {
-            // Plain identifier like (props) => ... -- no transformation needed
         }
         _ => {
-            // Array pattern or other unusual patterns -- skip
         }
     }
 
@@ -134,10 +129,8 @@ pub(crate) fn rewrite_props_references<'a>(
     match expr {
         Expression::Identifier(ident) => {
             let name = ident.name.as_str();
-            // Check if this identifier matches a local alias
             for (local_alias, original_key) in prop_map {
                 if name == local_alias {
-                    // Replace with _rawProps.originalKey
                     let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
                     let prop_name = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
                     let member = ctx.ast.static_member_expression(SPAN, obj, prop_name, false);
@@ -147,7 +140,6 @@ pub(crate) fn rewrite_props_references<'a>(
             }
         }
 
-        // Recursively walk compound expressions
         Expression::ArrayExpression(arr) => {
             for elem in arr.elements.iter_mut() {
                 match elem {
@@ -156,7 +148,6 @@ pub(crate) fn rewrite_props_references<'a>(
                     }
                     ArrayExpressionElement::Elision(_) => {}
                     _ => {
-                        // ArrayExpressionElement inherits Expression variants
                         if let Some(e) = array_element_as_expression_mut(elem) {
                             rewrite_props_references(e, prop_map, raw_props_name, ctx);
                         }
@@ -204,8 +195,6 @@ pub(crate) fn rewrite_props_references<'a>(
         }
 
         Expression::UpdateExpression(_update) => {
-            // UpdateExpression.argument is SimpleAssignmentTarget, not Expression.
-            // Identifiers in update expressions (e.g., i++) are not prop references.
         }
 
         Expression::AssignmentExpression(assign) => {
@@ -232,18 +221,14 @@ pub(crate) fn rewrite_props_references<'a>(
         }
 
         Expression::ArrowFunctionExpression(arrow) => {
-            // Recurse into arrow body, but be careful not to shadow destructured names
-            // Check if any parameter shadows a prop alias
             let shadowed: Vec<String> = arrow.params.items.iter()
                 .filter_map(|p| extract_binding_pattern_name(&p.pattern))
                 .filter(|name| prop_map.iter().any(|(local, _)| local == name))
                 .collect();
 
             if shadowed.is_empty() {
-                // No shadowing -- safe to recurse into body
                 rewrite_body_statements(&mut arrow.body.statements, prop_map, raw_props_name, ctx);
             } else {
-                // Filter out shadowed props from the map for this scope
                 let filtered: Vec<(String, String)> = prop_map.iter()
                     .filter(|(local, _)| !shadowed.contains(local))
                     .cloned()
@@ -293,7 +278,6 @@ pub(crate) fn rewrite_props_references<'a>(
             rewrite_props_references(&mut mem.expression, prop_map, raw_props_name, ctx);
         }
 
-        // Literals, this, etc. -- no identifiers to replace
         _ => {}
     }
 }
@@ -386,7 +370,6 @@ fn rewrite_call_arguments<'a>(
     for i in 0..arguments.len() {
         match &arguments[i] {
             Argument::SpreadElement(spread) => {
-                // For spread, we need to take ownership and replace
                 let placeholder = Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
                 let old = std::mem::replace(&mut arguments[i], placeholder);
                 if let Argument::SpreadElement(mut spread) = old {
@@ -395,10 +378,8 @@ fn rewrite_call_arguments<'a>(
                 }
             }
             Argument::Identifier(ident) => {
-                // Check if this identifier matches a destructured prop
                 let name = ident.name.as_str().to_string();
                 if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
-                    // Replace with _rawProps.originalKey
                     let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
                     let prop_name_ident = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
                     let member = ctx.ast.static_member_expression(SPAN, obj, prop_name_ident, false);
@@ -407,11 +388,9 @@ fn rewrite_call_arguments<'a>(
                 }
             }
             _ => {
-                // For compound expressions that are arguments, take ownership,
                 // rewrite, and put back.
                 let placeholder = Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
                 let old = std::mem::replace(&mut arguments[i], placeholder);
-                // Convert Argument to Expression, rewrite, convert back
                 let mut expr = crate::transform::argument_to_expression(old, ctx);
                 rewrite_props_references(&mut expr, prop_map, raw_props_name, ctx);
                 arguments[i] = Argument::from(expr);
@@ -425,22 +404,13 @@ fn rewrite_call_arguments<'a>(
 fn array_element_as_expression_mut<'b, 'a>(
     elem: &'b mut ArrayExpressionElement<'a>,
 ) -> Option<&'b mut Expression<'a>> {
-    // ArrayExpressionElement inherits Expression variants.
-    // We need to use unsafe transmute or a pattern-match approach.
-    // Since ArrayExpressionElement has the same Expression variants,
-    // we match common ones explicitly.
     match elem {
         ArrayExpressionElement::Identifier(ident) => {
-            // This is an IdentifierReference, which maps to Expression::Identifier
-            // We can't easily convert between these without owning the value.
-            // Instead, we'll use a different approach in the caller.
             let _ = ident;
             None
         }
         ArrayExpressionElement::SpreadElement(_) => None,
         ArrayExpressionElement::Elision(_) => None,
-        // For the remaining variants, we punt -- the main identifier case
-        // is handled separately in the array rewrite path.
         _ => None,
     }
 }
@@ -449,7 +419,6 @@ fn array_element_as_expression_mut<'b, 'a>(
 fn argument_as_expression_mut<'b, 'a>(
     _arg: &'b mut Argument<'a>,
 ) -> Option<&'b mut Expression<'a>> {
-    // Argument inherits Expression variants. Similar challenge as above.
     None
 }
 
@@ -532,7 +501,6 @@ pub(crate) fn build_rest_props_call<'a>(
     let raw_props_arg = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
 
     if excluded_keys.is_empty() {
-        // _restProps(_rawProps)
         let mut args = ctx.ast.vec_with_capacity(1);
         args.push(Argument::from(raw_props_arg));
         ctx.ast.expression_call(
@@ -543,7 +511,6 @@ pub(crate) fn build_rest_props_call<'a>(
             false,
         )
     } else {
-        // _restProps(_rawProps, ["key1", "key2"])
         let mut array_elements = ctx.ast.vec_with_capacity(excluded_keys.len());
         for key in excluded_keys {
             let key_atom = ctx.ast.atom(key.as_str());
@@ -610,8 +577,6 @@ mod tests {
         assert!(result.errors.is_empty(), "Parse errors: {:?}", result.errors);
         let program = result.program;
 
-        // Find the first ArrowFunctionExpression in the AST
-        // Walk statements to find a call expression with an arrow arg
         for stmt in &program.body {
             if let Some(info) = find_arrow_params_in_stmt(stmt) {
                 return info;
@@ -642,7 +607,6 @@ mod tests {
     fn find_arrow_params_in_expr(expr: &Expression<'_>) -> Option<PropsDestructuringInfo> {
         match expr {
             Expression::CallExpression(call) => {
-                // Check each argument for an arrow function
                 for arg in &call.arguments {
                     if let Argument::ArrowFunctionExpression(arrow) = arg {
                         return Some(analyze_props_destructuring(&arrow.params));

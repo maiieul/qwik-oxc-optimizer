@@ -36,7 +36,6 @@ pub(crate) fn build_segment_code_with_hoisted(
 ) -> String {
     let mut parts: Vec<String> = Vec::new();
 
-    // 1. Add _captures import if segment has captures
     if segment.captures && !segment.capture_names.is_empty() {
         parts.push(format!(
             "import {{ _captures }} from \"{}\";",
@@ -44,7 +43,6 @@ pub(crate) fn build_segment_code_with_hoisted(
         ));
     }
 
-    // 2. Add qrl import if segment has child $()-calls
     if segment.needs_qrl_import {
         parts.push(format!(
             "import {{ qrl }} from \"{}\";",
@@ -52,7 +50,6 @@ pub(crate) fn build_segment_code_with_hoisted(
         ));
     }
 
-    // 3. Add lazy import declarations for child segments
     for (hash, import_path) in &segment.child_lazy_imports {
         parts.push(format!(
             "const i_{} = () => import(\"{}\");",
@@ -60,9 +57,6 @@ pub(crate) fn build_segment_code_with_hoisted(
         ));
     }
 
-    // 3b. Detect and add segment-specific imports based on body code content.
-    // For segment strategy, the body code may reference framework helpers
-    // (_jsxSorted, _fnSignal, _wrapProp, _Fragment) that need imports.
     if body_code.contains("_jsxSorted") {
         parts.push(format!(
             "import {{ _jsxSorted }} from \"{}\";",
@@ -112,17 +106,13 @@ pub(crate) fn build_segment_code_with_hoisted(
         ));
     }
 
-    // 3c. Add hoisted function declarations for _fnSignal
     for (fn_code, str_code) in hoisted_stmts {
         parts.push(fn_code.clone());
         parts.push(str_code.clone());
     }
 
-    // 4. Build the export declaration with capture restoration
     let segment_name = &segment.name;
     if segment.captures && !segment.capture_names.is_empty() {
-        // Build capture restoration statements:
-        // const varName = _captures[0]; const varName2 = _captures[1]; etc.
         let capture_stmts: Vec<String> = segment
             .capture_names
             .iter()
@@ -130,7 +120,6 @@ pub(crate) fn build_segment_code_with_hoisted(
             .map(|(i, name)| format!("const {} = _captures[{}]", name, i))
             .collect();
 
-        // Inject captures into the body and wrap in export
         let modified_body = inject_captures_into_body(body_code, &capture_stmts);
         parts.push(format!("export const {} = {}", segment_name, modified_body));
     } else {
@@ -157,13 +146,10 @@ fn inject_captures_into_body(body_code: &str, capture_stmts: &[String]) -> Strin
         .map(|s| format!("{};\n", s))
         .collect();
 
-    // Find the arrow (`=>`) to determine what follows
     if let Some(arrow_pos) = find_arrow_position(body_code) {
         let after_arrow = body_code[arrow_pos + 2..].trim_start();
 
         if after_arrow.starts_with('{') {
-            // Block body: inject after opening {
-            // Find the actual `{` position in the original string
             let brace_offset = body_code[arrow_pos + 2..]
                 .find('{')
                 .map(|p| arrow_pos + 2 + p);
@@ -175,10 +161,8 @@ fn inject_captures_into_body(body_code: &str, capture_stmts: &[String]) -> Strin
             }
         }
 
-        // Expression body: wrap in block with return
         let prefix = &body_code[..arrow_pos + 2];
         let expr_body = body_code[arrow_pos + 2..].trim();
-        // Remove trailing semicolon if present
         let expr_body = expr_body.strip_suffix(';').unwrap_or(expr_body);
         return format!(
             "{} {{\n{}return {};\n}}",
@@ -186,8 +170,6 @@ fn inject_captures_into_body(body_code: &str, capture_stmts: &[String]) -> Strin
         );
     }
 
-    // Fallback: if we can't parse the arrow, just prepend captures as a comment
-    // This shouldn't happen for valid arrow functions
     body_code.to_string()
 }
 
@@ -256,7 +238,6 @@ pub(crate) fn emit_segment_with_map(
     let source_type = oxc::span::SourceType::mjs();
     let ret = oxc::parser::Parser::new(&allocator, source_in_arena, source_type).parse();
     if ret.panicked || !ret.errors.is_empty() {
-        // If parsing fails, return original code unchanged with no map
         return (raw_code.to_string(), None);
     }
 
@@ -347,7 +328,6 @@ mod tests {
             "Expected export declaration: {}",
             result
         );
-        // No imports needed
         assert!(
             !result.contains("import"),
             "Should not have imports: {}",
@@ -366,13 +346,11 @@ mod tests {
 
         let result = build_segment_code(body_code, &segment, &options);
 
-        // Should have _captures import
         assert!(
             result.contains("import { _captures } from \"@qwik.dev/core\""),
             "Expected _captures import: {}",
             result
         );
-        // Should have capture restoration
         assert!(
             result.contains("const state = _captures[0]"),
             "Expected state restoration: {}",
@@ -383,7 +361,6 @@ mod tests {
             "Expected count restoration: {}",
             result
         );
-        // Should have export with modified body
         assert!(
             result.contains("export const handler_abc123"),
             "Expected export: {}",
@@ -402,7 +379,6 @@ mod tests {
 
         let result = build_segment_code(body_code, &segment, &options);
 
-        // Should inject capture restoration after opening {
         assert!(
             result.contains("const state = _captures[0]"),
             "Expected capture restoration: {}",
@@ -428,19 +404,16 @@ mod tests {
 
         let result = build_segment_code(body_code, &segment, &options);
 
-        // Should have qrl import
         assert!(
             result.contains("import { qrl } from \"@qwik.dev/core\""),
             "Expected qrl import: {}",
             result
         );
-        // Should have lazy import declaration
         assert!(
             result.contains("const i_xyz789 = () => import(\"./test.tsx_App_component_1_xyz789\")"),
             "Expected lazy import: {}",
             result
         );
-        // Should have export
         assert!(
             result.contains("export const App_component_abc123"),
             "Expected export: {}",

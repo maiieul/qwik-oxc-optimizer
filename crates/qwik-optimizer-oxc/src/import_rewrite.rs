@@ -36,7 +36,6 @@ pub(crate) fn compute_import_changes(
     let mut to_remove = Vec::new();
     let mut to_keep = Vec::new();
 
-    // Collect all dollar-suffixed specifiers from qwik core imports
     for import in original_imports {
         if import.is_qwik_core {
             for spec in &import.specifiers {
@@ -49,12 +48,10 @@ pub(crate) fn compute_import_changes(
         }
     }
 
-    // Add needed Qrl-suffixed imports
     for qrl_name in needed_qrl_names {
         to_add.push(qrl_name.clone());
     }
 
-    // Add qrl/inlinedQrl
     if needs_qrl {
         to_add.push("qrl".to_string());
     }
@@ -80,25 +77,20 @@ pub(crate) fn build_qrl_call<'a>(
     captures: &[String],
     ctx: &mut TraverseCtx<'a, ()>,
 ) -> Expression<'a> {
-    // Allocate strings into the arena so they live for 'a
     let import_atom = ctx.ast.atom(import_ident_name);
     let name_atom = ctx.ast.atom(segment_export_name);
 
-    // Argument 1: identifier reference to the lazy import function
     let import_ref = ctx.ast.expression_identifier(SPAN, import_atom);
 
-    // Argument 2: string literal with the segment export name
     let name_literal = ctx
         .ast
         .expression_string_literal(SPAN, name_atom, None);
 
-    // Capacity: import_ref + name + optional captures array
     let capacity = if captures.is_empty() { 2 } else { 3 };
     let mut arguments = ctx.ast.vec_with_capacity(capacity);
     arguments.push(Argument::from(import_ref));
     arguments.push(Argument::from(name_literal));
 
-    // Argument 3 (optional): captures array
     if !captures.is_empty() {
         let mut elements = ctx.ast.vec_with_capacity(captures.len());
         for capture_name in captures {
@@ -112,10 +104,8 @@ pub(crate) fn build_qrl_call<'a>(
         ));
     }
 
-    // Build callee: identifier "qrl"
     let callee = ctx.ast.expression_identifier(SPAN, "qrl");
 
-    // Build: /*#__PURE__*/ qrl(i_hash, "name", [captures])
     ctx.ast.expression_call_with_pure(
         SPAN,
         callee,
@@ -135,23 +125,18 @@ pub(crate) fn build_inlined_qrl_call<'a>(
     captures: &[String],
     ctx: &mut TraverseCtx<'a, ()>,
 ) -> Expression<'a> {
-    // Allocate segment name into the arena
     let name_atom = ctx.ast.atom(segment_name);
 
-    // Capacity: body + name + optional captures array
     let capacity = if captures.is_empty() { 2 } else { 3 };
     let mut arguments = ctx.ast.vec_with_capacity(capacity);
 
-    // Argument 1: the expression (arrow function, string literal, etc.)
     arguments.push(Argument::from(body_expr));
 
-    // Argument 2: string literal segment name
     arguments.push(Argument::from(
         ctx.ast
             .expression_string_literal(SPAN, name_atom, None),
     ));
 
-    // Argument 3 (optional): captures array
     if !captures.is_empty() {
         let mut elements = ctx.ast.vec_with_capacity(captures.len());
         for capture_name in captures {
@@ -165,10 +150,8 @@ pub(crate) fn build_inlined_qrl_call<'a>(
         ));
     }
 
-    // Build callee: identifier "inlinedQrl"
     let callee = ctx.ast.expression_identifier(SPAN, "inlinedQrl");
 
-    // Build: /*#__PURE__*/ inlinedQrl(body, "name", [captures])
     ctx.ast.expression_call_with_pure(
         SPAN,
         callee,
@@ -186,34 +169,27 @@ pub(crate) fn build_named_import<'a>(
     source: &str,
     ctx: &mut TraverseCtx<'a, ()>,
 ) -> Statement<'a> {
-    // Allocate strings into the arena
     let name_atom = ctx.ast.atom(name);
     let source_atom = ctx.ast.atom(source);
 
-    // Build the local binding identifier
     let local = ctx.ast.binding_identifier(SPAN, name_atom.clone());
 
-    // Build the imported name (same as local for non-aliased imports)
     let imported = ctx
         .ast
         .module_export_name_identifier_name(SPAN, name_atom);
 
-    // Build the import specifier: { name }
     let specifier = ctx
         .ast
         .import_specifier(SPAN, imported, local, ImportOrExportKind::Value);
 
-    // Wrap in specifiers vec
     let specifiers = ctx
         .ast
         .vec1(ImportDeclarationSpecifier::ImportSpecifier(
             ctx.ast.alloc(specifier),
         ));
 
-    // Build the source string literal: "@qwik.dev/core"
     let source_lit = ctx.ast.string_literal(SPAN, source_atom, None);
 
-    // Build the import declaration
     let import_decl = ctx.ast.module_declaration_import_declaration(
         SPAN,
         Some(specifiers),
@@ -240,30 +216,24 @@ pub(crate) fn build_aliased_import<'a>(
     let local_atom = ctx.ast.atom(local_name);
     let source_atom = ctx.ast.atom(source);
 
-    // Build the local binding identifier (the alias)
     let local = ctx.ast.binding_identifier(SPAN, local_atom);
 
-    // Build the imported name (the original export name)
     let imported = ctx
         .ast
         .module_export_name_identifier_name(SPAN, imported_atom);
 
-    // Build the import specifier: { imported_name as local_name }
     let specifier = ctx
         .ast
         .import_specifier(SPAN, imported, local, ImportOrExportKind::Value);
 
-    // Wrap in specifiers vec
     let specifiers = ctx
         .ast
         .vec1(ImportDeclarationSpecifier::ImportSpecifier(
             ctx.ast.alloc(specifier),
         ));
 
-    // Build the source string literal
     let source_lit = ctx.ast.string_literal(SPAN, source_atom, None);
 
-    // Build the import declaration
     let import_decl = ctx.ast.module_declaration_import_declaration(
         SPAN,
         Some(specifiers),
@@ -284,11 +254,9 @@ pub(crate) fn build_lazy_import_declaration<'a>(
     ctx: &mut TraverseCtx<'a, ()>,
 ) -> Statement<'a> {
     let ident_name = format!("i_{}", hash);
-    // Allocate strings into the arena
     let ident_atom = ctx.ast.atom(&ident_name);
     let path_atom = ctx.ast.atom(import_path);
 
-    // Build the import expression: import("./path_segment_hash")
     let import_source = ctx
         .ast
         .expression_string_literal(SPAN, path_atom, None);
@@ -299,7 +267,6 @@ pub(crate) fn build_lazy_import_declaration<'a>(
         None, // no phase
     );
 
-    // Build the arrow function: () => import(...)
     let params = ctx.ast.formal_parameters(
         SPAN,
         FormalParameterKind::ArrowFormalParameters,
@@ -324,7 +291,6 @@ pub(crate) fn build_lazy_import_declaration<'a>(
         body,
     );
 
-    // Build: const i_hash = () => import(...)
     let binding = ctx
         .ast
         .binding_pattern_binding_identifier(SPAN, ident_atom);
@@ -410,7 +376,6 @@ pub(crate) fn build_noop_qrl_call<'a>(
     arguments.push(Argument::from(name_literal));
 
     if !captures.is_empty() {
-        // Build captures array [var1, var2, ...]
         let mut elements = ctx.ast.vec_with_capacity(captures.len());
         for cap in captures {
             let cap_atom = ctx.ast.atom(cap);

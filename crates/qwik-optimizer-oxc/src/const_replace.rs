@@ -52,37 +52,36 @@ fn build_replacement_map(
     let mut map = HashMap::new();
 
     for stmt in &program.body {
-        if let Statement::ImportDeclaration(import) = stmt {
-            let source = import.source.value.as_str();
-            if !BUILD_CONSTANT_SOURCES.iter().any(|s| *s == source) {
+        let Statement::ImportDeclaration(import) = stmt else {
+            continue;
+        };
+        let source = import.source.value.as_str();
+        if !BUILD_CONSTANT_SOURCES.iter().any(|s| *s == source) {
+            continue;
+        }
+        let Some(specifiers) = &import.specifiers else {
+            continue;
+        };
+        for spec in specifiers {
+            let ImportDeclarationSpecifier::ImportSpecifier(s) = spec else {
+                continue;
+            };
+            let imported_name = match &s.imported {
+                ModuleExportName::IdentifierName(id) => id.name.as_str(),
+                ModuleExportName::IdentifierReference(id) => id.name.as_str(),
+                ModuleExportName::StringLiteral(sl) => sl.value.as_str(),
+            };
+            if !BUILD_CONSTANTS.contains(&imported_name) {
                 continue;
             }
-
-            if let Some(specifiers) = &import.specifiers {
-                for spec in specifiers {
-                    if let ImportDeclarationSpecifier::ImportSpecifier(s) = spec {
-                        let imported_name = match &s.imported {
-                            ModuleExportName::IdentifierName(id) => id.name.as_str(),
-                            ModuleExportName::IdentifierReference(id) => id.name.as_str(),
-                            ModuleExportName::StringLiteral(sl) => sl.value.as_str(),
-                        };
-
-                        if !BUILD_CONSTANTS.contains(&imported_name) {
-                            continue;
-                        }
-
-                        let local_name = s.local.name.as_str().to_string();
-                        let value = match imported_name {
-                            "isServer" => options.is_server,
-                            "isBrowser" => !options.is_server,
-                            "isDev" => matches!(options.mode, EmitMode::Dev),
-                            _ => continue,
-                        };
-
-                        map.insert(local_name, value);
-                    }
-                }
-            }
+            let local_name = s.local.name.as_str().to_string();
+            let value = match imported_name {
+                "isServer" => options.is_server,
+                "isBrowser" => !options.is_server,
+                "isDev" => matches!(options.mode, EmitMode::Dev),
+                _ => continue,
+            };
+            map.insert(local_name, value);
         }
     }
 
@@ -595,39 +594,37 @@ fn eliminate_dead_branches<'a>(
     let mut actions: Vec<(usize, StmtAction<'a>)> = Vec::new();
 
     for (i, stmt) in stmts.iter_mut().enumerate() {
-        if let Statement::IfStatement(if_stmt) = stmt {
-            if let Some(test_val) = eval_boolean_value(&if_stmt.test) {
-                if test_val {
-                    // if (true) { consequent } -> inline consequent
-                    let placeholder =
-                        Statement::EmptyStatement(ast.alloc_empty_statement(SPAN));
-                    let consequent =
-                        std::mem::replace(&mut if_stmt.consequent, placeholder);
-                    if let Statement::BlockStatement(block) = consequent {
-                        // Unbox the block and drain the body into a std vec
-                        let block_inner = block.unbox();
-                        let body_stmts: Vec<Statement<'a>> =
-                            block_inner.body.into_iter().collect();
-                        actions.push((i, StmtAction::ReplaceWith(body_stmts)));
-                    } else {
-                        actions.push((i, StmtAction::ReplaceWith(vec![consequent])));
-                    }
-                } else if if_stmt.alternate.is_some() {
-                    // if (false) { ... } else { alternate } -> inline alternate
-                    let alternate = if_stmt.alternate.take().unwrap();
-                    if let Statement::BlockStatement(block) = alternate {
-                        let block_inner = block.unbox();
-                        let body_stmts: Vec<Statement<'a>> =
-                            block_inner.body.into_iter().collect();
-                        actions.push((i, StmtAction::ReplaceWith(body_stmts)));
-                    } else {
-                        actions.push((i, StmtAction::ReplaceWith(vec![alternate])));
-                    }
-                } else {
-                    // if (false) { ... } -> remove
-                    actions.push((i, StmtAction::Remove));
-                }
+        let Statement::IfStatement(if_stmt) = stmt else {
+            continue;
+        };
+        let Some(test_val) = eval_boolean_value(&if_stmt.test) else {
+            continue;
+        };
+        if test_val {
+            let placeholder =
+                Statement::EmptyStatement(ast.alloc_empty_statement(SPAN));
+            let consequent =
+                std::mem::replace(&mut if_stmt.consequent, placeholder);
+            if let Statement::BlockStatement(block) = consequent {
+                let block_inner = block.unbox();
+                let body_stmts: Vec<Statement<'a>> =
+                    block_inner.body.into_iter().collect();
+                actions.push((i, StmtAction::ReplaceWith(body_stmts)));
+            } else {
+                actions.push((i, StmtAction::ReplaceWith(vec![consequent])));
             }
+        } else if if_stmt.alternate.is_some() {
+            let alternate = if_stmt.alternate.take().unwrap();
+            if let Statement::BlockStatement(block) = alternate {
+                let block_inner = block.unbox();
+                let body_stmts: Vec<Statement<'a>> =
+                    block_inner.body.into_iter().collect();
+                actions.push((i, StmtAction::ReplaceWith(body_stmts)));
+            } else {
+                actions.push((i, StmtAction::ReplaceWith(vec![alternate])));
+            }
+        } else {
+            actions.push((i, StmtAction::Remove));
         }
     }
 

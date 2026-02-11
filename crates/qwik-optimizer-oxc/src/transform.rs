@@ -625,68 +625,60 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         call: &mut CallExpression<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
-        if let Some(kind) = self.is_dollar_call(call) {
-            // Skip $-calls with zero arguments (e.g., `component$()` with no callback).
-            // These don't produce segments in the SWC optimizer.
-            if call.arguments.is_empty() {
-                if let DollarCallKind::Named(ref name) = kind {
-                    let qrl_name = crate::words::dollar_to_qrl_name(name);
-                    if !self.import_tracker.qrl_imports.contains(&qrl_name) {
-                        self.import_tracker.qrl_imports.push(qrl_name);
-                    }
+        let Some(kind) = self.is_dollar_call(call) else {
+            return;
+        };
+
+        if call.arguments.is_empty() {
+            if let DollarCallKind::Named(ref name) = kind {
+                let qrl_name = crate::words::dollar_to_qrl_name(name);
+                if !self.import_tracker.qrl_imports.contains(&qrl_name) {
+                    self.import_tracker.qrl_imports.push(qrl_name);
                 }
+            }
+            return;
+        }
+
+        if let DollarCallKind::Named(ref name) = kind {
+            if name == "sync$" {
+                self.pending_sync_calls.insert(call.span.start);
+                self.capture_stack.push((Vec::new(), HashSet::new()));
                 return;
             }
-
-            if let DollarCallKind::Named(ref name) = kind {
-                if name == "sync$" {
-                    self.pending_sync_calls.insert(call.span.start);
-                    self.capture_stack.push((Vec::new(), HashSet::new()));
-                    return;
-                }
-            }
-
-            if let DollarCallKind::Named(ref name) = kind {
-                if name == "component$" {
-                    if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first() {
-                        let info = props_destructuring::analyze_props_destructuring(&arrow.params);
-                        if info.needs_transform {
-                            if info.rest_name.is_some() {
-                                self.import_tracker.needs_rest_props = true;
-                            }
-                            self.active_props_info = Some(info);
+            if name == "component$" {
+                if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first() {
+                    let info = props_destructuring::analyze_props_destructuring(&arrow.params);
+                    if info.needs_transform {
+                        if info.rest_name.is_some() {
+                            self.import_tracker.needs_rest_props = true;
                         }
+                        self.active_props_info = Some(info);
                     }
                 }
             }
-
-            // Push a new capture tracking frame for this $()-body.
-            self.capture_stack.push((Vec::new(), HashSet::new()));
-
-            if let Some(arg) = call.arguments.first() {
-                if let Argument::ArrowFunctionExpression(arrow) = arg {
-                    for param in &arrow.params.items {
-                        self.collect_binding_pattern_names(&param.pattern);
-                    }
-                    if let Some(rest) = &arrow.params.rest {
-                        self.collect_binding_pattern_names(&rest.rest.argument);
-                    }
-                }
-            }
-
-            let segment = self.record_segment(call, &kind);
-
-            // Check if this segment should be stripped
-            if let DollarCallKind::Named(ref name) = kind {
-                if self.should_strip_ctx_name(name) {
-                    self.stripped_segments.insert(call.span.start);
-                }
-            }
-
-            self.pending_dollar_calls.insert(call.span.start);
-
-            self.dollar_call_stack.push(segment.display_name.clone());
         }
+
+        self.capture_stack.push((Vec::new(), HashSet::new()));
+
+        if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first() {
+            for param in &arrow.params.items {
+                self.collect_binding_pattern_names(&param.pattern);
+            }
+            if let Some(rest) = &arrow.params.rest {
+                self.collect_binding_pattern_names(&rest.rest.argument);
+            }
+        }
+
+        let segment = self.record_segment(call, &kind);
+
+        if let DollarCallKind::Named(ref name) = kind {
+            if self.should_strip_ctx_name(name) {
+                self.stripped_segments.insert(call.span.start);
+            }
+        }
+
+        self.pending_dollar_calls.insert(call.span.start);
+        self.dollar_call_stack.push(segment.display_name.clone());
     }
 
     fn enter_identifier_reference(
@@ -830,121 +822,115 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
             self.dollar_call_stack.pop();
 
-            // not for nested $() calls inside it.
             let is_component_exit = matches!(&kind, DollarCallKind::Named(name) if name == "component$");
             let props_info = if is_component_exit {
                 self.active_props_info.take()
             } else {
                 None
             };
+            // props_info is only Some when is_component_exit is true, so the
+            // inner kind/name checks are unnecessary -- flatten to one level.
             if let Some(ref info) = props_info {
-                if let DollarCallKind::Named(ref name) = kind {
-                    if name == "component$" {
-                        // Apply the transformation to the arrow function argument
-                        if let Some(Argument::ArrowFunctionExpression(arrow)) =
-                            call.arguments.first_mut()
-                        {
-                            if !arrow.params.items.is_empty() {
-                                let new_pattern = ctx.ast.binding_pattern_binding_identifier(
-                                    SPAN,
-                                    ctx.ast.atom(&info.raw_props_name),
-                                );
-                                let new_param = ctx.ast.formal_parameter(
-                                    SPAN,
-                                    ctx.ast.vec(),  // no decorators
-                                    new_pattern,
-                                    None::<oxc::allocator::Box<'a, TSTypeAnnotation<'a>>>,
-                                    None::<oxc::allocator::Box<'a, Expression<'a>>>,
-                                    false,          // not optional
-                                    None,           // no accessibility
-                                    false,          // not readonly
-                                    false,          // no override
-                                );
-                                arrow.params.items[0] = new_param;
-                                arrow.params.rest = None;
-                            }
+                if let Some(Argument::ArrowFunctionExpression(arrow)) =
+                    call.arguments.first_mut()
+                {
+                    if !arrow.params.items.is_empty() {
+                        let new_pattern = ctx.ast.binding_pattern_binding_identifier(
+                            SPAN,
+                            ctx.ast.atom(&info.raw_props_name),
+                        );
+                        let new_param = ctx.ast.formal_parameter(
+                            SPAN,
+                            ctx.ast.vec(),
+                            new_pattern,
+                            None::<oxc::allocator::Box<'a, TSTypeAnnotation<'a>>>,
+                            None::<oxc::allocator::Box<'a, Expression<'a>>>,
+                            false,
+                            None,
+                            false,
+                            false,
+                        );
+                        arrow.params.items[0] = new_param;
+                        arrow.params.rest = None;
+                    }
 
-                            if let Some(ref rest_name) = info.rest_name {
-                                let excluded_keys: Vec<String> = info
-                                    .prop_keys
-                                    .iter()
-                                    .map(|(key, _)| key.clone())
-                                    .collect();
-                                let rest_stmt = props_destructuring::build_rest_props_declaration(
-                                    rest_name,
-                                    &info.raw_props_name,
-                                    &excluded_keys,
-                                    ctx,
-                                );
-
-                                let mut old_stmts = ctx.ast.vec();
-                                std::mem::swap(&mut arrow.body.statements, &mut old_stmts);
-                                let mut new_stmts =
-                                    ctx.ast.vec_with_capacity(1 + old_stmts.len());
-                                new_stmts.push(rest_stmt);
-                                for s in old_stmts {
-                                    new_stmts.push(s);
-                                }
-                                arrow.body.statements = new_stmts;
-                            }
-
-                            let prop_map: Vec<(String, String)> = info
-                                .prop_keys
-                                .iter()
-                                .map(|(key, local)| (local.clone(), key.clone()))
-                                .collect();
-
-                            if !prop_map.is_empty() {
-                                props_destructuring::rewrite_body_statements(
-                                    &mut arrow.body.statements,
-                                    &prop_map,
-                                    &info.raw_props_name,
-                                    ctx,
-                                );
-                            }
-                        }
-
-                        if let Some(seg) = self.segments.iter_mut().find(|s| {
-                            s.span.0 == call.span.start && s.span.1 == call.span.end
-                        }) {
-                            seg.param_names = vec![info.raw_props_name.clone()];
-                        }
-
-                        // destructured prop names with _rawProps.
-                        let local_aliases: HashSet<String> = info
+                    if let Some(ref rest_name) = info.rest_name {
+                        let excluded_keys: Vec<String> = info
                             .prop_keys
                             .iter()
-                            .map(|(_, local)| local.clone())
+                            .map(|(key, _)| key.clone())
                             .collect();
+                        let rest_stmt = props_destructuring::build_rest_props_declaration(
+                            rest_name,
+                            &info.raw_props_name,
+                            &excluded_keys,
+                            ctx,
+                        );
 
-                        let component_span = (call.span.start, call.span.end);
-                        let component_display_name = self
-                            .segments
-                            .iter()
-                            .find(|s| s.span == component_span)
-                            .map(|s| s.display_name.clone());
-
-                        if let Some(parent_name) = component_display_name {
-                            for seg in self.segments.iter_mut() {
-                                if seg.parent.as_ref() == Some(&parent_name) && !seg.capture_names.is_empty() {
-                                    let mut needs_rawprops = false;
-                                    seg.capture_names.retain(|name| {
-                                        if local_aliases.contains(name) {
-                                            needs_rawprops = true;
-                                            false // remove the individual prop name
-                                        } else {
-                                            true
-                                        }
-                                    });
-                                    if needs_rawprops {
-                                        if !seg.capture_names.contains(&info.raw_props_name) {
-                                            seg.capture_names.insert(0, info.raw_props_name.clone());
-                                        }
-                                    }
-                                    seg.captures = !seg.capture_names.is_empty();
-                                }
-                            }
+                        let mut old_stmts = ctx.ast.vec();
+                        std::mem::swap(&mut arrow.body.statements, &mut old_stmts);
+                        let mut new_stmts =
+                            ctx.ast.vec_with_capacity(1 + old_stmts.len());
+                        new_stmts.push(rest_stmt);
+                        for s in old_stmts {
+                            new_stmts.push(s);
                         }
+                        arrow.body.statements = new_stmts;
+                    }
+
+                    let prop_map: Vec<(String, String)> = info
+                        .prop_keys
+                        .iter()
+                        .map(|(key, local)| (local.clone(), key.clone()))
+                        .collect();
+
+                    if !prop_map.is_empty() {
+                        props_destructuring::rewrite_body_statements(
+                            &mut arrow.body.statements,
+                            &prop_map,
+                            &info.raw_props_name,
+                            ctx,
+                        );
+                    }
+                }
+
+                if let Some(seg) = self.segments.iter_mut().find(|s| {
+                    s.span.0 == call.span.start && s.span.1 == call.span.end
+                }) {
+                    seg.param_names = vec![info.raw_props_name.clone()];
+                }
+
+                let local_aliases: HashSet<String> = info
+                    .prop_keys
+                    .iter()
+                    .map(|(_, local)| local.clone())
+                    .collect();
+
+                let component_span = (call.span.start, call.span.end);
+                let component_display_name = self
+                    .segments
+                    .iter()
+                    .find(|s| s.span == component_span)
+                    .map(|s| s.display_name.clone());
+
+                if let Some(parent_name) = component_display_name {
+                    for seg in self.segments.iter_mut() {
+                        if seg.parent.as_ref() != Some(&parent_name) || seg.capture_names.is_empty() {
+                            continue;
+                        }
+                        let mut needs_rawprops = false;
+                        seg.capture_names.retain(|name| {
+                            if local_aliases.contains(name) {
+                                needs_rawprops = true;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        if needs_rawprops && !seg.capture_names.contains(&info.raw_props_name) {
+                            seg.capture_names.insert(0, info.raw_props_name.clone());
+                        }
+                        seg.captures = !seg.capture_names.is_empty();
                     }
                 }
             }

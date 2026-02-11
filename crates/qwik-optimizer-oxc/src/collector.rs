@@ -469,27 +469,27 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
         match decl {
             Declaration::VariableDeclaration(var_decl) => {
                 for declarator in &var_decl.declarations {
-                    if let Some(name) = binding_pattern_name(&declarator.id) {
-                        ctx.module_exports.push(ExportInfo {
-                            name: name.clone(),
-                            is_reexport: false,
-                            span: (export.span.start, export.span.end),
-                        });
+                    let Some(name) = binding_pattern_name(&declarator.id) else {
+                        continue;
+                    };
+                    ctx.module_exports.push(ExportInfo {
+                        name: name.clone(),
+                        is_reexport: false,
+                        span: (export.span.start, export.span.end),
+                    });
 
-                        if name.ends_with('$') && !ctx.dollar_imports.contains(&name) {
-                            if let Some(init) = &declarator.init {
-                                if is_wrap_call(init) {
-                                    ctx.dollar_imports.insert(name.clone());
-                                }
-                            }
-                        }
-
-                        ctx.current_var_name = Some(name);
-                        if let Some(init) = &declarator.init {
-                            walk_expression_for_calls(ctx, init);
-                        }
-                        ctx.current_var_name = None;
+                    if name.ends_with('$')
+                        && !ctx.dollar_imports.contains(&name)
+                        && declarator.init.as_ref().is_some_and(|init| is_wrap_call(init))
+                    {
+                        ctx.dollar_imports.insert(name.clone());
                     }
+
+                    ctx.current_var_name = Some(name);
+                    if let Some(init) = &declarator.init {
+                        walk_expression_for_calls(ctx, init);
+                    }
+                    ctx.current_var_name = None;
                 }
             }
             Declaration::FunctionDeclaration(func) => {
@@ -579,12 +579,11 @@ fn walk_statement_for_calls(ctx: &mut CollectContext, stmt: &Statement<'_>) {
             for declarator in &var_decl.declarations {
                 let var_name = binding_pattern_name(&declarator.id);
                 if let Some(ref name) = var_name {
-                    if name.ends_with('$') && !ctx.dollar_imports.contains(name) {
-                        if let Some(init) = &declarator.init {
-                            if is_wrap_call(init) {
-                                ctx.dollar_imports.insert(name.clone());
-                            }
-                        }
+                    if name.ends_with('$')
+                        && !ctx.dollar_imports.contains(name)
+                        && declarator.init.as_ref().is_some_and(|init| is_wrap_call(init))
+                    {
+                        ctx.dollar_imports.insert(name.clone());
                     }
                 }
                 ctx.current_var_name = var_name;
