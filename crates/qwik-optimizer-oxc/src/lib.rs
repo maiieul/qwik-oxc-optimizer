@@ -180,6 +180,11 @@ fn segment_data_to_analysis(seg: &SegmentData, origin_path: &str) -> SegmentAnal
         ctx_name: seg.ctx_name.clone(),
         captures: seg.captures,
         loc: seg.span,
+        param_names: if seg.param_names.is_empty() {
+            None
+        } else {
+            Some(seg.param_names.clone())
+        },
     }
 }
 

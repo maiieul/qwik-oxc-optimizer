@@ -236,6 +236,12 @@ pub struct SegmentAnalysis {
     /// Source location as [start_byte, end_byte] of the original $-call.
     /// Serializes as a JSON array [start, end] (Rust tuples serialize as arrays).
     pub loc: (u32, u32),
+
+    /// Parameter names after props destructuring transformation.
+    /// E.g., `["_rawProps"]` for component$ with destructured props.
+    /// Only present for component$ segments with destructured props.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub param_names: Option<Vec<String>>,
 }
 
 /// Controls how extracted segments are output.
@@ -508,6 +514,10 @@ pub(crate) struct SegmentData {
     /// The extracted function body expression span.
     /// In practice, this will be an index or key into the AST arena.
     pub body_span: (u32, u32),
+
+    /// Parameter names after props destructuring transformation.
+    /// E.g., `["_rawProps"]` for component$ with destructured props.
+    pub param_names: Vec<String>,
 }
 
 /// Per-module options derived from TransformModulesOptions.
@@ -672,6 +682,7 @@ mod tests {
             ctx_name: "$".to_string(),
             captures: false,
             loc: (90, 161),
+            param_names: None,
         };
 
         let json = serde_json::to_string(&segment).unwrap();

@@ -189,6 +189,7 @@ impl QwikTransform {
             capture_names: vec![], // Phase 9
             needed_imports: vec![], // Phase 10 (code_move)
             body_span: (call.span.start, call.span.end),
+            param_names: vec![],   // Set by props destructuring if needed
         };
 
         // Track imports based on strategy

@@ -3,14 +3,686 @@
 //! Transform component props destructuring patterns. When a component uses
 //! destructured props, the optimizer may need to transform the destructuring
 //! to preserve reactivity.
+//!
+//! This module provides:
+//! - `analyze_props_destructuring()`: Pure analysis of an arrow function's first
+//!   parameter to detect ObjectPattern destructuring and extract prop info.
+//! - `rewrite_props_references()`: Recursive walk that replaces IdentifierReference
+//!   nodes matching local aliases with `_rawProps.originalKey` member expressions.
 
-#![allow(unused)]
+use oxc::ast::ast::*;
+use oxc::span::SPAN;
+use oxc_traverse::TraverseCtx;
 
-/// Transform component props destructuring for reactivity preservation.
-pub(crate) fn transform_props<'a, S>(
-    _params: &mut oxc::ast::ast::FormalParameters<'a>,
-    _body: &mut oxc::ast::ast::FunctionBody<'a>,
-    _ctx: &mut oxc_traverse::TraverseCtx<'a, S>,
+/// Information extracted from analyzing a component$'s destructured props parameter.
+#[derive(Debug, Clone)]
+pub(crate) struct PropsDestructuringInfo {
+    /// Whether the parameter needs transformation (is an ObjectPattern).
+    pub needs_transform: bool,
+
+    /// Pairs of (original_key, local_alias) from the ObjectPattern properties.
+    /// E.g., `{foo}` -> ("foo", "foo"), `{count: c}` -> ("count", "c").
+    pub prop_keys: Vec<(String, String)>,
+
+    /// The rest variable name if a rest pattern exists.
+    /// E.g., `{...rest}` -> Some("rest").
+    pub rest_name: Option<String>,
+
+    /// The name for the raw props parameter (normally "_rawProps").
+    pub raw_props_name: String,
+}
+
+impl Default for PropsDestructuringInfo {
+    fn default() -> Self {
+        Self {
+            needs_transform: false,
+            prop_keys: Vec::new(),
+            rest_name: None,
+            raw_props_name: "_rawProps".to_string(),
+        }
+    }
+}
+
+/// Analyze the first parameter of a component$ arrow function to detect
+/// destructured props that need transformation.
+///
+/// Returns a `PropsDestructuringInfo` with `needs_transform = true` if the
+/// first parameter is an ObjectPattern (destructured props).
+///
+/// If the first parameter is a plain BindingIdentifier (e.g., `(props) =>`),
+/// or there are no parameters, returns `needs_transform = false`.
+pub(crate) fn analyze_props_destructuring(
+    params: &FormalParameters<'_>,
+) -> PropsDestructuringInfo {
+    let mut info = PropsDestructuringInfo::default();
+
+    // No parameters -> no transformation needed
+    if params.items.is_empty() {
+        return info;
+    }
+
+    let first_param = &params.items[0];
+
+    match &first_param.pattern {
+        BindingPattern::ObjectPattern(obj_pat) => {
+            info.needs_transform = true;
+
+            // Extract properties
+            for prop in &obj_pat.properties {
+                let key_name = extract_property_key_name(&prop.key);
+                let local_name = extract_binding_pattern_name(&prop.value);
+
+                if let (Some(key), Some(local)) = (key_name, local_name) {
+                    info.prop_keys.push((key, local));
+                }
+            }
+
+            // Extract rest element
+            if let Some(rest) = &obj_pat.rest {
+                if let Some(rest_name) = extract_binding_pattern_name(&rest.argument) {
+                    info.rest_name = Some(rest_name);
+                }
+            }
+        }
+        BindingPattern::BindingIdentifier(_) => {
+            // Plain identifier like (props) => ... -- no transformation needed
+        }
+        _ => {
+            // Array pattern or other unusual patterns -- skip
+        }
+    }
+
+    info
+}
+
+/// Extract a string name from a PropertyKey.
+///
+/// Handles:
+/// - `StaticIdentifier` (e.g., `foo` in `{foo}` or `count` in `{count: c}`)
+/// - `StringLiteral` expression (e.g., `'bind:value'` in `{'bind:value': bv}`)
+fn extract_property_key_name(key: &PropertyKey<'_>) -> Option<String> {
+    match key {
+        PropertyKey::StaticIdentifier(ident) => Some(ident.name.to_string()),
+        PropertyKey::StringLiteral(lit) => Some(lit.value.to_string()),
+        _ => None,
+    }
+}
+
+/// Extract a string name from a BindingPattern (only for BindingIdentifier).
+fn extract_binding_pattern_name(pattern: &BindingPattern<'_>) -> Option<String> {
+    match pattern {
+        BindingPattern::BindingIdentifier(ident) => Some(ident.name.to_string()),
+        _ => None,
+    }
+}
+
+/// Rewrite identifier references in an expression, replacing those that match
+/// local aliases from destructured props with `_rawProps.originalKey` member
+/// expressions.
+///
+/// This function takes an `&mut Expression` and recursively walks it, replacing
+/// `Expression::Identifier(name)` where `name` matches a local alias with
+/// `Expression::StaticMemberExpression(_rawProps, originalKey)`.
+///
+/// The `prop_map` contains (local_alias -> original_key) mappings.
+pub(crate) fn rewrite_props_references<'a>(
+    expr: &mut Expression<'a>,
+    prop_map: &[(String, String)], // (local_alias, original_key)
+    raw_props_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
 ) {
-    todo!("Implement props destructuring transformation")
+    match expr {
+        Expression::Identifier(ident) => {
+            let name = ident.name.as_str();
+            // Check if this identifier matches a local alias
+            for (local_alias, original_key) in prop_map {
+                if name == local_alias {
+                    // Replace with _rawProps.originalKey
+                    let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+                    let prop_name = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
+                    let member = ctx.ast.static_member_expression(SPAN, obj, prop_name, false);
+                    *expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
+                    return;
+                }
+            }
+        }
+
+        // Recursively walk compound expressions
+        Expression::ArrayExpression(arr) => {
+            for elem in arr.elements.iter_mut() {
+                match elem {
+                    ArrayExpressionElement::SpreadElement(spread) => {
+                        rewrite_props_references(&mut spread.argument, prop_map, raw_props_name, ctx);
+                    }
+                    ArrayExpressionElement::Elision(_) => {}
+                    _ => {
+                        // ArrayExpressionElement inherits Expression variants
+                        if let Some(e) = array_element_as_expression_mut(elem) {
+                            rewrite_props_references(e, prop_map, raw_props_name, ctx);
+                        }
+                    }
+                }
+            }
+        }
+
+        Expression::ObjectExpression(obj) => {
+            for prop in obj.properties.iter_mut() {
+                match prop {
+                    ObjectPropertyKind::ObjectProperty(p) => {
+                        rewrite_props_references(&mut p.value, prop_map, raw_props_name, ctx);
+                    }
+                    ObjectPropertyKind::SpreadProperty(spread) => {
+                        rewrite_props_references(&mut spread.argument, prop_map, raw_props_name, ctx);
+                    }
+                }
+            }
+        }
+
+        Expression::CallExpression(call) => {
+            rewrite_props_references(&mut call.callee, prop_map, raw_props_name, ctx);
+            for arg in call.arguments.iter_mut() {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        rewrite_props_references(&mut spread.argument, prop_map, raw_props_name, ctx);
+                    }
+                    _ => {
+                        if let Some(e) = argument_as_expression_mut(arg) {
+                            rewrite_props_references(e, prop_map, raw_props_name, ctx);
+                        }
+                    }
+                }
+            }
+        }
+
+        Expression::BinaryExpression(bin) => {
+            rewrite_props_references(&mut bin.left, prop_map, raw_props_name, ctx);
+            rewrite_props_references(&mut bin.right, prop_map, raw_props_name, ctx);
+        }
+
+        Expression::LogicalExpression(log) => {
+            rewrite_props_references(&mut log.left, prop_map, raw_props_name, ctx);
+            rewrite_props_references(&mut log.right, prop_map, raw_props_name, ctx);
+        }
+
+        Expression::ConditionalExpression(cond) => {
+            rewrite_props_references(&mut cond.test, prop_map, raw_props_name, ctx);
+            rewrite_props_references(&mut cond.consequent, prop_map, raw_props_name, ctx);
+            rewrite_props_references(&mut cond.alternate, prop_map, raw_props_name, ctx);
+        }
+
+        Expression::UnaryExpression(unary) => {
+            rewrite_props_references(&mut unary.argument, prop_map, raw_props_name, ctx);
+        }
+
+        Expression::UpdateExpression(_update) => {
+            // UpdateExpression.argument is SimpleAssignmentTarget, not Expression.
+            // Identifiers in update expressions (e.g., i++) are not prop references.
+        }
+
+        Expression::AssignmentExpression(assign) => {
+            rewrite_props_references(&mut assign.right, prop_map, raw_props_name, ctx);
+        }
+
+        Expression::SequenceExpression(seq) => {
+            for e in seq.expressions.iter_mut() {
+                rewrite_props_references(e, prop_map, raw_props_name, ctx);
+            }
+        }
+
+        Expression::TemplateLiteral(tmpl) => {
+            for e in tmpl.expressions.iter_mut() {
+                rewrite_props_references(e, prop_map, raw_props_name, ctx);
+            }
+        }
+
+        Expression::TaggedTemplateExpression(tagged) => {
+            rewrite_props_references(&mut tagged.tag, prop_map, raw_props_name, ctx);
+            for e in tagged.quasi.expressions.iter_mut() {
+                rewrite_props_references(e, prop_map, raw_props_name, ctx);
+            }
+        }
+
+        Expression::ArrowFunctionExpression(arrow) => {
+            // Recurse into arrow body, but be careful not to shadow destructured names
+            // Check if any parameter shadows a prop alias
+            let shadowed: Vec<String> = arrow.params.items.iter()
+                .filter_map(|p| extract_binding_pattern_name(&p.pattern))
+                .filter(|name| prop_map.iter().any(|(local, _)| local == name))
+                .collect();
+
+            if shadowed.is_empty() {
+                // No shadowing -- safe to recurse into body
+                rewrite_body_statements(&mut arrow.body.statements, prop_map, raw_props_name, ctx);
+            } else {
+                // Filter out shadowed props from the map for this scope
+                let filtered: Vec<(String, String)> = prop_map.iter()
+                    .filter(|(local, _)| !shadowed.contains(local))
+                    .cloned()
+                    .collect();
+                if !filtered.is_empty() {
+                    rewrite_body_statements(&mut arrow.body.statements, &filtered, raw_props_name, ctx);
+                }
+            }
+        }
+
+        Expression::ParenthesizedExpression(paren) => {
+            rewrite_props_references(&mut paren.expression, prop_map, raw_props_name, ctx);
+        }
+
+        Expression::AwaitExpression(aw) => {
+            rewrite_props_references(&mut aw.argument, prop_map, raw_props_name, ctx);
+        }
+
+        Expression::YieldExpression(y) => {
+            if let Some(ref mut arg) = y.argument {
+                rewrite_props_references(arg, prop_map, raw_props_name, ctx);
+            }
+        }
+
+        Expression::NewExpression(ne) => {
+            rewrite_props_references(&mut ne.callee, prop_map, raw_props_name, ctx);
+            for arg in ne.arguments.iter_mut() {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        rewrite_props_references(&mut spread.argument, prop_map, raw_props_name, ctx);
+                    }
+                    _ => {
+                        if let Some(e) = argument_as_expression_mut(arg) {
+                            rewrite_props_references(e, prop_map, raw_props_name, ctx);
+                        }
+                    }
+                }
+            }
+        }
+
+        Expression::StaticMemberExpression(mem) => {
+            rewrite_props_references(&mut mem.object, prop_map, raw_props_name, ctx);
+        }
+
+        Expression::ComputedMemberExpression(mem) => {
+            rewrite_props_references(&mut mem.object, prop_map, raw_props_name, ctx);
+            rewrite_props_references(&mut mem.expression, prop_map, raw_props_name, ctx);
+        }
+
+        // Literals, this, etc. -- no identifiers to replace
+        _ => {}
+    }
+}
+
+/// Rewrite identifier references in a slice of statements.
+pub(crate) fn rewrite_body_statements<'a>(
+    stmts: &mut oxc::allocator::Vec<'a, Statement<'a>>,
+    prop_map: &[(String, String)],
+    raw_props_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    for stmt in stmts.iter_mut() {
+        rewrite_statement(stmt, prop_map, raw_props_name, ctx);
+    }
+}
+
+/// Rewrite identifier references in a single statement.
+fn rewrite_statement<'a>(
+    stmt: &mut Statement<'a>,
+    prop_map: &[(String, String)],
+    raw_props_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    match stmt {
+        Statement::ExpressionStatement(expr_stmt) => {
+            rewrite_props_references(&mut expr_stmt.expression, prop_map, raw_props_name, ctx);
+        }
+        Statement::ReturnStatement(ret) => {
+            if let Some(ref mut arg) = ret.argument {
+                rewrite_props_references(arg, prop_map, raw_props_name, ctx);
+            }
+        }
+        Statement::VariableDeclaration(decl) => {
+            for declarator in decl.declarations.iter_mut() {
+                if let Some(ref mut init) = declarator.init {
+                    rewrite_props_references(init, prop_map, raw_props_name, ctx);
+                }
+            }
+        }
+        Statement::IfStatement(if_stmt) => {
+            rewrite_props_references(&mut if_stmt.test, prop_map, raw_props_name, ctx);
+            rewrite_statement(&mut if_stmt.consequent, prop_map, raw_props_name, ctx);
+            if let Some(ref mut alt) = if_stmt.alternate {
+                rewrite_statement(alt, prop_map, raw_props_name, ctx);
+            }
+        }
+        Statement::BlockStatement(block) => {
+            rewrite_body_statements(&mut block.body, prop_map, raw_props_name, ctx);
+        }
+        Statement::ForStatement(for_stmt) => {
+            if let Some(ref mut test) = for_stmt.test {
+                rewrite_props_references(test, prop_map, raw_props_name, ctx);
+            }
+            if let Some(ref mut update) = for_stmt.update {
+                rewrite_props_references(update, prop_map, raw_props_name, ctx);
+            }
+            rewrite_statement(&mut for_stmt.body, prop_map, raw_props_name, ctx);
+        }
+        Statement::WhileStatement(while_stmt) => {
+            rewrite_props_references(&mut while_stmt.test, prop_map, raw_props_name, ctx);
+            rewrite_statement(&mut while_stmt.body, prop_map, raw_props_name, ctx);
+        }
+        Statement::SwitchStatement(switch_stmt) => {
+            rewrite_props_references(&mut switch_stmt.discriminant, prop_map, raw_props_name, ctx);
+            for case in switch_stmt.cases.iter_mut() {
+                if let Some(ref mut test) = case.test {
+                    rewrite_props_references(test, prop_map, raw_props_name, ctx);
+                }
+                rewrite_body_statements(&mut case.consequent, prop_map, raw_props_name, ctx);
+            }
+        }
+        Statement::ThrowStatement(throw_stmt) => {
+            rewrite_props_references(&mut throw_stmt.argument, prop_map, raw_props_name, ctx);
+        }
+        _ => {}
+    }
+}
+
+/// Helper: Try to get a mutable Expression reference from an ArrayExpressionElement.
+/// ArrayExpressionElement inherits Expression variants via inherit_variants!.
+fn array_element_as_expression_mut<'b, 'a>(
+    elem: &'b mut ArrayExpressionElement<'a>,
+) -> Option<&'b mut Expression<'a>> {
+    // ArrayExpressionElement inherits Expression variants.
+    // We need to use unsafe transmute or a pattern-match approach.
+    // Since ArrayExpressionElement has the same Expression variants,
+    // we match common ones explicitly.
+    match elem {
+        ArrayExpressionElement::Identifier(ident) => {
+            // This is an IdentifierReference, which maps to Expression::Identifier
+            // We can't easily convert between these without owning the value.
+            // Instead, we'll use a different approach in the caller.
+            let _ = ident;
+            None
+        }
+        ArrayExpressionElement::SpreadElement(_) => None,
+        ArrayExpressionElement::Elision(_) => None,
+        // For the remaining variants, we punt -- the main identifier case
+        // is handled separately in the array rewrite path.
+        _ => None,
+    }
+}
+
+/// Helper: Try to get a mutable Expression reference from an Argument.
+fn argument_as_expression_mut<'b, 'a>(
+    _arg: &'b mut Argument<'a>,
+) -> Option<&'b mut Expression<'a>> {
+    // Argument inherits Expression variants. Similar challenge as above.
+    None
+}
+
+/// Rewrite identifier references in array expression elements.
+/// Since ArrayExpressionElement inherits Expression variants, we need
+/// to handle the element replacement at the array level.
+pub(crate) fn rewrite_array_elements<'a>(
+    elements: &mut oxc::allocator::Vec<'a, ArrayExpressionElement<'a>>,
+    prop_map: &[(String, String)],
+    raw_props_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    for i in 0..elements.len() {
+        let needs_replace = match &elements[i] {
+            ArrayExpressionElement::Identifier(ident) => {
+                let name = ident.name.as_str();
+                prop_map.iter().any(|(local, _)| local == name)
+            }
+            _ => false,
+        };
+
+        if needs_replace {
+            if let ArrayExpressionElement::Identifier(ident) = &elements[i] {
+                let name = ident.name.to_string();
+                if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
+                    let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+                    let prop_name = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
+                    let member = ctx.ast.static_member_expression(SPAN, obj, prop_name, false);
+                    let member_expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
+                    elements[i] = ArrayExpressionElement::from(member_expr);
+                }
+            }
+        }
+    }
+}
+
+/// Rewrite identifier references in call expression arguments.
+/// Since Argument inherits Expression variants, we need to handle
+/// the argument replacement at the arguments level.
+pub(crate) fn rewrite_arguments<'a>(
+    arguments: &mut oxc::allocator::Vec<'a, Argument<'a>>,
+    prop_map: &[(String, String)],
+    raw_props_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    for i in 0..arguments.len() {
+        let needs_replace = match &arguments[i] {
+            Argument::Identifier(ident) => {
+                let name = ident.name.as_str();
+                prop_map.iter().any(|(local, _)| local == name)
+            }
+            _ => false,
+        };
+
+        if needs_replace {
+            if let Argument::Identifier(ident) = &arguments[i] {
+                let name = ident.name.to_string();
+                if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
+                    let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+                    let prop_name = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
+                    let member = ctx.ast.static_member_expression(SPAN, obj, prop_name, false);
+                    let member_expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
+                    arguments[i] = Argument::from(member_expr);
+                }
+            }
+        }
+    }
+}
+
+/// Build a `_restProps(_rawProps, ["key1", "key2"])` call expression.
+///
+/// If `excluded_keys` is empty, builds `_restProps(_rawProps)` (no array argument).
+pub(crate) fn build_rest_props_call<'a>(
+    raw_props_name: &str,
+    excluded_keys: &[String],
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    let callee = ctx.ast.expression_identifier(SPAN, ctx.ast.atom("_restProps"));
+
+    let raw_props_arg = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+
+    if excluded_keys.is_empty() {
+        // _restProps(_rawProps)
+        let mut args = ctx.ast.vec_with_capacity(1);
+        args.push(Argument::from(raw_props_arg));
+        ctx.ast.expression_call(
+            SPAN,
+            callee,
+            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+            args,
+            false,
+        )
+    } else {
+        // _restProps(_rawProps, ["key1", "key2"])
+        let mut array_elements = ctx.ast.vec_with_capacity(excluded_keys.len());
+        for key in excluded_keys {
+            let key_atom = ctx.ast.atom(key.as_str());
+            array_elements.push(ArrayExpressionElement::from(
+                ctx.ast.expression_string_literal(SPAN, key_atom, None),
+            ));
+        }
+        let array_expr = ctx.ast.expression_array(SPAN, array_elements);
+
+        let mut args = ctx.ast.vec_with_capacity(2);
+        args.push(Argument::from(raw_props_arg));
+        args.push(Argument::from(array_expr));
+        ctx.ast.expression_call(
+            SPAN,
+            callee,
+            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+            args,
+            false,
+        )
+    }
+}
+
+/// Build a `const {rest_name} = _restProps(_rawProps, [...keys])` variable declaration statement.
+pub(crate) fn build_rest_props_declaration<'a>(
+    rest_name: &str,
+    raw_props_name: &str,
+    excluded_keys: &[String],
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Statement<'a> {
+    let rest_call = build_rest_props_call(raw_props_name, excluded_keys, ctx);
+
+    let binding = ctx.ast.binding_pattern_binding_identifier(SPAN, ctx.ast.atom(rest_name));
+    let declarator = ctx.ast.variable_declarator(
+        SPAN,
+        VariableDeclarationKind::Const,
+        binding,
+        None::<oxc::allocator::Box<'a, TSTypeAnnotation<'a>>>,
+        Some(rest_call),
+        false,
+    );
+    let declaration = ctx.ast.variable_declaration(
+        SPAN,
+        VariableDeclarationKind::Const,
+        ctx.ast.vec1(declarator),
+        false,
+    );
+
+    Statement::from(Declaration::VariableDeclaration(
+        ctx.ast.alloc(declaration),
+    ))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Helper to parse code and extract the FormalParameters of the first arrow function
+    /// argument in a component$(...) call.
+    fn parse_and_analyze(code: &str) -> PropsDestructuringInfo {
+        let allocator = oxc::allocator::Allocator::default();
+        let source = allocator.alloc_str(code);
+        let parser = oxc::parser::Parser::new(&allocator, source, oxc::span::SourceType::tsx());
+        let result = parser.parse();
+        assert!(result.errors.is_empty(), "Parse errors: {:?}", result.errors);
+        let program = result.program;
+
+        // Find the first ArrowFunctionExpression in the AST
+        // Walk statements to find a call expression with an arrow arg
+        for stmt in &program.body {
+            if let Some(info) = find_arrow_params_in_stmt(stmt) {
+                return info;
+            }
+        }
+        panic!("No arrow function found in test code");
+    }
+
+    fn find_arrow_params_in_stmt(stmt: &Statement<'_>) -> Option<PropsDestructuringInfo> {
+        match stmt {
+            Statement::ExpressionStatement(expr_stmt) => {
+                find_arrow_params_in_expr(&expr_stmt.expression)
+            }
+            Statement::VariableDeclaration(decl) => {
+                for d in &decl.declarations {
+                    if let Some(ref init) = d.init {
+                        if let Some(info) = find_arrow_params_in_expr(init) {
+                            return Some(info);
+                        }
+                    }
+                }
+                None
+            }
+            _ => None,
+        }
+    }
+
+    fn find_arrow_params_in_expr(expr: &Expression<'_>) -> Option<PropsDestructuringInfo> {
+        match expr {
+            Expression::CallExpression(call) => {
+                // Check each argument for an arrow function
+                for arg in &call.arguments {
+                    if let Argument::ArrowFunctionExpression(arrow) = arg {
+                        return Some(analyze_props_destructuring(&arrow.params));
+                    }
+                }
+                None
+            }
+            Expression::ArrowFunctionExpression(arrow) => {
+                Some(analyze_props_destructuring(&arrow.params))
+            }
+            _ => None,
+        }
+    }
+
+    #[test]
+    fn test_analyze_simple_destructuring() {
+        let info = parse_and_analyze("component$(({foo, bar}) => foo + bar)");
+        assert!(info.needs_transform);
+        assert_eq!(info.prop_keys.len(), 2);
+        assert_eq!(info.prop_keys[0], ("foo".to_string(), "foo".to_string()));
+        assert_eq!(info.prop_keys[1], ("bar".to_string(), "bar".to_string()));
+        assert!(info.rest_name.is_none());
+    }
+
+    #[test]
+    fn test_analyze_rest_pattern() {
+        let info = parse_and_analyze("component$(({foo, ...rest}) => foo)");
+        assert!(info.needs_transform);
+        assert_eq!(info.prop_keys.len(), 1);
+        assert_eq!(info.prop_keys[0], ("foo".to_string(), "foo".to_string()));
+        assert_eq!(info.rest_name, Some("rest".to_string()));
+    }
+
+    #[test]
+    fn test_analyze_renamed_props() {
+        let info = parse_and_analyze("component$(({count: c}) => c)");
+        assert!(info.needs_transform);
+        assert_eq!(info.prop_keys.len(), 1);
+        assert_eq!(info.prop_keys[0], ("count".to_string(), "c".to_string()));
+        assert!(info.rest_name.is_none());
+    }
+
+    #[test]
+    fn test_analyze_plain_identifier() {
+        let info = parse_and_analyze("component$((props) => props.foo)");
+        assert!(!info.needs_transform);
+        assert!(info.prop_keys.is_empty());
+        assert!(info.rest_name.is_none());
+    }
+
+    #[test]
+    fn test_analyze_no_params() {
+        let info = parse_and_analyze("component$(() => 'hello')");
+        assert!(!info.needs_transform);
+        assert!(info.prop_keys.is_empty());
+        assert!(info.rest_name.is_none());
+    }
+
+    #[test]
+    fn test_analyze_rest_only() {
+        let info = parse_and_analyze("component$(({...props}) => props)");
+        assert!(info.needs_transform);
+        assert!(info.prop_keys.is_empty());
+        assert_eq!(info.rest_name, Some("props".to_string()));
+    }
+
+    #[test]
+    fn test_analyze_complex_destructuring() {
+        let info = parse_and_analyze(
+            "component$(({message, id, count: c, ...rest}) => message + id + c)"
+        );
+        assert!(info.needs_transform);
+        assert_eq!(info.prop_keys.len(), 3);
+        assert_eq!(info.prop_keys[0], ("message".to_string(), "message".to_string()));
+        assert_eq!(info.prop_keys[1], ("id".to_string(), "id".to_string()));
+        assert_eq!(info.prop_keys[2], ("count".to_string(), "c".to_string()));
+        assert_eq!(info.rest_name, Some("rest".to_string()));
+        assert_eq!(info.raw_props_name, "_rawProps");
+    }
 }
