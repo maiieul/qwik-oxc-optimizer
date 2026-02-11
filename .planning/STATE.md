@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 8 -- Core Detection + QRL Transforms
+**Current focus:** Phase 9 -- Capture Analysis + Props Destructuring
 
 ## Current Position
 
-Phase: 8 of 13 (Core Detection + QRL Transforms) -- COMPLETE
-Plan: 2 of 2 in current phase -- COMPLETE
-Status: Phase 8 complete. QwikTransform + pipeline wired. Ready for Phase 9.
-Last activity: 2026-02-10 -- Completed 08-02: QwikTransform Traverse + pipeline wiring
+Phase: 9 of 13 (Capture Analysis + Props Destructuring)
+Plan: 1 of 2 in current phase -- COMPLETE
+Status: Props destructuring implemented. Ready for Plan 09-02 (capture analysis).
+Last activity: 2026-02-11 -- Completed 09-01: Props destructuring transformation
 
-Progress: [########░░░░░░░░░░░░] 40% (21/31 total plans across all milestones; v3.0 4/14)
+Progress: [#########░░░░░░░░░░░] 42% (22/31 total plans across all milestones; v3.0 5/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [########░░░░░░░░░░░░] 40% (21/31 total plans 
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 4
+- Total plans completed: 5
 - Average duration: 7.3min
-- Total execution time: 29min
+- Total execution time: 36min
 
 ## Accumulated Context
 
@@ -56,6 +56,9 @@ Recent decisions affecting current work:
 - std::mem::swap with ctx.ast.vec() for OXC Vec mutation (no Default impl)
 - expression_call_with_pure for PURE annotations on qrl/inlinedQrl calls
 - Pending dollar calls tracked by span.start u32 in HashSet for O(1) lookup
+- Post-analysis mutation pattern for props destructuring: analyze in enter_call_expression, mutate in exit_expression
+- Recursive walk for identifier replacement with scope-aware shadowing for nested arrows
+- param_names as Option<Vec<String>> on SegmentAnalysis with skip_serializing_if
 
 ### Pending Todos
 
@@ -67,6 +70,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-10
-Stopped at: Completed 08-02-PLAN.md (QwikTransform + pipeline wiring). Phase 8 complete. Ready for Phase 9.
+Last session: 2026-02-11
+Stopped at: Completed 09-01-PLAN.md (Props destructuring transformation). Ready for 09-02 (capture analysis).
 Resume file: None
