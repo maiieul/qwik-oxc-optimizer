@@ -225,21 +225,26 @@ pub fn transform_modules(
                     .map(|(_, code)| code.as_str())
                     .unwrap_or("");
 
-                let segment_code = if !body_code.is_empty() {
+                let seg_path = format!("{}.{}", segment_analysis.canonical_filename, seg_ext);
+                let (segment_code, segment_map) = if !body_code.is_empty() {
                     let raw_code = code_move::build_segment_code_with_hoisted(
                         body_code, seg, &transform_options, &hoisted_stmts,
                     );
-                    // Normalize via parse+codegen for consistent formatting
-                    emit::normalize_code(&raw_code)
+                    // Parse+codegen for consistent formatting, with optional source maps
+                    code_move::emit_segment_with_map(
+                        &raw_code,
+                        &seg_path,
+                        emit_options.source_maps,
+                    )
                 } else {
-                    String::new()
+                    (String::new(), None)
                 };
 
                 let segment_module = TransformModule {
-                    path: format!("{}.{}", segment_analysis.canonical_filename, seg_ext),
+                    path: seg_path,
                     is_entry: true,
                     code: segment_code,
-                    map: None,
+                    map: segment_map,
                     segment: Some(segment_analysis),
                     orig_path: Some(input.path.clone()),
                 };
@@ -2857,5 +2862,90 @@ export const result = myServer;"#
             "myServer should be replaced with true: {}",
             main_code
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // Source Maps Integration Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_source_maps_present() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => console.log('hello'));"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            source_maps: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Main module should have a source map
+        let main_module = &result.modules[0];
+        assert!(
+            main_module.map.is_some(),
+            "Expected main module to have a source map when source_maps=true"
+        );
+        let map_json = main_module.map.as_ref().unwrap();
+        assert!(
+            map_json.contains("\"version\""),
+            "Expected version field in source map: {}",
+            map_json
+        );
+        assert!(
+            map_json.contains("\"mappings\""),
+            "Expected mappings field in source map: {}",
+            map_json
+        );
+
+        // Segment modules (non-inline) should also have source maps
+        let segment_modules: Vec<_> = result
+            .modules
+            .iter()
+            .filter(|m| m.segment.is_some() && !m.code.is_empty())
+            .collect();
+        assert!(
+            !segment_modules.is_empty(),
+            "Expected at least one segment module with code"
+        );
+        for seg_mod in &segment_modules {
+            assert!(
+                seg_mod.map.is_some(),
+                "Expected segment module '{}' to have a source map when source_maps=true",
+                seg_mod.path
+            );
+            let seg_map = seg_mod.map.as_ref().unwrap();
+            assert!(
+                seg_map.contains("\"version\""),
+                "Expected version field in segment source map: {}",
+                seg_map
+            );
+        }
+    }
+
+    #[test]
+    fn test_source_maps_absent() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => console.log('hello'));"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            source_maps: false,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // All modules should have map: None
+        for module in &result.modules {
+            assert!(
+                module.map.is_none(),
+                "Expected all modules to have map=None when source_maps=false, but '{}' has a map",
+                module.path
+            );
+        }
     }
 }

@@ -237,6 +237,50 @@ fn find_arrow_position(code: &str) -> Option<usize> {
     None
 }
 
+/// Emit segment code with optional source map generation.
+///
+/// Parses the raw segment JavaScript string, runs Codegen with optional
+/// `source_map_path`, and returns (normalized_code, optional_map_json).
+///
+/// Since segment code is string-constructed (not AST-extracted with preserved
+/// spans), the source maps produce identity-like mappings (line N maps to
+/// line N in the re-parsed code). This is still useful for debugging as it
+/// provides column-level mapping within each generated line.
+pub(crate) fn emit_segment_with_map(
+    raw_code: &str,
+    segment_filename: &str,
+    source_maps: bool,
+) -> (String, Option<String>) {
+    let allocator = oxc::allocator::Allocator::default();
+    let source_in_arena = allocator.alloc_str(raw_code);
+    let source_type = oxc::span::SourceType::mjs();
+    let ret = oxc::parser::Parser::new(&allocator, source_in_arena, source_type).parse();
+    if ret.panicked || !ret.errors.is_empty() {
+        // If parsing fails, return original code unchanged with no map
+        return (raw_code.to_string(), None);
+    }
+
+    if source_maps {
+        use std::path::PathBuf;
+        let codegen_options = oxc::codegen::CodegenOptions {
+            source_map_path: Some(PathBuf::from(segment_filename)),
+            ..Default::default()
+        };
+        let codegen_result = oxc::codegen::Codegen::new()
+            .with_options(codegen_options)
+            .with_source_text(source_in_arena)
+            .build(&ret.program);
+
+        let map = codegen_result.map.map(|sm| sm.to_json_string());
+        (codegen_result.code, map)
+    } else {
+        let codegen_result = oxc::codegen::Codegen::new()
+            .with_source_text(source_in_arena)
+            .build(&ret.program);
+        (codegen_result.code, None)
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
