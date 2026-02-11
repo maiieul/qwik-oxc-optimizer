@@ -14,6 +14,7 @@ mod errors;
 mod filter_exports;
 mod hash;
 mod import_rewrite;
+mod jsx_transform;
 mod is_const;
 mod parse;
 mod props_destructuring;
