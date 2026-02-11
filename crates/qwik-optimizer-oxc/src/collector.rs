@@ -4,6 +4,11 @@
 //! needed by the transform pass: which imports come from `@qwik.dev/core`,
 //! which of those are `$`-suffixed, where `$()` call sites appear, and what
 //! the module exports. This is a read-only pass -- it does not mutate the AST.
+//!
+//! Also provides `compute_captures()` for capture analysis: given a set of
+//! identifier names referenced inside a $()-body and a set of names declared
+//! locally in that body, classify each outer reference as LocalCapture,
+//! ImportReemit, or skipped (global / framework import).
 
 use std::collections::HashSet;
 
@@ -12,6 +17,196 @@ use oxc::semantic::Scoping;
 
 use crate::types::{CollectResult, DollarCallSite, ExportInfo, ImportInfo};
 use crate::words;
+
+// ---------------------------------------------------------------------------
+// Capture Analysis
+// ---------------------------------------------------------------------------
+
+/// Result of capture analysis for a single $()-body.
+#[derive(Debug, Clone)]
+pub(crate) struct CaptureAnalysisResult {
+    /// Variable names that will be passed via _captures[] at runtime.
+    /// Order matches encounter order from the body traversal.
+    pub capture_names: Vec<String>,
+
+    /// Import bindings referenced in the body that should be re-emitted
+    /// in the segment module (NOT captured). Each entry is (local_name, source, is_default).
+    pub reemitted_imports: Vec<(String, String, bool)>,
+
+    /// Diagnostic messages for invalid captures (function/class declarations).
+    pub diagnostics: Vec<String>,
+}
+
+/// A well-known global identifier that should never be treated as a capture.
+const KNOWN_GLOBALS: &[&str] = &[
+    "console",
+    "undefined",
+    "NaN",
+    "Infinity",
+    "window",
+    "document",
+    "globalThis",
+    "self",
+    "navigator",
+    "location",
+    "history",
+    "localStorage",
+    "sessionStorage",
+    "fetch",
+    "setTimeout",
+    "setInterval",
+    "clearTimeout",
+    "clearInterval",
+    "requestAnimationFrame",
+    "cancelAnimationFrame",
+    "queueMicrotask",
+    "Promise",
+    "Array",
+    "Object",
+    "String",
+    "Number",
+    "Boolean",
+    "Symbol",
+    "Map",
+    "Set",
+    "WeakMap",
+    "WeakSet",
+    "Date",
+    "RegExp",
+    "Error",
+    "TypeError",
+    "RangeError",
+    "JSON",
+    "Math",
+    "parseInt",
+    "parseFloat",
+    "isNaN",
+    "isFinite",
+    "encodeURIComponent",
+    "decodeURIComponent",
+    "encodeURI",
+    "decodeURI",
+    "atob",
+    "btoa",
+    "structuredClone",
+    "URL",
+    "URLSearchParams",
+    "Headers",
+    "Request",
+    "Response",
+    "FormData",
+    "Blob",
+    "File",
+    "TextEncoder",
+    "TextDecoder",
+    "AbortController",
+    "AbortSignal",
+    "Event",
+    "CustomEvent",
+    "EventTarget",
+    "crypto",
+    "performance",
+    "alert",
+    "confirm",
+    "prompt",
+    "import",
+    "require",
+    "module",
+    "exports",
+    "__dirname",
+    "__filename",
+    "process",
+    "Buffer",
+    "global",
+    "arguments",
+    "this",
+    "super",
+    "new",
+    "true",
+    "false",
+    "null",
+];
+
+/// Determine which variables are captured by a $()-body.
+///
+/// This is the simplified/pragmatic approach for Phase 9: rather than using the
+/// full OXC Scoping API (which is consumed by `traverse_mut`), we receive:
+///
+/// - `body_ident_refs`: All IdentifierReference names seen inside the $()-body
+///   (collected during Traverse via `enter_identifier_reference`)
+/// - `body_local_decls`: Names declared locally inside the $()-body (parameters,
+///   let/const/var declarations) -- these are NOT captures
+/// - `collect_result`: The collector result with import data
+///
+/// For each unique name in `body_ident_refs` that is NOT in `body_local_decls`:
+/// - If it's a known global -> skip
+/// - If it's in the module's imports -> classify as ImportReemit (NOT captured)
+/// - If it's a $-suffixed import from @qwik.dev/core -> skip (framework, handled by QRL rewriting)
+/// - Otherwise -> LocalCapture (add to capture_names)
+///
+/// Encounter order from the body traversal is preserved in `body_ident_refs`.
+pub(crate) fn compute_captures(
+    body_ident_refs: &[String],
+    body_local_decls: &HashSet<String>,
+    collect_result: &CollectResult,
+) -> CaptureAnalysisResult {
+    let mut capture_names = Vec::new();
+    let mut reemitted_imports: Vec<(String, String, bool)> = Vec::new();
+    let diagnostics = Vec::new();
+    let mut seen: HashSet<String> = HashSet::new();
+
+    for name in body_ident_refs {
+        // Skip if already processed
+        if !seen.insert(name.clone()) {
+            continue;
+        }
+
+        // Skip if declared locally in the body
+        if body_local_decls.contains(name) {
+            continue;
+        }
+
+        // Skip known globals
+        if KNOWN_GLOBALS.contains(&name.as_str()) {
+            continue;
+        }
+
+        // Skip $-suffixed framework imports (handled by QRL rewriting)
+        if collect_result.dollar_imports.contains(name) {
+            continue;
+        }
+
+        // Check if it's a module import
+        let mut is_import = false;
+        for import_info in &collect_result.module_imports {
+            if import_info.specifiers.contains(name) {
+                // It's an import -- classify as re-emitted import, NOT captured
+                let is_default = import_info.specifiers.len() == 1
+                    && import_info.specifiers[0] == *name
+                    && !import_info.is_qwik_core;
+                reemitted_imports.push((
+                    name.clone(),
+                    import_info.source.clone(),
+                    is_default,
+                ));
+                is_import = true;
+                break;
+            }
+        }
+        if is_import {
+            continue;
+        }
+
+        // Not a global, not an import, not body-local -> it's a capture
+        capture_names.push(name.clone());
+    }
+
+    CaptureAnalysisResult {
+        capture_names,
+        reemitted_imports,
+        diagnostics,
+    }
+}
 
 /// Context for tracking nesting depth during recursive AST walk.
 struct CollectContext {
@@ -739,5 +934,167 @@ const x = $(() => 1);"#,
         let (start, end) = result.dollar_calls[0].span;
         assert!(start < end, "Span start ({}) should be less than end ({})", start, end);
         assert!(start > 0, "Span start should be > 0 (not at beginning of file)");
+    }
+
+    // -----------------------------------------------------------------------
+    // Capture Analysis Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_compute_captures_no_captures() {
+        // $() body with only local vars and globals -> empty captures
+        let collect_result = parse_and_collect(
+            r#"import { $ } from '@qwik.dev/core';
+const handler = $(() => {
+    const x = 1;
+    console.log(x);
+});"#,
+        );
+
+        let body_ident_refs = vec![
+            "x".to_string(),
+            "console".to_string(),
+        ];
+        let body_local_decls: HashSet<String> = ["x".to_string()].into_iter().collect();
+
+        let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
+        assert!(result.capture_names.is_empty(), "Expected no captures, got {:?}", result.capture_names);
+        assert!(result.reemitted_imports.is_empty());
+        assert!(result.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_compute_captures_state_variable() {
+        // $() body referencing outer `state` -> captures=["state"]
+        let collect_result = parse_and_collect(
+            r#"import { $, component$, useStore } from '@qwik.dev/core';
+export const App = component$(() => {
+    const state = useStore({count: 0});
+    return $(() => state.count);
+});"#,
+        );
+
+        // Simulating the inner $() body that references "state"
+        let body_ident_refs = vec!["state".to_string()];
+        let body_local_decls: HashSet<String> = HashSet::new();
+
+        let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
+        assert_eq!(result.capture_names, vec!["state".to_string()]);
+        assert!(result.reemitted_imports.is_empty());
+    }
+
+    #[test]
+    fn test_compute_captures_import_not_captured() {
+        // $() body referencing imported `useStore` -> not in captures, is in reemitted_imports
+        let collect_result = parse_and_collect(
+            r#"import { $, component$, useStore } from '@qwik.dev/core';
+import { thing } from './utils';
+export const App = component$(() => {
+    return $(() => {
+        thing.doStuff();
+        useStore({});
+    });
+});"#,
+        );
+
+        // The inner $() body references "thing" (import) and "useStore" (qwik core import)
+        let body_ident_refs = vec![
+            "thing".to_string(),
+            "useStore".to_string(),
+        ];
+        let body_local_decls: HashSet<String> = HashSet::new();
+
+        let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
+        // "thing" is an import -> reemitted, not captured
+        // "useStore" is a qwik core import (specifier on a qwik import) -> reemitted, not captured
+        assert!(result.capture_names.is_empty(), "Expected no captures, got {:?}", result.capture_names);
+
+        // "thing" should be in reemitted_imports
+        assert!(
+            result.reemitted_imports.iter().any(|(name, _, _)| name == "thing"),
+            "Expected 'thing' in reemitted_imports, got {:?}",
+            result.reemitted_imports
+        );
+        // "useStore" should also be in reemitted_imports (it's in the qwik core import specifiers)
+        assert!(
+            result.reemitted_imports.iter().any(|(name, _, _)| name == "useStore"),
+            "Expected 'useStore' in reemitted_imports, got {:?}",
+            result.reemitted_imports
+        );
+    }
+
+    #[test]
+    fn test_compute_captures_dollar_import_skipped() {
+        // $-suffixed imports (framework) should be skipped entirely
+        let collect_result = parse_and_collect(
+            r#"import { $, component$ } from '@qwik.dev/core';"#,
+        );
+
+        let body_ident_refs = vec![
+            "$".to_string(),
+            "component$".to_string(),
+        ];
+        let body_local_decls: HashSet<String> = HashSet::new();
+
+        let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
+        assert!(result.capture_names.is_empty());
+        assert!(result.reemitted_imports.is_empty());
+    }
+
+    #[test]
+    fn test_compute_captures_mixed() {
+        // Mix of captures, imports, and body-locals
+        let collect_result = parse_and_collect(
+            r#"import { $, component$ } from '@qwik.dev/core';
+import { thing } from './sibling';"#,
+        );
+
+        let body_ident_refs = vec![
+            "state".to_string(),       // outer variable -> capture
+            "count".to_string(),       // outer variable -> capture
+            "thing".to_string(),       // import -> reemitted
+            "localVar".to_string(),    // body-local -> skip
+            "console".to_string(),     // global -> skip
+            "$".to_string(),           // dollar import -> skip
+        ];
+        let body_local_decls: HashSet<String> = ["localVar".to_string()].into_iter().collect();
+
+        let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
+        assert_eq!(result.capture_names, vec!["state".to_string(), "count".to_string()]);
+        assert_eq!(result.reemitted_imports.len(), 1);
+        assert_eq!(result.reemitted_imports[0].0, "thing");
+    }
+
+    #[test]
+    fn test_compute_captures_deduplication() {
+        // Same name referenced multiple times -> only counted once
+        let collect_result = parse_and_collect(
+            r#"import { $ } from '@qwik.dev/core';"#,
+        );
+
+        let body_ident_refs = vec![
+            "state".to_string(),
+            "state".to_string(),
+            "state".to_string(),
+        ];
+        let body_local_decls: HashSet<String> = HashSet::new();
+
+        let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
+        assert_eq!(result.capture_names.len(), 1);
+        assert_eq!(result.capture_names[0], "state");
+    }
+
+    #[test]
+    fn test_compute_captures_rawprops() {
+        // After props destructuring, _rawProps is referenced in inner $() -> captured
+        let collect_result = parse_and_collect(
+            r#"import { $, component$ } from '@qwik.dev/core';"#,
+        );
+
+        let body_ident_refs = vec!["_rawProps".to_string()];
+        let body_local_decls: HashSet<String> = HashSet::new();
+
+        let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
+        assert_eq!(result.capture_names, vec!["_rawProps".to_string()]);
     }
 }
