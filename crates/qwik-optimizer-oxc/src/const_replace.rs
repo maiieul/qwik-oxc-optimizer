@@ -29,7 +29,6 @@ pub(crate) fn replace_build_constants<'a>(
     options: &TransformOptions,
     allocator: &'a oxc::allocator::Allocator,
 ) {
-    // 1. Build replacement map: local_name -> bool value
     let replacements = build_replacement_map(program, options);
     if replacements.is_empty() {
         return;
@@ -37,13 +36,10 @@ pub(crate) fn replace_build_constants<'a>(
 
     let ast = AstBuilder::new(allocator);
 
-    // 2. Replace identifiers with boolean literals throughout the AST
     replace_identifiers_in_statements(&mut program.body, &replacements, &ast);
 
-    // 3. Eliminate dead branches after replacement
     eliminate_dead_branches(&mut program.body, &ast);
 
-    // 4. Strip build constant imports (remove specifiers that were replaced)
     strip_build_constant_imports(&mut program.body, &replacements);
 }
 
@@ -224,7 +220,6 @@ fn replace_identifiers_in_declaration<'a>(
             }
         }
         Declaration::ClassDeclaration(class) => {
-            // Walk class body methods for identifiers
             for element in class.body.body.iter_mut() {
                 if let ClassElement::MethodDefinition(method) = element {
                     if let Some(ref mut body) = method.value.body {
@@ -317,8 +312,6 @@ fn replace_identifiers_in_expression<'a>(
                 replace_identifiers_in_argument(arg, replacements, ast);
             }
         }
-        // MemberExpression variants are flattened via inherit_variants!
-        // We skip them -- we don't want to replace `obj.isServer` (property access)
         Expression::StaticMemberExpression(_)
         | Expression::ComputedMemberExpression(_)
         | Expression::PrivateFieldExpression(_) => {}
@@ -527,7 +520,6 @@ fn eval_boolean_value(expr: &Expression<'_>) -> Option<bool> {
 /// `false && x` -> `false`, `true && x` -> `x`
 /// `true || x` -> `true`, `false || x` -> `x`
 fn simplify_logical_expression<'a>(expr: &mut Expression<'a>, ast: &AstBuilder<'a>) {
-    // First, recurse into sub-expressions
     if let Expression::LogicalExpression(logical) = expr {
         simplify_logical_expression(&mut logical.left, ast);
         simplify_logical_expression(&mut logical.right, ast);
@@ -536,7 +528,6 @@ fn simplify_logical_expression<'a>(expr: &mut Expression<'a>, ast: &AstBuilder<'
         simplify_logical_expression(&mut unary.argument, ast);
     }
 
-    // Then simplify this expression
     if let Expression::LogicalExpression(logical) = expr {
         if let Some(left_val) = eval_boolean_value(&logical.left) {
             match logical.operator {
@@ -571,7 +562,6 @@ fn simplify_logical_expression<'a>(expr: &mut Expression<'a>, ast: &AstBuilder<'
         }
     }
 
-    // Simplify !true -> false, !false -> true
     if let Expression::UnaryExpression(unary) = expr {
         if matches!(
             unary.operator,
@@ -598,12 +588,10 @@ fn eliminate_dead_branches<'a>(
     stmts: &mut oxc::allocator::Vec<'a, Statement<'a>>,
     ast: &AstBuilder<'a>,
 ) {
-    // First, simplify logical expressions in all statements
     for stmt in stmts.iter_mut() {
         simplify_expressions_in_statement(stmt, ast);
     }
 
-    // Collect actions for dead if-branches.
     let mut actions: Vec<(usize, StmtAction<'a>)> = Vec::new();
 
     for (i, stmt) in stmts.iter_mut().enumerate() {
@@ -643,7 +631,6 @@ fn eliminate_dead_branches<'a>(
         }
     }
 
-    // Apply actions: rebuild the statement list
     if !actions.is_empty() {
         let mut action_map: HashMap<usize, StmtAction<'a>> =
             actions.into_iter().collect();
@@ -668,7 +655,6 @@ fn eliminate_dead_branches<'a>(
         }
     }
 
-    // Recurse into remaining statements to handle nested dead branches
     for stmt in stmts.iter_mut() {
         recurse_dead_branches_in_statement(stmt, ast);
     }
@@ -884,7 +870,6 @@ fn strip_build_constant_imports<'a>(
     stmts: &mut oxc::allocator::Vec<'a, Statement<'a>>,
     replacements: &HashMap<String, bool>,
 ) {
-    // Collect indices of statements to remove entirely
     let mut remove_indices: Vec<usize> = Vec::new();
 
     for (i, stmt) in stmts.iter_mut().enumerate() {
@@ -895,7 +880,6 @@ fn strip_build_constant_imports<'a>(
             }
 
             if let Some(ref mut specifiers) = import.specifiers {
-                // Remove specifiers whose local name is in the replacement map
                 specifiers.retain(|spec| {
                     if let ImportDeclarationSpecifier::ImportSpecifier(s) = spec {
                         !replacements.contains_key(s.local.name.as_str())

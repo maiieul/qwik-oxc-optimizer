@@ -72,13 +72,9 @@ pub fn transform_modules(
     };
 
     for input in &config.input {
-        // 1. Create the arena allocator for this module
         let allocator = oxc::allocator::Allocator::default();
-
-        // Allocate source into the arena so it lives for 'a
         let source_in_arena = allocator.alloc_str(&input.code);
 
-        // 2. Parse the module (error-recovering: partial AST on recoverable errors)
         let (parse_result, parse_diags) =
             match parse::parse_module(&allocator, source_in_arena, &input.path) {
                 Ok((result, diags)) => (result, diags),
@@ -90,7 +86,6 @@ pub fn transform_modules(
             };
         all_diagnostics.extend(parse_diags);
 
-        // Track source type flags
         if parse_result.source_type.is_typescript() {
             is_type_script = true;
         }
@@ -101,21 +96,16 @@ pub fn transform_modules(
         let mut program = parse_result.program;
         let scoping = parse_result.scoping;
 
-        // 3. Run collector pass (with custom core_module for recognizing non-default imports)
         let collect_result = collector::collect(
             &program,
             &scoping,
             config.core_module.as_deref(),
         );
 
-        // 3b. Run build constant replacement pre-pass (isServer/isBrowser/isDev -> booleans)
-        // This must happen before traverse_mut so that segment body serialization
-        // sees the replaced boolean literals instead of the original identifiers.
+        // Must happen before traverse_mut so segment body serialization sees replaced values
         const_replace::replace_build_constants(&mut program, &transform_options, &allocator);
 
-        // 3c. Run export stripping pre-pass if strip_exports is configured.
-        // This replaces stripped export bodies with throw stubs BEFORE the
-        // traverse, so $-call detection won't find calls inside stripped exports.
+        // Must happen before traverse so $-call detection skips stripped exports
         if !transform_options.strip_exports.is_empty() {
             filter_exports::filter_exports(
                 &mut program,
@@ -125,13 +115,9 @@ pub fn transform_modules(
             );
         }
 
-        // 4. Create QwikTransform and run traverse
         let mut qwik_transform =
             transform::QwikTransform::new(&transform_options, collect_result, &input.path);
 
-        // Detect @jsxImportSource in the source code (e.g., `/* @jsxImportSource react */`).
-        // When present, JSX $-attributes are NOT Qwik event handlers and should not
-        // be extracted as segments.
         if input.code.contains("@jsxImportSource") {
             qwik_transform.set_custom_jsx_import_source(true);
         }
@@ -144,16 +130,11 @@ pub fn transform_modules(
             (),
         );
 
-        // 5. Post-transform processing: populate child segment metadata
         qwik_transform.finalize_segments();
 
-        // 6. Emit the transformed module
         let emit_result = emit::emit_module(&program, source_in_arena, &emit_options, &input.path);
 
-        // 6b. Prepend hoisted function declarations for _fnSignal.
-        // These are string-based const declarations that go after imports but before
-        // the main module body. Since imports are already prepended by exit_program,
-        // we insert hoisted stmts between imports and the rest of the code.
+        // Prepend hoisted function declarations between imports and module body
         let hoisted_stmts: Vec<(String, String)> = qwik_transform.hoisted_function_stmts().to_vec();
         let main_code = if !hoisted_stmts.is_empty() {
             let mut hoisted_code = String::new();
@@ -163,9 +144,6 @@ pub fn transform_modules(
                 hoisted_code.push_str(str_code);
                 hoisted_code.push('\n');
             }
-            // Find the insertion point: after all import statements.
-            // Import statements start with "import " in the emitted code.
-            // We scan for the last import line and insert after it.
             let code = &emit_result.code;
             let mut last_import_end = 0;
             let mut pos = 0;
@@ -179,14 +157,12 @@ pub fn transform_modules(
             if last_import_end > 0 {
                 format!("{}{}{}", &code[..last_import_end], hoisted_code, &code[last_import_end..])
             } else {
-                // No imports found, prepend hoisted code
                 format!("{}{}", hoisted_code, code)
             }
         } else {
             emit_result.code.clone()
         };
 
-        // 7. Compute output extension based on transpile_ts setting
         let output_ext = output_extension(&input.path, transform_options.transpile_ts);
         let main_path = if transform_options.transpile_ts {
             input
@@ -199,7 +175,6 @@ pub fn transform_modules(
             input.path.clone()
         };
 
-        // 8. Build the main TransformModule
         let main_module = TransformModule {
             path: main_path,
             is_entry: false,
@@ -210,7 +185,6 @@ pub fn transform_modules(
         };
         all_modules.push(main_module);
 
-        // 9. Build segment modules based on entry strategy
         let body_codes = qwik_transform.take_segment_body_codes();
         let segments = qwik_transform.extracted_segments();
         let stripped_spans = qwik_transform.stripped_segments();
@@ -222,25 +196,18 @@ pub fn transform_modules(
             );
 
         for seg in segments {
-            // Skip stripped segments -- they don't produce output modules
             if stripped_spans.contains(&seg.span.0) {
                 continue;
             }
 
-            // Inline/Hoist strategies: all code stays in the main module via
-            // inlinedQrl. The SWC optimizer produces only the main module for
-            // these strategies -- no separate segment TransformModule entries.
             if is_inline_like {
                 continue;
             }
 
             let segment_analysis = segment_data_to_analysis(seg, &input.path);
-
-            // Use output extension for segment module path
             let seg_ext = output_extension(&input.path, transform_options.transpile_ts);
 
             {
-                // Segment/Single/Component/Smart/Hook: separate file with code
                 let body_code = body_codes
                     .iter()
                     .find(|(span_start, _)| *span_start == seg.span.0)
@@ -252,7 +219,6 @@ pub fn transform_modules(
                     let raw_code = code_move::build_segment_code_with_hoisted(
                         body_code, seg, &transform_options, &hoisted_stmts,
                     );
-                    // Parse+codegen for consistent formatting, with optional source maps
                     code_move::emit_segment_with_map(
                         &raw_code,
                         &seg_path,
@@ -274,7 +240,6 @@ pub fn transform_modules(
             }
         }
 
-        // 8. Collect diagnostics
         all_diagnostics.extend(qwik_transform.diagnostics().to_vec());
     }
 
@@ -307,8 +272,6 @@ fn output_extension(input_path: &str, transpile_ts: bool) -> String {
 
 /// Convert internal SegmentData to public SegmentAnalysis.
 fn segment_data_to_analysis(seg: &SegmentData, origin_path: &str) -> SegmentAnalysis {
-    // Build canonical filename: display_name without the filename prefix + hash
-    // The canonical filename is used for the output file path
     let canonical_filename = format!(
         "{}_{}",
         seg.display_name, seg.hash
@@ -368,11 +331,10 @@ mod tests {
 
         let result = transform_modules(config).unwrap();
 
-        // Real pipeline now returns the transformed module
         assert_eq!(result.modules.len(), 1);
         assert!(result.modules[0].code.contains("const x = 1"));
-        assert!(result.is_type_script); // .tsx file
-        assert!(result.is_jsx);         // .tsx file
+        assert!(result.is_type_script);
+        assert!(result.is_jsx);
     }
 
     #[test]
@@ -416,14 +378,11 @@ export const handler = $(() => console.log('hello'));"#
         };
         let result = transform_modules(config).unwrap();
 
-        // Should have at least 1 module (the main transformed module)
         assert!(
             !result.modules.is_empty(),
             "Expected at least one output module"
         );
         let main_module = &result.modules[0];
-
-        // The main module code should contain qrl() (not $())
         assert!(
             main_module.code.contains("qrl"),
             "Expected qrl in output: {}",
@@ -449,13 +408,11 @@ const App = component$(() => {
         assert!(!result.modules.is_empty());
         let main_code = &result.modules[0].code;
 
-        // Should contain componentQrl (renamed from component$)
         assert!(
             main_code.contains("componentQrl"),
             "Expected componentQrl in output: {}",
             main_code
         );
-        // Should contain qrl() call wrapping the segment
         assert!(
             main_code.contains("qrl("),
             "Expected qrl() call: {}",
@@ -480,7 +437,6 @@ export const handler = $(() => console.log('hello'));"#
         assert!(!result.modules.is_empty());
         let main_code = &result.modules[0].code;
 
-        // Inline strategy should use inlinedQrl instead of qrl
         assert!(
             main_code.contains("inlinedQrl"),
             "Expected inlinedQrl in output: {}",
@@ -501,14 +457,12 @@ export const handler = $(() => console.log('hello'));"#
         };
         let result = transform_modules(config).unwrap();
 
-        // Should have main module + at least 1 segment module
         assert!(
             result.modules.len() >= 2,
             "Expected main + segment modules, got {} modules",
             result.modules.len()
         );
 
-        // Second module should be a segment with is_entry = true
         let segment_module = &result.modules[1];
         assert!(segment_module.is_entry, "Segment module should be an entry");
         assert!(
@@ -532,7 +486,6 @@ const App = component$(() => <div/>);"#
 
         let main_code = &result.modules[0].code;
 
-        // Should have import declarations for componentQrl and qrl
         assert!(
             main_code.contains("componentQrl"),
             "Expected componentQrl import: {}",
@@ -560,7 +513,6 @@ const handler = $(() => 1);"#
 
         let main_code = &result.modules[0].code;
 
-        // Should have lazy import constant: const i_HASH = () => import(...)
         assert!(
             main_code.contains("const i_"),
             "Expected lazy import constant: {}",
@@ -584,7 +536,6 @@ const handler = $(() => 1);"#
         };
         let result = transform_modules(config).unwrap();
 
-        // Should have diagnostics but not panic
         assert!(
             !result.diagnostics.is_empty(),
             "Expected parse error diagnostics"
@@ -601,7 +552,6 @@ const handler = $(() => 1);"#
 
     #[test]
     fn test_props_destructuring_basic() {
-        // Use inline strategy so arrow body stays in same module for easy verification
         let config = TransformModulesOptions {
             input: vec![TransformModuleInput {
                 code: r#"import { component$ } from '@qwik.dev/core';
@@ -619,13 +569,11 @@ const App = component$(({foo, bar}) => {
         assert!(!result.modules.is_empty());
         let main_code = &result.modules[0].code;
 
-        // Should contain _rawProps parameter (not destructured {foo, bar})
         assert!(
             main_code.contains("_rawProps"),
             "Expected _rawProps in output: {}",
             main_code
         );
-        // Should contain _rawProps.foo and _rawProps.bar member access
         assert!(
             main_code.contains("_rawProps.foo"),
             "Expected _rawProps.foo in output: {}",
@@ -636,7 +584,6 @@ const App = component$(({foo, bar}) => {
             "Expected _rawProps.bar in output: {}",
             main_code
         );
-        // Should NOT contain the original destructuring pattern
         assert!(
             !main_code.contains("{foo, bar}"),
             "Should not contain original destructuring: {}",
@@ -663,25 +610,21 @@ const App = component$(({foo, ...rest}) => {
         assert!(!result.modules.is_empty());
         let main_code = &result.modules[0].code;
 
-        // Should contain _rawProps parameter
         assert!(
             main_code.contains("_rawProps"),
             "Expected _rawProps in output: {}",
             main_code
         );
-        // Should contain _restProps call
         assert!(
             main_code.contains("_restProps"),
             "Expected _restProps in output: {}",
             main_code
         );
-        // Should contain the excluded key "foo" in the _restProps call
         assert!(
             main_code.contains("\"foo\""),
             "Expected \"foo\" key in _restProps call: {}",
             main_code
         );
-        // Should contain _restProps import
         assert!(
             main_code.contains("_restProps"),
             "Expected _restProps import: {}",
@@ -708,15 +651,12 @@ const App = component$(({count: c}) => {
         assert!(!result.modules.is_empty());
         let main_code = &result.modules[0].code;
 
-        // Should contain _rawProps.count (the original key, not the alias "c")
         assert!(
             main_code.contains("_rawProps.count"),
             "Expected _rawProps.count in output (not _rawProps.c): {}",
             main_code
         );
-        // The variable `c` should NOT appear as a standalone identifier reference.
         // It should be replaced with _rawProps.count, not _rawProps.c.
-        // Verify we don't have _rawProps.c followed by a non-alphanumeric
         // (which would mean the alias was used as a key)
         assert!(
             !main_code.contains("_rawProps.c ") && !main_code.contains("_rawProps.c;") && !main_code.contains("_rawProps.c\n"),
@@ -744,13 +684,11 @@ const App = component$((props) => {
         assert!(!result.modules.is_empty());
         let main_code = &result.modules[0].code;
 
-        // Should NOT contain _rawProps -- plain identifier params are unchanged
         assert!(
             !main_code.contains("_rawProps"),
             "Should NOT contain _rawProps for plain param: {}",
             main_code
         );
-        // Should contain original props reference
         assert!(
             main_code.contains("props"),
             "Expected original props reference: {}",
@@ -777,7 +715,6 @@ const App = component$(() => {
         assert!(!result.modules.is_empty());
         let main_code = &result.modules[0].code;
 
-        // Should NOT contain _rawProps -- no params to destructure
         assert!(
             !main_code.contains("_rawProps"),
             "Should NOT contain _rawProps for no params: {}",
@@ -810,7 +747,6 @@ const App = component$(({foo}) => {
 
         let segment = segment_module.segment.as_ref().unwrap();
 
-        // Should have param_names = ["_rawProps"]
         assert_eq!(
             segment.param_names,
             Some(vec!["_rawProps".to_string()]),
@@ -838,13 +774,11 @@ const App = component$(({...props}) => {
         assert!(!result.modules.is_empty());
         let main_code = &result.modules[0].code;
 
-        // Should contain _rawProps parameter
         assert!(
             main_code.contains("_rawProps"),
             "Expected _rawProps in output: {}",
             main_code
         );
-        // Should contain _restProps(_rawProps) call (no excluded keys)
         assert!(
             main_code.contains("_restProps(_rawProps)"),
             "Expected _restProps(_rawProps) without excluded keys: {}",
@@ -872,7 +806,6 @@ useTask$(({track}) => {
         assert!(!result.modules.is_empty());
         let main_code = &result.modules[0].code;
 
-        // Should NOT contain _rawProps -- only component$ gets this treatment
         assert!(
             !main_code.contains("_rawProps"),
             "useTask$ should NOT get _rawProps transformation: {}",
@@ -963,7 +896,6 @@ export const Foo = component$(({foo}) => {
         // In segment strategy, _rawProps won't appear in the main module
         // because the component body (containing the inner $() qrl call
         // with captures) is extracted into a separate segment file.
-        // Verify the main module at least has the component qrl call.
         let main_code = &result.modules[0].code;
         assert!(
             main_code.contains("componentQrl"),
@@ -1095,7 +1027,6 @@ export const Foo = component$(({foo}) => {
 
     #[test]
     fn test_capture_metadata_populated() {
-        // Verify SegmentAnalysis.captures and captureNames are correctly populated
         let config = TransformModulesOptions {
             input: vec![TransformModuleInput {
                 code: r#"import { $, component$, useStore } from '@qwik.dev/core';
@@ -1117,7 +1048,6 @@ export const App = component$(() => {
             .filter_map(|m| m.segment.as_ref())
             .collect();
 
-        // Should have 2 segments: component$ body and inner $()
         assert!(
             all_segments.len() >= 2,
             "Expected at least 2 segments, got {}: {:?}",
@@ -1204,7 +1134,6 @@ export const handler = $(() => console.log('hello'));"#
         };
         let result = transform_modules(config).unwrap();
 
-        // Should have main + segment module
         assert!(
             result.modules.len() >= 2,
             "Expected main + segment modules, got {}",
@@ -1272,14 +1201,12 @@ export const App = component$(() => {
             "Inner segment with captures should have code"
         );
 
-        // Should have _captures import
         assert!(
             inner_seg.code.contains("_captures"),
             "Segment should import _captures: {}",
             inner_seg.code
         );
 
-        // Should have capture restoration: _captures[0]
         assert!(
             inner_seg.code.contains("_captures[0]"),
             "Segment should restore captures: {}",
@@ -1336,7 +1263,6 @@ export const App = component$(() => {
 
     #[test]
     fn test_segment_code_export_name() {
-        // Verify the export name matches the segment name
         let config = TransformModulesOptions {
             input: vec![TransformModuleInput {
                 code: r#"import { $ } from '@qwik.dev/core';
@@ -1593,7 +1519,6 @@ export const handler = $(() => 1);"#
         let result = transform_modules(config).unwrap();
 
         let main_code = &result.modules[0].code;
-        // Should contain _jsxSorted calls instead of JSX
         assert!(
             main_code.contains("_jsxSorted"),
             "Expected _jsxSorted in output: {}",
@@ -1609,13 +1534,11 @@ export const handler = $(() => 1);"#
             "Expected \"span\" string tag: {}",
             main_code
         );
-        // Should NOT contain raw JSX
         assert!(
             !main_code.contains("<div>"),
             "Should not contain raw JSX: {}",
             main_code
         );
-        // Should have _jsxSorted import
         assert!(
             main_code.contains("import { _jsxSorted }"),
             "Expected _jsxSorted import: {}",
@@ -1713,7 +1636,6 @@ const App = component$(() => {
             "Expected q-e:blur in output: {}",
             main_code
         );
-        // Should NOT contain raw onClick$ in output
         assert!(
             !main_code.contains("onClick$"),
             "Should not contain raw onClick$: {}",
@@ -2063,13 +1985,11 @@ export const App = component$(({fromProps}) => {
         let result = transform_modules(config).unwrap();
 
         let main_code = &result.modules[0].code;
-        // Should have value prop
         assert!(
             main_code.contains("value"),
             "Expected value prop: {}",
             main_code
         );
-        // Should have q-e:input with _val handler
         assert!(
             main_code.contains("_val"),
             "Expected _val handler: {}",
@@ -2080,7 +2000,6 @@ export const App = component$(({fromProps}) => {
             "Expected inlinedQrl call: {}",
             main_code
         );
-        // Should NOT have bind:value in output
         assert!(
             !main_code.contains("bind:value"),
             "Should NOT have bind:value in output: {}",
@@ -2142,7 +2061,6 @@ export const App = component$(({fromProps}) => {
             "Expected bind:stuff to pass through: {}",
             main_code
         );
-        // Should NOT have _val or _chk
         assert!(
             !main_code.contains("_val"),
             "Should NOT have _val for bind:stuff: {}",
@@ -2161,7 +2079,6 @@ export const App = component$(({fromProps}) => {
 
     #[test]
     fn test_jsx_pure_annotation() {
-        // Verify _jsxSorted calls contain PURE annotation in output.
         // OXC emits /* @__PURE__ */ (standard format recognized by all bundlers).
         let config = TransformModulesOptions {
             input: vec![TransformModuleInput {
@@ -2189,7 +2106,6 @@ export const App = component$(({fromProps}) => {
 
     #[test]
     fn test_jsx_pure_annotation_fragment() {
-        // Verify _jsxSorted on fragments also has PURE annotation
         let config = TransformModulesOptions {
             input: vec![TransformModuleInput {
                 code: r#"export const App = () => <><div/><span/></>;"#.to_string(),
@@ -2210,7 +2126,6 @@ export const App = component$(({fromProps}) => {
 
     #[test]
     fn test_jsx_pure_annotation_spread_jsxsplit() {
-        // Verify _jsxSplit calls also have PURE annotation
         let config = TransformModulesOptions {
             input: vec![TransformModuleInput {
                 code: r#"export const App = (props) => <button {...props}/>;"#.to_string(),
@@ -2231,7 +2146,6 @@ export const App = component$(({fromProps}) => {
 
     #[test]
     fn test_jsx_pure_annotation_qrl_calls() {
-        // Verify componentQrl and qrl also have PURE annotation
         let config = TransformModulesOptions {
             input: vec![TransformModuleInput {
                 code: r#"import { component$ } from '@qwik.dev/core';
@@ -2474,7 +2388,6 @@ export const App = component$(() => {
             .find(|m| m.is_entry && m.code.contains("_qrlSync"))
             .expect("Expected component segment with _qrlSync");
 
-        // Should contain _qrlSync call with the function and stringified version
         assert!(
             component_seg.code.contains("_qrlSync"),
             "Expected _qrlSync in component segment: {}",
@@ -2531,7 +2444,6 @@ export const App = component$(() => {
             sync_segments.len()
         );
 
-        // The main module should NOT have any lazy import for sync$
         let main_code = &result.modules[0].code;
         assert!(
             !main_code.contains("_qrlSync"),
@@ -2567,7 +2479,6 @@ export const App = component$(() => {
             .find(|m| m.is_entry && m.code.contains("_qrlSync"))
             .expect("Expected component segment with _qrlSync");
 
-        // Should contain _qrlSync with function expression
         assert!(
             component_seg.code.contains("_qrlSync(function"),
             "Expected _qrlSync with function expression: {}",
@@ -2603,21 +2514,18 @@ export const handler = sync$((event, target) => {
 
         let main_code = &result.modules[0].code;
 
-        // Should contain _qrlSync in the main module (sync$ used at top level, not inside component$)
         assert!(
             main_code.contains("_qrlSync"),
             "Expected _qrlSync in output: {}",
             main_code
         );
 
-        // Should have _qrlSync import
         assert!(
             main_code.contains("import { _qrlSync }"),
             "Expected _qrlSync import: {}",
             main_code
         );
 
-        // Should NOT have any segment-related imports (no qrl, no lazy import)
         // since sync$ doesn't produce segments
         assert!(
             !main_code.contains("import { qrl }"),

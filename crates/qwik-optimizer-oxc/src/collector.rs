@@ -156,37 +156,29 @@ pub(crate) fn compute_captures(
     let mut seen: HashSet<String> = HashSet::new();
 
     for name in body_ident_refs {
-        // Skip if already processed
         if !seen.insert(name.clone()) {
             continue;
         }
 
-        // Skip if declared locally in the body
         if body_local_decls.contains(name) {
             continue;
         }
 
-        // Skip known globals
         if KNOWN_GLOBALS.contains(&name.as_str()) {
             continue;
         }
 
-        // Skip $-suffixed framework imports (handled by QRL rewriting)
         if collect_result.dollar_imports.contains(name) {
             continue;
         }
 
-        // Skip module-level declarations (available in module scope, not captures).
-        // This includes top-level const/let/var, function, class, and import names.
         if collect_result.module_level_decls.contains(name) {
             continue;
         }
 
-        // Check if it's a module import
         let mut is_import = false;
         for import_info in &collect_result.module_imports {
             if import_info.specifiers.contains(name) {
-                // It's an import -- classify as re-emitted import, NOT captured
                 let is_default = import_info.specifiers.len() == 1
                     && import_info.specifiers[0] == *name
                     && !import_info.is_qwik_core;
@@ -203,7 +195,6 @@ pub(crate) fn compute_captures(
             continue;
         }
 
-        // Not a global, not an import, not body-local, not module-level -> it's a capture
         capture_names.push(name.clone());
     }
 
@@ -249,7 +240,6 @@ impl CollectContext {
                 core_modules.push(cm.to_string());
             }
         }
-        // Also recognize legacy @builder.io/qwik
         if !core_modules.iter().any(|m| m == "@builder.io/qwik") {
             core_modules.push("@builder.io/qwik".to_string());
         }
@@ -278,19 +268,13 @@ impl CollectContext {
     /// Sub-paths like `@qwik.dev/core/build` or `@qwik.dev/core/jsx-runtime`
     /// are NOT treated as core imports (they don't re-export $-APIs).
     fn is_qwik_core_import(&self, source: &str) -> bool {
-        // Check exact matches from config (core_module, @qwik.dev/core, @builder.io/qwik)
         if self.core_modules.iter().any(|m| m == source) {
             return true;
         }
-        // Check @qwik.dev/* packages (excluding sub-paths like /core/build)
-        // e.g., "@qwik.dev/react" matches but "@qwik.dev/core/jsx-runtime" does not
         if source.starts_with("@qwik.dev/") {
             let after_scope = &source["@qwik.dev/".len()..];
-            // Must be a simple package name (no slash)
             return !after_scope.contains('/');
         }
-        // Check @builder.io/qwik-* packages (legacy)
-        // e.g., "@builder.io/qwik-react" matches but "@builder.io/qwik/build" does not
         if source.starts_with("@builder.io/qwik-") {
             return true;
         }
@@ -397,23 +381,17 @@ pub(crate) fn collect<'a>(
 ) -> CollectResult {
     let mut ctx = CollectContext::new(core_module);
 
-    // First pass: collect all imports (need dollar_imports before finding call sites)
     for stmt in &program.body {
         if let Statement::ImportDeclaration(import) = stmt {
             collect_import(&mut ctx, import);
         }
     }
 
-    // Second pass: collect exports, dollar call sites, and module-level declarations
     for stmt in &program.body {
         match stmt {
             Statement::ImportDeclaration(_) => {
-                // Already processed in first pass. Import names are handled
-                // separately in compute_captures via module_imports/dollar_imports
-                // checks, so we do NOT add them to module_level_decls.
             }
             Statement::ExportNamedDeclaration(export) => {
-                // Collect exported variable/function/class declarations as module-level
                 if let Some(decl) = &export.declaration {
                     collect_declaration_names(&mut ctx.module_level_decls, decl);
                 }
@@ -423,7 +401,6 @@ pub(crate) fn collect<'a>(
                 collect_default_export(&mut ctx, export);
             }
             _ => {
-                // Collect top-level declarations
                 collect_statement_decl_names(&mut ctx.module_level_decls, stmt);
                 walk_statement_for_calls(&mut ctx, stmt);
             }
@@ -456,18 +433,12 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
                         ModuleExportName::IdentifierReference(id) => id.name.as_str(),
                         ModuleExportName::StringLiteral(s) => s.value.as_str(),
                     };
-                    // Use local name (what is actually used in the code)
                     let local_name = s.local.name.as_str();
                     specifiers_vec.push(local_name.to_string());
 
-                    // Track dollar imports: recognize $-suffixed functions from any module.
-                    // The SWC optimizer treats all $-suffixed imports as segment
-                    // boundaries, including from non-core modules like @auth/qwik.
                     if imported_name == "$" || imported_name.ends_with('$') {
-                        // Insert the local name since that is what call sites will use
                         ctx.dollar_imports.insert(local_name.to_string());
 
-                        // If the local name differs from the imported name, record the alias
                         if local_name != imported_name {
                             ctx.alias_map
                                 .insert(local_name.to_string(), imported_name.to_string());
@@ -494,7 +465,6 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
 
 /// Collect information from a named export declaration.
 fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaration<'_>) {
-    // If export has a declaration (e.g., `export const Foo = ...`), get the names
     if let Some(decl) = &export.declaration {
         match decl {
             Declaration::VariableDeclaration(var_decl) => {
@@ -506,8 +476,6 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
                             span: (export.span.start, export.span.end),
                         });
 
-                        // Track locally-defined $-suffixed exports as dollar imports
-                        // ONLY when defined via wrap() or implicit$FirstArg() calls.
                         if name.ends_with('$') && !ctx.dollar_imports.contains(&name) {
                             if let Some(init) = &declarator.init {
                                 if is_wrap_call(init) {
@@ -516,7 +484,6 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
                             }
                         }
 
-                        // Also walk the init for dollar call sites
                         ctx.current_var_name = Some(name);
                         if let Some(init) = &declarator.init {
                             walk_expression_for_calls(ctx, init);
@@ -547,7 +514,6 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
         }
     }
 
-    // Handle re-exports: `export { Foo } from './module'`
     if export.source.is_some() {
         for spec in &export.specifiers {
             let name = match &spec.exported {
@@ -572,7 +538,6 @@ fn collect_default_export(ctx: &mut CollectContext, export: &ExportDefaultDeclar
         span: (export.span.start, export.span.end),
     });
 
-    // Walk the expression or declaration for dollar call sites
     match &export.declaration {
         ExportDefaultDeclarationKind::FunctionDeclaration(_)
         | ExportDefaultDeclarationKind::ClassDeclaration(_) => {}
@@ -613,9 +578,6 @@ fn walk_statement_for_calls(ctx: &mut CollectContext, stmt: &Statement<'_>) {
         Statement::VariableDeclaration(var_decl) => {
             for declarator in &var_decl.declarations {
                 let var_name = binding_pattern_name(&declarator.id);
-                // Track locally-defined $-suffixed variables as dollar imports
-                // ONLY when defined via wrap() or implicit$FirstArg() calls.
-                // These are the Qwik conventions for creating custom $-APIs.
                 if let Some(ref name) = var_name {
                     if name.ends_with('$') && !ctx.dollar_imports.contains(name) {
                         if let Some(init) = &declarator.init {
@@ -666,11 +628,9 @@ fn walk_statement_for_calls(ctx: &mut CollectContext, stmt: &Statement<'_>) {
 fn walk_expression_for_calls(ctx: &mut CollectContext, expr: &Expression<'_>) {
     match expr {
         Expression::CallExpression(call) => {
-            // Check if this is a dollar call
             if let Expression::Identifier(ident) = &call.callee {
                 let name = ident.name.as_str();
                 if ctx.dollar_imports.contains(name) {
-                    // Resolve alias: use the original imported name for callee_name and display_name
                     let original_name = ctx
                         .alias_map
                         .get(name)
@@ -688,7 +648,6 @@ fn walk_expression_for_calls(ctx: &mut CollectContext, expr: &Expression<'_>) {
                         parent_name,
                     });
 
-                    // Walk arguments with increased nesting depth
                     let prev_parent = ctx.parent_display_name.take();
                     ctx.parent_display_name = Some(display_name);
                     ctx.nesting_depth += 1;
@@ -703,14 +662,12 @@ fn walk_expression_for_calls(ctx: &mut CollectContext, expr: &Expression<'_>) {
                 }
             }
 
-            // Not a dollar call -- walk callee and arguments normally
             walk_expression_for_calls(ctx, &call.callee);
             for arg in &call.arguments {
                 walk_argument_for_calls(ctx, arg);
             }
         }
         Expression::ArrowFunctionExpression(arrow) => {
-            // Walk the arrow body
             for stmt in &arrow.body.statements {
                 walk_statement_for_calls(ctx, stmt);
             }
@@ -819,7 +776,6 @@ fn walk_jsx_expression_for_calls(ctx: &mut CollectContext, jsx_expr: &JSXExpress
             if let Expression::Identifier(ident) = &call.callee {
                 let name = ident.name.as_str();
                 if ctx.dollar_imports.contains(name) {
-                    // Resolve alias for callee_name and display_name
                     let original_name = ctx
                         .alias_map
                         .get(name)
@@ -848,7 +804,6 @@ fn walk_jsx_expression_for_calls(ctx: &mut CollectContext, jsx_expr: &JSXExpress
                     return;
                 }
             }
-            // Not a dollar call -- walk normally
             walk_expression_for_calls(ctx, &call.callee);
             for arg in &call.arguments {
                 walk_argument_for_calls(ctx, arg);
@@ -865,15 +820,12 @@ fn walk_jsx_expression_for_calls(ctx: &mut CollectContext, jsx_expr: &JSXExpress
         JSXExpression::JSXFragment(frag) => {
             walk_jsx_children_for_calls(ctx, &frag.children);
         }
-        // For all other inherited expression variants, we skip deep walking
-        // since they rarely contain dollar calls in JSX attribute positions.
         _ => {}
     }
 }
 
 /// Walk JSX element and its children for dollar calls.
 fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>) {
-    // Determine the element/component name for display name context
     let element_name = match &element.opening_element.name {
         JSXElementName::Identifier(ident) => Some(ident.name.as_str().to_string()),
         JSXElementName::NamespacedName(ns) => {
@@ -883,14 +835,11 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
         _ => None,
     };
 
-    // Walk attributes for dollar calls in attribute values
     for attr in &element.opening_element.attributes {
         if let JSXAttributeItem::Attribute(attr) = attr {
             let attr_name = match &attr.name {
                 JSXAttributeName::Identifier(ident) => ident.name.as_str(),
                 JSXAttributeName::NamespacedName(ns) => {
-                    // For namespace:name pattern, we don't treat as $-call
-                    // Walk the value for nested calls
                     if let Some(value) = &attr.value {
                         if let JSXAttributeValue::ExpressionContainer(container) = value {
                             walk_jsx_expression_for_calls(ctx, &container.expression);
@@ -900,21 +849,17 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
                 }
             };
 
-            // Check if this is a $-suffixed attribute (event handler or custom $ prop)
             if attr_name.ends_with('$') {
                 if let Some(value) = &attr.value {
                     if let JSXAttributeValue::ExpressionContainer(container) = value {
-                        // Get the expression span for the DollarCallSite
                         let expr_span = match &container.expression {
                             JSXExpression::EmptyExpression(_) => None,
                             _ => {
-                                // Get span from the expression inside the container
                                 get_jsx_expression_span(&container.expression)
                             }
                         };
 
                         if let Some((start, end)) = expr_span {
-                            // Build display name: parent_context + element_name + attr_name_transformed
                             let event_suffix = transform_attr_name_for_display(attr_name);
                             let display_name = derive_jsx_event_display_name(
                                 ctx, element_name.as_deref(), &event_suffix,
@@ -930,7 +875,6 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
                                 parent_name,
                             });
 
-                            // Walk the value expression for nested dollar calls
                             let prev_parent = ctx.parent_display_name.take();
                             ctx.parent_display_name = Some(display_name);
                             ctx.nesting_depth += 1;
@@ -943,7 +887,6 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
                 }
             }
 
-            // Non-$ attribute: walk value for nested dollar calls normally
             if let Some(value) = &attr.value {
                 if let JSXAttributeValue::ExpressionContainer(container) = value {
                     walk_jsx_expression_for_calls(ctx, &container.expression);
@@ -951,7 +894,6 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
             }
         }
     }
-    // Walk children
     walk_jsx_children_for_calls(ctx, &element.children);
 }
 
@@ -964,7 +906,6 @@ fn get_jsx_expression_span(expr: &JSXExpression<'_>) -> Option<(u32, u32)> {
         JSXExpression::CallExpression(call) => Some((call.span.start, call.span.end)),
         JSXExpression::Identifier(ident) => Some((ident.span.start, ident.span.end)),
         _ => {
-            // For other inherited expression variants, try to extract span
             // from the expression type. Many expression variants have a span field.
             None
         }
@@ -1038,22 +979,17 @@ fn walk_jsx_children_for_calls<'a>(ctx: &mut CollectContext, children: &oxc::all
 fn derive_display_name(ctx: &CollectContext, callee_name: &str) -> String {
     let var_name = ctx.current_var_name.as_deref().unwrap_or("");
 
-    // Strip the '$' from the callee for the suffix
     let callee_suffix = callee_name.strip_suffix('$').unwrap_or("");
 
     if var_name.is_empty() {
-        // No variable context -- use callee as display name
         if callee_suffix.is_empty() {
-            // Bare `$()` call without variable context
             "s_".to_string()
         } else {
             callee_suffix.to_string()
         }
     } else if callee_suffix.is_empty() {
-        // Bare `$()` with a variable name
         var_name.to_string()
     } else {
-        // Named callee like `component$`, `useTask$`
         format!("{var_name}_{callee_suffix}")
     }
 }
@@ -1079,7 +1015,6 @@ mod tests {
 
         assert!(result.dollar_imports.contains("$"));
         assert!(result.dollar_imports.contains("component$"));
-        // useStore is not $-suffixed
         assert!(!result.dollar_imports.contains("useStore"));
         assert_eq!(result.dollar_imports.len(), 2);
     }
@@ -1098,7 +1033,6 @@ import { $ } from '@qwik.dev/core';"#,
         assert!(result.dollar_imports.contains("$"));
         assert!(result.dollar_imports.contains("something$"));
 
-        // Both imports should be in module_imports
         assert_eq!(result.module_imports.len(), 2);
     }
 
@@ -1144,13 +1078,11 @@ export const App = component$(() => {
 
         assert_eq!(result.dollar_calls.len(), 2);
 
-        // The component$ call should be first (outer)
         let outer = &result.dollar_calls[0];
         assert_eq!(outer.callee_name, "component$");
         assert_eq!(outer.display_name, "App_component");
         assert!(!outer.is_nested);
 
-        // The inner $() call should be nested
         let inner = &result.dollar_calls[1];
         assert_eq!(inner.callee_name, "$");
         assert!(inner.is_nested);

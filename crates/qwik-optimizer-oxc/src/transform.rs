@@ -202,13 +202,10 @@ impl QwikTransform {
     /// Post-transform processing: populate child segment metadata.
     /// Must be called after traverse_mut completes.
     pub fn finalize_segments(&mut self) {
-        // Build a list of child segment info: (parent_display_name, child_hash, child_import_path)
-        // Skip stripped segments -- they use _noopQrl, not qrl(i_hash, ...), so no lazy import needed.
         let child_info: Vec<(String, String, String)> = self
             .segments
             .iter()
             .filter_map(|seg| {
-                // Skip stripped children -- they don't need lazy imports in parent
                 if self.stripped_segments.contains(&seg.span.0) {
                     return None;
                 }
@@ -220,7 +217,6 @@ impl QwikTransform {
             })
             .collect();
 
-        // For each parent segment, add child lazy imports
         for seg in self.segments.iter_mut() {
             let children: Vec<_> = child_info
                 .iter()
@@ -246,7 +242,6 @@ impl QwikTransform {
             Expression::Identifier(ident) => {
                 let name = ident.name.as_str();
                 if self.collected.dollar_imports.contains(name) {
-                    // Resolve alias: if this local name maps to an original import name, use that
                     let original_name = self
                         .collected
                         .alias_map
@@ -269,7 +264,6 @@ impl QwikTransform {
 
     /// Derive the display name for a dollar call from collector data or fallback.
     fn derive_display_name_for_call(&self, call: &CallExpression<'_>) -> String {
-        // Look up the call site in the collector data by matching span
         let call_start = call.span.start;
         let call_end = call.span.end;
         for site in &self.collected.dollar_calls {
@@ -277,13 +271,11 @@ impl QwikTransform {
                 return site.display_name.clone();
             }
         }
-        // Fallback: use a counter-based name
         format!("s_{}", self.segment_counter)
     }
 
     /// Build the canonical filename for a segment.
     fn build_canonical_filename(&self, display_name: &str, hash: &str) -> String {
-        // Strip extension from filename for the canonical name
         let base = self
             .filename
             .rfind('.')
@@ -344,7 +336,6 @@ impl QwikTransform {
     ) -> SegmentData {
         let display_name = self.derive_display_name_for_call(call);
 
-        // Compute the full display name with filename prefix (for hashing)
         let full_display_name = format!("{}_{}", self.filename, display_name);
 
         let segment_hash = hash::compute_segment_hash(
@@ -392,7 +383,6 @@ impl QwikTransform {
             _ => false,
         };
 
-        // Track imports based on strategy (skip qrl/inlinedQrl + lazy imports for stripped)
         if !will_be_stripped {
             let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
                     || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
@@ -407,7 +397,6 @@ impl QwikTransform {
             }
         }
 
-        // For named calls, track the Qrl-suffixed import (even for stripped)
         if let DollarCallKind::Named(name) = kind {
             let qrl_name = words::dollar_to_qrl_name(name);
             if !self.import_tracker.qrl_imports.contains(&qrl_name) {
@@ -443,9 +432,7 @@ impl QwikTransform {
             self.build_canonical_filename(display_name, &segment_hash);
         let import_path = self.build_segment_import_path(&canonical_filename);
 
-        // All JSX $-suffixed attributes are event handlers, regardless of the
         // attribute name pattern. This includes onClick$, onInput$, custom$, etc.
-        // Only JS-level $-calls use classify_ctx_kind for the Function/EventHandler distinction.
         let ctx_kind = crate::types::CtxKind::EventHandler;
         let parent = self.dollar_call_stack.last().cloned();
 
@@ -472,7 +459,6 @@ impl QwikTransform {
         // Check if this segment will be stripped
         let will_be_stripped = self.should_strip_ctx_name(ctx_name);
 
-        // Track imports based on strategy
         if !will_be_stripped {
             let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
                 || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
@@ -509,7 +495,6 @@ impl QwikTransform {
         if self.has_custom_jsx_import_source {
             return;
         }
-        // Determine element name for display name context
         let element_name = match &element.opening_element.name {
             JSXElementName::Identifier(ident) => ident.name.as_str().to_string(),
             JSXElementName::NamespacedName(ns) => {
@@ -521,9 +506,6 @@ impl QwikTransform {
         // Scan attributes for $-suffixed names (including namespaced like document:onFocus$)
         for attr_item in &element.opening_element.attributes {
             if let JSXAttributeItem::Attribute(attr) = attr_item {
-                // Extract the attribute name, handling both simple and namespaced forms.
-                // Simple: onClick$, onBlur$, on-anotherCustom$
-                // Namespaced: document:onFocus$, window:onClick$, host:onClick$
                 let (attr_name_str, namespace_prefix) = match &attr.name {
                     JSXAttributeName::Identifier(ident) => {
                         (ident.name.as_str().to_string(), None)
@@ -540,13 +522,9 @@ impl QwikTransform {
                         if let JSXAttributeValue::ExpressionContainer(container) = value {
                             let expr_span = get_jsx_lambda_span(&container.expression);
                             if let Some(span) = expr_span {
-                                // Build display name matching the collector.
-                                // For namespaced attributes, include the prefix in
                                 // the event suffix (e.g., document:onFocus$ -> q_d_focus).
                                 let event_suffix = if let Some(ref prefix) = namespace_prefix {
                                     let base = transform_attr_name_for_display(&attr_name_str);
-                                    // Map namespace prefixes to Qwik convention:
-                                    // document: -> q_d, window: -> q_w, host: -> q_e (?)
                                     let prefix_code = match prefix.as_str() {
                                         "document" => "q_d",
                                         "window" => "q_w",
@@ -560,7 +538,6 @@ impl QwikTransform {
                                     &element_name, &event_suffix,
                                 );
                                 let ctx_name = if namespace_prefix.is_some() {
-                                    // Use the full namespaced attribute as ctx_name
                                     format!("{}:{}", namespace_prefix.as_ref().unwrap(), attr_name_str)
                                 } else {
                                     attr_name_str.clone()
@@ -577,7 +554,6 @@ impl QwikTransform {
             }
         }
 
-        // Recurse into children
         self.create_jsx_event_segments_in_children(&element.children);
     }
 
@@ -653,8 +629,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             // Skip $-calls with zero arguments (e.g., `component$()` with no callback).
             // These don't produce segments in the SWC optimizer.
             if call.arguments.is_empty() {
-                // No arguments at all -- skip segment creation but still
-                // track the Qrl-suffixed import transformation.
                 if let DollarCallKind::Named(ref name) = kind {
                     let qrl_name = crate::words::dollar_to_qrl_name(name);
                     if !self.import_tracker.qrl_imports.contains(&qrl_name) {
@@ -664,19 +638,14 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 return;
             }
 
-            // Check for sync$ -- handle separately (no segment, no captures)
             if let DollarCallKind::Named(ref name) = kind {
                 if name == "sync$" {
                     self.pending_sync_calls.insert(call.span.start);
-                    // Push a capture stack frame so that identifiers inside the sync$ body
-                    // don't leak into the parent's capture tracking. This frame is discarded
-                    // in exit_expression when the sync$ call is processed.
                     self.capture_stack.push((Vec::new(), HashSet::new()));
                     return;
                 }
             }
 
-            // For component$ calls, check for props destructuring
             if let DollarCallKind::Named(ref name) = kind {
                 if name == "component$" {
                     if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first() {
@@ -694,7 +663,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             // Push a new capture tracking frame for this $()-body.
             self.capture_stack.push((Vec::new(), HashSet::new()));
 
-            // Collect parameter names of the arrow function body as body-local declarations
             if let Some(arg) = call.arguments.first() {
                 if let Argument::ArrowFunctionExpression(arrow) = arg {
                     for param in &arrow.params.items {
@@ -706,7 +674,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 }
             }
 
-            // Record the segment
             let segment = self.record_segment(call, &kind);
 
             // Check if this segment should be stripped
@@ -716,10 +683,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 }
             }
 
-            // Mark this call span so exit_expression can find it
             self.pending_dollar_calls.insert(call.span.start);
 
-            // Push to nesting stack
             self.dollar_call_stack.push(segment.display_name.clone());
         }
     }
@@ -730,7 +695,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
         // If we're inside a $()-body, collect the identifier name for capture analysis.
-        // Add to the TOPMOST (current) capture stack frame.
         if let Some(frame) = self.capture_stack.last_mut() {
             frame.0.push(ident.name.as_str().to_string());
         }
@@ -753,9 +717,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         ctx: &mut TraverseCtx<'a, ()>,
     ) {
         // Pre-scan JSX elements for $-suffixed event handler attributes.
-        // This creates segments for inline lambda bodies (arrow/function expressions).
-        // Must run REGARDLESS of transpile_jsx since segment extraction is orthogonal
-        // to JSX-to-JS transformation.
         match expr {
             Expression::JSXElement(_) => {
                 if let Expression::JSXElement(el) = &*expr {
@@ -770,9 +731,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             _ => {}
         }
 
-        // JSX transformation: replace JSXElement/JSXFragment with _jsxSorted/_jsxSplit calls
         if self.options.transpile_jsx {
-            // Build destructured props map for signal wrapping detection
             let destr_props: Option<Vec<(String, String)>> = self.active_props_info.as_ref().map(|info| {
                 info.prop_keys.iter().map(|(key, local)| (local.clone(), key.clone())).collect()
             });
@@ -784,7 +743,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
             match expr {
                 Expression::JSXElement(_) => {
-                    // Take the JSXElement out to process it
                     let placeholder = ctx.ast.expression_null_literal(SPAN);
                     let old_expr = std::mem::replace(expr, placeholder);
                     if let Expression::JSXElement(el) = old_expr {
@@ -826,8 +784,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         if let Expression::CallExpression(call) = expr {
             // Handle sync$() calls -- replace with _qrlSync(fn, "stringified_fn")
             if self.pending_sync_calls.remove(&call.span.start) {
-                // Pop the capture stack frame we pushed for sync$ to prevent
-                // identifier leakage into parent scope.
                 self.capture_stack.pop();
 
                 let body_expr = if !call.arguments.is_empty() {
@@ -850,10 +806,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         fn_expr, &minified, ctx,
                     );
 
-                    // Only add _qrlSync import to the main module if the call is at
                     // the top level (not inside a $-body that will be extracted).
-                    // For segment strategy, extracted bodies handle their own imports
-                    // via code_move.rs body content scanning.
                     let is_segment_strategy = !entry_strategy::should_inline(&self.options.entry_strategy)
                         && !matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
                     let inside_dollar_body = !self.capture_stack.is_empty();
@@ -866,7 +819,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 return;
             }
 
-            // Check if this was a detected dollar call
             if !self.pending_dollar_calls.remove(&call.span.start) {
                 return;
             }
@@ -876,11 +828,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 None => return,
             };
 
-            // Pop from nesting stack
             self.dollar_call_stack.pop();
 
-            // Apply props destructuring if active for this component$ call.
-            // Only take() the active_props_info for the component$ call itself,
             // not for nested $() calls inside it.
             let is_component_exit = matches!(&kind, DollarCallKind::Named(name) if name == "component$");
             let props_info = if is_component_exit {
@@ -895,7 +844,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         if let Some(Argument::ArrowFunctionExpression(arrow)) =
                             call.arguments.first_mut()
                         {
-                            // 1. Replace the ObjectPattern parameter with _rawProps BindingIdentifier
                             if !arrow.params.items.is_empty() {
                                 let new_pattern = ctx.ast.binding_pattern_binding_identifier(
                                     SPAN,
@@ -913,12 +861,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                                     false,          // no override
                                 );
                                 arrow.params.items[0] = new_param;
-                                // Remove rest param from FormalParameters if present
-                                // (the rest is handled via _restProps call)
                                 arrow.params.rest = None;
                             }
 
-                            // 2. If rest_name is present, prepend _restProps declaration to body
                             if let Some(ref rest_name) = info.rest_name {
                                 let excluded_keys: Vec<String> = info
                                     .prop_keys
@@ -932,7 +877,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                                     ctx,
                                 );
 
-                                // Prepend to body statements
                                 let mut old_stmts = ctx.ast.vec();
                                 std::mem::swap(&mut arrow.body.statements, &mut old_stmts);
                                 let mut new_stmts =
@@ -944,8 +888,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                                 arrow.body.statements = new_stmts;
                             }
 
-                            // 3. Rewrite identifier references in the body
-                            // Build (local_alias, original_key) pairs for the rewriter
                             let prop_map: Vec<(String, String)> = info
                                 .prop_keys
                                 .iter()
@@ -962,27 +904,19 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             }
                         }
 
-                        // Update the segment's param_names
                         if let Some(seg) = self.segments.iter_mut().find(|s| {
                             s.span.0 == call.span.start && s.span.1 == call.span.end
                         }) {
                             seg.param_names = vec![info.raw_props_name.clone()];
                         }
 
-                        // Post-process captures for child segments: replace individual
                         // destructured prop names with _rawProps.
-                        // Because capture analysis runs during inner $() exit (before
-                        // props destructuring rewrites the AST), child segments may have
-                        // captured individual prop aliases (e.g., "foo") instead of "_rawProps".
-                        // We need to replace those with the raw props name.
                         let local_aliases: HashSet<String> = info
                             .prop_keys
                             .iter()
                             .map(|(_, local)| local.clone())
                             .collect();
 
-                        // Find all child segments (segments whose parent matches this component's display_name).
-                        // The child segment's `parent` field stores the parent segment's `display_name`.
                         let component_span = (call.span.start, call.span.end);
                         let component_display_name = self
                             .segments
@@ -1003,7 +937,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                                         }
                                     });
                                     if needs_rawprops {
-                                        // Add _rawProps if not already present
                                         if !seg.capture_names.contains(&info.raw_props_name) {
                                             seg.capture_names.insert(0, info.raw_props_name.clone());
                                         }
@@ -1016,28 +949,20 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 }
             }
 
-            // Pop the capture tracking frame for this $()-body
             let (body_ident_refs, body_local_decls) = self
                 .capture_stack
                 .pop()
                 .unwrap_or_default();
 
-            // After popping, capture_stack.len() == 0 means this was a top-level $()-call
-            // (not nested inside another $()-body). Top-level calls never produce captures
-            // because module-level variables are available via module scope, not via
-            // the _captures serialization mechanism. Only nested $()-calls (inside a
-            // component$ or other $-function body) can capture variables from the
             // enclosing function scope.
             let is_top_level_dollar_call = self.capture_stack.is_empty();
 
-            // Compute captures using the collected identifier references and local declarations
             let capture_result = collector::compute_captures(
                 &body_ident_refs,
                 &body_local_decls,
                 &self.collected,
             );
 
-            // Update the segment's capture metadata
             if let Some(seg) = self.segments.iter_mut().find(|s| {
                 s.span.0 == call.span.start && s.span.1 == call.span.end
             }) {
@@ -1051,7 +976,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 }
             }
 
-            // If captures are non-empty and strategy is inline, track _captures import
             let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
                 || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
             if !is_top_level_dollar_call
@@ -1061,7 +985,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 self.import_tracker.needs_captures = true;
             }
 
-            // Find the segment info we recorded for this call
             let segment_info = self
                 .segments
                 .iter()
@@ -1073,12 +996,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 None => return,
             };
 
-            // Check if this segment is stripped
             let is_stripped = self.stripped_segments.contains(&call.span.start);
 
-            // For stripped segments, skip body serialization entirely
             if !is_stripped {
-                // For segment strategy, serialize the body expression to a string
                 if !is_inline && !call.arguments.is_empty() {
                     let placeholder =
                         Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
@@ -1099,9 +1019,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 }
             }
 
-            // Build the replacement expression
             let replacement = if is_stripped {
-                // Stripped segment: _noopQrl("s_HASH")
                 self.import_tracker.needs_noop_qrl = true;
                 import_rewrite::build_noop_qrl_call(
                     &segment_info.name,
@@ -1109,7 +1027,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     ctx,
                 )
             } else if is_inline {
-                // Inline strategy: inlinedQrl(body, "name_hash")
                 let body_expr = if !call.arguments.is_empty() {
                     let arg = &mut call.arguments[0];
                     std::mem::replace(
@@ -1134,7 +1051,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     ctx,
                 )
             } else {
-                // Segment strategy: qrl(i_hash, "name_hash", captures)
                 let import_ident = format!("i_{}", segment_info.hash);
                 import_rewrite::build_qrl_call(
                     &import_ident,
@@ -1164,7 +1080,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 }
             };
 
-            // Replace the expression in-place
             *expr = final_expr;
         }
     }
@@ -1178,13 +1093,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
         let mut new_stmts: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
 
-        // 1. Add Qrl-suffixed imports
         for qrl_name in &self.import_tracker.qrl_imports {
             let stmt = import_rewrite::build_named_import(qrl_name, core_module, ctx);
             new_stmts.push(stmt);
         }
 
-        // 2. Add qrl or inlinedQrl import
         if self.import_tracker.needs_qrl {
             let stmt = import_rewrite::build_named_import("qrl", core_module, ctx);
             new_stmts.push(stmt);
@@ -1194,19 +1107,16 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
-        // 3. Add _captures import if needed
         if self.import_tracker.needs_captures {
             let stmt = import_rewrite::build_named_import("_captures", core_module, ctx);
             new_stmts.push(stmt);
         }
 
-        // 3b. Add _restProps import if needed (props destructuring with rest patterns)
         if self.import_tracker.needs_rest_props {
             let stmt = import_rewrite::build_named_import("_restProps", core_module, ctx);
             new_stmts.push(stmt);
         }
 
-        // 4. Add JSX-related imports
         if self.import_tracker.needs_jsx_sorted {
             let stmt = import_rewrite::build_named_import("_jsxSorted", core_module, ctx);
             new_stmts.push(stmt);
@@ -1224,7 +1134,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
-        // 4b. Add signal/binding-related imports
         if self.import_tracker.needs_wrap_prop {
             let stmt = import_rewrite::build_named_import("_wrapProp", core_module, ctx);
             new_stmts.push(stmt);
@@ -1250,13 +1159,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
-        // 5. Add lazy import constants (segment strategy)
         for (hash, import_path) in &self.import_tracker.lazy_imports {
             let stmt = import_rewrite::build_lazy_import_declaration(hash, import_path, ctx);
             new_stmts.push(stmt);
         }
 
-        // 5b. Add Fragment aliased import from jsx-runtime (after lazy imports)
         if self.import_tracker.needs_fragment {
             let stmt = import_rewrite::build_aliased_import(
                 "Fragment",
@@ -1267,19 +1174,14 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
-        // 6. Prepend new statements before existing program body
         if !new_stmts.is_empty() {
-            // Build a new arena vec with capacity for both new and existing statements
             let existing_len = program.body.len();
             let mut new_body = ctx.ast.vec_with_capacity(new_stmts.len() + existing_len);
 
-            // Add new statements first
             for stmt in new_stmts {
                 new_body.push(stmt);
             }
 
-            // Move existing statements (drain the arena vec)
-            // We need to use a swap approach since OXC Vec doesn't implement Default
             let mut old_body = ctx.ast.vec();
             std::mem::swap(&mut program.body, &mut old_body);
             for stmt in old_body {
@@ -1298,7 +1200,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 /// Normalize JSX text: collapse whitespace, strip leading/trailing newlines.
 /// Returns empty string for whitespace-only text.
 fn normalize_jsx_text(raw: &str) -> String {
-    // Split into lines
     let lines: Vec<&str> = raw.split('\n').collect();
     let mut parts: Vec<String> = Vec::new();
 
@@ -1334,7 +1235,6 @@ fn normalize_jsx_text(raw: &str) -> String {
 ///
 /// Returns None if the attribute is not a transformable event handler.
 fn transform_event_attr_name(attr_name: &str) -> Option<String> {
-    // Handle scope prefixes: document:, window:
     if let Some(rest) = attr_name.strip_prefix("document:") {
         if rest.starts_with("on") && rest.ends_with('$') {
             let event_part = &rest[2..rest.len() - 1];
@@ -1354,11 +1254,9 @@ fn transform_event_attr_name(attr_name: &str) -> Option<String> {
         return None;
     }
 
-    // Standard event: onClick$, onDocumentScroll$, on-cLick$
     if attr_name.starts_with("on") && attr_name.ends_with('$') {
         let event_part = &attr_name[2..attr_name.len() - 1];
 
-        // Handle colon-separated scope: onDocument:keyup$ -> q-e:document:keyup
         if let Some(colon_pos) = event_part.find(':') {
             let scope = &event_part[..colon_pos];
             let event = &event_part[colon_pos + 1..];
@@ -1412,7 +1310,6 @@ fn detect_signal_wrap(
         Expression::StaticMemberExpression(member) => {
             let prop_name = member.property.name.as_str();
 
-            // Check if it's X.value where X is a simple identifier
             if prop_name == "value" {
                 if let Expression::Identifier(ident) = &member.object {
                     let _name = ident.name.as_str();
@@ -1420,7 +1317,6 @@ fn detect_signal_wrap(
                 }
             }
 
-            // Check if it's _rawProps.propName (props parameter member access)
             if let Expression::Identifier(ident) = &member.object {
                 if ident.name.as_str() == "_rawProps" && prop_name != "value" {
                     return SignalWrapResult::WrapPropNamed(prop_name.to_string());
@@ -1429,7 +1325,6 @@ fn detect_signal_wrap(
 
             SignalWrapResult::None
         }
-        // Check for destructured prop identifier: if `fromProps` matches a
         // destructured prop alias, treat as _wrapProp(_rawProps, "fromProps")
         Expression::Identifier(ident) => {
             if let Some(props) = destructured_props {
@@ -1541,11 +1436,9 @@ fn collect_reactive_deps_inner(
         Expression::StaticMemberExpression(member) => {
             let prop = member.property.name.as_str();
 
-            // Get the root identifier
             let root = get_root_identifier(&member.object);
 
             if prop == "value" {
-                // X.value pattern
                 if let Some(root_name) = &root {
                     if !seen.contains(root_name.as_str()) {
                         let param = format!("p{}", deps.len());
@@ -1559,9 +1452,7 @@ fn collect_reactive_deps_inner(
                 }
             }
 
-            // Multi-level chain: store.address.city.name
             if let Some(root_name) = &root {
-                // Check if root is _rawProps
                 if root_name == "_rawProps" {
                     if !seen.contains(root_name.as_str()) {
                         let param = format!("p{}", deps.len());
@@ -1574,19 +1465,15 @@ fn collect_reactive_deps_inner(
                     return;
                 }
 
-                // Check if root is an import (not reactive)
                 if is_imported_identifier(root_name, collected_imports) {
-                    // Import member access is const, not reactive
                     return;
                 }
 
-                // Check if root is a known global
                 if crate::collector::KNOWN_GLOBALS.contains(&root_name.as_str()) {
                     *has_non_reactive_non_const = true;
                     return;
                 }
 
-                // Multi-level property chain on a local variable -> likely a store
                 if has_chain_depth(expr, 2) {
                     if !seen.contains(root_name.as_str()) {
                         let param = format!("p{}", deps.len());
@@ -1600,22 +1487,18 @@ fn collect_reactive_deps_inner(
                 }
             }
 
-            // Single-level member: recurse into object
             collect_reactive_deps_inner(
                 &member.object, destructured_props, collected_imports,
                 deps, seen, has_non_reactive_non_const,
             );
         }
 
-        // Identifier that might be a destructured prop
         Expression::Identifier(ident) => {
             let name = ident.name.as_str();
 
-            // Check if it's a destructured prop
             if let Some(props) = destructured_props {
                 for (local_alias, _original_key) in props {
                     if local_alias == name {
-                        // This is a destructured prop -> _rawProps is the reactive source
                         if !seen.contains("_rawProps") {
                             let param = format!("p{}", deps.len());
                             seen.insert("_rawProps".to_string());
@@ -1629,24 +1512,18 @@ fn collect_reactive_deps_inner(
                 }
             }
 
-            // Check if identifier is an import (not reactive)
             if is_imported_identifier(name, collected_imports) {
                 return;
             }
 
-            // Check if it's a known global
             if crate::collector::KNOWN_GLOBALS.contains(&name) {
                 *has_non_reactive_non_const = true;
                 return;
             }
 
-            // Unknown identifier -- could be a local var (not reactive for signal tracking)
-            // Don't flag as non-reactive-non-const unless it's in a context where
             // we know it's not a signal. For now, identifiers used standalone in
-            // compound expressions alongside reactive sources are treated as reactive deps.
         }
 
-        // Recurse into compound expressions
         Expression::BinaryExpression(bin) => {
             collect_reactive_deps_inner(
                 &bin.left, destructured_props, collected_imports,
@@ -1702,7 +1579,6 @@ fn collect_reactive_deps_inner(
             );
         }
 
-        // Literals are const -- no deps
         _ => {}
     }
 }
@@ -1751,59 +1627,46 @@ fn build_fn_signal_wrapping<'a>(
     let hf_name = format!("_hf{}", hf_index);
     let hf_str_name = format!("_hf{}_str", hf_index);
 
-    // Serialize the expression to a string
     let mut codegen = oxc::codegen::Codegen::new();
     codegen.print_expression(&expr);
     let mut body_str = codegen.into_source_text();
 
-    // Replace reactive source root identifiers with parameter names
     for dep in deps {
-        // For destructured props, we need to replace the local alias with p0.originalKey
         if dep.root_name == "_rawProps" {
             if let Some(props) = destructured_props {
                 for (local_alias, original_key) in props {
-                    // Replace standalone identifier references (word boundary aware)
                     body_str = replace_identifier_in_code(&body_str, local_alias, &format!("{}.{}", dep.param_name, original_key));
                 }
             }
-            // Also replace _rawProps itself
             body_str = replace_identifier_in_code(&body_str, "_rawProps", &dep.param_name);
         } else {
             body_str = replace_identifier_in_code(&body_str, &dep.root_name, &dep.param_name);
         }
     }
 
-    // Build the params string: (p0) or (p0, p1)
     let params_str = deps
         .iter()
         .map(|d| d.param_name.clone())
         .collect::<Vec<_>>()
         .join(", ");
 
-    // Check if body needs wrapping in parens (object expression)
     let body_for_fn = if body_str.starts_with('{') {
         format!("({})", body_str)
     } else {
         body_str.clone()
     };
 
-    // Build hoisted function code: const _hfN = (p0) => BODY;
     let fn_code = format!("const {} = ({}) => {};", hf_name, params_str, body_for_fn);
 
-    // Build minified string for _hfN_str
-    // Re-serialize with a minifying codegen if possible, or just strip whitespace
     let minified = minify_expression_string(&body_str);
     let str_code = format!("const {} = \"{}\";", hf_str_name, escape_string_literal(&minified));
 
-    // Build the _fnSignal call expression: _fnSignal(_hfN, [deps], _hfN_str)
     let callee = ctx.ast.expression_identifier(SPAN, "_fnSignal");
     let mut arguments = ctx.ast.vec_with_capacity(3);
 
-    // Arg 1: _hfN identifier
     let hf_atom = ctx.ast.atom(&hf_name);
     arguments.push(Argument::from(ctx.ast.expression_identifier(SPAN, hf_atom)));
 
-    // Arg 2: [dep0, dep1, ...] array
     let mut dep_elements = ctx.ast.vec_with_capacity(deps.len());
     for dep in deps {
         let dep_atom = ctx.ast.atom(&dep.root_name);
@@ -1813,7 +1676,6 @@ fn build_fn_signal_wrapping<'a>(
     }
     arguments.push(Argument::from(ctx.ast.expression_array(SPAN, dep_elements)));
 
-    // Arg 3: _hfN_str identifier
     let str_atom = ctx.ast.atom(&hf_str_name);
     arguments.push(Argument::from(ctx.ast.expression_identifier(SPAN, str_atom)));
 
@@ -1885,7 +1747,6 @@ fn minify_expression_string(s: &str) -> String {
 
         if c == ' ' || c == '\t' || c == '\n' || c == '\r' {
             if !prev_was_space && !result.is_empty() {
-                // Only keep space if needed between identifiers/numbers
                 let last = result.chars().last().unwrap_or(' ');
                 if is_ident_char(last) {
                     prev_was_space = true;
@@ -1896,9 +1757,6 @@ fn minify_expression_string(s: &str) -> String {
         }
 
         if prev_was_space && is_ident_char(c) {
-            // Need the space between ident chars
-            // But check: in the actual minified output, most spaces between
-            // operators and identifiers aren't needed
         }
         prev_was_space = false;
         result.push(c);
@@ -1917,7 +1775,6 @@ fn extract_identifier_name(expr: &Expression<'_>) -> String {
     match expr {
         Expression::Identifier(ident) => ident.name.as_str().to_string(),
         _ => {
-            // Fallback: serialize the expression
             let mut codegen = oxc::codegen::Codegen::new();
             codegen.print_expression(expr);
             codegen.into_source_text()
@@ -1942,15 +1799,12 @@ fn build_bind_event_handler<'a>(
 
     let mut arguments = ctx.ast.vec_with_capacity(3);
 
-    // Arg 1: _val or _chk identifier
     arguments.push(Argument::from(ctx.ast.expression_identifier(SPAN, handler_atom)));
 
-    // Arg 2: "_val" or "_chk" string literal
     arguments.push(Argument::from(
         ctx.ast.expression_string_literal(SPAN, handler_str_atom, None),
     ));
 
-    // Arg 3: [signal] captures array
     let mut elements = ctx.ast.vec_with_capacity(1);
     elements.push(ArrayExpressionElement::from(
         ctx.ast.expression_identifier(SPAN, signal_atom),
@@ -2389,7 +2243,6 @@ fn transform_jsx_element_inner<'a>(
             false,
         );
 
-        // Build the _jsxSplit call
         let callee = ctx.ast.expression_identifier(SPAN, "_jsxSplit");
         let mut arguments = ctx.ast.vec_with_capacity(6);
         arguments.push(Argument::from(tag));
@@ -2464,7 +2317,6 @@ fn transform_jsx_element_inner<'a>(
             ctx.ast.expression_object(SPAN, props_vec)
         };
 
-        // Build the _jsxSorted call
         let callee = ctx.ast.expression_identifier(SPAN, "_jsxSorted");
         let mut arguments = ctx.ast.vec_with_capacity(6);
         arguments.push(Argument::from(tag));
