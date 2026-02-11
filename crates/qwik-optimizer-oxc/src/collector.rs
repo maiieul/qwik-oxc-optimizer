@@ -176,6 +176,12 @@ pub(crate) fn compute_captures(
             continue;
         }
 
+        // Skip module-level declarations (available in module scope, not captures).
+        // This includes top-level const/let/var, function, class, and import names.
+        if collect_result.module_level_decls.contains(name) {
+            continue;
+        }
+
         // Check if it's a module import
         let mut is_import = false;
         for import_info in &collect_result.module_imports {
@@ -197,7 +203,7 @@ pub(crate) fn compute_captures(
             continue;
         }
 
-        // Not a global, not an import, not body-local -> it's a capture
+        // Not a global, not an import, not body-local, not module-level -> it's a capture
         capture_names.push(name.clone());
     }
 
@@ -222,6 +228,8 @@ struct CollectContext {
     module_imports: Vec<ImportInfo>,
     /// All export declarations.
     module_exports: Vec<ExportInfo>,
+    /// Names declared at module (top-level) scope.
+    module_level_decls: HashSet<String>,
     /// Current nesting depth inside $-calls (0 = top level).
     nesting_depth: u32,
     /// Parent call site's display name when nested.
@@ -251,6 +259,7 @@ impl CollectContext {
             dollar_calls: Vec::new(),
             module_imports: Vec::new(),
             module_exports: Vec::new(),
+            module_level_decls: HashSet::new(),
             nesting_depth: 0,
             parent_display_name: None,
             current_var_name: None,
@@ -289,6 +298,83 @@ impl CollectContext {
     }
 }
 
+/// Collect binding names from a Declaration into a set.
+/// Handles variable declarations, function declarations, and class declarations.
+fn collect_declaration_names(names: &mut HashSet<String>, decl: &oxc::ast::ast::Declaration<'_>) {
+    use oxc::ast::ast::Declaration;
+    match decl {
+        Declaration::VariableDeclaration(var_decl) => {
+            for declarator in &var_decl.declarations {
+                collect_binding_pattern_names_into(names, &declarator.id);
+            }
+        }
+        Declaration::FunctionDeclaration(fn_decl) => {
+            if let Some(ident) = &fn_decl.id {
+                names.insert(ident.name.as_str().to_string());
+            }
+        }
+        Declaration::ClassDeclaration(class_decl) => {
+            if let Some(ident) = &class_decl.id {
+                names.insert(ident.name.as_str().to_string());
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Collect binding names from a BindingPattern into a set (for module-level tracking).
+fn collect_binding_pattern_names_into(
+    names: &mut HashSet<String>,
+    pattern: &oxc::ast::ast::BindingPattern<'_>,
+) {
+    use oxc::ast::ast::BindingPattern;
+    match pattern {
+        BindingPattern::BindingIdentifier(ident) => {
+            names.insert(ident.name.as_str().to_string());
+        }
+        BindingPattern::ObjectPattern(obj) => {
+            for prop in &obj.properties {
+                collect_binding_pattern_names_into(names, &prop.value);
+            }
+            if let Some(rest) = &obj.rest {
+                collect_binding_pattern_names_into(names, &rest.argument);
+            }
+        }
+        BindingPattern::ArrayPattern(arr) => {
+            for elem in arr.elements.iter().flatten() {
+                collect_binding_pattern_names_into(names, elem);
+            }
+            if let Some(rest) = &arr.rest {
+                collect_binding_pattern_names_into(names, &rest.argument);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Collect declaration names from a top-level statement.
+fn collect_statement_decl_names(names: &mut HashSet<String>, stmt: &oxc::ast::ast::Statement<'_>) {
+    use oxc::ast::ast::Statement;
+    match stmt {
+        Statement::VariableDeclaration(var_decl) => {
+            for declarator in &var_decl.declarations {
+                collect_binding_pattern_names_into(names, &declarator.id);
+            }
+        }
+        Statement::FunctionDeclaration(fn_decl) => {
+            if let Some(ident) = &fn_decl.id {
+                names.insert(ident.name.as_str().to_string());
+            }
+        }
+        Statement::ClassDeclaration(class_decl) => {
+            if let Some(ident) = &class_decl.id {
+                names.insert(ident.name.as_str().to_string());
+            }
+        }
+        _ => {}
+    }
+}
+
 /// Perform first-pass analysis of the parsed module.
 ///
 /// Walks the program body to collect:
@@ -318,19 +404,27 @@ pub(crate) fn collect<'a>(
         }
     }
 
-    // Second pass: collect exports and dollar call sites
+    // Second pass: collect exports, dollar call sites, and module-level declarations
     for stmt in &program.body {
         match stmt {
             Statement::ImportDeclaration(_) => {
-                // Already processed
+                // Already processed in first pass. Import names are handled
+                // separately in compute_captures via module_imports/dollar_imports
+                // checks, so we do NOT add them to module_level_decls.
             }
             Statement::ExportNamedDeclaration(export) => {
+                // Collect exported variable/function/class declarations as module-level
+                if let Some(decl) = &export.declaration {
+                    collect_declaration_names(&mut ctx.module_level_decls, decl);
+                }
                 collect_named_export(&mut ctx, export);
             }
             Statement::ExportDefaultDeclaration(export) => {
                 collect_default_export(&mut ctx, export);
             }
             _ => {
+                // Collect top-level declarations
+                collect_statement_decl_names(&mut ctx.module_level_decls, stmt);
                 walk_statement_for_calls(&mut ctx, stmt);
             }
         }
@@ -342,6 +436,7 @@ pub(crate) fn collect<'a>(
         dollar_calls: ctx.dollar_calls,
         module_imports: ctx.module_imports,
         module_exports: ctx.module_exports,
+        module_level_decls: ctx.module_level_decls,
     }
 }
 

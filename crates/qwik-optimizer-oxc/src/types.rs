@@ -430,6 +430,12 @@ pub(crate) struct CollectResult {
 
     /// All export declarations in the module.
     pub module_exports: Vec<ExportInfo>,
+
+    /// Names declared at module (top-level) scope.
+    /// These are NOT captures -- they're available in the module scope and don't
+    /// need serialization through `_captures`. Includes variable declarations,
+    /// function declarations, and class declarations at the top level.
+    pub module_level_decls: HashSet<String>,
 }
 
 /// A located $-call site in the source code.

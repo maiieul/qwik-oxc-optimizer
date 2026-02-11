@@ -443,7 +443,10 @@ impl QwikTransform {
             self.build_canonical_filename(display_name, &segment_hash);
         let import_path = self.build_segment_import_path(&canonical_filename);
 
-        let ctx_kind = words::classify_ctx_kind(ctx_name);
+        // All JSX $-suffixed attributes are event handlers, regardless of the
+        // attribute name pattern. This includes onClick$, onInput$, custom$, etc.
+        // Only JS-level $-calls use classify_ctx_kind for the Function/EventHandler distinction.
+        let ctx_kind = crate::types::CtxKind::EventHandler;
         let parent = self.dollar_call_stack.last().cloned();
 
         let segment = SegmentData {
@@ -1019,6 +1022,14 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 .pop()
                 .unwrap_or_default();
 
+            // After popping, capture_stack.len() == 0 means this was a top-level $()-call
+            // (not nested inside another $()-body). Top-level calls never produce captures
+            // because module-level variables are available via module scope, not via
+            // the _captures serialization mechanism. Only nested $()-calls (inside a
+            // component$ or other $-function body) can capture variables from the
+            // enclosing function scope.
+            let is_top_level_dollar_call = self.capture_stack.is_empty();
+
             // Compute captures using the collected identifier references and local declarations
             let capture_result = collector::compute_captures(
                 &body_ident_refs,
@@ -1030,14 +1041,23 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             if let Some(seg) = self.segments.iter_mut().find(|s| {
                 s.span.0 == call.span.start && s.span.1 == call.span.end
             }) {
-                seg.captures = !capture_result.capture_names.is_empty();
-                seg.capture_names = capture_result.capture_names.clone();
+                if is_top_level_dollar_call {
+                    // Top-level $()-calls never have captures
+                    seg.captures = false;
+                    seg.capture_names = vec![];
+                } else {
+                    seg.captures = !capture_result.capture_names.is_empty();
+                    seg.capture_names = capture_result.capture_names.clone();
+                }
             }
 
             // If captures are non-empty and strategy is inline, track _captures import
             let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
                 || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
-            if !capture_result.capture_names.is_empty() && is_inline {
+            if !is_top_level_dollar_call
+                && !capture_result.capture_names.is_empty()
+                && is_inline
+            {
                 self.import_tracker.needs_captures = true;
             }
 
