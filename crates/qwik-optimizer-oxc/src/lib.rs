@@ -119,6 +119,42 @@ pub fn transform_modules(
         // 6. Emit the transformed module
         let emit_result = emit::emit_module(&program, source_in_arena, &emit_options);
 
+        // 6b. Prepend hoisted function declarations for _fnSignal.
+        // These are string-based const declarations that go after imports but before
+        // the main module body. Since imports are already prepended by exit_program,
+        // we insert hoisted stmts between imports and the rest of the code.
+        let hoisted_stmts: Vec<(String, String)> = qwik_transform.hoisted_function_stmts().to_vec();
+        let main_code = if !hoisted_stmts.is_empty() {
+            let mut hoisted_code = String::new();
+            for (fn_code, str_code) in &hoisted_stmts {
+                hoisted_code.push_str(fn_code);
+                hoisted_code.push('\n');
+                hoisted_code.push_str(str_code);
+                hoisted_code.push('\n');
+            }
+            // Find the insertion point: after all import statements.
+            // Import statements start with "import " in the emitted code.
+            // We scan for the last import line and insert after it.
+            let code = &emit_result.code;
+            let mut last_import_end = 0;
+            let mut pos = 0;
+            for line in code.lines() {
+                let line_end = pos + line.len() + 1; // +1 for \n
+                if line.starts_with("import ") {
+                    last_import_end = line_end.min(code.len());
+                }
+                pos = line_end;
+            }
+            if last_import_end > 0 {
+                format!("{}{}{}", &code[..last_import_end], hoisted_code, &code[last_import_end..])
+            } else {
+                // No imports found, prepend hoisted code
+                format!("{}{}", hoisted_code, code)
+            }
+        } else {
+            emit_result.code.clone()
+        };
+
         // 7. Compute output extension based on transpile_ts setting
         let output_ext = output_extension(&input.path, transform_options.transpile_ts);
         let main_path = if transform_options.transpile_ts {
@@ -136,7 +172,7 @@ pub fn transform_modules(
         let main_module = TransformModule {
             path: main_path,
             is_entry: false,
-            code: emit_result.code,
+            code: main_code,
             map: emit_result.map,
             segment: None,
             orig_path: Some(input.path.clone()),
@@ -179,8 +215,9 @@ pub fn transform_modules(
                     .unwrap_or("");
 
                 let segment_code = if !body_code.is_empty() {
-                    let raw_code =
-                        code_move::build_segment_code(body_code, seg, &transform_options);
+                    let raw_code = code_move::build_segment_code_with_hoisted(
+                        body_code, seg, &transform_options, &hoisted_stmts,
+                    );
                     // Normalize via parse+codegen for consistent formatting
                     emit::normalize_code(&raw_code)
                 } else {
@@ -1869,6 +1906,103 @@ export const App = component$(({fromProps}) => {
         assert!(
             main_code.contains("_wrapProp(value)"),
             "Expected _wrapProp(value) for child signal.value: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_fn_signal_computed_expression() {
+        // signal.value + 1 should become _fnSignal(_hf0, [signal], _hf0_str)
+        // with hoisted const _hf0 = (p0) => p0.value + 1;
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const signal = useSignal(0);
+    return <div count={signal.value + 1}></div>;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("_fnSignal("),
+            "Expected _fnSignal call: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("_hf0"),
+            "Expected hoisted function _hf0: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("_hf0_str"),
+            "Expected hoisted string _hf0_str: {}",
+            main_code
+        );
+        // The hoisted function should reference p0.value
+        assert!(
+            main_code.contains("p0.value"),
+            "Expected p0.value in hoisted function body: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_fn_signal_store_expression() {
+        // store.address.city should become _fnSignal(_hf0, [store], _hf0_str)
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const store = useStore({});
+    return <div city={store.address.city}></div>;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("_fnSignal("),
+            "Expected _fnSignal call for store deep access: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("[store]"),
+            "Expected [store] in deps array: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_fn_signal_not_for_function_calls() {
+        // signal.value + unknown() should NOT get _fnSignal (has function call)
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const signal = useSignal(0);
+    return <div x={signal.value + unknown()}></div>;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            !main_code.contains("_fnSignal("),
+            "Should NOT wrap with _fnSignal when expression has function call: {}",
             main_code
         );
     }

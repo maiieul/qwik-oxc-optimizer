@@ -38,7 +38,7 @@ pub(crate) struct CaptureAnalysisResult {
 }
 
 /// A well-known global identifier that should never be treated as a capture.
-const KNOWN_GLOBALS: &[&str] = &[
+pub(crate) const KNOWN_GLOBALS: &[&str] = &[
     "console",
     "undefined",
     "NaN",

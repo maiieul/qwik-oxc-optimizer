@@ -14,14 +14,25 @@ use crate::types::{SegmentData, TransformOptions};
 /// 1. Framework imports (`import { _captures } from "@qwik.dev/core"`)
 /// 2. QRL import for nested $-calls (`import { qrl } from "@qwik.dev/core"`)
 /// 3. Lazy import declarations (`const i_hash = () => import(...)`)
-/// 4. Capture restoration statements (`const varName = _captures[N]`)
-/// 5. Export declaration (`export const name = body`)
+/// 4. Hoisted function declarations for _fnSignal (`const _hfN = ...`)
+/// 5. Capture restoration statements (`const varName = _captures[N]`)
+/// 6. Export declaration (`export const name = body`)
 ///
 /// Returns the complete JavaScript module source code.
 pub(crate) fn build_segment_code(
     body_code: &str,
     segment: &SegmentData,
     options: &TransformOptions,
+) -> String {
+    build_segment_code_with_hoisted(body_code, segment, options, &[])
+}
+
+/// Build a segment's JavaScript source code with optional hoisted function declarations.
+pub(crate) fn build_segment_code_with_hoisted(
+    body_code: &str,
+    segment: &SegmentData,
+    options: &TransformOptions,
+    hoisted_stmts: &[(String, String)],
 ) -> String {
     let mut parts: Vec<String> = Vec::new();
 
@@ -47,6 +58,52 @@ pub(crate) fn build_segment_code(
             "const i_{} = () => import(\"{}\");",
             hash, import_path
         ));
+    }
+
+    // 3b. Detect and add segment-specific imports based on body code content.
+    // For segment strategy, the body code may reference framework helpers
+    // (_jsxSorted, _fnSignal, _wrapProp, _Fragment) that need imports.
+    if body_code.contains("_jsxSorted") {
+        parts.push(format!(
+            "import {{ _jsxSorted }} from \"{}\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("_jsxSplit") {
+        parts.push(format!(
+            "import {{ _jsxSplit }} from \"{}\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("_fnSignal") || !hoisted_stmts.is_empty() {
+        parts.push(format!(
+            "import {{ _fnSignal }} from \"{}\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("_wrapProp") {
+        parts.push(format!(
+            "import {{ _wrapProp }} from \"{}\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("_Fragment") {
+        parts.push(format!(
+            "import {{ Fragment as _Fragment }} from \"{}/jsx-runtime\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("inlinedQrl") {
+        parts.push(format!(
+            "import {{ inlinedQrl }} from \"{}\";",
+            options.core_module
+        ));
+    }
+
+    // 3c. Add hoisted function declarations for _fnSignal
+    for (fn_code, str_code) in hoisted_stmts {
+        parts.push(fn_code.clone());
+        parts.push(str_code.clone());
     }
 
     // 4. Build the export declaration with capture restoration

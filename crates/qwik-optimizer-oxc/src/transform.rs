@@ -153,6 +153,13 @@ impl QwikTransform {
         std::mem::take(&mut self.segment_body_codes)
     }
 
+    /// Get the hoisted function declarations for _fnSignal.
+    /// Each entry is (fn_declaration_code, str_declaration_code).
+    /// E.g., ("const _hf0 = (p0)=>p0.value;", "const _hf0_str = \"p0.value\";")
+    pub fn hoisted_function_stmts(&self) -> &[(String, String)] {
+        &self.hoisted_function_stmts
+    }
+
     /// Post-transform processing: populate child segment metadata.
     /// Must be called after traverse_mut completes.
     pub fn finalize_segments(&mut self) {
@@ -438,6 +445,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             });
             let destr_props_ref = destr_props.as_deref();
 
+            // Take hoisted_function_stmts out to avoid borrow conflict with &mut self
+            let mut hoisted_stmts = std::mem::take(&mut self.hoisted_function_stmts);
+            let module_imports = &self.collected.module_imports;
+
             match expr {
                 Expression::JSXElement(_) => {
                     // Take the JSXElement out to process it
@@ -449,9 +460,12 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             &mut self.import_tracker,
                             ctx,
                             destr_props_ref,
+                            module_imports,
+                            &mut hoisted_stmts,
                         );
                         *expr = result;
                     }
+                    self.hoisted_function_stmts = hoisted_stmts;
                     return;
                 }
                 Expression::JSXFragment(_) => {
@@ -463,13 +477,17 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             &mut self.import_tracker,
                             ctx,
                             destr_props_ref,
+                            module_imports,
+                            &mut hoisted_stmts,
                         );
                         *expr = result;
                     }
+                    self.hoisted_function_stmts = hoisted_stmts;
                     return;
                 }
                 _ => {}
             }
+            self.hoisted_function_stmts = hoisted_stmts;
         }
 
         if let Expression::CallExpression(call) = expr {
@@ -852,7 +870,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
-        // 5. Prepend new statements before existing program body
+        // 6. Prepend new statements before existing program body
         if !new_stmts.is_empty() {
             // Build a new arena vec with capacity for both new and existing statements
             let existing_len = program.body.len();
@@ -1042,6 +1060,461 @@ fn is_call_on_value(value: &Expression<'_>) -> bool {
     false
 }
 
+/// A reactive dependency found in an expression.
+#[derive(Debug, Clone)]
+struct ReactiveDep {
+    /// The root identifier name (e.g., "signal", "store", "_rawProps").
+    root_name: String,
+    /// The parameter name assigned (e.g., "p0", "p1").
+    param_name: String,
+}
+
+/// Check if an expression contains any function calls (makes it non-wrappable).
+fn contains_function_call(expr: &Expression<'_>) -> bool {
+    match expr {
+        Expression::CallExpression(_) => true,
+        Expression::BinaryExpression(bin) => {
+            contains_function_call(&bin.left) || contains_function_call(&bin.right)
+        }
+        Expression::ConditionalExpression(cond) => {
+            contains_function_call(&cond.test)
+                || contains_function_call(&cond.consequent)
+                || contains_function_call(&cond.alternate)
+        }
+        Expression::UnaryExpression(unary) => contains_function_call(&unary.argument),
+        Expression::ObjectExpression(obj) => obj.properties.iter().any(|prop| match prop {
+            ObjectPropertyKind::ObjectProperty(p) => contains_function_call(&p.value),
+            ObjectPropertyKind::SpreadProperty(s) => contains_function_call(&s.argument),
+        }),
+        Expression::ArrayExpression(arr) => arr.elements.iter().any(|elem| match elem {
+            ArrayExpressionElement::SpreadElement(s) => contains_function_call(&s.argument),
+            ArrayExpressionElement::Elision(_) => false,
+            _ => false, // array element literals can't contain calls
+        }),
+        Expression::ParenthesizedExpression(paren) => contains_function_call(&paren.expression),
+        Expression::StaticMemberExpression(mem) => contains_function_call(&mem.object),
+        Expression::ComputedMemberExpression(mem) => {
+            contains_function_call(&mem.object) || contains_function_call(&mem.expression)
+        }
+        _ => false,
+    }
+}
+
+/// Collect reactive dependency root identifiers from an expression.
+///
+/// A reactive source is:
+/// - An identifier whose `.value` is accessed (signal pattern: `signal.value`)
+/// - An identifier that is the root of a multi-level property chain (store pattern: `store.address.city`)
+/// - `_rawProps` identifier in a member expression (`_rawProps.propName`)
+/// - A destructured prop identifier
+///
+/// Returns the list of unique reactive deps and whether the expression
+/// contains any non-reactive non-const sub-expressions (which would prevent wrapping).
+fn collect_reactive_deps(
+    expr: &Expression<'_>,
+    destructured_props: Option<&[(String, String)]>,
+    collected_imports: &[crate::types::ImportInfo],
+) -> (Vec<ReactiveDep>, bool) {
+    let mut deps: Vec<ReactiveDep> = Vec::new();
+    let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+    let mut has_non_reactive_non_const = false;
+
+    collect_reactive_deps_inner(
+        expr,
+        destructured_props,
+        collected_imports,
+        &mut deps,
+        &mut seen,
+        &mut has_non_reactive_non_const,
+    );
+
+    (deps, has_non_reactive_non_const)
+}
+
+fn collect_reactive_deps_inner(
+    expr: &Expression<'_>,
+    destructured_props: Option<&[(String, String)]>,
+    collected_imports: &[crate::types::ImportInfo],
+    deps: &mut Vec<ReactiveDep>,
+    seen: &mut std::collections::HashSet<String>,
+    has_non_reactive_non_const: &mut bool,
+) {
+    match expr {
+        // signal.value -> signal is a reactive dep
+        Expression::StaticMemberExpression(member) => {
+            let prop = member.property.name.as_str();
+
+            // Get the root identifier
+            let root = get_root_identifier(&member.object);
+
+            if prop == "value" {
+                // X.value pattern
+                if let Some(root_name) = &root {
+                    if !seen.contains(root_name.as_str()) {
+                        let param = format!("p{}", deps.len());
+                        seen.insert(root_name.clone());
+                        deps.push(ReactiveDep {
+                            root_name: root_name.clone(),
+                            param_name: param,
+                        });
+                    }
+                    return; // Don't recurse further
+                }
+            }
+
+            // Multi-level chain: store.address.city.name
+            if let Some(root_name) = &root {
+                // Check if root is _rawProps
+                if root_name == "_rawProps" {
+                    if !seen.contains(root_name.as_str()) {
+                        let param = format!("p{}", deps.len());
+                        seen.insert(root_name.clone());
+                        deps.push(ReactiveDep {
+                            root_name: root_name.clone(),
+                            param_name: param,
+                        });
+                    }
+                    return;
+                }
+
+                // Check if root is an import (not reactive)
+                if is_imported_identifier(root_name, collected_imports) {
+                    // Import member access is const, not reactive
+                    return;
+                }
+
+                // Check if root is a known global
+                if crate::collector::KNOWN_GLOBALS.contains(&root_name.as_str()) {
+                    *has_non_reactive_non_const = true;
+                    return;
+                }
+
+                // Multi-level property chain on a local variable -> likely a store
+                if has_chain_depth(expr, 2) {
+                    if !seen.contains(root_name.as_str()) {
+                        let param = format!("p{}", deps.len());
+                        seen.insert(root_name.clone());
+                        deps.push(ReactiveDep {
+                            root_name: root_name.clone(),
+                            param_name: param,
+                        });
+                    }
+                    return;
+                }
+            }
+
+            // Single-level member: recurse into object
+            collect_reactive_deps_inner(
+                &member.object, destructured_props, collected_imports,
+                deps, seen, has_non_reactive_non_const,
+            );
+        }
+
+        // Identifier that might be a destructured prop
+        Expression::Identifier(ident) => {
+            let name = ident.name.as_str();
+
+            // Check if it's a destructured prop
+            if let Some(props) = destructured_props {
+                for (local_alias, _original_key) in props {
+                    if local_alias == name {
+                        // This is a destructured prop -> _rawProps is the reactive source
+                        if !seen.contains("_rawProps") {
+                            let param = format!("p{}", deps.len());
+                            seen.insert("_rawProps".to_string());
+                            deps.push(ReactiveDep {
+                                root_name: "_rawProps".to_string(),
+                                param_name: param,
+                            });
+                        }
+                        return;
+                    }
+                }
+            }
+
+            // Check if identifier is an import (not reactive)
+            if is_imported_identifier(name, collected_imports) {
+                return;
+            }
+
+            // Check if it's a known global
+            if crate::collector::KNOWN_GLOBALS.contains(&name) {
+                *has_non_reactive_non_const = true;
+                return;
+            }
+
+            // Unknown identifier -- could be a local var (not reactive for signal tracking)
+            // Don't flag as non-reactive-non-const unless it's in a context where
+            // we know it's not a signal. For now, identifiers used standalone in
+            // compound expressions alongside reactive sources are treated as reactive deps.
+        }
+
+        // Recurse into compound expressions
+        Expression::BinaryExpression(bin) => {
+            collect_reactive_deps_inner(
+                &bin.left, destructured_props, collected_imports,
+                deps, seen, has_non_reactive_non_const,
+            );
+            collect_reactive_deps_inner(
+                &bin.right, destructured_props, collected_imports,
+                deps, seen, has_non_reactive_non_const,
+            );
+        }
+        Expression::ConditionalExpression(cond) => {
+            collect_reactive_deps_inner(
+                &cond.test, destructured_props, collected_imports,
+                deps, seen, has_non_reactive_non_const,
+            );
+            collect_reactive_deps_inner(
+                &cond.consequent, destructured_props, collected_imports,
+                deps, seen, has_non_reactive_non_const,
+            );
+            collect_reactive_deps_inner(
+                &cond.alternate, destructured_props, collected_imports,
+                deps, seen, has_non_reactive_non_const,
+            );
+        }
+        Expression::UnaryExpression(unary) => {
+            collect_reactive_deps_inner(
+                &unary.argument, destructured_props, collected_imports,
+                deps, seen, has_non_reactive_non_const,
+            );
+        }
+        Expression::ObjectExpression(obj) => {
+            for prop in &obj.properties {
+                match prop {
+                    ObjectPropertyKind::ObjectProperty(p) => {
+                        collect_reactive_deps_inner(
+                            &p.value, destructured_props, collected_imports,
+                            deps, seen, has_non_reactive_non_const,
+                        );
+                    }
+                    ObjectPropertyKind::SpreadProperty(s) => {
+                        collect_reactive_deps_inner(
+                            &s.argument, destructured_props, collected_imports,
+                            deps, seen, has_non_reactive_non_const,
+                        );
+                    }
+                }
+            }
+        }
+        Expression::ParenthesizedExpression(paren) => {
+            collect_reactive_deps_inner(
+                &paren.expression, destructured_props, collected_imports,
+                deps, seen, has_non_reactive_non_const,
+            );
+        }
+
+        // Literals are const -- no deps
+        _ => {}
+    }
+}
+
+/// Get the root identifier name from a (possibly chained) member expression.
+fn get_root_identifier(expr: &Expression<'_>) -> Option<String> {
+    match expr {
+        Expression::Identifier(ident) => Some(ident.name.as_str().to_string()),
+        Expression::StaticMemberExpression(member) => get_root_identifier(&member.object),
+        Expression::ComputedMemberExpression(member) => get_root_identifier(&member.object),
+        _ => None,
+    }
+}
+
+/// Check if a member expression chain has at least `min_depth` levels.
+fn has_chain_depth(expr: &Expression<'_>, min_depth: usize) -> bool {
+    fn depth(expr: &Expression<'_>) -> usize {
+        match expr {
+            Expression::StaticMemberExpression(member) => 1 + depth(&member.object),
+            Expression::ComputedMemberExpression(member) => 1 + depth(&member.object),
+            _ => 0,
+        }
+    }
+    depth(expr) >= min_depth
+}
+
+/// Check if an identifier is an imported name.
+fn is_imported_identifier(name: &str, imports: &[crate::types::ImportInfo]) -> bool {
+    imports.iter().any(|imp| imp.specifiers.iter().any(|spec| spec == name))
+}
+
+/// Build an _fnSignal call and hoisted function declarations.
+///
+/// Returns (replacement_expression, fn_code, str_code) where fn_code and str_code
+/// are string representations of the hoisted const declarations to insert at module level.
+fn build_fn_signal_wrapping<'a>(
+    expr: Expression<'a>,
+    deps: &[ReactiveDep],
+    destructured_props: Option<&[(String, String)]>,
+    tracker: &mut ImportTracker,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> (Expression<'a>, String, String) {
+    let hf_index = tracker.hoisted_fn_counter;
+    tracker.hoisted_fn_counter += 1;
+
+    let hf_name = format!("_hf{}", hf_index);
+    let hf_str_name = format!("_hf{}_str", hf_index);
+
+    // Serialize the expression to a string
+    let mut codegen = oxc::codegen::Codegen::new();
+    codegen.print_expression(&expr);
+    let mut body_str = codegen.into_source_text();
+
+    // Replace reactive source root identifiers with parameter names
+    for dep in deps {
+        // For destructured props, we need to replace the local alias with p0.originalKey
+        if dep.root_name == "_rawProps" {
+            if let Some(props) = destructured_props {
+                for (local_alias, original_key) in props {
+                    // Replace standalone identifier references (word boundary aware)
+                    body_str = replace_identifier_in_code(&body_str, local_alias, &format!("{}.{}", dep.param_name, original_key));
+                }
+            }
+            // Also replace _rawProps itself
+            body_str = replace_identifier_in_code(&body_str, "_rawProps", &dep.param_name);
+        } else {
+            body_str = replace_identifier_in_code(&body_str, &dep.root_name, &dep.param_name);
+        }
+    }
+
+    // Build the params string: (p0) or (p0, p1)
+    let params_str = deps
+        .iter()
+        .map(|d| d.param_name.clone())
+        .collect::<Vec<_>>()
+        .join(", ");
+
+    // Check if body needs wrapping in parens (object expression)
+    let body_for_fn = if body_str.starts_with('{') {
+        format!("({})", body_str)
+    } else {
+        body_str.clone()
+    };
+
+    // Build hoisted function code: const _hfN = (p0) => BODY;
+    let fn_code = format!("const {} = ({}) => {};", hf_name, params_str, body_for_fn);
+
+    // Build minified string for _hfN_str
+    // Re-serialize with a minifying codegen if possible, or just strip whitespace
+    let minified = minify_expression_string(&body_str);
+    let str_code = format!("const {} = \"{}\";", hf_str_name, escape_string_literal(&minified));
+
+    // Build the _fnSignal call expression: _fnSignal(_hfN, [deps], _hfN_str)
+    let callee = ctx.ast.expression_identifier(SPAN, "_fnSignal");
+    let mut arguments = ctx.ast.vec_with_capacity(3);
+
+    // Arg 1: _hfN identifier
+    let hf_atom = ctx.ast.atom(&hf_name);
+    arguments.push(Argument::from(ctx.ast.expression_identifier(SPAN, hf_atom)));
+
+    // Arg 2: [dep0, dep1, ...] array
+    let mut dep_elements = ctx.ast.vec_with_capacity(deps.len());
+    for dep in deps {
+        let dep_atom = ctx.ast.atom(&dep.root_name);
+        dep_elements.push(ArrayExpressionElement::from(
+            ctx.ast.expression_identifier(SPAN, dep_atom),
+        ));
+    }
+    arguments.push(Argument::from(ctx.ast.expression_array(SPAN, dep_elements)));
+
+    // Arg 3: _hfN_str identifier
+    let str_atom = ctx.ast.atom(&hf_str_name);
+    arguments.push(Argument::from(ctx.ast.expression_identifier(SPAN, str_atom)));
+
+    let fn_signal_call = ctx.ast.expression_call(
+        SPAN,
+        callee,
+        None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+        arguments,
+        false,
+    );
+
+    (fn_signal_call, fn_code, str_code)
+}
+
+/// Replace an identifier in code with a replacement string, being aware of word boundaries.
+fn replace_identifier_in_code(code: &str, old_name: &str, new_name: &str) -> String {
+    let mut result = String::with_capacity(code.len());
+    let chars: Vec<char> = code.chars().collect();
+    let old_chars: Vec<char> = old_name.chars().collect();
+    let old_len = old_chars.len();
+    let mut i = 0;
+
+    while i < chars.len() {
+        if i + old_len <= chars.len() && &chars[i..i + old_len] == old_chars.as_slice() {
+            // Check word boundaries
+            let before_ok = i == 0 || !is_ident_char(chars[i - 1]);
+            let after_ok = i + old_len >= chars.len() || !is_ident_char(chars[i + old_len]);
+
+            if before_ok && after_ok {
+                result.push_str(new_name);
+                i += old_len;
+                continue;
+            }
+        }
+        result.push(chars[i]);
+        i += 1;
+    }
+
+    result
+}
+
+fn is_ident_char(c: char) -> bool {
+    c.is_alphanumeric() || c == '_' || c == '$'
+}
+
+/// Simple minification: remove unnecessary whitespace.
+fn minify_expression_string(s: &str) -> String {
+    let mut result = String::with_capacity(s.len());
+    let mut in_string = false;
+    let mut string_char = '"';
+    let mut prev_was_space = false;
+
+    for c in s.chars() {
+        if in_string {
+            result.push(c);
+            if c == string_char {
+                in_string = false;
+            }
+            continue;
+        }
+
+        if c == '"' || c == '\'' || c == '`' {
+            in_string = true;
+            string_char = c;
+            prev_was_space = false;
+            result.push(c);
+            continue;
+        }
+
+        if c == ' ' || c == '\t' || c == '\n' || c == '\r' {
+            if !prev_was_space && !result.is_empty() {
+                // Only keep space if needed between identifiers/numbers
+                let last = result.chars().last().unwrap_or(' ');
+                if is_ident_char(last) {
+                    prev_was_space = true;
+                    // Defer the space -- only add if next char is also ident-like
+                }
+            }
+            continue;
+        }
+
+        if prev_was_space && is_ident_char(c) {
+            // Need the space between ident chars
+            // But check: in the actual minified output, most spaces between
+            // operators and identifiers aren't needed
+        }
+        prev_was_space = false;
+        result.push(c);
+    }
+
+    result
+}
+
+/// Escape a string for use inside a double-quoted JS string literal.
+fn escape_string_literal(s: &str) -> String {
+    s.replace('\\', "\\\\").replace('"', "\\\"")
+}
+
 /// Build the tag expression for a JSX element name.
 fn build_tag_expression<'a>(
     name: &JSXElementName<'a>,
@@ -1162,6 +1635,8 @@ fn jsx_attr_value_to_expression<'a>(
     tracker: &mut ImportTracker,
     ctx: &mut TraverseCtx<'a, ()>,
     destructured_props: Option<&[(String, String)]>,
+    module_imports: &[crate::types::ImportInfo],
+    hoisted_stmts: &mut Vec<(String, String)>,
 ) -> Expression<'a> {
     match value {
         JSXAttributeValue::StringLiteral(lit) => Expression::StringLiteral(lit),
@@ -1170,10 +1645,10 @@ fn jsx_attr_value_to_expression<'a>(
         }
         JSXAttributeValue::Element(el) => {
             // JSX element as attribute value: transform it
-            transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props)
+            transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts)
         }
         JSXAttributeValue::Fragment(frag) => {
-            transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props)
+            transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts)
         }
     }
 }
@@ -1184,6 +1659,8 @@ fn transform_jsx_element_inner<'a>(
     tracker: &mut ImportTracker,
     ctx: &mut TraverseCtx<'a, ()>,
     destructured_props: Option<&[(String, String)]>,
+    module_imports: &[crate::types::ImportInfo],
+    hoisted_stmts: &mut Vec<(String, String)>,
 ) -> Expression<'a> {
     let tag = build_tag_expression(&element.opening_element.name, ctx);
 
@@ -1218,7 +1695,7 @@ fn transform_jsx_element_inner<'a>(
                 // Handle key attribute
                 if attr_name == "key" {
                     if let Some(val) = attr.value {
-                        key_value = Some(jsx_attr_value_to_expression(val, tracker, ctx, destructured_props));
+                        key_value = Some(jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts));
                     }
                     continue;
                 }
@@ -1227,7 +1704,7 @@ fn transform_jsx_element_inner<'a>(
                 if let Some(event_name) = transform_event_attr_name(&attr_name) {
                     // Event handler: value goes into const props with renamed key
                     let value = if let Some(val) = attr.value {
-                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props)
+                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts)
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
@@ -1238,7 +1715,7 @@ fn transform_jsx_element_inner<'a>(
                 // Check for host: prefix (kept as-is) or custom$ (kept as-is)
                 if attr_name.starts_with("host:") || (attr_name.ends_with('$') && !attr_name.starts_with("on")) {
                     let value = if let Some(val) = attr.value {
-                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props)
+                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts)
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
@@ -1250,7 +1727,7 @@ fn transform_jsx_element_inner<'a>(
                 has_any_visible_prop = true;
                 _has_only_events = false;
                 let value = if let Some(val) = attr.value {
-                    jsx_attr_value_to_expression(val, tracker, ctx, destructured_props)
+                    jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts)
                 } else {
                     // Boolean attribute: <input disabled /> -> disabled: true
                     ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1295,6 +1772,22 @@ fn transform_jsx_element_inner<'a>(
 
                 if is_const_jsx_value(&value) {
                     const_props.push((attr_name, value));
+                } else if !contains_function_call(&value) {
+                    // Check if expression has reactive deps -> _fnSignal wrapping
+                    let (deps, has_non_reactive) = collect_reactive_deps(
+                        &value, destructured_props, module_imports,
+                    );
+                    if !deps.is_empty() && !has_non_reactive {
+                        // Wrap with _fnSignal
+                        let (wrapped, fn_code, str_code) = build_fn_signal_wrapping(
+                            value, &deps, destructured_props, tracker, ctx,
+                        );
+                        tracker.needs_fn_signal = true;
+                        hoisted_stmts.push((fn_code, str_code));
+                        const_props.push((attr_name, wrapped));
+                    } else {
+                        var_props.push((attr_name, value));
+                    }
                 } else {
                     var_props.push((attr_name, value));
                 }
@@ -1304,7 +1797,7 @@ fn transform_jsx_element_inner<'a>(
 
     // Build children
     let (children_expr, children_count) =
-        transform_jsx_children(&mut element.children, tracker, ctx, destructured_props);
+        transform_jsx_children(&mut element.children, tracker, ctx, destructured_props, module_imports, hoisted_stmts);
 
     // Compute flags
     let flags = if has_spread {
@@ -1504,6 +1997,8 @@ fn transform_jsx_fragment_inner<'a>(
     tracker: &mut ImportTracker,
     ctx: &mut TraverseCtx<'a, ()>,
     destructured_props: Option<&[(String, String)]>,
+    module_imports: &[crate::types::ImportInfo],
+    hoisted_stmts: &mut Vec<(String, String)>,
 ) -> Expression<'a> {
     tracker.needs_jsx_sorted = true;
     tracker.needs_fragment = true;
@@ -1512,7 +2007,7 @@ fn transform_jsx_fragment_inner<'a>(
 
     // Build children
     let (children_expr, children_count) =
-        transform_jsx_children(&mut fragment.children, tracker, ctx, destructured_props);
+        transform_jsx_children(&mut fragment.children, tracker, ctx, destructured_props, module_imports, hoisted_stmts);
 
     // Flags: 1 for multiple children, 3 for single/no children
     let flags: u32 = if children_count > 1 { 1 } else { 3 };
@@ -1556,6 +2051,8 @@ fn transform_jsx_children<'a>(
     tracker: &mut ImportTracker,
     ctx: &mut TraverseCtx<'a, ()>,
     destructured_props: Option<&[(String, String)]>,
+    module_imports: &[crate::types::ImportInfo],
+    hoisted_stmts: &mut Vec<(String, String)>,
 ) -> (Option<Expression<'a>>, usize) {
     let mut child_exprs: Vec<Expression<'a>> = Vec::new();
 
@@ -1574,12 +2071,12 @@ fn transform_jsx_children<'a>(
             }
             JSXChild::Element(el) => {
                 // Recursively transform child JSXElement
-                let transformed = transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props);
+                let transformed = transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts);
                 child_exprs.push(transformed);
             }
             JSXChild::Fragment(frag) => {
                 // Recursively transform child JSXFragment
-                let transformed = transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props);
+                let transformed = transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts);
                 child_exprs.push(transformed);
             }
             JSXChild::ExpressionContainer(container) => {
@@ -1597,12 +2094,12 @@ fn transform_jsx_children<'a>(
                         match transformed {
                             Expression::JSXElement(el) => {
                                 let result =
-                                    transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props);
+                                    transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts);
                                 child_exprs.push(result);
                             }
                             Expression::JSXFragment(frag) => {
                                 let result =
-                                    transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props);
+                                    transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts);
                                 child_exprs.push(result);
                             }
                             other => {
