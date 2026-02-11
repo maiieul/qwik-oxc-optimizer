@@ -11,6 +11,7 @@ use oxc::ast::ast::*;
 use oxc::span::SPAN;
 use oxc_traverse::{Traverse, TraverseCtx};
 
+use crate::collector;
 use crate::entry_strategy;
 use crate::hash;
 use crate::import_rewrite;
@@ -67,6 +68,11 @@ pub(crate) struct QwikTransform {
     /// Active props destructuring info for the current component$ call.
     /// Set in enter_call_expression, consumed in exit_expression.
     active_props_info: Option<PropsDestructuringInfo>,
+
+    /// Stack of capture tracking state for nested $()-bodies.
+    /// Each entry is (body_ident_refs, body_local_decls) for one $()-body.
+    /// Pushed on entering a $()-call, popped on exiting.
+    capture_stack: Vec<(Vec<String>, HashSet<String>)>,
 }
 
 impl QwikTransform {
@@ -83,6 +89,7 @@ impl QwikTransform {
             dollar_call_stack: Vec::new(),
             pending_dollar_calls: HashSet::new(),
             active_props_info: None,
+            capture_stack: Vec::new(),
         }
     }
 
@@ -152,6 +159,36 @@ impl QwikTransform {
             .next()
             .unwrap_or("js")
             .to_string()
+    }
+
+    /// Collect all binding names from a BindingPattern into the current
+    /// capture stack frame's body_local_decls.
+    /// Handles BindingIdentifier, ObjectPattern, and ArrayPattern recursively.
+    fn collect_binding_pattern_names(&mut self, pattern: &BindingPattern<'_>) {
+        match pattern {
+            BindingPattern::BindingIdentifier(ident) => {
+                if let Some(frame) = self.capture_stack.last_mut() {
+                    frame.1.insert(ident.name.as_str().to_string());
+                }
+            }
+            BindingPattern::ObjectPattern(obj) => {
+                for prop in &obj.properties {
+                    self.collect_binding_pattern_names(&prop.value);
+                }
+                if let Some(rest) = &obj.rest {
+                    self.collect_binding_pattern_names(&rest.argument);
+                }
+            }
+            BindingPattern::ArrayPattern(arr) => {
+                for elem in arr.elements.iter().flatten() {
+                    self.collect_binding_pattern_names(elem);
+                }
+                if let Some(rest) = &arr.rest {
+                    self.collect_binding_pattern_names(&rest.argument);
+                }
+            }
+            _ => {}
+        }
     }
 
     /// Record a segment and track imports. Returns the segment data.
@@ -251,6 +288,23 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 }
             }
 
+            // Push a new capture tracking frame for this $()-body.
+            // Each $()-body gets its own set of identifier refs and local declarations.
+            self.capture_stack.push((Vec::new(), HashSet::new()));
+
+            // Collect parameter names of the arrow function body as body-local declarations
+            if let Some(arg) = call.arguments.first() {
+                if let Argument::ArrowFunctionExpression(arrow) = arg {
+                    for param in &arrow.params.items {
+                        self.collect_binding_pattern_names(&param.pattern);
+                    }
+                    // Also collect rest parameter
+                    if let Some(rest) = &arrow.params.rest {
+                        self.collect_binding_pattern_names(&rest.rest.argument);
+                    }
+                }
+            }
+
             // Record the segment
             let segment = self.record_segment(call, &kind);
 
@@ -259,6 +313,29 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
             // Push to nesting stack
             self.dollar_call_stack.push(segment.display_name.clone());
+        }
+    }
+
+    fn enter_identifier_reference(
+        &mut self,
+        ident: &mut IdentifierReference<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // If we're inside a $()-body, collect the identifier name for capture analysis.
+        // Add to the TOPMOST (current) capture stack frame.
+        if let Some(frame) = self.capture_stack.last_mut() {
+            frame.0.push(ident.name.as_str().to_string());
+        }
+    }
+
+    fn enter_variable_declarator(
+        &mut self,
+        declarator: &mut VariableDeclarator<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // If we're inside a $()-body, record variable declarations as body-local.
+        if !self.capture_stack.is_empty() {
+            self.collect_binding_pattern_names(&declarator.id);
         }
     }
 
@@ -281,8 +358,15 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             // Pop from nesting stack
             self.dollar_call_stack.pop();
 
-            // Apply props destructuring if active for this component$ call
-            let props_info = self.active_props_info.take();
+            // Apply props destructuring if active for this component$ call.
+            // Only take() the active_props_info for the component$ call itself,
+            // not for nested $() calls inside it.
+            let is_component_exit = matches!(&kind, DollarCallKind::Named(name) if name == "component$");
+            let props_info = if is_component_exit {
+                self.active_props_info.take()
+            } else {
+                None
+            };
             if let Some(ref info) = props_info {
                 if let DollarCallKind::Named(ref name) = kind {
                     if name == "component$" {
@@ -363,8 +447,79 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         }) {
                             seg.param_names = vec![info.raw_props_name.clone()];
                         }
+
+                        // Post-process captures for child segments: replace individual
+                        // destructured prop names with _rawProps.
+                        // Because capture analysis runs during inner $() exit (before
+                        // props destructuring rewrites the AST), child segments may have
+                        // captured individual prop aliases (e.g., "foo") instead of "_rawProps".
+                        // We need to replace those with the raw props name.
+                        let local_aliases: HashSet<String> = info
+                            .prop_keys
+                            .iter()
+                            .map(|(_, local)| local.clone())
+                            .collect();
+
+                        // Find all child segments (segments whose parent matches this component's display_name).
+                        // The child segment's `parent` field stores the parent segment's `display_name`.
+                        let component_span = (call.span.start, call.span.end);
+                        let component_display_name = self
+                            .segments
+                            .iter()
+                            .find(|s| s.span == component_span)
+                            .map(|s| s.display_name.clone());
+
+                        if let Some(parent_name) = component_display_name {
+                            for seg in self.segments.iter_mut() {
+                                if seg.parent.as_ref() == Some(&parent_name) && !seg.capture_names.is_empty() {
+                                    let mut needs_rawprops = false;
+                                    seg.capture_names.retain(|name| {
+                                        if local_aliases.contains(name) {
+                                            needs_rawprops = true;
+                                            false // remove the individual prop name
+                                        } else {
+                                            true
+                                        }
+                                    });
+                                    if needs_rawprops {
+                                        // Add _rawProps if not already present
+                                        if !seg.capture_names.contains(&info.raw_props_name) {
+                                            seg.capture_names.insert(0, info.raw_props_name.clone());
+                                        }
+                                    }
+                                    seg.captures = !seg.capture_names.is_empty();
+                                }
+                            }
+                        }
                     }
                 }
+            }
+
+            // Pop the capture tracking frame for this $()-body
+            let (body_ident_refs, body_local_decls) = self
+                .capture_stack
+                .pop()
+                .unwrap_or_default();
+
+            // Compute captures using the collected identifier references and local declarations
+            let capture_result = collector::compute_captures(
+                &body_ident_refs,
+                &body_local_decls,
+                &self.collected,
+            );
+
+            // Update the segment's capture metadata
+            if let Some(seg) = self.segments.iter_mut().find(|s| {
+                s.span.0 == call.span.start && s.span.1 == call.span.end
+            }) {
+                seg.captures = !capture_result.capture_names.is_empty();
+                seg.capture_names = capture_result.capture_names.clone();
+            }
+
+            // If captures are non-empty and strategy is inline, track _captures import
+            let is_inline = entry_strategy::should_inline(&self.options.entry_strategy);
+            if !capture_result.capture_names.is_empty() && is_inline {
+                self.import_tracker.needs_captures = true;
             }
 
             // Find the segment info we recorded for this call
@@ -378,8 +533,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 Some(s) => s,
                 None => return,
             };
-
-            let is_inline = entry_strategy::should_inline(&self.options.entry_strategy);
 
             // Build the replacement expression
             let replacement = if is_inline {
@@ -416,9 +569,14 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     ctx,
                 )
             } else {
-                // Segment strategy: qrl(i_hash, "name_hash")
+                // Segment strategy: qrl(i_hash, "name_hash", captures)
                 let import_ident = format!("i_{}", segment_info.hash);
-                import_rewrite::build_qrl_call(&import_ident, &segment_info.name, ctx)
+                import_rewrite::build_qrl_call(
+                    &import_ident,
+                    &segment_info.name,
+                    &segment_info.capture_names,
+                    ctx,
+                )
             };
 
             // For named $-suffixed calls, wrap with the Qrl-suffixed version

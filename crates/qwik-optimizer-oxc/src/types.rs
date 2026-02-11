@@ -233,6 +233,11 @@ pub struct SegmentAnalysis {
     /// Whether this segment captures variables from its enclosing scope.
     pub captures: bool,
 
+    /// Names of captured variables (for inlinedQrl/qrl capture arrays).
+    /// Only present when captures is true.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub capture_names: Option<Vec<String>>,
+
     /// Source location as [start_byte, end_byte] of the original $-call.
     /// Serializes as a JSON array [start, end] (Rust tuples serialize as arrays).
     pub loc: (u32, u32),
@@ -681,6 +686,7 @@ mod tests {
             ctx_kind: CtxKind::Function,
             ctx_name: "$".to_string(),
             captures: false,
+            capture_names: None,
             loc: (90, 161),
             param_names: None,
         };

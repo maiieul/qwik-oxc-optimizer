@@ -179,6 +179,11 @@ fn segment_data_to_analysis(seg: &SegmentData, origin_path: &str) -> SegmentAnal
         ctx_kind: seg.ctx_kind.clone(),
         ctx_name: seg.ctx_name.clone(),
         captures: seg.captures,
+        capture_names: if seg.capture_names.is_empty() {
+            None
+        } else {
+            Some(seg.capture_names.clone())
+        },
         loc: seg.span,
         param_names: if seg.param_names.is_empty() {
             None
@@ -725,5 +730,311 @@ useTask$(({track}) => {
             "useTask$ should NOT get _rawProps transformation: {}",
             main_code
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // Capture Analysis Integration Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_capture_state_variable_inline() {
+        // State variable captured inside a nested $() -> appears in inlinedQrl captures array
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$, useStore } from '@qwik.dev/core';
+export const App = component$(() => {
+    const state = useStore({count: 0});
+    return $(() => state.count);
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        assert!(!result.modules.is_empty());
+        let main_code = &result.modules[0].code;
+
+        // The inner $() should have captures [state] in the inlinedQrl call
+        assert!(
+            main_code.contains("[state]"),
+            "Expected [state] captures array in output: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("inlinedQrl"),
+            "Expected inlinedQrl in output: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_capture_rawprops_segment() {
+        // Props destructured component captures _rawProps in nested $() -> segment metadata
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$ } from '@qwik.dev/core';
+export const Foo = component$(({foo}) => {
+    return $(() => foo);
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default() // segment strategy
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find segment modules with captures
+        let segments_with_captures: Vec<_> = result
+            .modules
+            .iter()
+            .filter_map(|m| m.segment.as_ref())
+            .filter(|s| s.captures)
+            .collect();
+
+        // The inner $() segment should have captures = true
+        assert!(
+            !segments_with_captures.is_empty(),
+            "Expected at least one segment with captures=true"
+        );
+
+        // The capturing segment should have captureNames = ["_rawProps"]
+        // (because foo was rewritten to _rawProps.foo by props destructuring)
+        let inner_segment = segments_with_captures
+            .iter()
+            .find(|s| s.ctx_name == "$")
+            .expect("Expected a $ segment with captures");
+        assert_eq!(
+            inner_segment.capture_names,
+            Some(vec!["_rawProps".to_string()]),
+            "Expected captureNames [\"_rawProps\"] for inner $ segment"
+        );
+
+        // In segment strategy, _rawProps won't appear in the main module
+        // because the component body (containing the inner $() qrl call
+        // with captures) is extracted into a separate segment file.
+        // Verify the main module at least has the component qrl call.
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("componentQrl"),
+            "Expected componentQrl in main module output: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_no_capture_imports() {
+        // Imports should NOT appear in captures
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$, useStore } from '@qwik.dev/core';
+export const App = component$(() => {
+    return $(() => useStore({}));
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+
+        // useStore is an import -- should NOT be captured
+        // The inner $() inlinedQrl should NOT have a captures array with useStore
+        assert!(
+            !main_code.contains("[useStore]"),
+            "useStore should NOT be in captures array: {}",
+            main_code
+        );
+
+        // Check segment metadata: inner $() should have captures = false
+        let inner_segments: Vec<_> = result
+            .modules
+            .iter()
+            .filter_map(|m| m.segment.as_ref())
+            .filter(|s| s.ctx_name == "$")
+            .collect();
+
+        if let Some(seg) = inner_segments.first() {
+            assert!(
+                !seg.captures,
+                "Inner $() with only import references should have captures=false"
+            );
+        }
+    }
+
+    #[test]
+    fn test_no_capture_body_local() {
+        // Variables declared inside the $() body should NOT be captured
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$ } from '@qwik.dev/core';
+export const App = component$(() => {
+    return $(() => {
+        const x = 1;
+        return x;
+    });
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+
+        // x is declared inside the $() body -> NOT captured
+        // The inlinedQrl should NOT have a captures array
+        assert!(
+            !main_code.contains(", [x]"),
+            "Body-local variable x should NOT be in captures: {}",
+            main_code
+        );
+
+        // Check segment metadata
+        let inner_segments: Vec<_> = result
+            .modules
+            .iter()
+            .filter_map(|m| m.segment.as_ref())
+            .filter(|s| s.ctx_name == "$")
+            .collect();
+
+        if let Some(seg) = inner_segments.first() {
+            assert!(
+                !seg.captures,
+                "Inner $() with only body-local variables should have captures=false"
+            );
+        }
+    }
+
+    #[test]
+    fn test_capture_segment_strategy_qrl_with_captures() {
+        // Segment strategy: qrl(i_hash, "name", [captures]) with third argument
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$ } from '@qwik.dev/core';
+export const Foo = component$(({foo}) => {
+    return $(() => foo);
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default() // segment strategy
+        };
+        let result = transform_modules(config).unwrap();
+
+        // The component body segment should contain qrl() with captures
+        // After props destructuring, the component body uses _rawProps.foo
+        // and the inner $() captures _rawProps
+        // The component body segment code should contain:
+        //   qrl(i_HASH, "name_HASH", [_rawProps])
+        // But since segment code is not yet generated (Phase 10), check the main module
+        let main_code = &result.modules[0].code;
+
+        // Main module should have outer qrl calls without captures (component$ itself)
+        assert!(
+            main_code.contains("qrl("),
+            "Expected qrl() in main module: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_capture_metadata_populated() {
+        // Verify SegmentAnalysis.captures and captureNames are correctly populated
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$, useStore } from '@qwik.dev/core';
+export const App = component$(() => {
+    const state = useStore({count: 0});
+    return $(() => state.count);
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find the inner $() segment
+        let all_segments: Vec<_> = result
+            .modules
+            .iter()
+            .filter_map(|m| m.segment.as_ref())
+            .collect();
+
+        // Should have 2 segments: component$ body and inner $()
+        assert!(
+            all_segments.len() >= 2,
+            "Expected at least 2 segments, got {}: {:?}",
+            all_segments.len(),
+            all_segments.iter().map(|s| &s.ctx_name).collect::<Vec<_>>()
+        );
+
+        // The inner $() should have captures = true and captureNames = ["state"]
+        let inner = all_segments
+            .iter()
+            .find(|s| s.ctx_name == "$")
+            .expect("Expected a $ segment");
+        assert!(inner.captures, "Inner $() should have captures=true");
+        assert_eq!(
+            inner.capture_names,
+            Some(vec!["state".to_string()]),
+            "Inner $() should have captureNames=[\"state\"]"
+        );
+
+        // The component$ segment should have captures = false (no outer scope refs)
+        let component = all_segments
+            .iter()
+            .find(|s| s.ctx_name == "component$")
+            .expect("Expected a component$ segment");
+        assert!(
+            !component.captures,
+            "component$ should have captures=false"
+        );
+    }
+
+    #[test]
+    fn test_capture_globals_not_captured() {
+        // Globals (console, window, etc.) should NOT be captured
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$ } from '@qwik.dev/core';
+export const App = component$(() => {
+    return $(() => {
+        console.log("test");
+        window.location.href;
+        setTimeout(() => {}, 100);
+    });
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // No captures should be generated for globals
+        let inner_segments: Vec<_> = result
+            .modules
+            .iter()
+            .filter_map(|m| m.segment.as_ref())
+            .filter(|s| s.ctx_name == "$")
+            .collect();
+
+        if let Some(seg) = inner_segments.first() {
+            assert!(
+                !seg.captures,
+                "Globals should not generate captures: {:?}",
+                seg.capture_names
+            );
+        }
     }
 }

@@ -70,12 +70,14 @@ pub(crate) fn compute_import_changes(
 }
 
 /// Build a segment-strategy QRL call expression:
-///   `qrl(i_hashValue, "SegmentName_hash")`
+///   `qrl(i_hashValue, "SegmentName_hash")`                        -- no captures
+///   `qrl(i_hashValue, "SegmentName_hash", [captured_vars])`       -- with captures
 ///
 /// The string parameters are allocated into the arena via `ctx.ast.atom()`.
 pub(crate) fn build_qrl_call<'a>(
     import_ident_name: &str,
     segment_export_name: &str,
+    captures: &[String],
     ctx: &mut TraverseCtx<'a, ()>,
 ) -> Expression<'a> {
     // Allocate strings into the arena so they live for 'a
@@ -90,15 +92,30 @@ pub(crate) fn build_qrl_call<'a>(
         .ast
         .expression_string_literal(SPAN, name_atom, None);
 
-    // Build arguments vector: [i_hash, "name_hash"]
-    let mut arguments = ctx.ast.vec_with_capacity(2);
+    // Capacity: import_ref + name + optional captures array
+    let capacity = if captures.is_empty() { 2 } else { 3 };
+    let mut arguments = ctx.ast.vec_with_capacity(capacity);
     arguments.push(Argument::from(import_ref));
     arguments.push(Argument::from(name_literal));
+
+    // Argument 3 (optional): captures array
+    if !captures.is_empty() {
+        let mut elements = ctx.ast.vec_with_capacity(captures.len());
+        for capture_name in captures {
+            let cap_atom = ctx.ast.atom(capture_name.as_str());
+            elements.push(ArrayExpressionElement::from(
+                ctx.ast.expression_identifier(SPAN, cap_atom),
+            ));
+        }
+        arguments.push(Argument::from(
+            ctx.ast.expression_array(SPAN, elements),
+        ));
+    }
 
     // Build callee: identifier "qrl"
     let callee = ctx.ast.expression_identifier(SPAN, "qrl");
 
-    // Build: /*#__PURE__*/ qrl(i_hash, "name")
+    // Build: /*#__PURE__*/ qrl(i_hash, "name", [captures])
     ctx.ast.expression_call_with_pure(
         SPAN,
         callee,
