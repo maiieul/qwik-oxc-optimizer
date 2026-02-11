@@ -113,10 +113,13 @@ pub fn transform_modules(
             (),
         );
 
-        // 5. Emit the transformed module
+        // 5. Post-transform processing: populate child segment metadata
+        qwik_transform.finalize_segments();
+
+        // 6. Emit the transformed module
         let emit_result = emit::emit_module(&program, source_in_arena, &emit_options);
 
-        // 6. Build the main TransformModule
+        // 7. Build the main TransformModule
         let main_module = TransformModule {
             path: input.path.clone(),
             is_entry: false,
@@ -127,17 +130,35 @@ pub fn transform_modules(
         };
         all_modules.push(main_module);
 
-        // 7. Build segment modules
+        // 8. Build segment modules with real code generation
+        let body_codes = qwik_transform.take_segment_body_codes();
         let segments = qwik_transform.extracted_segments();
         for seg in segments {
             let segment_analysis = segment_data_to_analysis(seg, &input.path);
 
-            // For segment strategy, the segment code is generated in Phase 10 (code_move.rs)
-            // For now, create a placeholder TransformModule
+            // Find matching body code by span start
+            let body_code = body_codes
+                .iter()
+                .find(|(span_start, _)| *span_start == seg.span.0)
+                .map(|(_, code)| code.as_str())
+                .unwrap_or("");
+
+            // Build segment module code (only for segment strategy)
+            let segment_code = if !entry_strategy::should_inline(&transform_options.entry_strategy)
+                && !body_code.is_empty()
+            {
+                let raw_code =
+                    code_move::build_segment_code(body_code, seg, &transform_options);
+                // Normalize via parse+codegen for consistent formatting
+                emit::normalize_code(&raw_code)
+            } else {
+                String::new()
+            };
+
             let segment_module = TransformModule {
                 path: format!("{}.{}", segment_analysis.canonical_filename, seg.extension),
                 is_entry: true,
-                code: String::new(), // Placeholder -- Phase 10 will generate segment code
+                code: segment_code,
                 map: None,
                 segment: Some(segment_analysis),
                 orig_path: Some(input.path.clone()),
@@ -1035,6 +1056,222 @@ export const App = component$(() => {
                 "Globals should not generate captures: {:?}",
                 seg.capture_names
             );
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Segment Code Generation Integration Tests (Phase 10)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_segment_code_generated() {
+        // Basic $() with segment strategy should produce segment module with code
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => console.log('hello'));"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Should have main + segment module
+        assert!(
+            result.modules.len() >= 2,
+            "Expected main + segment modules, got {}",
+            result.modules.len()
+        );
+
+        // Find the segment module
+        let seg_module = result
+            .modules
+            .iter()
+            .find(|m| m.is_entry && m.segment.is_some())
+            .expect("Expected a segment module");
+
+        // Segment module should have non-empty code
+        assert!(
+            !seg_module.code.is_empty(),
+            "Segment should have code, got empty string"
+        );
+
+        // Segment code should contain export const with segment name
+        assert!(
+            seg_module.code.contains("export const"),
+            "Segment should have export: {}",
+            seg_module.code
+        );
+        // Segment code should contain the original body
+        assert!(
+            seg_module.code.contains("console.log"),
+            "Segment should contain original body: {}",
+            seg_module.code
+        );
+    }
+
+    #[test]
+    fn test_segment_with_captures_code() {
+        // Segment with captures should have _captures import and restoration
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$, useStore } from '@qwik.dev/core';
+export const App = component$(() => {
+    const state = useStore({count: 0});
+    return $(() => state.count);
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find the inner $() segment (captures state)
+        let inner_seg = result
+            .modules
+            .iter()
+            .find(|m| {
+                m.segment
+                    .as_ref()
+                    .map_or(false, |s| s.ctx_name == "$" && s.captures)
+            })
+            .expect("Expected inner $ segment with captures");
+
+        // Segment code should not be empty
+        assert!(
+            !inner_seg.code.is_empty(),
+            "Inner segment with captures should have code"
+        );
+
+        // Should have _captures import
+        assert!(
+            inner_seg.code.contains("_captures"),
+            "Segment should import _captures: {}",
+            inner_seg.code
+        );
+
+        // Should have capture restoration: _captures[0]
+        assert!(
+            inner_seg.code.contains("_captures[0]"),
+            "Segment should restore captures: {}",
+            inner_seg.code
+        );
+    }
+
+    #[test]
+    fn test_nested_segments_lazy_imports() {
+        // Component with nested $() should have lazy imports in the component segment
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$ } from '@qwik.dev/core';
+export const App = component$(() => {
+    return $(() => 'hello');
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find the component$ segment (parent of the inner $() segment)
+        let component_seg = result
+            .modules
+            .iter()
+            .find(|m| {
+                m.segment
+                    .as_ref()
+                    .map_or(false, |s| s.ctx_name == "component$")
+            })
+            .expect("Expected component$ segment");
+
+        // Component segment should have non-empty code
+        assert!(
+            !component_seg.code.is_empty(),
+            "Component segment should have code"
+        );
+
+        // Component segment should have qrl import for child segment
+        assert!(
+            component_seg.code.contains("qrl"),
+            "Component segment should have qrl: {}",
+            component_seg.code
+        );
+        // Component segment should have lazy import for child
+        assert!(
+            component_seg.code.contains("import("),
+            "Component segment should have lazy import: {}",
+            component_seg.code
+        );
+    }
+
+    #[test]
+    fn test_segment_code_export_name() {
+        // Verify the export name matches the segment name
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 42);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let seg_module = result
+            .modules
+            .iter()
+            .find(|m| m.segment.is_some())
+            .expect("Expected a segment module");
+
+        let seg_name = &seg_module.segment.as_ref().unwrap().name;
+
+        // The segment code should contain `export const <segment_name>`
+        let expected_export = format!("export const {}", seg_name);
+        assert!(
+            seg_module.code.contains(&expected_export),
+            "Expected '{}' in segment code: {}",
+            expected_export,
+            seg_module.code
+        );
+    }
+
+    #[test]
+    fn test_inline_strategy_no_segment_code() {
+        // Inline strategy should NOT generate segment code
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => console.log('hello'));"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Main module should have all code inline
+        assert!(!result.modules.is_empty());
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("inlinedQrl"),
+            "Expected inlinedQrl in main module: {}",
+            main_code
+        );
+
+        // No segment modules should have code (inline strategy keeps body in main)
+        for m in &result.modules {
+            if m.is_entry && m.segment.is_some() {
+                assert!(
+                    m.code.is_empty(),
+                    "Inline strategy segment should have empty code: {}",
+                    m.code
+                );
+            }
         }
     }
 }
