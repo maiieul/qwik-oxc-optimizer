@@ -101,6 +101,11 @@ pub fn transform_modules(
         // 3. Run collector pass
         let collect_result = collector::collect(&program, &scoping);
 
+        // 3b. Run build constant replacement pre-pass (isServer/isBrowser/isDev -> booleans)
+        // This must happen before traverse_mut so that segment body serialization
+        // sees the replaced boolean literals instead of the original identifiers.
+        const_replace::replace_build_constants(&mut program, &transform_options, &allocator);
+
         // 4. Create QwikTransform and run traverse
         let mut qwik_transform =
             transform::QwikTransform::new(&transform_options, collect_result, &input.path);
@@ -2590,6 +2595,266 @@ export const handler = sync$((event, target) => {
         assert!(
             !main_code.contains("import { qrl }"),
             "sync$ should NOT need qrl import: {}",
+            main_code
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Const Replacement Integration Tests (Phase 12-01)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_const_replace_isserver_true() {
+        // isServer imported from @qwik.dev/core/build, is_server=true -> replaced with true
+        // The if (isServer) block body should be inlined (dead branch elimination)
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { isServer } from '@qwik.dev/core/build';
+export const result = () => {
+    if (isServer) {
+        console.log('server');
+    }
+    return 'done';
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            is_server: Some(true),
+            mode: EmitMode::Prod,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // isServer should be replaced -- no raw isServer identifier in output
+        assert!(
+            !main_code.contains("isServer"),
+            "isServer should be replaced, not present in output: {}",
+            main_code
+        );
+        // The if block body should be inlined (isServer=true means if(true) -> inline)
+        assert!(
+            main_code.contains("console.log"),
+            "Expected console.log to be inlined from if(true) block: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_const_replace_isbrowser_false() {
+        // isBrowser imported from @qwik.dev/core/build, is_server=true -> isBrowser=false
+        // if (isBrowser) { ... } should be removed entirely
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { isBrowser } from '@qwik.dev/core/build';
+export const fn1 = () => {
+    if (isBrowser) {
+        console.log('browser');
+    }
+    return 'done';
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            is_server: Some(true),
+            mode: EmitMode::Prod,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // isBrowser should be replaced
+        assert!(
+            !main_code.contains("isBrowser"),
+            "isBrowser should be replaced: {}",
+            main_code
+        );
+        // The if(false) block should be eliminated
+        assert!(
+            !main_code.contains("console.log"),
+            "if(false) block should be eliminated: {}",
+            main_code
+        );
+        // return 'done' should still be present
+        assert!(
+            main_code.contains("done"),
+            "Expected 'done' to still be present: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_const_replace_dead_branch_elimination() {
+        // Function body with only if(isBrowser) should become empty () => {}
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { isBrowser as isb } from '@qwik.dev/core/build';
+export const functionThatNeedsWindow = () => {
+    if (isb) {
+        console.log('browser');
+        window.alert('hey');
+    }
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            is_server: Some(true),
+            mode: EmitMode::Prod,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // The aliased isBrowser should be replaced
+        assert!(
+            !main_code.contains("isb"),
+            "isb alias should be replaced: {}",
+            main_code
+        );
+        // The entire if block should be eliminated, leaving an empty function body
+        assert!(
+            !main_code.contains("console.log"),
+            "if(false) block should be eliminated: {}",
+            main_code
+        );
+        assert!(
+            !main_code.contains("window.alert"),
+            "if(false) block should be eliminated: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_const_replace_logical_simplification() {
+        // isServer && <expr> with isServer=true should become <expr>
+        // isBrowser && <expr> with isBrowser=false should become false
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { isServer } from '@qwik.dev/core';
+import { isBrowser } from '@qwik.dev/core/build';
+export const a = isServer && 'yes';
+export const b = isBrowser && 'no';"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            is_server: Some(true),
+            mode: EmitMode::Prod,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // true && 'yes' -> 'yes'
+        assert!(
+            main_code.contains("\"yes\"") || main_code.contains("'yes'"),
+            "Expected 'yes' (true && 'yes' -> 'yes'): {}",
+            main_code
+        );
+        // false && 'no' -> false
+        assert!(
+            main_code.contains("false"),
+            "Expected false (false && 'no' -> false): {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_const_replace_isdev() {
+        // isDev with mode=Dev should be true, with mode=Prod should be false
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { isDev } from '@qwik.dev/core';
+export const dev = isDev;"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            is_server: Some(false),
+            mode: EmitMode::Dev,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("true"),
+            "isDev in Dev mode should be true: {}",
+            main_code
+        );
+
+        // Now test with Prod mode
+        let config2 = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { isDev } from '@qwik.dev/core';
+export const dev = isDev;"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            is_server: Some(false),
+            mode: EmitMode::Prod,
+            ..TransformModulesOptions::default()
+        };
+        let result2 = transform_modules(config2).unwrap();
+
+        let main_code2 = &result2.modules[0].code;
+        assert!(
+            main_code2.contains("false"),
+            "isDev in Prod mode should be false: {}",
+            main_code2
+        );
+    }
+
+    #[test]
+    fn test_const_replace_no_replacement_without_import() {
+        // If there's no build constant import, identifiers should NOT be replaced
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"const isServer = true;
+export const result = isServer;"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            is_server: Some(true),
+            mode: EmitMode::Prod,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // isServer declared locally should NOT be replaced
+        assert!(
+            main_code.contains("isServer"),
+            "Locally declared isServer should NOT be replaced: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_const_replace_aliased_import() {
+        // import { isServer as isServer2 } from '@qwik.dev/core'
+        // The local name isServer2 should be replaced, not the imported name isServer
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { isServer as myServer } from '@qwik.dev/core';
+export const result = myServer;"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            is_server: Some(true),
+            mode: EmitMode::Prod,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // myServer should be replaced with true
+        assert!(
+            !main_code.contains("myServer"),
+            "myServer alias should be replaced: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("true"),
+            "myServer should be replaced with true: {}",
             main_code
         );
     }
