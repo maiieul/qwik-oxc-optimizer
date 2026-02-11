@@ -4,19 +4,20 @@
 
 A project to port the Qwik framework's code optimizer from SWC to OXC. The v1.0 milestone produced a complete behavioral specification of all 162 SWC optimizer snapshot tests. The v2.0 milestone mapped every transformation pattern to concrete OXC APIs with Rust code examples, built working proof-of-concept programs, and produced an architectural blueprint — so the v3.0 port can proceed with zero guesswork.
 
-## Current Status
+## Current Milestone: v3.0 OXC Optimizer Port
 
-v1.0 and v2.0 milestones shipped. Ready for v3.0 (the actual port).
+**Goal:** Build a complete `oxc-optimizer` Rust crate implementing all 14 CONV transformation types, validated against the 162 behavioral spec files.
 
-**v2.0 delivered:**
-- 7 comprehensive API mapping documents (~16K lines, 99 Rust code blocks)
-- 4 working Rust POCs (dollar detection, capture analysis, multi-module output, source maps)
-- Architecture blueprint with crate module layout, public API, data flow, and Cargo.toml
-- Master cross-reference for all 14 CONV types with dependency ordering and implementation roadmap
+**Target features:**
+- Crate skeleton with module layout from architecture blueprint
+- All 14 CONV types implemented in dependency order
+- Test harness validating output against 162 spec markdown files
+- Public API compatible with downstream consumers (TransformModulesOptions, TransformOutput, SegmentAnalysis)
+- Source map generation for all output modules
 
 ## Core Value
 
-A complete, SWC-independent behavioral specification and OXC API mapping of every optimizer transformation so the OXC port can be built from spec and research, not from reverse-engineering SWC code.
+A working OXC-based Qwik optimizer crate that passes all 162 spec tests — built from behavioral specs and API mappings, not reverse-engineered from SWC.
 
 ## Requirements
 
@@ -38,7 +39,11 @@ A complete, SWC-independent behavioral specification and OXC API mapping of ever
 
 ### Active
 
-(None — next milestone requirements defined via `/gsd:new-milestone`)
+- [ ] Crate skeleton (types, errors, module layout, Cargo.toml)
+- [ ] All 14 CONV transformation types implemented
+- [ ] Spec-based test harness (162 tests)
+- [ ] Source map generation
+- [ ] Public API compatibility
 
 ### Out of Scope
 
@@ -88,4 +93,4 @@ Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap),
 | 9-tier CONV implementation order | Dependency graph + frequency analysis determines build order for v3.0 | — Pending (validated during port) |
 
 ---
-*Last updated: 2026-02-11 after v2.0 milestone*
+*Last updated: 2026-02-10 after v3.0 milestone started*
