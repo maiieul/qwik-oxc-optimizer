@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** A complete, SWC-independent behavioral specification of every optimizer transformation so the OXC port can be built from spec
-**Current focus:** Phase 5 -- Deep Research & Proof of Concept
+**Current focus:** Phase 6 -- Secondary Patterns & Cross-Reference
 
 ## Current Position
 
-Phase: 5 of 6 (Deep Research & Proof of Concept)
-Plan: 3 of 3 in current phase -- COMPLETE
-Status: Phase 5 complete, all 3 plans done. Ready for Phase 6.
-Last activity: 2026-02-10 -- Completed 05-03 multi-module output + source maps POCs
+Phase: 6 of 6 (Secondary Patterns & Cross-Reference)
+Plan: 2 of 3 in current phase -- COMPLETE
+Status: Phase 6 in progress. Plans 06-01 and 06-02 complete. Ready for 06-03.
+Last activity: 2026-02-11 -- Completed 06-02 entry strategy, code stripping, const folding mapping
 
-Progress: [██████████████████████████░░░░] 14/16 plans (87% overall, 71% v2.0)
+Progress: [████████████████████████████░░] 16/17 plans (94% overall, 86% v2.0)
 
 ## Performance Metrics
 
@@ -24,8 +24,8 @@ Progress: [███████████████████████
 - Total execution time: 1.42 hours
 
 **v2.0:**
-- Total plans completed: 5
-- Plans remaining: 2
+- Total plans completed: 7
+- Plans remaining: 1
 
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
@@ -34,6 +34,8 @@ Progress: [███████████████████████
 | 05    | 01   | 8min     | 2     | 2     |
 | 05    | 02   | 10min    | 2     | 2     |
 | 05    | 03   | 12min    | 2     | 3     |
+| 06    | 01   | 7min     | 2     | 1     |
+| 06    | 02   | 6min     | 2     | 1     |
 
 ## Accumulated Context
 
@@ -61,6 +63,10 @@ Recent decisions affecting current work:
 - [05-03]: Segment hash exact values vary by Rust toolchain; validate structure (11-char base64url) not exact match
 - [05-03]: Program span must encompass all preserved child spans for source map generation
 - [05-03]: Segments with preserved spans require Program.source_text = original source
+- [06-02]: Entry strategy is pure configuration-driven branching of two existing API patterns (qrl vs inlinedQrl) -- no new AstBuilder patterns needed
+- [06-02]: CONV-10 (const replacement) must run before CONV-09 (code stripping) to enable dead branch elimination prior to noop replacement
+- [06-02]: Side effect analysis uses post-stripping reference counting via oxc_semantic -- declarations with zero live references after stripping are removed
+- [06-02]: Static expression evaluator scoped to literals and simple operations only -- no function calls or complex expressions
 
 ### Pending Todos
 
@@ -72,6 +78,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-10
-Stopped at: Completed 05-03-PLAN.md. Phase 5 complete (all 3 plans). Ready for Phase 6.
+Last session: 2026-02-11
+Stopped at: Completed 06-02-PLAN.md. Phase 6 plan 2 of 3 complete. Ready for 06-03.
 Resume file: None
