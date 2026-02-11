@@ -70,11 +70,12 @@ Plans:
   3. A cross-reference table exists mapping all 14 CONV types to their specific OXC API patterns, with every CONV type having at least one concrete API mapping
   4. Documents exist mapping props destructuring, signal optimization, entry strategy, code stripping, and const folding patterns to OXC APIs
 
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md -- JSX transformation + props destructuring + signal optimization OXC API mapping (APIM-04, APIM-09)
+- [ ] 06-02-PLAN.md -- Entry strategy, code stripping, const folding, input binding, sync$, dev mode OXC API mapping (APIM-10)
+- [ ] 06-03-PLAN.md -- 14 CONV type cross-reference table + source map span strategy + PURE annotations (APIM-07, APIM-08)
 
 ## Progress
 
@@ -88,8 +89,8 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 3. Verify Completeness | v1.0 | 2/2 | Complete | 2026-02-10 |
 | 4. Core API Mapping & Architecture | v2.0 | 2/2 | Complete | 2026-02-10 |
 | 5. Deep Research & Proof of Concept | v2.0 | 3/3 | Complete | 2026-02-10 |
-| 6. Secondary Patterns & Cross-Reference | v2.0 | 0/2 | Not started | - |
+| 6. Secondary Patterns & Cross-Reference | v2.0 | 0/3 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-10 (Phase 5 complete)*
+*Last updated: 2026-02-10 (Phase 6 planned)*
