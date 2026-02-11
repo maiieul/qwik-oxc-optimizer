@@ -53,11 +53,11 @@ Full details: `milestones/v2.0-ROADMAP.md`
   2. `transform_modules()` accepts `TransformModulesOptions` and returns a `TransformOutput` (stub with empty modules/diagnostics)
   3. All public types (`TransformModulesOptions`, `TransformOutput`, `SegmentAnalysis`, etc.) serialize to/from JSON matching the SWC optimizer's wire format
   4. Test harness parses all 162 spec markdown files and extracts input code, expected output modules, and expected diagnostics without errors
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: Crate skeleton (Cargo.toml, types.rs, all module stubs, lib.rs entry point)
-- [ ] 07-02: Spec file parser and test harness infrastructure
+- [ ] 07-01-PLAN.md -- Crate skeleton with workspace Cargo.toml, all 16 module stubs, public types, and stub transform_modules()
+- [ ] 07-02-PLAN.md -- Spec file parser and test harness validating all 162 specs parse correctly
 
 ### Phase 8: Core Detection + QRL Transforms
 **Goal**: Optimizer detects all $() call sites and produces qrl()/inlinedQrl() replacements
@@ -164,7 +164,7 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 4. Core API Mapping & Architecture | v2.0 | 2/2 | Complete | 2026-02-10 |
 | 5. Deep Research & Proof of Concept | v2.0 | 3/3 | Complete | 2026-02-10 |
 | 6. Secondary Patterns & Cross-Reference | v2.0 | 3/3 | Complete | 2026-02-11 |
-| 7. Crate Foundation + Test Harness | v3.0 | 0/2 | Not started | - |
+| 7. Crate Foundation + Test Harness | v3.0 | 0/2 | Planning complete | - |
 | 8. Core Detection + QRL Transforms | v3.0 | 0/2 | Not started | - |
 | 9. Capture Analysis + Props Destructuring | v3.0 | 0/2 | Not started | - |
 | 10. Segment Extraction + Codegen | v3.0 | 0/2 | Not started | - |
