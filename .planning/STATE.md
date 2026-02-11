@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 ## Current Position
 
-Phase: 11 of 13 (JSX + Signal Transforms) -- IN PROGRESS
-Plan: 1 of 2 in current phase -- COMPLETE
-Status: Plan 11-01 complete. JSX elements/fragments transformed to _jsxSorted/_jsxSplit calls. 162 specs, 0 errors.
-Last activity: 2026-02-11 -- Completed 11-01: JSX element and fragment transformation
+Phase: 11 of 13 (JSX + Signal Transforms) -- COMPLETE
+Plan: 2 of 2 in current phase -- COMPLETE
+Status: Phase 11 complete. Signal wrapping (_wrapProp, _fnSignal), bind: directives, hoisted functions all implemented. 162 specs, 0 errors. 127 unit tests + 5 spec tests pass.
+Last activity: 2026-02-11 -- Completed 11-02: Signal & binding transforms
 
-Progress: [#############░░░░░░░] 52% (26/31 total plans across all milestones; v3.0 9/14)
+Progress: [##############░░░░░░] 55% (27/31 total plans across all milestones; v3.0 10/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [#############░░░░░░░] 52% (26/31 total plans across all
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 9
-- Average duration: 8min
-- Total execution time: 80min
+- Total plans completed: 10
+- Average duration: 12min
+- Total execution time: ~125min
 
 ## Accumulated Context
 
@@ -74,6 +74,10 @@ Recent decisions affecting current work:
 - Exhaustive JSXExpression->Expression match covering all 39 inherited variants (no catch-all to undefined)
 - Auto-key u6_N generation for elements with content; null key for empty self-closing
 - Event handlers to const props with q-e: prefix; non-const values to var props
+- String-based hoisted function approach: store _hfN declarations as code strings, inject into codegen output after imports
+- Signal-wrapped values (_wrapProp, _fnSignal) go to const props since wrapping handles reactivity
+- Reactive dep detection: .value = signal, deep chains = store, _rawProps = props, imports = not reactive
+- bind:value/bind:checked expand to value/checked const prop + q-e:input inlinedQrl event handler
 
 ### Pending Todos
 
@@ -86,5 +90,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 11-01-PLAN.md. JSX element/fragment transformation done. Proceeding to 11-02.
+Stopped at: Completed 11-02-PLAN.md. Phase 11 (JSX + Signal Transforms) fully complete.
 Resume file: None
