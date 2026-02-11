@@ -332,25 +332,13 @@ fn collect_binding_pattern_names_into(
 }
 
 /// Collect declaration names from a top-level statement.
+///
+/// Delegates to `collect_declaration_names` for statements that carry a
+/// Declaration (variable, function, class). Non-declaration statements are
+/// ignored.
 fn collect_statement_decl_names(names: &mut HashSet<String>, stmt: &oxc::ast::ast::Statement<'_>) {
-    use oxc::ast::ast::Statement;
-    match stmt {
-        Statement::VariableDeclaration(var_decl) => {
-            for declarator in &var_decl.declarations {
-                collect_binding_pattern_names_into(names, &declarator.id);
-            }
-        }
-        Statement::FunctionDeclaration(fn_decl) => {
-            if let Some(ident) = &fn_decl.id {
-                names.insert(ident.name.as_str().to_string());
-            }
-        }
-        Statement::ClassDeclaration(class_decl) => {
-            if let Some(ident) = &class_decl.id {
-                names.insert(ident.name.as_str().to_string());
-            }
-        }
-        _ => {}
+    if let Some(decl) = stmt.as_declaration() {
+        collect_declaration_names(names, decl);
     }
 }
 
