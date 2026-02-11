@@ -285,7 +285,8 @@ impl QwikTransform {
         };
 
         // Track imports based on strategy
-        let is_inline = entry_strategy::should_inline(&self.options.entry_strategy);
+        let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
+                || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
 
         if is_inline {
             self.import_tracker.needs_inlined_qrl = true;
@@ -563,7 +564,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
 
             // If captures are non-empty and strategy is inline, track _captures import
-            let is_inline = entry_strategy::should_inline(&self.options.entry_strategy);
+            let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
+                || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
             if !capture_result.capture_names.is_empty() && is_inline {
                 self.import_tracker.needs_captures = true;
             }

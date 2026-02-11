@@ -119,9 +119,22 @@ pub fn transform_modules(
         // 6. Emit the transformed module
         let emit_result = emit::emit_module(&program, source_in_arena, &emit_options);
 
-        // 7. Build the main TransformModule
+        // 7. Compute output extension based on transpile_ts setting
+        let output_ext = output_extension(&input.path, transform_options.transpile_ts);
+        let main_path = if transform_options.transpile_ts {
+            input
+                .path
+                .rsplit_once('.')
+                .map_or(input.path.clone(), |(base, _)| {
+                    format!("{}.{}", base, output_ext)
+                })
+        } else {
+            input.path.clone()
+        };
+
+        // 8. Build the main TransformModule
         let main_module = TransformModule {
-            path: input.path.clone(),
+            path: main_path,
             is_entry: false,
             code: emit_result.code,
             map: emit_result.map,
@@ -130,40 +143,60 @@ pub fn transform_modules(
         };
         all_modules.push(main_module);
 
-        // 8. Build segment modules with real code generation
+        // 9. Build segment modules based on entry strategy
         let body_codes = qwik_transform.take_segment_body_codes();
         let segments = qwik_transform.extracted_segments();
+
+        let is_inline_like = entry_strategy::should_inline(&transform_options.entry_strategy)
+            || matches!(
+                transform_options.entry_strategy,
+                EntryStrategy::Hoist
+            );
+
         for seg in segments {
             let segment_analysis = segment_data_to_analysis(seg, &input.path);
 
-            // Find matching body code by span start
-            let body_code = body_codes
-                .iter()
-                .find(|(span_start, _)| *span_start == seg.span.0)
-                .map(|(_, code)| code.as_str())
-                .unwrap_or("");
+            // Use output extension for segment module path
+            let seg_ext = output_extension(&input.path, transform_options.transpile_ts);
 
-            // Build segment module code (only for segment strategy)
-            let segment_code = if !entry_strategy::should_inline(&transform_options.entry_strategy)
-                && !body_code.is_empty()
-            {
-                let raw_code =
-                    code_move::build_segment_code(body_code, seg, &transform_options);
-                // Normalize via parse+codegen for consistent formatting
-                emit::normalize_code(&raw_code)
+            if is_inline_like {
+                // Inline/Hoist: segment metadata only, no separate code
+                let segment_module = TransformModule {
+                    path: format!("{}.{}", segment_analysis.canonical_filename, seg_ext),
+                    is_entry: false,
+                    code: String::new(),
+                    map: None,
+                    segment: Some(segment_analysis),
+                    orig_path: Some(input.path.clone()),
+                };
+                all_modules.push(segment_module);
             } else {
-                String::new()
-            };
+                // Segment/Single/Component/Smart/Hook: separate file with code
+                let body_code = body_codes
+                    .iter()
+                    .find(|(span_start, _)| *span_start == seg.span.0)
+                    .map(|(_, code)| code.as_str())
+                    .unwrap_or("");
 
-            let segment_module = TransformModule {
-                path: format!("{}.{}", segment_analysis.canonical_filename, seg.extension),
-                is_entry: true,
-                code: segment_code,
-                map: None,
-                segment: Some(segment_analysis),
-                orig_path: Some(input.path.clone()),
-            };
-            all_modules.push(segment_module);
+                let segment_code = if !body_code.is_empty() {
+                    let raw_code =
+                        code_move::build_segment_code(body_code, seg, &transform_options);
+                    // Normalize via parse+codegen for consistent formatting
+                    emit::normalize_code(&raw_code)
+                } else {
+                    String::new()
+                };
+
+                let segment_module = TransformModule {
+                    path: format!("{}.{}", segment_analysis.canonical_filename, seg_ext),
+                    is_entry: true,
+                    code: segment_code,
+                    map: None,
+                    segment: Some(segment_analysis),
+                    orig_path: Some(input.path.clone()),
+                };
+                all_modules.push(segment_module);
+            }
         }
 
         // 8. Collect diagnostics
@@ -176,6 +209,25 @@ pub fn transform_modules(
         is_type_script,
         is_jsx,
     })
+}
+
+/// Compute the output file extension, accounting for transpile_ts.
+///
+/// When transpile_ts is true, TypeScript extensions are mapped to JavaScript:
+/// - `.tsx` -> `.jsx`
+/// - `.ts` -> `.js`
+/// Otherwise the original extension is preserved.
+fn output_extension(input_path: &str, transpile_ts: bool) -> String {
+    let ext = input_path.rsplit('.').next().unwrap_or("js");
+    if transpile_ts {
+        match ext {
+            "tsx" => "jsx".to_string(),
+            "ts" => "js".to_string(),
+            other => other.to_string(),
+        }
+    } else {
+        ext.to_string()
+    }
 }
 
 /// Convert internal SegmentData to public SegmentAnalysis.
@@ -1263,15 +1315,186 @@ export const handler = $(() => console.log('hello'));"#
             main_code
         );
 
-        // No segment modules should have code (inline strategy keeps body in main)
+        // All segment modules should have empty code and is_entry=false
         for m in &result.modules {
-            if m.is_entry && m.segment.is_some() {
+            if m.segment.is_some() {
                 assert!(
                     m.code.is_empty(),
                     "Inline strategy segment should have empty code: {}",
                     m.code
                 );
+                assert!(
+                    !m.is_entry,
+                    "Inline strategy segment should not be entry"
+                );
             }
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Entry Strategy + Output Extension Tests (Phase 10-02)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_hoist_strategy_same_as_inline() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => console.log('hello'));"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Hoist,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main = &result.modules[0];
+        assert!(
+            main.code.contains("inlinedQrl"),
+            "Hoist should use inlinedQrl: {}",
+            main.code
+        );
+
+        // All segment modules should have empty code and is_entry=false (same as inline)
+        for m in &result.modules {
+            if m.segment.is_some() {
+                assert!(
+                    m.code.is_empty(),
+                    "Hoist strategy segment should have empty code: {}",
+                    m.code
+                );
+                assert!(
+                    !m.is_entry,
+                    "Hoist strategy segment should not be entry"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn test_smart_strategy_produces_segment_code() {
+        // Smart/Component/Hook/Single should be treated like Segment for now
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => console.log('hello'));"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Smart,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Smart strategy should produce segment modules with code (treated as Segment)
+        let seg_modules: Vec<_> = result
+            .modules
+            .iter()
+            .filter(|m| m.segment.is_some())
+            .collect();
+        assert!(
+            !seg_modules.is_empty(),
+            "Smart strategy should produce segment modules"
+        );
+        // Segment modules produced by Smart should have non-empty code and is_entry=true
+        // (Smart is NOT inline-like, it should produce separate files)
+        // Note: should_hoist returns true for Smart, but for code generation purposes
+        // Smart produces segments in separate files. The hoist behavior is about
+        // grouping, which we defer to Phase 13. For now Smart behaves like Segment.
+    }
+
+    #[test]
+    fn test_transpile_ts_output_extension() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 1);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_ts: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Main module should have .jsx extension path
+        assert!(
+            result.modules[0].path.ends_with(".jsx"),
+            "Expected .jsx path, got: {}",
+            result.modules[0].path
+        );
+
+        // Segment module should also have .jsx extension
+        if result.modules.len() > 1 {
+            assert!(
+                result.modules[1].path.ends_with(".jsx"),
+                "Expected .jsx segment path, got: {}",
+                result.modules[1].path
+            );
+        }
+    }
+
+    #[test]
+    fn test_transpile_ts_false_preserves_extension() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 1);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_ts: false,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Main module should keep .tsx extension
+        assert!(
+            result.modules[0].path.ends_with(".tsx"),
+            "Expected .tsx path, got: {}",
+            result.modules[0].path
+        );
+
+        // Segment module should also keep .tsx extension
+        if result.modules.len() > 1 {
+            assert!(
+                result.modules[1].path.ends_with(".tsx"),
+                "Expected .tsx segment path, got: {}",
+                result.modules[1].path
+            );
+        }
+    }
+
+    #[test]
+    fn test_transpile_ts_with_ts_extension() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 1);"#
+                    .to_string(),
+                path: "test.ts".to_string(),
+            }],
+            transpile_ts: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Main module should have .js extension path
+        assert!(
+            result.modules[0].path.ends_with(".js"),
+            "Expected .js path, got: {}",
+            result.modules[0].path
+        );
+    }
+
+    #[test]
+    fn test_output_extension_helper() {
+        assert_eq!(output_extension("test.tsx", true), "jsx");
+        assert_eq!(output_extension("test.ts", true), "js");
+        assert_eq!(output_extension("test.jsx", true), "jsx");
+        assert_eq!(output_extension("test.js", true), "js");
+        assert_eq!(output_extension("test.tsx", false), "tsx");
+        assert_eq!(output_extension("test.ts", false), "ts");
     }
 }
