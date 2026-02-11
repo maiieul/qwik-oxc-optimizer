@@ -145,11 +145,13 @@ Plans:
   1. Optimizer generates source maps for all output modules (main and segments) that map generated positions back to original source locations
   2. Test harness runs the optimizer on all 162 spec inputs and compares output semantically against spec expectations
   3. All 162 spec tests pass -- every module path, segment metadata field, and diagnostic matches the behavioral specification
-**Plans**: 2 plans
+**Plans**: 4 plans
 
 Plans:
 - [ ] 13-01-PLAN.md -- Source map generation for main and segment modules (EMIT-02)
-- [ ] 13-02-PLAN.md -- Full 162-spec validation pass and fix remaining failures (TEST-02, TEST-03)
+- [ ] 13-02-PLAN.md -- Diagnose mismatches and fix import alias/core_module detection
+- [ ] 13-03-PLAN.md -- Fix strip_exports, reg_ctx_name, and transpile-only edge cases
+- [ ] 13-04-PLAN.md -- Fix remaining edge cases and build 162/162 validation test (TEST-02, TEST-03)
 
 ## Progress
 
@@ -170,8 +172,8 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 10. Segment Extraction + Codegen | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 11. JSX + Signal Transforms | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Annotations + Stripping | v3.0 | 2/2 | Complete | 2026-02-11 |
-| 13. Source Maps + Full Validation | v3.0 | 0/2 | In progress | - |
+| 13. Source Maps + Full Validation | v3.0 | 0/4 | In progress | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 13 planning complete)*
+*Last updated: 2026-02-11 (Phase 13 plans revised - split into 4 plans)*
