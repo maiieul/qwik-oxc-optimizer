@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/qwik-optimizer-oxc", "poc"]
+resolver = "3"
