@@ -127,15 +127,15 @@ Plans:
 **Depends on**: Phase 11
 **Requirements**: ANNO-01, ANNO-02, ANNO-03, ANNO-04, ANNO-05
 **Success Criteria** (what must be TRUE):
-  1. Every framework replacement call (_jsxSorted, componentQrl, qrl, inlinedQrl, _wrapProp, _fnSignal, _qrlSync, _noopQrl, _restProps) has a `/*#__PURE__*/` annotation in codegen output
+  1. Every framework replacement call (_jsxSorted, componentQrl, qrl, inlinedQrl, _qrlSync, _noopQrl) has a `/*#__PURE__*/` annotation in codegen output
   2. `isServer`, `isDev`, `isBrowser` identifiers are replaced with boolean literals matching the build mode, and resulting dead branches (`if (false) { ... }`) are eliminated
   3. Stripped `$()` calls (matching `strip_ctx_name`) become `_noopQrl("s_HASH")` in prod mode
   4. `sync$()` calls become `_qrlSync(fn, "minified_fn_string")` with the function body serialized as a minified string
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 12-01: PURE annotation mechanism and const replacement with dead branch elimination (is_const.rs, const_replace.rs, CONV-07, CONV-10)
-- [ ] 12-02: Code stripping (_noopQrl) and sync$ serialization (_qrlSync) (CONV-09, CONV-13)
+- [ ] 12-01-PLAN.md -- PURE annotations on _jsxSorted/_jsxSplit calls and const replacement with dead branch elimination (CONV-07, CONV-10)
+- [ ] 12-02-PLAN.md -- Code stripping (_noopQrl for stripped ctx names) and sync$ serialization (_qrlSync) (CONV-09, CONV-13)
 
 ### Phase 13: Source Maps + Full Validation
 **Goal**: All 162 spec tests pass with source map generation
@@ -174,4 +174,4 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 11 complete)*
+*Last updated: 2026-02-11 (Phase 12 planned)*
