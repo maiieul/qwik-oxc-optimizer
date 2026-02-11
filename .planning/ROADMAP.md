@@ -116,11 +116,11 @@ Plans:
   3. `signal.value` in JSX props becomes `_wrapProp(signal)`, store property access becomes `_wrapProp(store, "prop")`, and computed expressions become `_fnSignal(_hfN, [deps], _hfN_str)` calls
   4. Hoisted `_hfN` function declarations and `_hfN_str` string constants are inserted at module top level
   5. `bind:value` and `bind:checked` JSX attributes produce the correct event handler QRLs with `_val`/`_chk` handlers
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 11-01: JSX element transformation (_jsxSorted, _jsxSplit, fragments, prop classification)
-- [ ] 11-02: Signal optimization (_wrapProp, _fnSignal, hoisted functions) and input binding (bind:value, bind:checked)
+- [ ] 11-01-PLAN.md -- JSX element and fragment transformation (_jsxSorted, _jsxSplit, prop var/const classification, children encoding, flags, key, event handler renaming, Fragment import)
+- [ ] 11-02-PLAN.md -- Signal optimization (_wrapProp, _fnSignal, hoisted _hfN functions) and input binding (bind:value, bind:checked, _val/_chk QRL handlers)
 
 ### Phase 12: Annotations + Stripping
 **Goal**: Optimizer adds PURE annotations, replaces build constants, strips dead code, and handles sync$ serialization
