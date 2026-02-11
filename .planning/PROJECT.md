@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A project to port the Qwik framework's code optimizer from SWC to OXC. The v1.0 milestone produced a complete behavioral specification of all 162 SWC optimizer snapshot tests. The v2.0 milestone mapped every transformation pattern to concrete OXC APIs with Rust code examples, built working proof-of-concept programs, and produced an architectural blueprint. The v3.0 milestone built the complete `qwik-optimizer-oxc` Rust crate implementing all 14 CONV transformation types, validated at 157/162 spec match (96.9%).
+A project to port the Qwik framework's code optimizer from SWC to OXC. The v1.0 milestone produced a complete behavioral specification of all 162 SWC optimizer snapshot tests. The v2.0 milestone mapped every transformation pattern to concrete OXC APIs with Rust code examples, built working proof-of-concept programs, and produced an architectural blueprint. The v3.0 milestone built the complete `qwik-optimizer-oxc` Rust crate implementing all 14 CONV transformation types, validated at 157/162 spec match (96.9%). The v4.0 milestone refactored the crate for maintainability -- extracting modules, eliminating boilerplate, fixing bugs, and cleaning code style -- with zero regressions.
 
 ## Core Value
 
@@ -32,21 +32,17 @@ A working OXC-based Qwik optimizer crate that passes all 162 spec tests — buil
 - ✓ Source map generation — v3.0 (main and segment modules via OXC codegen)
 - ✓ Public API compatibility — v3.0 (TransformModulesOptions, TransformOutput, SegmentAnalysis with serde camelCase)
 
+- ✓ Style cleanup — v4.0 (280+ redundant comments stripped, early returns added, cargo fmt normalized)
+- ✓ Dead code elimination — v4.0 (350 lines removed, zero compiler warnings, no #![allow(unused)])
+- ✓ Bug fix: minify_expression_string space preservation — v4.0
+- ✓ Performance: KNOWN_GLOBALS O(1) LazyLock<HashSet> — v4.0
+- ✓ JSX transform extraction — v4.0 (29 functions into jsx_transform.rs, transform.rs -54%)
+- ✓ const_replace VisitMut rewrite — v4.0 (860→275 lines, -68%)
+- ✓ Spec compliance maintained — v4.0 (157/162, zero regressions)
+
 ### Active
 
-## Current Milestone: v4.0 Code Quality Refactor
-
-**Goal:** Refactor the `qwik-optimizer-oxc` crate for maintainability — extract modules, eliminate boilerplate, fix bugs, clean up code style — while maintaining or improving 157/162 spec compliance.
-
-**Target improvements:**
-- Extract JSX transform from transform.rs into its own module
-- Rewrite const_replace.rs using OXC VisitMut to eliminate ~750 lines of manual AST walking
-- Fix minify_expression_string bug (drops spaces between identifiers)
-- Remove dead code and duplicate constants
-- Strip unnecessary comments, add early returns, flatten nesting
-- KNOWN_GLOBALS as HashSet for O(1) lookup
-- Consolidate duplicate binding-name collection functions in collector.rs
-- Opportunistic spec compliance improvements
+(No active milestone — all 4 milestones shipped)
 
 ### Out of Scope
 
@@ -58,13 +54,15 @@ A working OXC-based Qwik optimizer crate that passes all 162 spec tests — buil
 
 ## Context
 
-Shipped v1.0 (162 spec files, 166K lines), v2.0 (7 API mapping docs, 4 working POCs, architecture blueprint, ~16K lines), and v3.0 (complete optimizer crate, 11,758 LOC Rust, 16 source files).
-Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap), Python (spec generation/audit scripts), Markdown.
+Shipped v1.0 (162 spec files, 166K lines), v2.0 (7 API mapping docs, 4 working POCs, architecture blueprint, ~16K lines), v3.0 (complete optimizer crate, 11,758 LOC Rust, 16 source files), and v4.0 (code quality refactoring, -930 net lines, 10,627 LOC Rust).
+Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap, ast_visit), Python (spec generation/audit scripts), Markdown.
 
 - The `qwik-optimizer-oxc` crate at `crates/qwik-optimizer-oxc/` implements all 14 CONV transformation types
-- 165 tests pass (158 unit + 7 spec), 157/162 module count match with 250/250 metadata assertions
+- 162 tests pass (154 unit + 8 spec), 157/162 module count match with 250/250 metadata assertions
 - 5 known deviations: 3 parser limitations (OXC stricter on invalid source), 2 pre-compiled QRL extraction (out of scope)
-- Tech debt: 16 capture analysis deviations (JSX event handler scope tracking), 3 diagnostic deviations, 4 orphaned functions
+- Tech debt: 16 capture analysis deviations (JSX event handler scope tracking), 3 diagnostic deviations
+- JSX transform extracted to jsx_transform.rs (29 functions), const_replace.rs uses OXC VisitMut pattern
+- Zero compiler warnings, consistent formatting via cargo fmt
 - The existing SWC optimizer lives in `swc-optimizer/core/` as a read-only reference
 - The public API (`TransformModulesOptions`, `TransformOutput`, `SegmentAnalysis`) matches the SWC optimizer's wire format
 
@@ -100,6 +98,11 @@ Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap),
 | Span-based tracking (HashSet<u32>) | O(1) lookup for stripped segments and pending sync calls | ✓ Good — efficient and simple |
 | const_replace as pre-pass | Runs before traverse_mut so segment body serialization sees replaced boolean literals | ✓ Good — correct ordering for dead branch elimination |
 | Known deviation sets | 5 module count + 16 capture + 3 diagnostic deviations categorized with rationale | ✓ Good — transparent tracking of limitations |
+| cargo fmt as canonical formatter | Consistent style across all files without manual formatting debates | ✓ Good — zero diffs on cargo fmt --check |
+| Delete dead code, don't suppress | Remove unused code rather than #![allow(unused)] | ✓ Good — 350 lines removed, cleaner codebase |
+| LazyLock<HashSet> for KNOWN_GLOBALS | O(1) lookup, stays in std, no extra dependency (vs phf::Set) | ✓ Good — simple, efficient |
+| JSX extraction with import block | jsx_transform.rs imports via crate::transform::ImportTracker | ✓ Good — clear module boundary, transform.rs -54% |
+| Two VisitMut impls for const_replace | ConstReplacer + DeadBranchEliminator as separate passes | ✓ Good — clean separation, bottom-up traversal for correctness |
 
 ---
-*Last updated: 2026-02-11 after v4.0 milestone started*
+*Last updated: 2026-02-11 after v4.0 milestone*

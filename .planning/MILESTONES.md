@@ -58,3 +58,23 @@
 
 ---
 
+
+## v4.0 Code Quality Refactor (Shipped: 2026-02-11)
+
+**Delivered:** Comprehensive refactoring of the qwik-optimizer-oxc crate for maintainability -- module extraction, boilerplate elimination, bug fixes, dead code removal, and style cleanup -- with zero regressions against 157/162 spec compliance.
+
+**Phases completed:** 6 phases, 8 plans | 20 files changed, -930 net lines | ~2 hours
+**Git range:** `feat(14-01)` → `docs(phase-19)` (fd112e9..b93fe3b)
+
+**Key accomplishments:**
+1. Stripped 280+ redundant comments and flattened deeply nested functions with early returns across all source files
+2. Deleted 350 lines of dead code, eliminated all #![allow(unused)] directives, achieved zero compiler warnings
+3. Fixed minify_expression_string space-dropping bug and converted KNOWN_GLOBALS to O(1) LazyLock<HashSet>
+4. Extracted 29 JSX transformation functions into jsx_transform.rs -- transform.rs reduced 54% (2,745 → 1,268 lines)
+5. Rewrote const_replace.rs with OXC VisitMut trait -- eliminated 585 lines of manual AST walking (68% reduction)
+6. Zero regressions confirmed: 157/162 spec match, 250/250 metadata assertions, 162 tests passing
+
+**Archives:** `milestones/v4.0-ROADMAP.md`, `milestones/v4.0-REQUIREMENTS.md`
+
+---
+
