@@ -98,8 +98,12 @@ pub fn transform_modules(
         let mut program = parse_result.program;
         let scoping = parse_result.scoping;
 
-        // 3. Run collector pass
-        let collect_result = collector::collect(&program, &scoping);
+        // 3. Run collector pass (with custom core_module for recognizing non-default imports)
+        let collect_result = collector::collect(
+            &program,
+            &scoping,
+            config.core_module.as_deref(),
+        );
 
         // 3b. Run build constant replacement pre-pass (isServer/isBrowser/isDev -> booleans)
         // This must happen before traverse_mut so that segment body serialization

@@ -6,7 +6,7 @@
 //! without importing logic.
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 // ---------------------------------------------------------------------------
 // Public Types
@@ -413,9 +413,14 @@ pub struct SourceLocation {
 /// before transformation begins.
 #[derive(Debug, Clone)]
 pub(crate) struct CollectResult {
-    /// Set of known $-suffixed imports from @qwik.dev/core.
-    /// e.g., {"$", "component$", "useTask$"}
+    /// Set of known $-suffixed imports from @qwik.dev/core (or custom core_module).
+    /// Contains LOCAL names. e.g., {"$", "component$", "useTask$"} or {"Component", "onRender"} for aliases.
     pub dollar_imports: HashSet<String>,
+
+    /// Alias map: local_name -> original_imported_name for $-suffixed imports.
+    /// Only populated when the local name differs from the imported name.
+    /// e.g., {"Component" -> "component$", "onRender" -> "$"}
+    pub alias_map: HashMap<String, String>,
 
     /// Located $-call sites with span info.
     pub dollar_calls: Vec<DollarCallSite>,

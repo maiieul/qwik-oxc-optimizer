@@ -10,7 +10,7 @@
 //! locally in that body, classify each outer reference as LocalCapture,
 //! ImportReemit, or skipped (global / framework import).
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use oxc::ast::ast::*;
 use oxc::semantic::Scoping;
@@ -210,8 +210,12 @@ pub(crate) fn compute_captures(
 
 /// Context for tracking nesting depth during recursive AST walk.
 struct CollectContext {
-    /// Set of dollar-suffixed imports from @qwik.dev/core.
+    /// Set of dollar-suffixed imports from @qwik.dev/core (or custom core_module).
+    /// Contains LOCAL names (which may be aliases).
     dollar_imports: HashSet<String>,
+    /// Alias map: local_name -> original_imported_name for $-suffixed imports.
+    /// Only populated when the local name differs from the imported name.
+    alias_map: HashMap<String, String>,
     /// All located dollar call sites.
     dollar_calls: Vec<DollarCallSite>,
     /// All import declarations.
@@ -224,37 +228,88 @@ struct CollectContext {
     parent_display_name: Option<String>,
     /// Current variable name context (set when walking a variable declarator).
     current_var_name: Option<String>,
+    /// The core module import path(s) to recognize as Qwik imports.
+    /// Always includes "@qwik.dev/core"; may also include a custom core_module.
+    core_modules: Vec<String>,
 }
 
 impl CollectContext {
-    fn new() -> Self {
+    fn new(core_module: Option<&str>) -> Self {
+        let mut core_modules = vec!["@qwik.dev/core".to_string()];
+        if let Some(cm) = core_module {
+            if cm != "@qwik.dev/core" {
+                core_modules.push(cm.to_string());
+            }
+        }
+        // Also recognize legacy @builder.io/qwik
+        if !core_modules.iter().any(|m| m == "@builder.io/qwik") {
+            core_modules.push("@builder.io/qwik".to_string());
+        }
         Self {
             dollar_imports: HashSet::new(),
+            alias_map: HashMap::new(),
             dollar_calls: Vec::new(),
             module_imports: Vec::new(),
             module_exports: Vec::new(),
             nesting_depth: 0,
             parent_display_name: None,
             current_var_name: None,
+            core_modules,
         }
+    }
+
+    /// Check if an import source is a recognized Qwik module.
+    ///
+    /// Returns true for:
+    /// - `@qwik.dev/core` (default)
+    /// - `@qwik.dev/*` packages (e.g., `@qwik.dev/react`)
+    /// - `@builder.io/qwik` and `@builder.io/qwik-*` (legacy)
+    /// - Any custom core_module specified in config
+    ///
+    /// Sub-paths like `@qwik.dev/core/build` or `@qwik.dev/core/jsx-runtime`
+    /// are NOT treated as core imports (they don't re-export $-APIs).
+    fn is_qwik_core_import(&self, source: &str) -> bool {
+        // Check exact matches from config (core_module, @qwik.dev/core, @builder.io/qwik)
+        if self.core_modules.iter().any(|m| m == source) {
+            return true;
+        }
+        // Check @qwik.dev/* packages (excluding sub-paths like /core/build)
+        // e.g., "@qwik.dev/react" matches but "@qwik.dev/core/jsx-runtime" does not
+        if source.starts_with("@qwik.dev/") {
+            let after_scope = &source["@qwik.dev/".len()..];
+            // Must be a simple package name (no slash)
+            return !after_scope.contains('/');
+        }
+        // Check @builder.io/qwik-* packages (legacy)
+        // e.g., "@builder.io/qwik-react" matches but "@builder.io/qwik/build" does not
+        if source.starts_with("@builder.io/qwik-") {
+            return true;
+        }
+        false
     }
 }
 
 /// Perform first-pass analysis of the parsed module.
 ///
 /// Walks the program body to collect:
-/// - Dollar-suffixed imports from `@qwik.dev/core`
+/// - Dollar-suffixed imports from `@qwik.dev/core` (or custom core_module)
 /// - All import and export declarations
 /// - All `$()` call sites with display names and nesting info
+/// - Alias mappings for renamed $-suffixed imports
 ///
 /// The `scoping` parameter is passed through for future capture analysis
 /// (Phase 9). It is unused in the collector but kept in the signature for
 /// API stability.
+///
+/// The `core_module` parameter allows recognizing imports from a custom
+/// module (e.g., `@qwik.dev/react`, `@builder.io/qwik`) as Qwik core
+/// imports in addition to the default `@qwik.dev/core`.
 pub(crate) fn collect<'a>(
     program: &Program<'a>,
     _scoping: &Scoping,
+    core_module: Option<&str>,
 ) -> CollectResult {
-    let mut ctx = CollectContext::new();
+    let mut ctx = CollectContext::new(core_module);
 
     // First pass: collect all imports (need dollar_imports before finding call sites)
     for stmt in &program.body {
@@ -283,6 +338,7 @@ pub(crate) fn collect<'a>(
 
     CollectResult {
         dollar_imports: ctx.dollar_imports,
+        alias_map: ctx.alias_map,
         dollar_calls: ctx.dollar_calls,
         module_imports: ctx.module_imports,
         module_exports: ctx.module_exports,
@@ -292,7 +348,7 @@ pub(crate) fn collect<'a>(
 /// Collect information from an import declaration.
 fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
     let source = import.source.value.as_str();
-    let is_qwik_core = words::is_qwik_core_import(source);
+    let is_qwik_core = ctx.is_qwik_core_import(source);
 
     let mut specifiers_vec = Vec::new();
 
@@ -309,12 +365,18 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
                     let local_name = s.local.name.as_str();
                     specifiers_vec.push(local_name.to_string());
 
-                    // Track dollar imports from Qwik core
+                    // Track dollar imports from Qwik core (or custom core_module)
                     if is_qwik_core
                         && (imported_name == "$" || imported_name.ends_with('$'))
                     {
                         // Insert the local name since that is what call sites will use
                         ctx.dollar_imports.insert(local_name.to_string());
+
+                        // If the local name differs from the imported name, record the alias
+                        if local_name != imported_name {
+                            ctx.alias_map
+                                .insert(local_name.to_string(), imported_name.to_string());
+                        }
                     }
                 }
                 ImportDeclarationSpecifier::ImportDefaultSpecifier(s) => {
@@ -479,12 +541,18 @@ fn walk_expression_for_calls(ctx: &mut CollectContext, expr: &Expression<'_>) {
             if let Expression::Identifier(ident) = &call.callee {
                 let name = ident.name.as_str();
                 if ctx.dollar_imports.contains(name) {
-                    let display_name = derive_display_name(ctx, name);
+                    // Resolve alias: use the original imported name for callee_name and display_name
+                    let original_name = ctx
+                        .alias_map
+                        .get(name)
+                        .map(|s| s.as_str())
+                        .unwrap_or(name);
+                    let display_name = derive_display_name(ctx, original_name);
                     let is_nested = ctx.nesting_depth > 0;
                     let parent_name = ctx.parent_display_name.clone();
 
                     ctx.dollar_calls.push(DollarCallSite {
-                        callee_name: name.to_string(),
+                        callee_name: original_name.to_string(),
                         span: (call.span.start, call.span.end),
                         display_name: display_name.clone(),
                         is_nested,
@@ -622,12 +690,18 @@ fn walk_jsx_expression_for_calls(ctx: &mut CollectContext, jsx_expr: &JSXExpress
             if let Expression::Identifier(ident) = &call.callee {
                 let name = ident.name.as_str();
                 if ctx.dollar_imports.contains(name) {
-                    let display_name = derive_display_name(ctx, name);
+                    // Resolve alias for callee_name and display_name
+                    let original_name = ctx
+                        .alias_map
+                        .get(name)
+                        .map(|s| s.as_str())
+                        .unwrap_or(name);
+                    let display_name = derive_display_name(ctx, original_name);
                     let is_nested = ctx.nesting_depth > 0;
                     let parent_name = ctx.parent_display_name.clone();
 
                     ctx.dollar_calls.push(DollarCallSite {
-                        callee_name: name.to_string(),
+                        callee_name: original_name.to_string(),
                         span: (call.span.start, call.span.end),
                         display_name: display_name.clone(),
                         is_nested,
@@ -742,7 +816,7 @@ mod tests {
     fn parse_and_collect(source: &str) -> CollectResult {
         let allocator = Allocator::default();
         let result = parse_module(&allocator, source, "test.tsx").expect("parse failed");
-        collect(&result.program, &result.scoping)
+        collect(&result.program, &result.scoping, None)
     }
 
     #[test]
@@ -1096,5 +1170,131 @@ import { thing } from './sibling';"#,
 
         let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
         assert_eq!(result.capture_names, vec!["_rawProps".to_string()]);
+    }
+
+    // -----------------------------------------------------------------------
+    // Import Alias Detection Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_collect_alias_detection() {
+        // component$ as Component, $ as onRender
+        let result = parse_and_collect(
+            r#"import { component$ as Component, $ as onRender, useStore } from '@qwik.dev/core';"#,
+        );
+
+        // Both aliased imports should be in dollar_imports (under local names)
+        assert!(result.dollar_imports.contains("Component"), "Component should be in dollar_imports");
+        assert!(result.dollar_imports.contains("onRender"), "onRender should be in dollar_imports");
+        assert!(!result.dollar_imports.contains("component$"), "original name should NOT be in dollar_imports");
+        assert!(!result.dollar_imports.contains("$"), "original '$' should NOT be in dollar_imports");
+        assert_eq!(result.dollar_imports.len(), 2);
+
+        // Alias map should record the mapping
+        assert_eq!(result.alias_map.get("Component").map(|s| s.as_str()), Some("component$"));
+        assert_eq!(result.alias_map.get("onRender").map(|s| s.as_str()), Some("$"));
+        assert_eq!(result.alias_map.len(), 2);
+    }
+
+    #[test]
+    fn test_collect_alias_call_sites() {
+        // Aliased imports used in call sites should have original names as callee_name
+        let result = parse_and_collect(
+            r#"import { component$ as Component, $ as onRender } from '@qwik.dev/core';
+export const App = Component(() => {
+    return onRender(() => "hello");
+});"#,
+        );
+
+        assert_eq!(result.dollar_calls.len(), 2);
+
+        // Component call should resolve to component$
+        let component_call = result.dollar_calls.iter().find(|c| c.display_name.contains("component")).unwrap();
+        assert_eq!(component_call.callee_name, "component$");
+
+        // onRender call should resolve to $
+        let dollar_call = result.dollar_calls.iter().find(|c| c.callee_name == "$").unwrap();
+        assert_eq!(dollar_call.callee_name, "$");
+    }
+
+    #[test]
+    fn test_collect_no_alias_when_same_name() {
+        // No alias when local == imported
+        let result = parse_and_collect(
+            r#"import { component$, $ } from '@qwik.dev/core';"#,
+        );
+
+        assert!(result.alias_map.is_empty(), "No aliases when names match");
+        assert!(result.dollar_imports.contains("$"));
+        assert!(result.dollar_imports.contains("component$"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Custom Core Module Tests
+    // -----------------------------------------------------------------------
+
+    fn parse_and_collect_with_core_module(source: &str, core_module: Option<&str>) -> CollectResult {
+        let allocator = Allocator::default();
+        let result = parse_module(&allocator, source, "test.tsx").expect("parse failed");
+        collect(&result.program, &result.scoping, core_module)
+    }
+
+    #[test]
+    fn test_collect_builder_io_qwik_legacy() {
+        // Legacy @builder.io/qwik imports should be recognized
+        let result = parse_and_collect(
+            r#"import { $, component$ } from '@builder.io/qwik';"#,
+        );
+
+        assert!(result.dollar_imports.contains("$"));
+        assert!(result.dollar_imports.contains("component$"));
+        assert_eq!(result.dollar_imports.len(), 2);
+    }
+
+    #[test]
+    fn test_collect_builder_io_qwik_react() {
+        // @builder.io/qwik-react should be recognized for $-suffixed imports
+        let result = parse_and_collect(
+            r#"import { qwikify$ } from '@builder.io/qwik-react';
+import { component$ } from '@builder.io/qwik';"#,
+        );
+
+        assert!(result.dollar_imports.contains("qwikify$"));
+        assert!(result.dollar_imports.contains("component$"));
+        assert_eq!(result.dollar_imports.len(), 2);
+    }
+
+    #[test]
+    fn test_collect_qwik_dev_react() {
+        // @qwik.dev/react should be recognized for $-suffixed imports
+        let result = parse_and_collect(
+            r#"import { qwikify$ } from '@qwik.dev/react';"#,
+        );
+
+        assert!(result.dollar_imports.contains("qwikify$"));
+        assert_eq!(result.dollar_imports.len(), 1);
+    }
+
+    #[test]
+    fn test_collect_custom_core_module() {
+        // Custom core_module should be recognized
+        let result = parse_and_collect_with_core_module(
+            r#"import { myThing$ } from '@my/custom-framework';"#,
+            Some("@my/custom-framework"),
+        );
+
+        assert!(result.dollar_imports.contains("myThing$"));
+        assert_eq!(result.dollar_imports.len(), 1);
+    }
+
+    #[test]
+    fn test_collect_qwik_core_subpath_not_recognized() {
+        // Sub-paths like @qwik.dev/core/build should NOT be recognized
+        // (they export build constants, not $-APIs)
+        let result = parse_and_collect(
+            r#"import { isDev } from '@qwik.dev/core/build';"#,
+        );
+
+        assert!(result.dollar_imports.is_empty());
     }
 }

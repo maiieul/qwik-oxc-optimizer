@@ -225,15 +225,27 @@ impl QwikTransform {
     }
 
     /// Check if a CallExpression is a Qwik $-call.
+    ///
+    /// Resolves aliases: if the callee is an aliased import (e.g., `Component`
+    /// for `component$`), returns the DollarCallKind using the ORIGINAL
+    /// imported name, not the alias.
     fn is_dollar_call(&self, call: &CallExpression<'_>) -> Option<DollarCallKind> {
         match &call.callee {
             Expression::Identifier(ident) => {
                 let name = ident.name.as_str();
                 if self.collected.dollar_imports.contains(name) {
-                    if name == "$" {
+                    // Resolve alias: if this local name maps to an original import name, use that
+                    let original_name = self
+                        .collected
+                        .alias_map
+                        .get(name)
+                        .map(|s| s.as_str())
+                        .unwrap_or(name);
+
+                    if original_name == "$" {
                         Some(DollarCallKind::RawDollar)
                     } else {
-                        Some(DollarCallKind::Named(name.to_string()))
+                        Some(DollarCallKind::Named(original_name.to_string()))
                     }
                 } else {
                     None

@@ -425,15 +425,17 @@ mod tests {
 
     /// Diagnostic test: categorize all module count mismatches by failure type.
     ///
-    /// Top failure categories (updated after running):
-    /// - alias: specs using `import { component$ as X }` or similar alias patterns
-    /// - core_module: specs with custom core_module (e.g., @qwik.dev/react, @builder.io/qwik)
-    /// - strip_exports: specs using strip_exports config
-    /// - strip_ctx_name: specs using strip_ctx_name config
-    /// - reg_ctx_name: specs using reg_ctx_name config
-    /// - transpile_only: specs with transpile_ts/transpile_jsx but no $ in input
-    /// - diagnostics_expected: specs expecting diagnostics (error cases)
-    /// - other: remaining mismatches not fitting above categories
+    /// Results (after 13-02 alias/core_module fixes):
+    ///   Total: 83 mismatches out of 162 specs (79 match)
+    ///   strip_ctx_name: 3 (example_drop_side_effects, example_strip_client_code, example_strip_server_code)
+    ///   reg_ctx_name: 3 (example_reg_ctx_name_segments, _hoisted, _inlined)
+    ///   other: 77 -- dominated by JSX event handler extraction (onClick$, onInput$ in JSX
+    ///     attributes create implicit $-calls that need segment extraction, not yet implemented)
+    ///
+    /// The alias/core_module fixes resolved:
+    ///   - rename_builder_io: @builder.io/qwik imports now recognized (was 3 vs 4, now 4/4)
+    ///   - example_renamed_exports: alias detection already worked before (module count matched)
+    ///   - Remaining JSX handler extraction is the primary gap for reaching 100+
     #[test]
     fn test_diagnose_module_count_mismatches() {
         use qwik_optimizer_oxc::transform_modules;
@@ -562,7 +564,7 @@ mod tests {
 
             // Categorize the mismatch
             // Check alias: input contains `as ` pattern after a $-suffixed import name
-            let has_alias = spec.input_code.contains(" as ")
+            let _has_alias = spec.input_code.contains(" as ")
                 && (spec.input_code.contains("$ as ") || spec.input_code.contains("$,"));
 
             // More precise alias check: look for `X$ as Y` in import lines
