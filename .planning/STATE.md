@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 11 -- JSX + Signal Transforms
+**Current focus:** Phase 12 -- Annotations & Stripping
 
 ## Current Position
 
-Phase: 11 of 13 (JSX + Signal Transforms) -- COMPLETE
-Plan: 2 of 2 in current phase -- COMPLETE
-Status: Phase 11 complete. Signal wrapping (_wrapProp, _fnSignal), bind: directives, hoisted functions all implemented. 162 specs, 0 errors. 127 unit tests + 5 spec tests pass.
-Last activity: 2026-02-11 -- Completed 11-02: Signal & binding transforms
+Phase: 12 of 13 (Annotations & Stripping) -- IN PROGRESS
+Plan: 2 of 2 in current phase -- Plan 02 COMPLETE
+Status: Plan 02 complete. Code stripping (_noopQrl for stripped ctx names) and sync$ serialization (_qrlSync with minified function strings) implemented. 139 unit tests + 5 spec tests pass. Plan 01 (PURE annotations) has tests from prior work.
+Last activity: 2026-02-11 -- Completed 12-02: Code stripping and sync$ serialization
 
-Progress: [##############░░░░░░] 55% (27/31 total plans across all milestones; v3.0 10/14)
+Progress: [###############░░░░░] 56% (28/31 total plans across all milestones; v3.0 11/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [##############░░░░░░] 55% (27/31 total plans across all m
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: 12min
-- Total execution time: ~125min
+- Total execution time: ~150min
 
 ## Accumulated Context
 
@@ -78,6 +78,10 @@ Recent decisions affecting current work:
 - Signal-wrapped values (_wrapProp, _fnSignal) go to const props since wrapping handles reactivity
 - Reactive dep detection: .value = signal, deep chains = store, _rawProps = props, imports = not reactive
 - bind:value/bind:checked expand to value/checked const prop + q-e:input inlinedQrl event handler
+- Span-based tracking (HashSet<u32>) for stripped_segments and pending_sync_calls with O(1) lookup
+- Capture stack frame pushed for sync$ calls to isolate identifiers (popped on exit, frame discarded)
+- Strategy-aware import tracking: _qrlSync import only added to main module for top-level sync$ calls
+- Filter stripped children from finalize_segments() child_lazy_imports to prevent unnecessary lazy imports in parent
 
 ### Pending Todos
 
@@ -90,5 +94,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 11-02-PLAN.md. Phase 11 (JSX + Signal Transforms) fully complete.
+Stopped at: Completed 12-02-PLAN.md. Code stripping and sync$ serialization implemented. Phase 12 Plan 01 (PURE annotations) still pending.
 Resume file: None
