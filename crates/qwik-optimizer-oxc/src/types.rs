@@ -413,6 +413,7 @@ pub struct SourceLocation {
 /// Result of the collector pass -- everything discovered about the module
 /// before transformation begins.
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub(crate) struct CollectResult {
     /// Set of known $-suffixed imports from @qwik.dev/core (or custom core_module).
     /// Contains LOCAL names. e.g., {"$", "component$", "useTask$"} or {"Component", "onRender"} for aliases.
@@ -441,6 +442,7 @@ pub(crate) struct CollectResult {
 
 /// A located $-call site in the source code.
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub(crate) struct DollarCallSite {
     /// The name of the callee (e.g., "$", "component$").
     pub callee_name: String,
@@ -461,6 +463,7 @@ pub(crate) struct DollarCallSite {
 
 /// Recorded import declaration from the source module.
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub(crate) struct ImportInfo {
     /// Import source (e.g., "@qwik.dev/core", "./utils").
     pub source: String,
@@ -477,6 +480,7 @@ pub(crate) struct ImportInfo {
 
 /// Recorded export declaration from the source module.
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub(crate) struct ExportInfo {
     /// Exported name (e.g., "renderHeader").
     pub name: String,
@@ -491,6 +495,7 @@ pub(crate) struct ExportInfo {
 /// Intermediate segment representation recorded during the transform pass.
 /// This gets converted to SegmentAnalysis + a segment Program during code_move.
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub(crate) struct SegmentData {
     /// The display name (e.g., "test.tsx_Header_component").
     pub display_name: String,
@@ -553,6 +558,7 @@ pub(crate) struct SegmentData {
 /// Per-module options derived from TransformModulesOptions.
 /// Passed to individual module transformations.
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub(crate) struct TransformOptions {
     pub src_dir: String,
     pub root_dir: Option<String>,

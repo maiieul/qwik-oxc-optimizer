@@ -23,6 +23,7 @@ use crate::types::{CollectResult, DollarCallSite, ExportInfo, ImportInfo};
 
 /// Result of capture analysis for a single $()-body.
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub(crate) struct CaptureAnalysisResult {
     /// Variable names that will be passed via _captures[] at runtime.
     /// Order matches encounter order from the body traversal.
