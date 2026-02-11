@@ -100,11 +100,11 @@ Plans:
   3. `SegmentAnalysis` metadata is produced for each segment with correct hash, canonicalFilename, displayName, origin, ctxKind, ctxName, and captures fields
   4. All entry strategies (Segment, Inline, Hoist, Single, Component, Smart, Hook) produce the correct output shape
   5. OXC codegen emits valid JavaScript for both main modules and extracted segments, with correct import declarations for all framework functions used
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 10-01: Segment Program construction (code_move.rs, CONV-08) and lazy import generation (CONV-06)
-- [ ] 10-02: Code emission pipeline (emit.rs, filter_exports.rs) and entry strategy variants (SEGM-04)
+- [ ] 10-01-PLAN.md -- Segment body extraction in transform.rs + code_move.rs segment Program construction with imports, captures restoration, and lazy imports
+- [ ] 10-02-PLAN.md -- Entry strategy routing for all 7 variants, output path/extension handling, and spec test validation
 
 ### Phase 11: JSX + Signal Transforms
 **Goal**: Optimizer transforms JSX elements to _jsxSorted/_jsxSplit calls with signal optimization and hoisted helpers
