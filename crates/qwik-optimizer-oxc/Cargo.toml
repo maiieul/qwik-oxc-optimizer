@@ -24,6 +24,7 @@ oxc = { version = "0.113", features = [
     "codegen",      # oxc_codegen for AST -> JavaScript output
     "semantic",     # oxc_semantic for SemanticBuilder (scope/symbol analysis)
     "serialize",    # ESTree JSON serialization (for debugging/testing)
+    "ast_visit",    # VisitMut trait for const_replace pre-pass
 ] }
 # NOTE: oxc always includes oxc_parser and oxc_traverse (no feature flags needed).
 
