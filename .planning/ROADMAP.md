@@ -5,6 +5,7 @@
 - v1.0 Spec Generation -- Phases 1-3 (shipped 2026-02-10)
 - v2.0 OXC API Research & Architecture -- Phases 4-6 (shipped 2026-02-11)
 - v3.0 OXC Optimizer Port -- Phases 7-13 (shipped 2026-02-11)
+- v4.0 Code Quality Refactor -- Phases 14-19 (in progress)
 
 ## Phases
 
@@ -45,7 +46,108 @@ Full details: `milestones/v3.0-ROADMAP.md`
 
 </details>
 
+### v4.0 Code Quality Refactor (In Progress)
+
+**Milestone Goal:** Refactor the qwik-optimizer-oxc crate for maintainability -- clean style, remove dead code, fix bugs, extract modules, rewrite boilerplate -- while maintaining or improving 157/162 spec compliance.
+
+- [ ] **Phase 14: Style Cleanup** - Strip unnecessary comments, add early returns, normalize formatting across the crate
+- [ ] **Phase 15: Dead Code Removal** - Eliminate unused error factories, consolidate duplicate constants and functions
+- [ ] **Phase 16: Targeted Fixes** - Fix minify_expression_string bug and convert KNOWN_GLOBALS to HashSet
+- [ ] **Phase 17: Extract JSX Transform** - Move JSX transformation code from transform.rs into its own module
+- [ ] **Phase 18: const_replace VisitMut Rewrite** - Replace manual AST walking with OXC VisitMut pattern
+- [ ] **Phase 19: Spec Compliance Verification** - Confirm all changes preserve or improve 157/162 spec match
+
+## Phase Details
+
+### Phase 14: Style Cleanup
+**Goal**: Codebase reads cleanly -- no stale comments, minimal nesting, consistent formatting patterns
+**Depends on**: Phase 13 (v3.0 complete)
+**Requirements**: STYLE-01, STYLE-02, STYLE-03
+**Success Criteria** (what must be TRUE):
+  1. No comments that merely restate what the code does (e.g., "// check if X" before `if x`) remain in the crate
+  2. Functions with deeply nested if/else chains use early returns to keep the happy path at the top indentation level
+  3. Match arms with unreachable dead branches are cleaned up, formatting is consistent across all 16 source files
+  4. All 165 tests still pass after style changes (zero regressions)
+**Plans**: TBD
+
+Plans:
+- [ ] 14-01: Strip comments and add early returns across all source files
+- [ ] 14-02: Formatting cleanup and match arm normalization
+
+### Phase 15: Dead Code Removal
+**Goal**: No unused code, no duplicate definitions -- every function and constant earns its place
+**Depends on**: Phase 14
+**Requirements**: DEAD-01, DEAD-02, DEAD-03
+**Success Criteria** (what must be TRUE):
+  1. errors.rs has no `#![allow(unused)]` attribute, and every public function in errors.rs is called somewhere in the crate
+  2. words.rs has a single constant for the Qwik core package identifier (no BUILDER_IO_QWIK / QWIK_CORE_ID duplication)
+  3. collector.rs has one canonical function for collecting binding names from patterns (near-duplicates consolidated)
+  4. `cargo build` produces no unused warnings without allow-unused attributes suppressing them
+**Plans**: TBD
+
+Plans:
+- [ ] 15-01: Clean errors.rs unused factories and words.rs duplicate constants
+- [ ] 15-02: Consolidate collector.rs binding-name functions
+
+### Phase 16: Targeted Fixes
+**Goal**: Known bug fixed and known performance bottleneck addressed
+**Depends on**: Phase 15
+**Requirements**: BUG-01, PERF-01
+**Success Criteria** (what must be TRUE):
+  1. `minify_expression_string("a b")` preserves the space between identifiers (does not produce `"ab"`)
+  2. KNOWN_GLOBALS is a `HashSet` (or equivalent O(1) lookup structure), not a linear-scan array/slice
+  3. All 165 tests still pass after these changes
+**Plans**: TBD
+
+Plans:
+- [ ] 16-01: Fix minify_expression_string and convert KNOWN_GLOBALS to HashSet
+
+### Phase 17: Extract JSX Transform
+**Goal**: JSX transformation logic lives in its own module, and transform.rs is shorter and focused
+**Depends on**: Phase 16
+**Requirements**: STRUCT-01
+**Success Criteria** (what must be TRUE):
+  1. A new `jsx_transform.rs` module exists containing all JSX-specific transformation code (~1,350 lines extracted from transform.rs)
+  2. transform.rs delegates to jsx_transform.rs for JSX node handling -- no JSX logic duplicated between the two
+  3. All 165 tests still pass after extraction (pure refactor, zero behavior change)
+**Plans**: TBD
+
+Plans:
+- [ ] 17-01: Extract JSX transformation code into jsx_transform.rs
+- [ ] 17-02: Wire up delegation and verify tests pass
+
+### Phase 18: const_replace VisitMut Rewrite
+**Goal**: const_replace.rs uses OXC's VisitMut pattern instead of manual recursive AST walking
+**Depends on**: Phase 17
+**Requirements**: STRUCT-02
+**Success Criteria** (what must be TRUE):
+  1. const_replace.rs implements `VisitMut` trait instead of manual match-and-recurse functions
+  2. Net line count reduction of at least 500 lines compared to current const_replace.rs
+  3. All 165 tests still pass -- identical transformation behavior to the manual implementation
+  4. The `isServer`/`isBrowser`/`isDev` replacement and dead branch elimination produce the same output as before
+**Plans**: TBD
+
+Plans:
+- [ ] 18-01: Rewrite const_replace.rs using OXC VisitMut
+- [ ] 18-02: Validate identical behavior across all spec tests
+
+### Phase 19: Spec Compliance Verification
+**Goal**: All refactoring confirmed to preserve (or improve) spec compliance
+**Depends on**: Phase 18
+**Requirements**: SPEC-01
+**Success Criteria** (what must be TRUE):
+  1. Spec test harness reports 157/162 or better module count match
+  2. All 250 metadata assertions pass
+  3. No new test failures introduced compared to v3.0 baseline
+**Plans**: TBD
+
+Plans:
+- [ ] 19-01: Full spec compliance run and regression comparison
+
 ## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -62,7 +164,13 @@ Full details: `milestones/v3.0-ROADMAP.md`
 | 11. JSX + Signal Transforms | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Annotations + Stripping | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 13. Source Maps + Full Validation | v3.0 | 4/4 | Complete | 2026-02-11 |
+| 14. Style Cleanup | v4.0 | 0/2 | Not started | - |
+| 15. Dead Code Removal | v4.0 | 0/2 | Not started | - |
+| 16. Targeted Fixes | v4.0 | 0/1 | Not started | - |
+| 17. Extract JSX Transform | v4.0 | 0/2 | Not started | - |
+| 18. const_replace VisitMut Rewrite | v4.0 | 0/2 | Not started | - |
+| 19. Spec Compliance Verification | v4.0 | 0/1 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (v3.0 milestone shipped)*
+*Last updated: 2026-02-11 (v4.0 roadmap created)*

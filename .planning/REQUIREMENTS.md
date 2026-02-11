@@ -1,4 +1,4 @@
-# Requirements: Qwik Optimizer — OXC Port
+# Requirements: Qwik Optimizer -- OXC Port
 
 **Defined:** 2026-02-11
 **Core Value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
@@ -58,23 +58,23 @@ Requirements for the code quality refactoring milestone. Each maps to roadmap ph
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| STRUCT-01 | — | Pending |
-| STRUCT-02 | — | Pending |
-| BUG-01 | — | Pending |
-| DEAD-01 | — | Pending |
-| DEAD-02 | — | Pending |
-| DEAD-03 | — | Pending |
-| PERF-01 | — | Pending |
-| STYLE-01 | — | Pending |
-| STYLE-02 | — | Pending |
-| STYLE-03 | — | Pending |
-| SPEC-01 | — | Pending |
+| STYLE-01 | Phase 14 | Pending |
+| STYLE-02 | Phase 14 | Pending |
+| STYLE-03 | Phase 14 | Pending |
+| DEAD-01 | Phase 15 | Pending |
+| DEAD-02 | Phase 15 | Pending |
+| DEAD-03 | Phase 15 | Pending |
+| BUG-01 | Phase 16 | Pending |
+| PERF-01 | Phase 16 | Pending |
+| STRUCT-01 | Phase 17 | Pending |
+| STRUCT-02 | Phase 18 | Pending |
+| SPEC-01 | Phase 19 | Pending |
 
 **Coverage:**
 - v4.0 requirements: 11 total
-- Mapped to phases: 0
-- Unmapped: 11
+- Mapped to phases: 11
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-11*
-*Last updated: 2026-02-11 after initial definition*
+*Last updated: 2026-02-11 after roadmap creation*
