@@ -350,4 +350,3 @@ pub(crate) fn build_qrl_sync_call<'a>(
         false,
     )
 }
-

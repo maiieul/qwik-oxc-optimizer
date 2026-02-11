@@ -74,9 +74,7 @@ mod tests {
         let ret = oxc::parser::Parser::new(&allocator, source_in_arena, source_type).parse();
         assert!(!ret.panicked, "Parse should not panic");
 
-        let options = EmitOptions {
-            source_maps: true,
-        };
+        let options = EmitOptions { source_maps: true };
 
         let result = emit_module(&ret.program, source_in_arena, &options, "test.js");
 
@@ -116,9 +114,7 @@ mod tests {
         let ret = oxc::parser::Parser::new(&allocator, source_in_arena, source_type).parse();
         assert!(!ret.panicked, "Parse should not panic");
 
-        let options = EmitOptions {
-            source_maps: false,
-        };
+        let options = EmitOptions { source_maps: false };
 
         let result = emit_module(&ret.program, source_in_arena, &options, "test.js");
 
