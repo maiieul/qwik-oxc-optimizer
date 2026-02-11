@@ -13,7 +13,7 @@ default = ["parallel", "source-maps"]
 parallel = ["dep:rayon"]
 
 # Enable source map generation.
-source-maps = ["dep:base64"]
+source-maps = []
 
 [dependencies]
 # OXC umbrella crate -- provides parser, AST, traverse, codegen, semantic analysis.
@@ -39,9 +39,8 @@ serde_json = "1"
 # Error handling with context chains.
 anyhow = "1"
 
-# Source map encoding (base64).
-# Only included when "source-maps" feature is active.
-base64 = { version = "0.22", optional = true }
+# Base64 encoding for segment hash computation and source maps.
+base64 = "0.22"
 
 # Parallel module transformation.
 # Only included when "parallel" feature is active.
