@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 13 of 13 (Source Maps & Full Validation)
-Plan: 3 of 4 in current phase -- 13-03 complete
-Status: strip_exports implemented, Inline/Hoist module fix, JSX event handler segment extraction. Module count match: 148/162 (91.4%). 158 unit tests + 6 spec tests pass.
-Last activity: 2026-02-11 -- Completed 13-03: strip_exports & JSX event handler extraction
+Plan: 4 of 4 in current phase -- 13-04 complete (PHASE COMPLETE)
+Status: All 4 plans complete. 157/162 module count match (96.9%). Comprehensive test_full_spec_validation with 250/250 metadata assertions. 158 unit tests + 7 spec tests pass. Source maps enabled.
+Last activity: 2026-02-11 -- Completed 13-04: edge case fixes & comprehensive spec validation
 
-Progress: [##################░░] 70% (31/31+4 total plans across all milestones; v3.0 15/14+4)
+Progress: [####################] 100% (35/35 total plans across all milestones; v3.0 19/18)
 
 ## Performance Metrics
 
@@ -97,6 +97,13 @@ Recent decisions affecting current work:
 - Skip segment TransformModule creation for Inline/Hoist strategies (SWC produces only main module)
 - JSX event handler segment extraction independent of transpile_jsx flag
 - Lambda-only extraction for $-suffixed JSX attributes (skip identifiers/calls to avoid double-counting)
+- All JSX $-suffixed attributes produce CtxKind::EventHandler (not just on* patterns; matches SWC behavior)
+- Top-level $-calls (capture_stack depth 1) always produce captures=false (module scope, no serialization needed)
+- Module-level declarations (const/let/var/function/class at top level) excluded from capture analysis
+- classify_ctx_kind recognizes on[A-Z]*$ and namespaced (document:onClick$) as EventHandler
+- Parse error recovery: only bail on OXC panicked==true, continue with partial AST on recoverable errors
+- $-suffixed imports recognized from ALL modules (not just core) for segment extraction
+- Known deviation sets in test: 5 module count, 16 capture, 3 diagnostic deviations with categorized rationale
 
 ### Pending Todos
 
@@ -109,5 +116,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 13-03-PLAN.md. strip_exports implemented, Inline/Hoist fix, JSX event handler extraction. 148/162 module count match. Ready for 13-04 (final validation).
+Stopped at: Completed 13-04-PLAN.md. Phase 13 complete. 157/162 module count match with comprehensive validation test. All phases complete -- ready for milestone audit.
 Resume file: None
