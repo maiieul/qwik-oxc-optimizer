@@ -26,14 +26,12 @@ pub(crate) fn is_const_expression(expr: &oxc::ast::ast::Expression<'_>) -> bool 
 
         // Template literals are const only if they have no expressions
         Expression::TemplateLiteral(tpl) => {
-            tpl.expressions.is_empty()
-                || tpl.expressions.iter().all(|e| is_const_expression(e))
+            tpl.expressions.is_empty() || tpl.expressions.iter().all(|e| is_const_expression(e))
         }
 
         // typeof is always a string
         Expression::UnaryExpression(unary) => {
-            matches!(unary.operator, UnaryOperator::Typeof)
-                || is_const_expression(&unary.argument)
+            matches!(unary.operator, UnaryOperator::Typeof) || is_const_expression(&unary.argument)
         }
 
         // Ternary: const if all three parts are const

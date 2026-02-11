@@ -182,7 +182,10 @@ mod tests {
         let mut failures: Vec<String> = Vec::new();
 
         // Test 1: Inline strategy spec should produce segments with empty code
-        if let Some(spec) = specs.iter().find(|s| s.name == "example_inlined_entry_strategy") {
+        if let Some(spec) = specs
+            .iter()
+            .find(|s| s.name == "example_inlined_entry_strategy")
+        {
             let options = spec_parser::build_options(spec);
             match transform_modules(options) {
                 Ok(result) => {
@@ -207,7 +210,10 @@ mod tests {
                     }
                 }
                 Err(e) => {
-                    failures.push(format!("example_inlined_entry_strategy: transform failed: {}", e));
+                    failures.push(format!(
+                        "example_inlined_entry_strategy: transform failed: {}",
+                        e
+                    ));
                     fail_count += 1;
                 }
             }
@@ -226,11 +232,8 @@ mod tests {
                 match transform_modules(options) {
                     Ok(result) => {
                         // Count expected entry point modules from spec
-                        let expected_entries = spec
-                            .expected_modules
-                            .iter()
-                            .filter(|m| m.is_entry)
-                            .count();
+                        let expected_entries =
+                            spec.expected_modules.iter().filter(|m| m.is_entry).count();
 
                         // Count actual segment modules
                         let actual_segments: Vec<_> = result
@@ -273,10 +276,8 @@ mod tests {
                             if all_have_meta {
                                 pass_count += 1;
                             } else {
-                                failures.push(format!(
-                                    "{}: some segments missing metadata",
-                                    spec_name
-                                ));
+                                failures
+                                    .push(format!("{}: some segments missing metadata", spec_name));
                                 fail_count += 1;
                             }
                         } else {
@@ -379,14 +380,13 @@ mod tests {
         // fundamental differences between OXC and SWC implementations.
         let known_deviations: std::collections::HashSet<&str> = [
             // Parser panics: invalid/abbreviated source code that OXC cannot parse
-            "example_3",                                         // stray `);\n` in source
+            "example_3", // stray `);\n` in source
             "example_component_with_event_listeners_inside_loop", // `{...}` placeholders in JSX
-            "example_immutable_analysis",                         // bare array in JSX body
-
+            "example_immutable_analysis", // bare array in JSX body
             // Pre-compiled QRL extraction: inlinedQrl() in already-compiled code
             // requires reverse-engineering compiled output, which is out of scope
-            "example_qwik_react",  // inlinedQrl in @qwik.dev/react pre-compiled source
-            "relative_paths",      // inlinedQrl in dependency module pre-compiled source
+            "example_qwik_react", // inlinedQrl in @qwik.dev/react pre-compiled source
+            "relative_paths",     // inlinedQrl in dependency module pre-compiled source
         ]
         .iter()
         .copied()
@@ -435,10 +435,7 @@ mod tests {
         );
 
         if !transform_err_names.is_empty() {
-            eprintln!(
-                "Transform errors:\n{}",
-                transform_err_names.join("\n")
-            );
+            eprintln!("Transform errors:\n{}", transform_err_names.join("\n"));
         }
 
         // All specs should transform without errors (no panics)
@@ -487,7 +484,6 @@ mod tests {
             "example_3",                                          // stray `);` in source
             "example_component_with_event_listeners_inside_loop", // `{...}` placeholders
             "example_immutable_analysis",                         // bare array in JSX body
-
             // Pre-compiled QRL extraction (missing segments): inlinedQrl() in
             // already-compiled code requires reverse-engineering compiled output
             "example_qwik_react", // @qwik.dev/react pre-compiled source
@@ -530,10 +526,9 @@ mod tests {
             "should_split_spread_props_with_additional_prop4",
             "should_transform_qrls_in_ternary_expression",
             "should_wrap_prop_from_destructured_array",
-
             // Category B: Nested $-call false positive captures (expected false, got true)
-            "example_capturing_fn_class",  // references class instances in $() body
-            "example_exports",             // references undeclared identifiers (v1, v2, v3, obj)
+            "example_capturing_fn_class", // references class instances in $() body
+            "example_exports",            // references undeclared identifiers (v1, v2, v3, obj)
             "example_invalid_segment_expr1", // invalid segment expressions not validated
         ]
         .iter()
@@ -541,8 +536,8 @@ mod tests {
         .collect();
 
         let known_diagnostic_deviations: std::collections::HashSet<&str> = [
-            "example_capturing_fn_class",        // expected 2 diagnostics (class capture warnings)
-            "example_invalid_segment_expr1",     // expected 2 diagnostics (invalid segment expr)
+            "example_capturing_fn_class", // expected 2 diagnostics (class capture warnings)
+            "example_invalid_segment_expr1", // expected 2 diagnostics (invalid segment expr)
             "example_missing_custom_inlined_functions", // expected 1 diagnostic (missing inlined fn)
         ]
         .iter()
@@ -869,11 +864,7 @@ mod tests {
                 .iter()
                 .map(|m| m.path.as_str())
                 .collect();
-            let actual_paths: Vec<&str> = result
-                .modules
-                .iter()
-                .map(|m| m.path.as_str())
-                .collect();
+            let actual_paths: Vec<&str> = result.modules.iter().map(|m| m.path.as_str()).collect();
 
             // Determine entry strategy from config
             let entry_strategy = spec
@@ -890,15 +881,13 @@ mod tests {
                 .map(|(_, v)| v.as_str())
                 .unwrap_or("Lib");
 
-            let transpile_ts = spec
-                .config_overrides
-                .iter()
-                .any(|(k, v)| k.trim().to_lowercase() == "transpile ts" && v.trim().to_lowercase() == "true");
+            let transpile_ts = spec.config_overrides.iter().any(|(k, v)| {
+                k.trim().to_lowercase() == "transpile ts" && v.trim().to_lowercase() == "true"
+            });
 
-            let transpile_jsx = spec
-                .config_overrides
-                .iter()
-                .any(|(k, v)| k.trim().to_lowercase() == "transpile jsx" && v.trim().to_lowercase() == "true");
+            let transpile_jsx = spec.config_overrides.iter().any(|(k, v)| {
+                k.trim().to_lowercase() == "transpile jsx" && v.trim().to_lowercase() == "true"
+            });
 
             let core_module = spec
                 .config_overrides
@@ -958,10 +947,10 @@ mod tests {
                 && (spec.input_code.contains("$ as ") || spec.input_code.contains("$,"));
 
             // More precise alias check: look for `X$ as Y` in import lines
-            let has_import_alias = spec.input_code.lines().any(|line| {
-                line.trim_start().starts_with("import ")
-                    && line.contains("$ as ")
-            });
+            let has_import_alias = spec
+                .input_code
+                .lines()
+                .any(|line| line.trim_start().starts_with("import ") && line.contains("$ as "));
 
             let has_non_default_core_module = core_module.as_ref().map_or(false, |cm| {
                 let clean = cm
@@ -997,7 +986,10 @@ mod tests {
                 "other"
             };
 
-            categories.get_mut(category).unwrap().push(spec.name.clone());
+            categories
+                .get_mut(category)
+                .unwrap()
+                .push(spec.name.clone());
         }
 
         // Print all mismatches

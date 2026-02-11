@@ -144,12 +144,7 @@ pub fn load_all_specs() -> Vec<SpecFile> {
     let mut entries: Vec<_> = fs::read_dir(&dir)
         .unwrap_or_else(|e| panic!("Failed to read spec directory {}: {}", dir.display(), e))
         .filter_map(|entry| entry.ok())
-        .filter(|entry| {
-            entry
-                .path()
-                .extension()
-                .map_or(false, |ext| ext == "md")
-        })
+        .filter(|entry| entry.path().extension().map_or(false, |ext| ext == "md"))
         .collect();
 
     entries.sort_by_key(|e| e.file_name());
@@ -364,9 +359,7 @@ fn extract_output_modules(lines: &[&str]) -> Result<Vec<ExpectedModule>, String>
         let trimmed = lines[i].trim();
 
         // Stop at the next ## section (like ## Conventions Applied, ## Diagnostics, etc.)
-        if trimmed.starts_with("## ")
-            && !trimmed.starts_with("### ")
-        {
+        if trimmed.starts_with("## ") && !trimmed.starts_with("### ") {
             break;
         }
 
@@ -382,23 +375,14 @@ fn extract_output_modules(lines: &[&str]) -> Result<Vec<ExpectedModule>, String>
     Ok(modules)
 }
 
-fn parse_module_section(
-    lines: &[&str],
-    start: usize,
-) -> Result<(ExpectedModule, usize), String> {
+fn parse_module_section(lines: &[&str], start: usize) -> Result<(ExpectedModule, usize), String> {
     let header = lines[start].trim();
 
     // Parse "### Module: {path}" or "### Module: {path} (ENTRY POINT)"
-    let after_prefix = header
-        .strip_prefix("### Module:")
-        .unwrap()
-        .trim();
+    let after_prefix = header.strip_prefix("### Module:").unwrap().trim();
 
     let (path, is_entry) = if after_prefix.ends_with("(ENTRY POINT)") {
-        let p = after_prefix
-            .strip_suffix("(ENTRY POINT)")
-            .unwrap()
-            .trim();
+        let p = after_prefix.strip_suffix("(ENTRY POINT)").unwrap().trim();
         (p.to_string(), true)
     } else {
         (after_prefix.to_string(), false)

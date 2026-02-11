@@ -116,23 +116,50 @@ mod tests {
         assert!(matches!(classify_ctx_kind("component$"), CtxKind::Function));
         assert!(matches!(classify_ctx_kind("useTask$"), CtxKind::Function));
         assert!(matches!(classify_ctx_kind("useStyles$"), CtxKind::Function));
-        assert!(matches!(classify_ctx_kind("useVisibleTask$"), CtxKind::Function));
+        assert!(matches!(
+            classify_ctx_kind("useVisibleTask$"),
+            CtxKind::Function
+        ));
     }
 
     #[test]
     fn test_classify_ctx_kind_event_handler() {
         assert!(matches!(classify_ctx_kind("event$"), CtxKind::EventHandler));
         // JSX event handler attributes
-        assert!(matches!(classify_ctx_kind("onClick$"), CtxKind::EventHandler));
-        assert!(matches!(classify_ctx_kind("onInput$"), CtxKind::EventHandler));
-        assert!(matches!(classify_ctx_kind("onBlur$"), CtxKind::EventHandler));
-        assert!(matches!(classify_ctx_kind("onFocus$"), CtxKind::EventHandler));
-        assert!(matches!(classify_ctx_kind("onMouseover$"), CtxKind::EventHandler));
+        assert!(matches!(
+            classify_ctx_kind("onClick$"),
+            CtxKind::EventHandler
+        ));
+        assert!(matches!(
+            classify_ctx_kind("onInput$"),
+            CtxKind::EventHandler
+        ));
+        assert!(matches!(
+            classify_ctx_kind("onBlur$"),
+            CtxKind::EventHandler
+        ));
+        assert!(matches!(
+            classify_ctx_kind("onFocus$"),
+            CtxKind::EventHandler
+        ));
+        assert!(matches!(
+            classify_ctx_kind("onMouseover$"),
+            CtxKind::EventHandler
+        ));
         // Namespaced JSX event handlers
-        assert!(matches!(classify_ctx_kind("document:onClick$"), CtxKind::EventHandler));
-        assert!(matches!(classify_ctx_kind("window:onFocus$"), CtxKind::EventHandler));
+        assert!(matches!(
+            classify_ctx_kind("document:onClick$"),
+            CtxKind::EventHandler
+        ));
+        assert!(matches!(
+            classify_ctx_kind("window:onFocus$"),
+            CtxKind::EventHandler
+        ));
         // on-custom$ (hyphenated) should also be event handler
-        assert!(matches!(classify_ctx_kind("on-anotherCustom$"), CtxKind::EventHandler));
+        assert!(matches!(
+            classify_ctx_kind("on-anotherCustom$"),
+            CtxKind::EventHandler
+        ));
         // Not event handlers (no on[A-Z] pattern)
         assert!(matches!(classify_ctx_kind("onl$"), CtxKind::Function));
         assert!(matches!(classify_ctx_kind("$"), CtxKind::Function));

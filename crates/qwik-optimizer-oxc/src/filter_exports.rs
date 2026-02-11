@@ -9,8 +9,8 @@
 //! see the binding but get a runtime error if they call it on the wrong
 //! platform.
 
-use oxc::ast::ast::*;
 use oxc::ast::AstBuilder;
+use oxc::ast::ast::*;
 use oxc::span::SPAN;
 
 /// The error message injected into stripped export bodies.
@@ -45,10 +45,7 @@ pub(crate) fn filter_exports<'a>(
                             for declarator in var_decl.declarations.iter_mut() {
                                 if let Some(name) = binding_pattern_name(&declarator.id) {
                                     if strip_exports.iter().any(|s| s == name) {
-                                        replace_init_body(
-                                            &mut declarator.init,
-                                            &ast,
-                                        );
+                                        replace_init_body(&mut declarator.init, &ast);
                                     }
                                 }
                             }
@@ -68,10 +65,7 @@ pub(crate) fn filter_exports<'a>(
             }
             Statement::ExportDefaultDeclaration(export_default) => {
                 if strip_exports.iter().any(|s| s == "default") {
-                    replace_default_export_body(
-                        &mut export_default.declaration,
-                        &ast,
-                    );
+                    replace_default_export_body(&mut export_default.declaration, &ast);
                 }
             }
             _ => {}
@@ -85,10 +79,7 @@ pub(crate) fn filter_exports<'a>(
 ///   - ArrowFunctionExpression: replace body statements
 ///   - FunctionExpression: replace body statements
 ///   - Other expressions: leave as-is (not a function)
-fn replace_init_body<'a>(
-    init: &mut Option<Expression<'a>>,
-    ast: &AstBuilder<'a>,
-) {
+fn replace_init_body<'a>(init: &mut Option<Expression<'a>>, ast: &AstBuilder<'a>) {
     if let Some(expr) = init {
         match expr {
             Expression::ArrowFunctionExpression(arrow) => {
@@ -100,8 +91,7 @@ fn replace_init_body<'a>(
                 let throw_body = build_throw_body(ast);
                 func.body = Some(ast.alloc(throw_body));
             }
-            _ => {
-            }
+            _ => {}
         }
     }
 }
@@ -125,8 +115,7 @@ fn replace_default_export_body<'a>(
             let throw_body = build_throw_body(ast);
             func.body = Some(ast.alloc(throw_body));
         }
-        _ => {
-        }
+        _ => {}
     }
 }
 

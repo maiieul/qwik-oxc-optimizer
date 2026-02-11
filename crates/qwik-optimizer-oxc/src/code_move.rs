@@ -141,10 +141,7 @@ fn inject_captures_into_body(body_code: &str, capture_stmts: &[String]) -> Strin
         return body_code.to_string();
     }
 
-    let capture_code: String = capture_stmts
-        .iter()
-        .map(|s| format!("{};\n", s))
-        .collect();
+    let capture_code: String = capture_stmts.iter().map(|s| format!("{};\n", s)).collect();
 
     if let Some(arrow_pos) = find_arrow_position(body_code) {
         let after_arrow = body_code[arrow_pos + 2..].trim_start();
@@ -164,10 +161,7 @@ fn inject_captures_into_body(body_code: &str, capture_stmts: &[String]) -> Strin
         let prefix = &body_code[..arrow_pos + 2];
         let expr_body = body_code[arrow_pos + 2..].trim();
         let expr_body = expr_body.strip_suffix(';').unwrap_or(expr_body);
-        return format!(
-            "{} {{\n{}return {};\n}}",
-            prefix, capture_code, expr_body
-        );
+        return format!("{} {{\n{}return {};\n}}", prefix, capture_code, expr_body);
     }
 
     body_code.to_string()
@@ -396,9 +390,10 @@ mod tests {
         let options = make_test_options();
         let mut segment = make_segment("App_component");
         segment.needs_qrl_import = true;
-        segment.child_lazy_imports = vec![
-            ("xyz789".to_string(), "./test.tsx_App_component_1_xyz789".to_string()),
-        ];
+        segment.child_lazy_imports = vec![(
+            "xyz789".to_string(),
+            "./test.tsx_App_component_1_xyz789".to_string(),
+        )];
 
         let body_code = "() => {\n  return qrl(i_xyz789, \"App_component_1_xyz789\");\n}";
 

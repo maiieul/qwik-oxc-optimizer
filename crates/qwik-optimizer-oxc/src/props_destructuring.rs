@@ -51,9 +51,7 @@ impl Default for PropsDestructuringInfo {
 ///
 /// If the first parameter is a plain BindingIdentifier (e.g., `(props) =>`),
 /// or there are no parameters, returns `needs_transform = false`.
-pub(crate) fn analyze_props_destructuring(
-    params: &FormalParameters<'_>,
-) -> PropsDestructuringInfo {
+pub(crate) fn analyze_props_destructuring(params: &FormalParameters<'_>) -> PropsDestructuringInfo {
     let mut info = PropsDestructuringInfo::default();
 
     if params.items.is_empty() {
@@ -81,10 +79,8 @@ pub(crate) fn analyze_props_destructuring(
                 }
             }
         }
-        BindingPattern::BindingIdentifier(_) => {
-        }
-        _ => {
-        }
+        BindingPattern::BindingIdentifier(_) => {}
+        _ => {}
     }
 
     info
@@ -131,9 +127,15 @@ pub(crate) fn rewrite_props_references<'a>(
             let name = ident.name.as_str();
             for (local_alias, original_key) in prop_map {
                 if name == local_alias {
-                    let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
-                    let prop_name = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
-                    let member = ctx.ast.static_member_expression(SPAN, obj, prop_name, false);
+                    let obj = ctx
+                        .ast
+                        .expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+                    let prop_name = ctx
+                        .ast
+                        .identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
+                    let member = ctx
+                        .ast
+                        .static_member_expression(SPAN, obj, prop_name, false);
                     *expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
                     return;
                 }
@@ -144,7 +146,12 @@ pub(crate) fn rewrite_props_references<'a>(
             for elem in arr.elements.iter_mut() {
                 match elem {
                     ArrayExpressionElement::SpreadElement(spread) => {
-                        rewrite_props_references(&mut spread.argument, prop_map, raw_props_name, ctx);
+                        rewrite_props_references(
+                            &mut spread.argument,
+                            prop_map,
+                            raw_props_name,
+                            ctx,
+                        );
                     }
                     ArrayExpressionElement::Elision(_) => {}
                     _ => {
@@ -163,7 +170,12 @@ pub(crate) fn rewrite_props_references<'a>(
                         rewrite_props_references(&mut p.value, prop_map, raw_props_name, ctx);
                     }
                     ObjectPropertyKind::SpreadProperty(spread) => {
-                        rewrite_props_references(&mut spread.argument, prop_map, raw_props_name, ctx);
+                        rewrite_props_references(
+                            &mut spread.argument,
+                            prop_map,
+                            raw_props_name,
+                            ctx,
+                        );
                     }
                 }
             }
@@ -194,8 +206,7 @@ pub(crate) fn rewrite_props_references<'a>(
             rewrite_props_references(&mut unary.argument, prop_map, raw_props_name, ctx);
         }
 
-        Expression::UpdateExpression(_update) => {
-        }
+        Expression::UpdateExpression(_update) => {}
 
         Expression::AssignmentExpression(assign) => {
             rewrite_props_references(&mut assign.right, prop_map, raw_props_name, ctx);
@@ -221,7 +232,10 @@ pub(crate) fn rewrite_props_references<'a>(
         }
 
         Expression::ArrowFunctionExpression(arrow) => {
-            let shadowed: Vec<String> = arrow.params.items.iter()
+            let shadowed: Vec<String> = arrow
+                .params
+                .items
+                .iter()
                 .filter_map(|p| extract_binding_pattern_name(&p.pattern))
                 .filter(|name| prop_map.iter().any(|(local, _)| local == name))
                 .collect();
@@ -229,12 +243,18 @@ pub(crate) fn rewrite_props_references<'a>(
             if shadowed.is_empty() {
                 rewrite_body_statements(&mut arrow.body.statements, prop_map, raw_props_name, ctx);
             } else {
-                let filtered: Vec<(String, String)> = prop_map.iter()
+                let filtered: Vec<(String, String)> = prop_map
+                    .iter()
                     .filter(|(local, _)| !shadowed.contains(local))
                     .cloned()
                     .collect();
                 if !filtered.is_empty() {
-                    rewrite_body_statements(&mut arrow.body.statements, &filtered, raw_props_name, ctx);
+                    rewrite_body_statements(
+                        &mut arrow.body.statements,
+                        &filtered,
+                        raw_props_name,
+                        ctx,
+                    );
                 }
             }
         }
@@ -258,7 +278,12 @@ pub(crate) fn rewrite_props_references<'a>(
             for arg in ne.arguments.iter_mut() {
                 match arg {
                     Argument::SpreadElement(spread) => {
-                        rewrite_props_references(&mut spread.argument, prop_map, raw_props_name, ctx);
+                        rewrite_props_references(
+                            &mut spread.argument,
+                            prop_map,
+                            raw_props_name,
+                            ctx,
+                        );
                     }
                     _ => {
                         if let Some(e) = argument_as_expression_mut(arg) {
@@ -380,9 +405,15 @@ fn rewrite_call_arguments<'a>(
             Argument::Identifier(ident) => {
                 let name = ident.name.as_str().to_string();
                 if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
-                    let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
-                    let prop_name_ident = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
-                    let member = ctx.ast.static_member_expression(SPAN, obj, prop_name_ident, false);
+                    let obj = ctx
+                        .ast
+                        .expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+                    let prop_name_ident = ctx
+                        .ast
+                        .identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
+                    let member =
+                        ctx.ast
+                            .static_member_expression(SPAN, obj, prop_name_ident, false);
                     let member_expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
                     arguments[i] = Argument::from(member_expr);
                 }
@@ -444,9 +475,15 @@ pub(crate) fn rewrite_array_elements<'a>(
             if let ArrayExpressionElement::Identifier(ident) = &elements[i] {
                 let name = ident.name.to_string();
                 if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
-                    let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
-                    let prop_name = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
-                    let member = ctx.ast.static_member_expression(SPAN, obj, prop_name, false);
+                    let obj = ctx
+                        .ast
+                        .expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+                    let prop_name = ctx
+                        .ast
+                        .identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
+                    let member = ctx
+                        .ast
+                        .static_member_expression(SPAN, obj, prop_name, false);
                     let member_expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
                     elements[i] = ArrayExpressionElement::from(member_expr);
                 }
@@ -477,9 +514,15 @@ pub(crate) fn rewrite_arguments<'a>(
             if let Argument::Identifier(ident) = &arguments[i] {
                 let name = ident.name.to_string();
                 if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
-                    let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
-                    let prop_name = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
-                    let member = ctx.ast.static_member_expression(SPAN, obj, prop_name, false);
+                    let obj = ctx
+                        .ast
+                        .expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+                    let prop_name = ctx
+                        .ast
+                        .identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
+                    let member = ctx
+                        .ast
+                        .static_member_expression(SPAN, obj, prop_name, false);
                     let member_expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
                     arguments[i] = Argument::from(member_expr);
                 }
@@ -496,9 +539,13 @@ pub(crate) fn build_rest_props_call<'a>(
     excluded_keys: &[String],
     ctx: &mut TraverseCtx<'a, ()>,
 ) -> Expression<'a> {
-    let callee = ctx.ast.expression_identifier(SPAN, ctx.ast.atom("_restProps"));
+    let callee = ctx
+        .ast
+        .expression_identifier(SPAN, ctx.ast.atom("_restProps"));
 
-    let raw_props_arg = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+    let raw_props_arg = ctx
+        .ast
+        .expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
 
     if excluded_keys.is_empty() {
         let mut args = ctx.ast.vec_with_capacity(1);
@@ -542,7 +589,9 @@ pub(crate) fn build_rest_props_declaration<'a>(
 ) -> Statement<'a> {
     let rest_call = build_rest_props_call(raw_props_name, excluded_keys, ctx);
 
-    let binding = ctx.ast.binding_pattern_binding_identifier(SPAN, ctx.ast.atom(rest_name));
+    let binding = ctx
+        .ast
+        .binding_pattern_binding_identifier(SPAN, ctx.ast.atom(rest_name));
     let declarator = ctx.ast.variable_declarator(
         SPAN,
         VariableDeclarationKind::Const,
@@ -558,9 +607,7 @@ pub(crate) fn build_rest_props_declaration<'a>(
         false,
     );
 
-    Statement::from(Declaration::VariableDeclaration(
-        ctx.ast.alloc(declaration),
-    ))
+    Statement::from(Declaration::VariableDeclaration(ctx.ast.alloc(declaration)))
 }
 
 #[cfg(test)]
@@ -574,7 +621,11 @@ mod tests {
         let source = allocator.alloc_str(code);
         let parser = oxc::parser::Parser::new(&allocator, source, oxc::span::SourceType::tsx());
         let result = parser.parse();
-        assert!(result.errors.is_empty(), "Parse errors: {:?}", result.errors);
+        assert!(
+            result.errors.is_empty(),
+            "Parse errors: {:?}",
+            result.errors
+        );
         let program = result.program;
 
         for stmt in &program.body {
@@ -675,12 +726,14 @@ mod tests {
 
     #[test]
     fn test_analyze_complex_destructuring() {
-        let info = parse_and_analyze(
-            "component$(({message, id, count: c, ...rest}) => message + id + c)"
-        );
+        let info =
+            parse_and_analyze("component$(({message, id, count: c, ...rest}) => message + id + c)");
         assert!(info.needs_transform);
         assert_eq!(info.prop_keys.len(), 3);
-        assert_eq!(info.prop_keys[0], ("message".to_string(), "message".to_string()));
+        assert_eq!(
+            info.prop_keys[0],
+            ("message".to_string(), "message".to_string())
+        );
         assert_eq!(info.prop_keys[1], ("id".to_string(), "id".to_string()));
         assert_eq!(info.prop_keys[2], ("count".to_string(), "c".to_string()));
         assert_eq!(info.rest_name, Some("rest".to_string()));

@@ -5,8 +5,9 @@
 //! circular dependencies since every other module can import from `types`
 //! without importing logic.
 
-use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
+
+use serde::{Deserialize, Serialize};
 
 // ---------------------------------------------------------------------------
 // Public Types
@@ -621,16 +622,46 @@ mod tests {
         let json = serde_json::to_string_pretty(&opts).unwrap();
 
         // Verify camelCase field names
-        assert!(json.contains("\"srcDir\""), "Expected srcDir in JSON: {json}");
-        assert!(json.contains("\"rootDir\""), "Expected rootDir in JSON: {json}");
-        assert!(json.contains("\"sourceMaps\""), "Expected sourceMaps in JSON: {json}");
-        assert!(json.contains("\"transpileTs\""), "Expected transpileTs in JSON: {json}");
-        assert!(json.contains("\"transpileJsx\""), "Expected transpileJsx in JSON: {json}");
-        assert!(json.contains("\"preserveFilenames\""), "Expected preserveFilenames in JSON: {json}");
-        assert!(json.contains("\"entryStrategy\""), "Expected entryStrategy in JSON: {json}");
-        assert!(json.contains("\"explicitExtensions\""), "Expected explicitExtensions in JSON: {json}");
-        assert!(json.contains("\"isServer\""), "Expected isServer in JSON: {json}");
-        assert!(json.contains("\"stripEventHandlers\""), "Expected stripEventHandlers in JSON: {json}");
+        assert!(
+            json.contains("\"srcDir\""),
+            "Expected srcDir in JSON: {json}"
+        );
+        assert!(
+            json.contains("\"rootDir\""),
+            "Expected rootDir in JSON: {json}"
+        );
+        assert!(
+            json.contains("\"sourceMaps\""),
+            "Expected sourceMaps in JSON: {json}"
+        );
+        assert!(
+            json.contains("\"transpileTs\""),
+            "Expected transpileTs in JSON: {json}"
+        );
+        assert!(
+            json.contains("\"transpileJsx\""),
+            "Expected transpileJsx in JSON: {json}"
+        );
+        assert!(
+            json.contains("\"preserveFilenames\""),
+            "Expected preserveFilenames in JSON: {json}"
+        );
+        assert!(
+            json.contains("\"entryStrategy\""),
+            "Expected entryStrategy in JSON: {json}"
+        );
+        assert!(
+            json.contains("\"explicitExtensions\""),
+            "Expected explicitExtensions in JSON: {json}"
+        );
+        assert!(
+            json.contains("\"isServer\""),
+            "Expected isServer in JSON: {json}"
+        );
+        assert!(
+            json.contains("\"stripEventHandlers\""),
+            "Expected stripEventHandlers in JSON: {json}"
+        );
 
         // Verify it round-trips
         let deserialized: TransformModulesOptions = serde_json::from_str(&json).unwrap();
@@ -717,7 +748,10 @@ mod tests {
 
         let json = serde_json::to_string(&segment).unwrap();
         // loc should serialize as [90, 161]
-        assert!(json.contains(r#""loc":[90,161]"#), "Expected loc as array: {json}");
+        assert!(
+            json.contains(r#""loc":[90,161]"#),
+            "Expected loc as array: {json}"
+        );
 
         // Verify round-trip
         let deserialized: SegmentAnalysis = serde_json::from_str(&json).unwrap();
@@ -749,9 +783,15 @@ mod tests {
         assert_eq!(deserialized.modules[0].path, "test.tsx");
         assert!(deserialized.is_type_script);
         assert!(!deserialized.is_jsx);
-        assert!(json.contains("\"isTypeScript\""), "Expected isTypeScript in JSON: {json}");
+        assert!(
+            json.contains("\"isTypeScript\""),
+            "Expected isTypeScript in JSON: {json}"
+        );
         assert!(json.contains("\"isJsx\""), "Expected isJsx in JSON: {json}");
-        assert!(json.contains("\"isEntry\""), "Expected isEntry in JSON: {json}");
+        assert!(
+            json.contains("\"isEntry\""),
+            "Expected isEntry in JSON: {json}"
+        );
     }
 
     #[test]

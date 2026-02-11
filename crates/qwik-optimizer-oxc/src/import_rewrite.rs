@@ -82,9 +82,7 @@ pub(crate) fn build_qrl_call<'a>(
 
     let import_ref = ctx.ast.expression_identifier(SPAN, import_atom);
 
-    let name_literal = ctx
-        .ast
-        .expression_string_literal(SPAN, name_atom, None);
+    let name_literal = ctx.ast.expression_string_literal(SPAN, name_atom, None);
 
     let capacity = if captures.is_empty() { 2 } else { 3 };
     let mut arguments = ctx.ast.vec_with_capacity(capacity);
@@ -99,9 +97,7 @@ pub(crate) fn build_qrl_call<'a>(
                 ctx.ast.expression_identifier(SPAN, cap_atom),
             ));
         }
-        arguments.push(Argument::from(
-            ctx.ast.expression_array(SPAN, elements),
-        ));
+        arguments.push(Argument::from(ctx.ast.expression_array(SPAN, elements)));
     }
 
     let callee = ctx.ast.expression_identifier(SPAN, "qrl");
@@ -133,8 +129,7 @@ pub(crate) fn build_inlined_qrl_call<'a>(
     arguments.push(Argument::from(body_expr));
 
     arguments.push(Argument::from(
-        ctx.ast
-            .expression_string_literal(SPAN, name_atom, None),
+        ctx.ast.expression_string_literal(SPAN, name_atom, None),
     ));
 
     if !captures.is_empty() {
@@ -145,9 +140,7 @@ pub(crate) fn build_inlined_qrl_call<'a>(
                 ctx.ast.expression_identifier(SPAN, cap_atom),
             ));
         }
-        arguments.push(Argument::from(
-            ctx.ast.expression_array(SPAN, elements),
-        ));
+        arguments.push(Argument::from(ctx.ast.expression_array(SPAN, elements)));
     }
 
     let callee = ctx.ast.expression_identifier(SPAN, "inlinedQrl");
@@ -174,19 +167,15 @@ pub(crate) fn build_named_import<'a>(
 
     let local = ctx.ast.binding_identifier(SPAN, name_atom.clone());
 
-    let imported = ctx
-        .ast
-        .module_export_name_identifier_name(SPAN, name_atom);
+    let imported = ctx.ast.module_export_name_identifier_name(SPAN, name_atom);
 
     let specifier = ctx
         .ast
         .import_specifier(SPAN, imported, local, ImportOrExportKind::Value);
 
-    let specifiers = ctx
-        .ast
-        .vec1(ImportDeclarationSpecifier::ImportSpecifier(
-            ctx.ast.alloc(specifier),
-        ));
+    let specifiers = ctx.ast.vec1(ImportDeclarationSpecifier::ImportSpecifier(
+        ctx.ast.alloc(specifier),
+    ));
 
     let source_lit = ctx.ast.string_literal(SPAN, source_atom, None);
 
@@ -226,11 +215,9 @@ pub(crate) fn build_aliased_import<'a>(
         .ast
         .import_specifier(SPAN, imported, local, ImportOrExportKind::Value);
 
-    let specifiers = ctx
-        .ast
-        .vec1(ImportDeclarationSpecifier::ImportSpecifier(
-            ctx.ast.alloc(specifier),
-        ));
+    let specifiers = ctx.ast.vec1(ImportDeclarationSpecifier::ImportSpecifier(
+        ctx.ast.alloc(specifier),
+    ));
 
     let source_lit = ctx.ast.string_literal(SPAN, source_atom, None);
 
@@ -257,9 +244,7 @@ pub(crate) fn build_lazy_import_declaration<'a>(
     let ident_atom = ctx.ast.atom(&ident_name);
     let path_atom = ctx.ast.atom(import_path);
 
-    let import_source = ctx
-        .ast
-        .expression_string_literal(SPAN, path_atom, None);
+    let import_source = ctx.ast.expression_string_literal(SPAN, path_atom, None);
     let import_expr = ctx.ast.expression_import(
         SPAN,
         import_source,
@@ -291,9 +276,7 @@ pub(crate) fn build_lazy_import_declaration<'a>(
         body,
     );
 
-    let binding = ctx
-        .ast
-        .binding_pattern_binding_identifier(SPAN, ident_atom);
+    let binding = ctx.ast.binding_pattern_binding_identifier(SPAN, ident_atom);
     let declarator = ctx.ast.variable_declarator(
         SPAN,
         VariableDeclarationKind::Const,
@@ -309,9 +292,7 @@ pub(crate) fn build_lazy_import_declaration<'a>(
         false,
     );
 
-    Statement::from(Declaration::VariableDeclaration(
-        ctx.ast.alloc(declaration),
-    ))
+    Statement::from(Declaration::VariableDeclaration(ctx.ast.alloc(declaration)))
 }
 
 /// Build a _wrapProp(signal) call expression (Form 1: signal.value access).
@@ -442,12 +423,7 @@ mod tests {
             span: (0, 50),
         }];
 
-        let changes = compute_import_changes(
-            &imports,
-            &["componentQrl".to_string()],
-            true,
-            false,
-        );
+        let changes = compute_import_changes(&imports, &["componentQrl".to_string()], true, false);
 
         assert!(changes.to_remove.contains(&"$".to_string()));
         assert!(changes.to_remove.contains(&"component$".to_string()));
@@ -465,12 +441,7 @@ mod tests {
             span: (0, 30),
         }];
 
-        let changes = compute_import_changes(
-            &imports,
-            &[],
-            false,
-            true,
-        );
+        let changes = compute_import_changes(&imports, &[], false, true);
 
         assert!(changes.to_add.contains(&"inlinedQrl".to_string()));
         assert!(!changes.to_add.contains(&"qrl".to_string()));

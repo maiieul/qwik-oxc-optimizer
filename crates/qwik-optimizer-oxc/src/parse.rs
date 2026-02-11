@@ -4,9 +4,10 @@
 //! with semantic scoping from `SemanticBuilder`. Handles source type detection
 //! from filename extension and reports parse errors as `Diagnostic` values.
 
+use oxc::semantic::Scoping;
+
 use crate::errors;
 use crate::types::Diagnostic;
-use oxc::semantic::Scoping;
 
 /// Result of parsing a single source file.
 pub(crate) struct ParseResult<'a> {
@@ -40,9 +41,7 @@ fn source_type_from_filename(filename: &str) -> oxc::span::SourceType {
         oxc::span::SourceType::ts().with_jsx(true)
     } else if filename.ends_with(".jsx") {
         oxc::span::SourceType::jsx()
-    } else if filename.ends_with(".js")
-        || filename.ends_with(".mjs")
-        || filename.ends_with(".cjs")
+    } else if filename.ends_with(".js") || filename.ends_with(".mjs") || filename.ends_with(".cjs")
     {
         oxc::span::SourceType::mjs()
     } else {

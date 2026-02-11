@@ -6,9 +6,10 @@
 //! Algorithm: `DefaultHasher(scope?, rel_path, display_name) -> u64 -> LE bytes -> base64url -> replace -/_ with 0`
 //! This is an exact port of the SWC optimizer hash algorithm validated in POC-03.
 
-use base64::Engine;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::Hasher;
+
+use base64::Engine;
 
 /// Compute the segment hash for a display name.
 ///
@@ -106,17 +107,17 @@ mod tests {
     fn test_hash_scope_changes_result() {
         let h1 = compute_segment_hash(None, "test.tsx", "test.tsx_Foo_component");
         let h2 = compute_segment_hash(Some("my-scope"), "test.tsx", "test.tsx_Foo_component");
-        assert_ne!(
-            h1, h2,
-            "Scope should affect the hash output"
-        );
+        assert_ne!(h1, h2, "Scope should affect the hash output");
     }
 
     #[test]
     fn test_hash_different_paths() {
         let h1 = compute_segment_hash(None, "foo.tsx", "foo.tsx_App_component");
         let h2 = compute_segment_hash(None, "bar.tsx", "bar.tsx_App_component");
-        assert_ne!(h1, h2, "Different file paths should produce different hashes");
+        assert_ne!(
+            h1, h2,
+            "Different file paths should produce different hashes"
+        );
     }
 
     #[test]

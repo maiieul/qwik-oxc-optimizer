@@ -4,8 +4,9 @@
 //! `Program` AST. Wraps `oxc::codegen::Codegen` with the crate's options
 //! (minification, source maps, etc.) and produces `TransformModule` values.
 
-use crate::types::MinifyMode;
 use std::path::PathBuf;
+
+use crate::types::MinifyMode;
 
 /// Options controlling code emission.
 pub(crate) struct EmitOptions {
