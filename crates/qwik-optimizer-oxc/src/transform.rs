@@ -49,6 +49,24 @@ pub(crate) struct ImportTracker {
     /// Lazy import constants to insert (segment strategy).
     /// Each entry: (hash, import_path).
     pub lazy_imports: Vec<(String, String)>,
+
+    /// Whether the module needs `import { _jsxSorted }` from core.
+    pub needs_jsx_sorted: bool,
+
+    /// Whether the module needs `import { _jsxSplit }` from core.
+    pub needs_jsx_split: bool,
+
+    /// Whether the module needs `import { _getVarProps }` from core.
+    pub needs_get_var_props: bool,
+
+    /// Whether the module needs `import { _getConstProps }` from core.
+    pub needs_get_const_props: bool,
+
+    /// Whether the module needs `import { Fragment as _Fragment }` from jsx-runtime.
+    pub needs_fragment: bool,
+
+    /// Monotonic counter for generating unique JSX key suffixes like "u6_0", "u6_1".
+    pub jsx_key_counter: u32,
 }
 
 /// The core Qwik transform traversal state.
@@ -391,6 +409,40 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         expr: &mut Expression<'a>,
         ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        // JSX transformation: replace JSXElement/JSXFragment with _jsxSorted/_jsxSplit calls
+        if self.options.transpile_jsx {
+            match expr {
+                Expression::JSXElement(_) => {
+                    // Take the JSXElement out to process it
+                    let placeholder = ctx.ast.expression_null_literal(SPAN);
+                    let old_expr = std::mem::replace(expr, placeholder);
+                    if let Expression::JSXElement(el) = old_expr {
+                        let result = transform_jsx_element_inner(
+                            el.unbox(),
+                            &mut self.import_tracker,
+                            ctx,
+                        );
+                        *expr = result;
+                    }
+                    return;
+                }
+                Expression::JSXFragment(_) => {
+                    let placeholder = ctx.ast.expression_null_literal(SPAN);
+                    let old_expr = std::mem::replace(expr, placeholder);
+                    if let Expression::JSXFragment(frag) = old_expr {
+                        let result = transform_jsx_fragment_inner(
+                            frag.unbox(),
+                            &mut self.import_tracker,
+                            ctx,
+                        );
+                        *expr = result;
+                    }
+                    return;
+                }
+                _ => {}
+            }
+        }
+
         if let Expression::CallExpression(call) = expr {
             // Check if this was a detected dollar call
             if !self.pending_dollar_calls.remove(&call.span.start) {
@@ -718,9 +770,38 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
-        // 4. Add lazy import constants (segment strategy)
+        // 4. Add JSX-related imports
+        if self.import_tracker.needs_jsx_sorted {
+            let stmt = import_rewrite::build_named_import("_jsxSorted", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+        if self.import_tracker.needs_get_var_props {
+            let stmt = import_rewrite::build_named_import("_getVarProps", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+        if self.import_tracker.needs_get_const_props {
+            let stmt = import_rewrite::build_named_import("_getConstProps", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+        if self.import_tracker.needs_jsx_split {
+            let stmt = import_rewrite::build_named_import("_jsxSplit", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+
+        // 5. Add lazy import constants (segment strategy)
         for (hash, import_path) in &self.import_tracker.lazy_imports {
             let stmt = import_rewrite::build_lazy_import_declaration(hash, import_path, ctx);
+            new_stmts.push(stmt);
+        }
+
+        // 5b. Add Fragment aliased import from jsx-runtime (after lazy imports)
+        if self.import_tracker.needs_fragment {
+            let stmt = import_rewrite::build_aliased_import(
+                "Fragment",
+                "_Fragment",
+                "@qwik.dev/core/jsx-runtime",
+                ctx,
+            );
             new_stmts.push(stmt);
         }
 
@@ -744,6 +825,653 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
 
             program.body = new_body;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// JSX Transformation Helpers
+// ---------------------------------------------------------------------------
+
+/// Normalize JSX text: collapse whitespace, strip leading/trailing newlines.
+/// Returns empty string for whitespace-only text.
+fn normalize_jsx_text(raw: &str) -> String {
+    // Split into lines
+    let lines: Vec<&str> = raw.split('\n').collect();
+    let mut parts: Vec<String> = Vec::new();
+
+    for (i, line) in lines.iter().enumerate() {
+        let trimmed = if i == 0 {
+            line.trim_end()
+        } else if i == lines.len() - 1 {
+            line.trim_start()
+        } else {
+            line.trim()
+        };
+        if !trimmed.is_empty() {
+            parts.push(trimmed.to_string());
+        }
+    }
+
+    parts.join(" ")
+}
+
+/// Transform a JSX event attribute name to its output form.
+///
+/// Handles patterns:
+/// - onClick$ -> q-e:click
+/// - onDocumentScroll$ -> q-e:documentscroll
+/// - on-cLick$ -> q-e:c-lick
+/// - onDocument-sCroll$ -> q-e:document--scroll
+/// - document:onFocus$ -> q-d:focus
+/// - window:onClick$ -> q-w:click
+/// - onKeyup$ -> q-e:keyup
+/// - onDocument:keyup$ -> q-e:document:keyup
+/// - onWindow:keyup$ -> q-e:window:keyup
+/// - host:onClick$ -> host:onClick$ (kept as-is, deprecated)
+///
+/// Returns None if the attribute is not a transformable event handler.
+fn transform_event_attr_name(attr_name: &str) -> Option<String> {
+    // Handle scope prefixes: document:, window:
+    if let Some(rest) = attr_name.strip_prefix("document:") {
+        if rest.starts_with("on") && rest.ends_with('$') {
+            let event_part = &rest[2..rest.len() - 1];
+            return Some(format!("q-d:{}", event_part.to_lowercase()));
+        }
+        return None;
+    }
+    if let Some(rest) = attr_name.strip_prefix("window:") {
+        if rest.starts_with("on") && rest.ends_with('$') {
+            let event_part = &rest[2..rest.len() - 1];
+            return Some(format!("q-w:{}", event_part.to_lowercase()));
+        }
+        return None;
+    }
+    if attr_name.starts_with("host:") {
+        // host: prefix is kept as-is (deprecated)
+        return None;
+    }
+
+    // Standard event: onClick$, onDocumentScroll$, on-cLick$
+    if attr_name.starts_with("on") && attr_name.ends_with('$') {
+        let event_part = &attr_name[2..attr_name.len() - 1];
+
+        // Handle colon-separated scope: onDocument:keyup$ -> q-e:document:keyup
+        if let Some(colon_pos) = event_part.find(':') {
+            let scope = &event_part[..colon_pos];
+            let event = &event_part[colon_pos + 1..];
+            return Some(format!(
+                "q-e:{}:{}",
+                scope.to_lowercase(),
+                event.to_lowercase()
+            ));
+        }
+
+        let event_lower = event_part.to_lowercase();
+        return Some(format!("q-e:{}", event_lower));
+    }
+
+    None
+}
+
+/// Check if a JSX attribute value is a compile-time constant for prop classification.
+fn is_const_jsx_value(value: &Expression<'_>) -> bool {
+    match value {
+        Expression::StringLiteral(_)
+        | Expression::NumericLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_) => true,
+        Expression::TemplateLiteral(tpl) => tpl.expressions.is_empty(),
+        _ => false,
+    }
+}
+
+/// Build the tag expression for a JSX element name.
+fn build_tag_expression<'a>(
+    name: &JSXElementName<'a>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    match name {
+        JSXElementName::Identifier(ident) => {
+            let tag_name = ident.name.as_str();
+            if tag_name
+                .chars()
+                .next()
+                .map_or(false, |c| c.is_lowercase())
+            {
+                let atom = ctx.ast.atom(tag_name);
+                ctx.ast.expression_string_literal(SPAN, atom, None)
+            } else {
+                let atom = ctx.ast.atom(tag_name);
+                ctx.ast.expression_identifier(SPAN, atom)
+            }
+        }
+        JSXElementName::IdentifierReference(ident_ref) => {
+            let atom = ctx.ast.atom(ident_ref.name.as_str());
+            ctx.ast.expression_identifier(SPAN, atom)
+        }
+        JSXElementName::MemberExpression(member) => build_jsx_member_expr(member, ctx),
+        JSXElementName::NamespacedName(ns) => {
+            let name = format!("{}:{}", ns.namespace.name, ns.name.name);
+            let atom = ctx.ast.atom(&name);
+            ctx.ast.expression_string_literal(SPAN, atom, None)
+        }
+        JSXElementName::ThisExpression(_) => ctx.ast.expression_this(SPAN),
+    }
+}
+
+/// Build a member expression from a JSXMemberExpression (e.g., Foo.Bar.Baz).
+fn build_jsx_member_expr<'a>(
+    member: &JSXMemberExpression<'a>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    let object = match &member.object {
+        JSXMemberExpressionObject::IdentifierReference(ident) => {
+            let atom = ctx.ast.atom(ident.name.as_str());
+            ctx.ast.expression_identifier(SPAN, atom)
+        }
+        JSXMemberExpressionObject::MemberExpression(inner) => build_jsx_member_expr(inner, ctx),
+        JSXMemberExpressionObject::ThisExpression(_) => ctx.ast.expression_this(SPAN),
+    };
+    let property_atom = ctx.ast.atom(member.property.name.as_str());
+    let property = ctx.ast.identifier_name(SPAN, property_atom);
+    Expression::StaticMemberExpression(ctx.ast.alloc_static_member_expression(
+        SPAN, object, property, false,
+    ))
+}
+
+/// Convert a JSXExpression to an Expression. JSXExpression uses inherit_variants!
+/// from Expression, so all Expression variants appear directly on JSXExpression.
+fn jsx_expression_to_expression<'a>(
+    jsx_expr: JSXExpression<'a>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    match jsx_expr {
+        JSXExpression::EmptyExpression(_) => ctx.ast.expression_identifier(SPAN, "undefined"),
+        // Inherited Expression variants - literals
+        JSXExpression::BooleanLiteral(e) => Expression::BooleanLiteral(e),
+        JSXExpression::NullLiteral(e) => Expression::NullLiteral(e),
+        JSXExpression::NumericLiteral(e) => Expression::NumericLiteral(e),
+        JSXExpression::BigIntLiteral(e) => Expression::BigIntLiteral(e),
+        JSXExpression::RegExpLiteral(e) => Expression::RegExpLiteral(e),
+        JSXExpression::StringLiteral(e) => Expression::StringLiteral(e),
+        JSXExpression::TemplateLiteral(e) => Expression::TemplateLiteral(e),
+        // Identifiers and special
+        JSXExpression::Identifier(e) => Expression::Identifier(e),
+        JSXExpression::MetaProperty(e) => Expression::MetaProperty(e),
+        JSXExpression::Super(e) => Expression::Super(e),
+        // Compound expressions
+        JSXExpression::ArrayExpression(e) => Expression::ArrayExpression(e),
+        JSXExpression::ArrowFunctionExpression(e) => Expression::ArrowFunctionExpression(e),
+        JSXExpression::AssignmentExpression(e) => Expression::AssignmentExpression(e),
+        JSXExpression::AwaitExpression(e) => Expression::AwaitExpression(e),
+        JSXExpression::BinaryExpression(e) => Expression::BinaryExpression(e),
+        JSXExpression::CallExpression(e) => Expression::CallExpression(e),
+        JSXExpression::ChainExpression(e) => Expression::ChainExpression(e),
+        JSXExpression::ClassExpression(e) => Expression::ClassExpression(e),
+        JSXExpression::ConditionalExpression(e) => Expression::ConditionalExpression(e),
+        JSXExpression::FunctionExpression(e) => Expression::FunctionExpression(e),
+        JSXExpression::ImportExpression(e) => Expression::ImportExpression(e),
+        JSXExpression::LogicalExpression(e) => Expression::LogicalExpression(e),
+        JSXExpression::NewExpression(e) => Expression::NewExpression(e),
+        JSXExpression::ObjectExpression(e) => Expression::ObjectExpression(e),
+        JSXExpression::ParenthesizedExpression(e) => Expression::ParenthesizedExpression(e),
+        JSXExpression::SequenceExpression(e) => Expression::SequenceExpression(e),
+        JSXExpression::TaggedTemplateExpression(e) => Expression::TaggedTemplateExpression(e),
+        JSXExpression::ThisExpression(e) => Expression::ThisExpression(e),
+        JSXExpression::UnaryExpression(e) => Expression::UnaryExpression(e),
+        JSXExpression::UpdateExpression(e) => Expression::UpdateExpression(e),
+        JSXExpression::YieldExpression(e) => Expression::YieldExpression(e),
+        JSXExpression::PrivateInExpression(e) => Expression::PrivateInExpression(e),
+        // Member expressions (inherited from MemberExpression)
+        JSXExpression::ComputedMemberExpression(e) => Expression::ComputedMemberExpression(e),
+        JSXExpression::StaticMemberExpression(e) => Expression::StaticMemberExpression(e),
+        JSXExpression::PrivateFieldExpression(e) => Expression::PrivateFieldExpression(e),
+        // JSX
+        JSXExpression::JSXElement(e) => Expression::JSXElement(e),
+        JSXExpression::JSXFragment(e) => Expression::JSXFragment(e),
+        // TypeScript expressions
+        JSXExpression::TSAsExpression(e) => Expression::TSAsExpression(e),
+        JSXExpression::TSSatisfiesExpression(e) => Expression::TSSatisfiesExpression(e),
+        JSXExpression::TSTypeAssertion(e) => Expression::TSTypeAssertion(e),
+        JSXExpression::TSNonNullExpression(e) => Expression::TSNonNullExpression(e),
+        JSXExpression::TSInstantiationExpression(e) => Expression::TSInstantiationExpression(e),
+        JSXExpression::V8IntrinsicExpression(e) => Expression::V8IntrinsicExpression(e),
+    }
+}
+
+/// Convert a JSXAttributeValue to an Expression, taking ownership.
+fn jsx_attr_value_to_expression<'a>(
+    value: JSXAttributeValue<'a>,
+    tracker: &mut ImportTracker,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    match value {
+        JSXAttributeValue::StringLiteral(lit) => Expression::StringLiteral(lit),
+        JSXAttributeValue::ExpressionContainer(container) => {
+            jsx_expression_to_expression(container.unbox().expression, ctx)
+        }
+        JSXAttributeValue::Element(el) => {
+            // JSX element as attribute value: transform it
+            transform_jsx_element_inner(el.unbox(), tracker, ctx)
+        }
+        JSXAttributeValue::Fragment(frag) => {
+            transform_jsx_fragment_inner(frag.unbox(), tracker, ctx)
+        }
+    }
+}
+
+/// Recursively transform a JSXElement into a _jsxSorted/_jsxSplit call expression.
+fn transform_jsx_element_inner<'a>(
+    mut element: JSXElement<'a>,
+    tracker: &mut ImportTracker,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    let tag = build_tag_expression(&element.opening_element.name, ctx);
+
+    // Classify attributes: detect spreads, separate key, classify var/const props
+    let mut has_spread = false;
+    let mut key_value: Option<Expression<'a>> = None;
+    let mut var_props: Vec<(String, Expression<'a>)> = Vec::new();
+    let mut const_props: Vec<(String, Expression<'a>)> = Vec::new();
+    let mut spread_args: Vec<Expression<'a>> = Vec::new();
+    let mut _has_only_events = true;
+    let mut has_any_visible_prop = false;
+
+    // Take attributes out of the opening element
+    let mut attrs = ctx.ast.vec();
+    std::mem::swap(&mut element.opening_element.attributes, &mut attrs);
+
+    for attr_item in attrs {
+        match attr_item {
+            JSXAttributeItem::SpreadAttribute(spread) => {
+                has_spread = true;
+                spread_args.push(spread.unbox().argument);
+            }
+            JSXAttributeItem::Attribute(attr) => {
+                let attr = attr.unbox();
+                let attr_name = match &attr.name {
+                    JSXAttributeName::Identifier(ident) => ident.name.as_str().to_string(),
+                    JSXAttributeName::NamespacedName(ns) => {
+                        format!("{}:{}", ns.namespace.name, ns.name.name)
+                    }
+                };
+
+                // Handle key attribute
+                if attr_name == "key" {
+                    if let Some(val) = attr.value {
+                        key_value = Some(jsx_attr_value_to_expression(val, tracker, ctx));
+                    }
+                    continue;
+                }
+
+                // Check for event handler attributes
+                if let Some(event_name) = transform_event_attr_name(&attr_name) {
+                    // Event handler: value goes into const props with renamed key
+                    let value = if let Some(val) = attr.value {
+                        jsx_attr_value_to_expression(val, tracker, ctx)
+                    } else {
+                        ctx.ast.expression_boolean_literal(SPAN, true)
+                    };
+                    const_props.push((event_name, value));
+                    continue;
+                }
+
+                // Check for host: prefix (kept as-is) or custom$ (kept as-is)
+                if attr_name.starts_with("host:") || (attr_name.ends_with('$') && !attr_name.starts_with("on")) {
+                    let value = if let Some(val) = attr.value {
+                        jsx_attr_value_to_expression(val, tracker, ctx)
+                    } else {
+                        ctx.ast.expression_boolean_literal(SPAN, true)
+                    };
+                    const_props.push((attr_name, value));
+                    continue;
+                }
+
+                // Regular attribute
+                has_any_visible_prop = true;
+                _has_only_events = false;
+                let value = if let Some(val) = attr.value {
+                    jsx_attr_value_to_expression(val, tracker, ctx)
+                } else {
+                    // Boolean attribute: <input disabled /> -> disabled: true
+                    ctx.ast.expression_boolean_literal(SPAN, true)
+                };
+
+                if is_const_jsx_value(&value) {
+                    const_props.push((attr_name, value));
+                } else {
+                    var_props.push((attr_name, value));
+                }
+            }
+        }
+    }
+
+    // Build children
+    let (children_expr, children_count) =
+        transform_jsx_children(&mut element.children, tracker, ctx);
+
+    // Compute flags
+    let flags = if has_spread {
+        0
+    } else if children_count > 1 {
+        1
+    } else {
+        3
+    };
+
+    // Generate key
+    let key_expr = if let Some(key) = key_value {
+        key
+    } else if children_count > 0 || has_any_visible_prop || !const_props.is_empty() || !var_props.is_empty() {
+        // Generate auto-key for elements with content (they may be siblings)
+        let key_str = format!("u6_{}", tracker.jsx_key_counter);
+        tracker.jsx_key_counter += 1;
+        let atom = ctx.ast.atom(&key_str);
+        ctx.ast.expression_string_literal(SPAN, atom, None)
+    } else {
+        ctx.ast.expression_null_literal(SPAN)
+    };
+
+    if has_spread {
+        // Use _jsxSplit for elements with spread attributes
+        tracker.needs_jsx_split = true;
+        tracker.needs_get_var_props = true;
+        tracker.needs_get_const_props = true;
+
+        // Build: _jsxSplit(tag, { ..._getVarProps(source) }, _getConstProps(source), children, flags, key)
+        // For multiple spreads, use the first one (simplification)
+        let spread_source = if !spread_args.is_empty() {
+            spread_args.remove(0)
+        } else {
+            ctx.ast.expression_identifier(SPAN, "undefined")
+        };
+
+        // Build varProps = { ..._getVarProps(source), ...otherVarProps }
+        let mut var_obj_props = ctx.ast.vec_with_capacity(1 + var_props.len());
+
+        // _getVarProps(source) spread
+        let get_var_callee = ctx.ast.expression_identifier(SPAN, "_getVarProps");
+        let mut get_var_args = ctx.ast.vec_with_capacity(1);
+        // Clone the spread source expression for _getVarProps
+        let spread_source_clone = ctx.ast.expression_identifier(SPAN,
+            // Try to extract name from spread_source
+            if let Expression::Identifier(ref ident) = spread_source {
+                ctx.ast.atom(ident.name.as_str())
+            } else {
+                ctx.ast.atom("props")
+            }
+        );
+        get_var_args.push(Argument::from(spread_source_clone));
+        let get_var_call = ctx.ast.expression_call(
+            SPAN,
+            get_var_callee,
+            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+            get_var_args,
+            false,
+        );
+        var_obj_props.push(ctx.ast.object_property_kind_spread_property(SPAN, get_var_call));
+
+        // Add non-spread var props
+        for (name, value) in var_props {
+            let key = ctx.ast.property_key_static_identifier(SPAN, ctx.ast.atom(&name));
+            var_obj_props.push(ctx.ast.object_property_kind_object_property(
+                SPAN,
+                PropertyKind::Init,
+                key,
+                value,
+                false,
+                false,
+                false,
+            ));
+        }
+
+        let var_props_expr = ctx.ast.expression_object(SPAN, var_obj_props);
+
+        // Build _getConstProps(source) for constProps argument
+        let get_const_callee = ctx.ast.expression_identifier(SPAN, "_getConstProps");
+        let mut get_const_args = ctx.ast.vec_with_capacity(1);
+        get_const_args.push(Argument::from(spread_source));
+        let const_props_expr = ctx.ast.expression_call(
+            SPAN,
+            get_const_callee,
+            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+            get_const_args,
+            false,
+        );
+
+        // Build the _jsxSplit call
+        let callee = ctx.ast.expression_identifier(SPAN, "_jsxSplit");
+        let mut arguments = ctx.ast.vec_with_capacity(6);
+        arguments.push(Argument::from(tag));
+        arguments.push(Argument::from(var_props_expr));
+        arguments.push(Argument::from(const_props_expr));
+        arguments.push(Argument::from(
+            children_expr.unwrap_or_else(|| ctx.ast.expression_null_literal(SPAN)),
+        ));
+        arguments.push(Argument::from(ctx.ast.expression_numeric_literal(
+            SPAN,
+            flags as f64,
+            None,
+            NumberBase::Decimal,
+        )));
+        arguments.push(Argument::from(key_expr));
+
+        ctx.ast.expression_call_with_pure(
+            SPAN,
+            callee,
+            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+            arguments,
+            false,
+            true,
+        )
+    } else {
+        // Use _jsxSorted for normal elements
+        tracker.needs_jsx_sorted = true;
+
+        // Build var_props object or null
+        let var_props_arg = if var_props.is_empty() {
+            ctx.ast.expression_null_literal(SPAN)
+        } else {
+            let mut props_vec = ctx.ast.vec_with_capacity(var_props.len());
+            for (name, value) in var_props {
+                let key = ctx.ast.property_key_static_identifier(SPAN, ctx.ast.atom(&name));
+                props_vec.push(ctx.ast.object_property_kind_object_property(
+                    SPAN,
+                    PropertyKind::Init,
+                    key,
+                    value,
+                    false,
+                    false,
+                    false,
+                ));
+            }
+            ctx.ast.expression_object(SPAN, props_vec)
+        };
+
+        // Build const_props object or null
+        let const_props_arg = if const_props.is_empty() {
+            ctx.ast.expression_null_literal(SPAN)
+        } else {
+            let mut props_vec = ctx.ast.vec_with_capacity(const_props.len());
+            for (name, value) in const_props {
+                // Use string literal key for names with special chars (q-e:, etc.)
+                let key = if name.contains(':') || name.contains('-') || name.contains('$') {
+                    let atom = ctx.ast.atom(&name);
+                    PropertyKey::from(ctx.ast.expression_string_literal(SPAN, atom, None))
+                } else {
+                    ctx.ast.property_key_static_identifier(SPAN, ctx.ast.atom(&name))
+                };
+                props_vec.push(ctx.ast.object_property_kind_object_property(
+                    SPAN,
+                    PropertyKind::Init,
+                    key,
+                    value,
+                    false,
+                    false,
+                    false,
+                ));
+            }
+            ctx.ast.expression_object(SPAN, props_vec)
+        };
+
+        // Build the _jsxSorted call
+        let callee = ctx.ast.expression_identifier(SPAN, "_jsxSorted");
+        let mut arguments = ctx.ast.vec_with_capacity(6);
+        arguments.push(Argument::from(tag));
+        arguments.push(Argument::from(var_props_arg));
+        arguments.push(Argument::from(const_props_arg));
+        arguments.push(Argument::from(
+            children_expr.unwrap_or_else(|| ctx.ast.expression_null_literal(SPAN)),
+        ));
+        arguments.push(Argument::from(ctx.ast.expression_numeric_literal(
+            SPAN,
+            flags as f64,
+            None,
+            NumberBase::Decimal,
+        )));
+        arguments.push(Argument::from(key_expr));
+
+        ctx.ast.expression_call_with_pure(
+            SPAN,
+            callee,
+            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+            arguments,
+            false,
+            true,
+        )
+    }
+}
+
+/// Recursively transform a JSXFragment into a _jsxSorted call with _Fragment tag.
+fn transform_jsx_fragment_inner<'a>(
+    mut fragment: JSXFragment<'a>,
+    tracker: &mut ImportTracker,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    tracker.needs_jsx_sorted = true;
+    tracker.needs_fragment = true;
+
+    let tag = ctx.ast.expression_identifier(SPAN, "_Fragment");
+
+    // Build children
+    let (children_expr, children_count) =
+        transform_jsx_children(&mut fragment.children, tracker, ctx);
+
+    // Flags: 1 for multiple children, 3 for single/no children
+    let flags: u32 = if children_count > 1 { 1 } else { 3 };
+
+    // Generate auto-key
+    let key_str = format!("u6_{}", tracker.jsx_key_counter);
+    tracker.jsx_key_counter += 1;
+    let key_atom = ctx.ast.atom(&key_str);
+    let key_expr = ctx.ast.expression_string_literal(SPAN, key_atom, None);
+
+    let callee = ctx.ast.expression_identifier(SPAN, "_jsxSorted");
+    let mut arguments = ctx.ast.vec_with_capacity(6);
+    arguments.push(Argument::from(tag));
+    arguments.push(Argument::from(ctx.ast.expression_null_literal(SPAN)));
+    arguments.push(Argument::from(ctx.ast.expression_null_literal(SPAN)));
+    arguments.push(Argument::from(
+        children_expr.unwrap_or_else(|| ctx.ast.expression_null_literal(SPAN)),
+    ));
+    arguments.push(Argument::from(ctx.ast.expression_numeric_literal(
+        SPAN,
+        flags as f64,
+        None,
+        NumberBase::Decimal,
+    )));
+    arguments.push(Argument::from(key_expr));
+
+    ctx.ast.expression_call_with_pure(
+        SPAN,
+        callee,
+        None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+        arguments,
+        false,
+        true,
+    )
+}
+
+/// Transform JSX children to expression(s).
+/// Returns (children_expression, significant_children_count).
+fn transform_jsx_children<'a>(
+    children: &mut oxc::allocator::Vec<'a, JSXChild<'a>>,
+    tracker: &mut ImportTracker,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> (Option<Expression<'a>>, usize) {
+    let mut child_exprs: Vec<Expression<'a>> = Vec::new();
+
+    // Take children out to process them
+    let mut old_children = ctx.ast.vec();
+    std::mem::swap(children, &mut old_children);
+
+    for child in old_children {
+        match child {
+            JSXChild::Text(text) => {
+                let trimmed = normalize_jsx_text(text.value.as_str());
+                if !trimmed.is_empty() {
+                    let atom = ctx.ast.atom(&trimmed);
+                    child_exprs.push(ctx.ast.expression_string_literal(SPAN, atom, None));
+                }
+            }
+            JSXChild::Element(el) => {
+                // Recursively transform child JSXElement
+                let transformed = transform_jsx_element_inner(el.unbox(), tracker, ctx);
+                child_exprs.push(transformed);
+            }
+            JSXChild::Fragment(frag) => {
+                // Recursively transform child JSXFragment
+                let transformed = transform_jsx_fragment_inner(frag.unbox(), tracker, ctx);
+                child_exprs.push(transformed);
+            }
+            JSXChild::ExpressionContainer(container) => {
+                let container = container.unbox();
+                match container.expression {
+                    JSXExpression::EmptyExpression(_) => {
+                        // Skip empty expressions {}
+                    }
+                    expr => {
+                        // The expression inside the container may already have been
+                        // transformed by exit_expression (e.g., $() calls, or inner
+                        // JSXElement expressions). Convert to Expression.
+                        let transformed = jsx_expression_to_expression(expr, ctx);
+                        // If it's a JSXElement or JSXFragment, transform it
+                        match transformed {
+                            Expression::JSXElement(el) => {
+                                let result =
+                                    transform_jsx_element_inner(el.unbox(), tracker, ctx);
+                                child_exprs.push(result);
+                            }
+                            Expression::JSXFragment(frag) => {
+                                let result =
+                                    transform_jsx_fragment_inner(frag.unbox(), tracker, ctx);
+                                child_exprs.push(result);
+                            }
+                            other => {
+                                child_exprs.push(other);
+                            }
+                        }
+                    }
+                }
+            }
+            JSXChild::Spread(spread) => {
+                let spread = spread.unbox();
+                child_exprs.push(spread.expression);
+            }
+        }
+    }
+
+    let count = child_exprs.len();
+    match count {
+        0 => (None, 0),
+        1 => (Some(child_exprs.into_iter().next().unwrap()), 1),
+        _ => {
+            let mut elements = ctx.ast.vec_with_capacity(count);
+            for child in child_exprs {
+                elements.push(ArrayExpressionElement::from(child));
+            }
+            (Some(ctx.ast.expression_array(SPAN, elements)), count)
         }
     }
 }

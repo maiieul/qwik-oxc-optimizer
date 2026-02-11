@@ -1497,4 +1497,267 @@ export const handler = $(() => 1);"#
         assert_eq!(output_extension("test.tsx", false), "tsx");
         assert_eq!(output_extension("test.ts", false), "ts");
     }
+
+    // -----------------------------------------------------------------------
+    // JSX Transformation Integration Tests (Phase 11-01)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_jsx_basic_element_transform() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const Lightweight = (props) => {
+    return <div><span>hello</span></div>;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // Should contain _jsxSorted calls instead of JSX
+        assert!(
+            main_code.contains("_jsxSorted"),
+            "Expected _jsxSorted in output: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("\"div\""),
+            "Expected \"div\" string tag: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("\"span\""),
+            "Expected \"span\" string tag: {}",
+            main_code
+        );
+        // Should NOT contain raw JSX
+        assert!(
+            !main_code.contains("<div>"),
+            "Should not contain raw JSX: {}",
+            main_code
+        );
+        // Should have _jsxSorted import
+        assert!(
+            main_code.contains("import { _jsxSorted }"),
+            "Expected _jsxSorted import: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_fragment_transform() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    return <><div/><span/></>;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("_Fragment"),
+            "Expected _Fragment in output: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("@qwik.dev/core/jsx-runtime"),
+            "Expected jsx-runtime import source: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_spread_uses_jsxsplit() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = (props) => {
+    return <button {...props}/>;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("_jsxSplit"),
+            "Expected _jsxSplit for spread: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("_getVarProps"),
+            "Expected _getVarProps for spread: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("_getConstProps"),
+            "Expected _getConstProps for spread: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_event_handler_rename() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+const App = component$(() => {
+    return <div onClick$={() => {}} onBlur$={() => {}}>click</div>;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // Event handlers should be renamed to q-e: prefix
+        assert!(
+            main_code.contains("q-e:click"),
+            "Expected q-e:click in output: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("q-e:blur"),
+            "Expected q-e:blur in output: {}",
+            main_code
+        );
+        // Should NOT contain raw onClick$ in output
+        assert!(
+            !main_code.contains("onClick$"),
+            "Should not contain raw onClick$: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_const_props_classification() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    return <div class="foo" id={someVar}>text</div>;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // class="foo" is const (string literal)
+        assert!(
+            main_code.contains("class: \"foo\""),
+            "Expected class: \"foo\" as const prop: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_no_transform_when_flag_false() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => <div>hello</div>;"#.to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: false,  // JSX should NOT be transformed
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // JSX should pass through untouched
+        assert!(
+            !main_code.contains("_jsxSorted"),
+            "Should NOT contain _jsxSorted when transpile_jsx=false: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_key_attribute() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => <div key="mykey">hello</div>;"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // key should be extracted as 6th argument, not as a prop
+        assert!(
+            main_code.contains("\"mykey\""),
+            "Expected key value in output: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_children_encoding() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => (
+    <div>
+        <span>a</span>
+        <span>b</span>
+    </div>
+);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // Multiple children should be encoded as an array
+        assert!(
+            main_code.contains("["),
+            "Expected array for multiple children: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_self_closing_null_children() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => <div/>;"#.to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // Self-closing with no children should have null and flags=3
+        assert!(
+            main_code.contains("null, null, null, 3"),
+            "Expected null children and flags=3 for self-closing: {}",
+            main_code
+        );
+    }
 }

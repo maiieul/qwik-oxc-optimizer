@@ -226,6 +226,56 @@ pub(crate) fn build_named_import<'a>(
     Statement::from(import_decl)
 }
 
+/// Build an aliased import declaration:
+///   `import { imported_name as local_name } from "source"`
+///
+/// Used for `import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime"`.
+pub(crate) fn build_aliased_import<'a>(
+    imported_name: &str,
+    local_name: &str,
+    source: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Statement<'a> {
+    let imported_atom = ctx.ast.atom(imported_name);
+    let local_atom = ctx.ast.atom(local_name);
+    let source_atom = ctx.ast.atom(source);
+
+    // Build the local binding identifier (the alias)
+    let local = ctx.ast.binding_identifier(SPAN, local_atom);
+
+    // Build the imported name (the original export name)
+    let imported = ctx
+        .ast
+        .module_export_name_identifier_name(SPAN, imported_atom);
+
+    // Build the import specifier: { imported_name as local_name }
+    let specifier = ctx
+        .ast
+        .import_specifier(SPAN, imported, local, ImportOrExportKind::Value);
+
+    // Wrap in specifiers vec
+    let specifiers = ctx
+        .ast
+        .vec1(ImportDeclarationSpecifier::ImportSpecifier(
+            ctx.ast.alloc(specifier),
+        ));
+
+    // Build the source string literal
+    let source_lit = ctx.ast.string_literal(SPAN, source_atom, None);
+
+    // Build the import declaration
+    let import_decl = ctx.ast.module_declaration_import_declaration(
+        SPAN,
+        Some(specifiers),
+        source_lit,
+        None,
+        None::<oxc::allocator::Box<'a, WithClause<'a>>>,
+        ImportOrExportKind::Value,
+    );
+
+    Statement::from(import_decl)
+}
+
 /// Build a lazy import declaration:
 ///   `const i_hash = () => import("./path_segment_hash")`
 pub(crate) fn build_lazy_import_declaration<'a>(
