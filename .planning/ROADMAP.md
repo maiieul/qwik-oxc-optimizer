@@ -54,7 +54,7 @@ Full details: `milestones/v3.0-ROADMAP.md`
 - [x] **Phase 15: Dead Code Removal** - Eliminate unused error factories, consolidate duplicate constants and functions -- completed 2026-02-11
 - [x] **Phase 16: Targeted Fixes** - Fix minify_expression_string bug and convert KNOWN_GLOBALS to HashSet -- completed 2026-02-11
 - [x] **Phase 17: Extract JSX Transform** - Move JSX transformation code from transform.rs into its own module -- completed 2026-02-11
-- [ ] **Phase 18: const_replace VisitMut Rewrite** - Replace manual AST walking with OXC VisitMut pattern
+- [x] **Phase 18: const_replace VisitMut Rewrite** - Replace manual AST walking with OXC VisitMut pattern -- completed 2026-02-11
 - [ ] **Phase 19: Spec Compliance Verification** - Confirm all changes preserve or improve 157/162 spec match
 
 ## Phase Details
@@ -127,7 +127,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 18-01-PLAN.md -- Enable ast_visit feature and rewrite const_replace.rs with VisitMut (includes test validation)
+- [x] 18-01-PLAN.md -- Enable ast_visit feature and rewrite const_replace.rs with VisitMut (includes test validation)
 
 ### Phase 19: Spec Compliance Verification
 **Goal**: All refactoring confirmed to preserve (or improve) spec compliance
@@ -166,9 +166,9 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 | 15. Dead Code Removal | v4.0 | 2/2 | Complete | 2026-02-11 |
 | 16. Targeted Fixes | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 17. Extract JSX Transform | v4.0 | 1/1 | Complete | 2026-02-11 |
-| 18. const_replace VisitMut Rewrite | v4.0 | 0/1 | Not started | - |
+| 18. const_replace VisitMut Rewrite | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 19. Spec Compliance Verification | v4.0 | 0/1 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 17 complete)*
+*Last updated: 2026-02-11 (Phase 18 complete)*
