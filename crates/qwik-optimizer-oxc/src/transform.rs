@@ -1437,7 +1437,7 @@ fn collect_reactive_deps_inner(
                     return;
                 }
 
-                if crate::collector::KNOWN_GLOBALS.contains(&root_name.as_str()) {
+                if crate::collector::KNOWN_GLOBALS.contains(root_name.as_str()) {
                     *has_non_reactive_non_const = true;
                     return;
                 }
@@ -1488,7 +1488,7 @@ fn collect_reactive_deps_inner(
                 return;
             }
 
-            if crate::collector::KNOWN_GLOBALS.contains(&name) {
+            if crate::collector::KNOWN_GLOBALS.contains(name) {
                 *has_non_reactive_non_const = true;
                 return;
             }
