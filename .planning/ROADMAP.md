@@ -124,11 +124,10 @@ Plans:
   2. Net line count reduction of at least 500 lines compared to current const_replace.rs
   3. All 165 tests still pass -- identical transformation behavior to the manual implementation
   4. The `isServer`/`isBrowser`/`isDev` replacement and dead branch elimination produce the same output as before
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 18-01: Rewrite const_replace.rs using OXC VisitMut
-- [ ] 18-02: Validate identical behavior across all spec tests
+- [ ] 18-01-PLAN.md -- Enable ast_visit feature and rewrite const_replace.rs with VisitMut (includes test validation)
 
 ### Phase 19: Spec Compliance Verification
 **Goal**: All refactoring confirmed to preserve (or improve) spec compliance
@@ -167,7 +166,7 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 | 15. Dead Code Removal | v4.0 | 2/2 | Complete | 2026-02-11 |
 | 16. Targeted Fixes | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 17. Extract JSX Transform | v4.0 | 1/1 | Complete | 2026-02-11 |
-| 18. const_replace VisitMut Rewrite | v4.0 | 0/2 | Not started | - |
+| 18. const_replace VisitMut Rewrite | v4.0 | 0/1 | Not started | - |
 | 19. Spec Compliance Verification | v4.0 | 0/1 | Not started | - |
 
 ---
