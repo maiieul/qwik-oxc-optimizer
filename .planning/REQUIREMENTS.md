@@ -1,4 +1,4 @@
-# Requirements: Qwik Optimizer — SWC-to-OXC Port
+# Requirements: Qwik Optimizer -- SWC-to-OXC Port
 
 **Defined:** 2026-02-10
 **Core Value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
@@ -17,7 +17,7 @@ Requirements for the OXC optimizer port. Each maps to roadmap phases.
 ### Core Transforms
 
 - [ ] **CORE-01**: Optimizer detects all `$()` call sites (component$, useTask$, useVisibleTask$, etc.) from `@qwik.dev/core` imports
-- [ ] **CORE-02**: Optimizer renames `$`-suffixed callers to `Qrl`-suffixed (component$ → componentQrl, useTask$ → useTaskQrl)
+- [ ] **CORE-02**: Optimizer renames `$`-suffixed callers to `Qrl`-suffixed (component$ -> componentQrl, useTask$ -> useTaskQrl)
 - [ ] **CORE-03**: Optimizer generates `qrl()` calls with correct import identifier and segment export name for segment entry strategy
 - [ ] **CORE-04**: Optimizer generates `inlinedQrl()` calls with function body and hash for inline/hoist entry strategies
 
@@ -51,7 +51,7 @@ Requirements for the OXC optimizer port. Each maps to roadmap phases.
 
 - [ ] **ANNO-01**: Optimizer adds `/*#__PURE__*/` annotations to all framework replacement calls (_jsxSorted, _jsxSplit, componentQrl, qrl, inlinedQrl, _wrapProp, _fnSignal, _qrlSync, _noopQrl, _restProps)
 - [ ] **ANNO-02**: Optimizer replaces `isServer`/`isDev`/`isBrowser` with boolean literals based on build mode
-- [ ] **ANNO-03**: Optimizer eliminates dead branches after const replacement (if (false) { ... } → removed)
+- [ ] **ANNO-03**: Optimizer eliminates dead branches after const replacement (if (false) { ... } -> removed)
 - [ ] **ANNO-04**: Optimizer replaces stripped $() calls with `_noopQrl("s_HASH")` in prod mode
 - [ ] **ANNO-05**: Optimizer handles sync$ by generating `_qrlSync(fn, stringified_fn)` with minified function string
 
@@ -90,48 +90,48 @@ Requirements for the OXC optimizer port. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUN-01 | — | Pending |
-| FOUN-02 | — | Pending |
-| FOUN-03 | — | Pending |
-| FOUN-04 | — | Pending |
-| CORE-01 | — | Pending |
-| CORE-02 | — | Pending |
-| CORE-03 | — | Pending |
-| CORE-04 | — | Pending |
-| CAPT-01 | — | Pending |
-| CAPT-02 | — | Pending |
-| CAPT-03 | — | Pending |
-| CAPT-04 | — | Pending |
-| CAPT-05 | — | Pending |
-| SEGM-01 | — | Pending |
-| SEGM-02 | — | Pending |
-| SEGM-03 | — | Pending |
-| SEGM-04 | — | Pending |
-| JSX-01 | — | Pending |
-| JSX-02 | — | Pending |
-| JSX-03 | — | Pending |
-| JSX-04 | — | Pending |
-| JSX-05 | — | Pending |
-| JSX-06 | — | Pending |
-| JSX-07 | — | Pending |
-| JSX-08 | — | Pending |
-| ANNO-01 | — | Pending |
-| ANNO-02 | — | Pending |
-| ANNO-03 | — | Pending |
-| ANNO-04 | — | Pending |
-| ANNO-05 | — | Pending |
-| TEST-01 | — | Pending |
-| TEST-02 | — | Pending |
-| TEST-03 | — | Pending |
-| EMIT-01 | — | Pending |
-| EMIT-02 | — | Pending |
-| EMIT-03 | — | Pending |
+| FOUN-01 | Phase 7 | Pending |
+| FOUN-02 | Phase 7 | Pending |
+| FOUN-03 | Phase 7 | Pending |
+| FOUN-04 | Phase 7 | Pending |
+| CORE-01 | Phase 8 | Pending |
+| CORE-02 | Phase 8 | Pending |
+| CORE-03 | Phase 8 | Pending |
+| CORE-04 | Phase 8 | Pending |
+| CAPT-01 | Phase 9 | Pending |
+| CAPT-02 | Phase 9 | Pending |
+| CAPT-03 | Phase 9 | Pending |
+| CAPT-04 | Phase 9 | Pending |
+| CAPT-05 | Phase 9 | Pending |
+| SEGM-01 | Phase 10 | Pending |
+| SEGM-02 | Phase 10 | Pending |
+| SEGM-03 | Phase 10 | Pending |
+| SEGM-04 | Phase 10 | Pending |
+| JSX-01 | Phase 11 | Pending |
+| JSX-02 | Phase 11 | Pending |
+| JSX-03 | Phase 11 | Pending |
+| JSX-04 | Phase 11 | Pending |
+| JSX-05 | Phase 11 | Pending |
+| JSX-06 | Phase 11 | Pending |
+| JSX-07 | Phase 11 | Pending |
+| JSX-08 | Phase 11 | Pending |
+| ANNO-01 | Phase 12 | Pending |
+| ANNO-02 | Phase 12 | Pending |
+| ANNO-03 | Phase 12 | Pending |
+| ANNO-04 | Phase 12 | Pending |
+| ANNO-05 | Phase 12 | Pending |
+| TEST-01 | Phase 7 | Pending |
+| TEST-02 | Phase 13 | Pending |
+| TEST-03 | Phase 13 | Pending |
+| EMIT-01 | Phase 10 | Pending |
+| EMIT-02 | Phase 13 | Pending |
+| EMIT-03 | Phase 10 | Pending |
 
 **Coverage:**
 - v3.0 requirements: 36 total
-- Mapped to phases: 0
-- Unmapped: 36 (roadmap pending)
+- Mapped to phases: 36
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-10*
-*Last updated: 2026-02-10 after initial definition*
+*Last updated: 2026-02-10 after roadmap creation (all 36 requirements mapped to phases 7-13)*
