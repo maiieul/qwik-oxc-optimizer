@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 18 -- const_replace VisitMut Rewrite (v4.0 Code Quality Refactor)
+**Current focus:** Phase 19 -- Spec Compliance Verification (v4.0 Code Quality Refactor) -- COMPLETE
 
 ## Current Position
 
-Phase: 18 of 19 (const_replace VisitMut Rewrite) -- COMPLETE
+Phase: 19 of 19 (Spec Compliance Verification) -- COMPLETE
 Plan: 1 of 1 in current phase (all plans complete)
-Status: Phase Complete
-Last activity: 2026-02-11 -- Completed 18-01-PLAN.md (const_replace VisitMut rewrite)
+Status: Milestone Complete (v4.0 Code Quality Refactor)
+Last activity: 2026-02-11 -- Completed 19-01-PLAN.md (spec compliance verification)
 
-Progress: [==============================....] 88% (40/43 plans lifetime, 7/10 v4.0)
+Progress: [==================================] 100% (41/43 plans lifetime, 8/10 v4.0)
 
 ## Performance Metrics
 
@@ -34,9 +34,9 @@ Progress: [==============================....] 88% (40/43 plans lifetime, 7/10 v
 - Total execution time: ~201min
 
 **Velocity (v4.0):**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 5min
-- Total execution time: ~37min
+- Total execution time: ~39min
 
 ## Accumulated Context
 
@@ -55,6 +55,7 @@ Full decision log in PROJECT.md Key Decisions table.
 - [17-01] Kept ImportTracker in transform.rs; jsx_transform imports via crate::transform::ImportTracker
 - [18-01] Used two separate VisitMut impls (ConstReplacer + DeadBranchEliminator) for clean two-pass approach
 - [18-01] Bottom-up traversal in DeadBranchEliminator for correct simplification ordering
+- [19-01] v4.0 regression guard uses inline validation with hard numeric assertions (>= 157 modules, >= 250 metadata, == 0 errors)
 
 ### Pending Todos
 
@@ -67,5 +68,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 18-01-PLAN.md (phase 18 complete -- const_replace VisitMut rewrite)
+Stopped at: Completed 19-01-PLAN.md (phase 19 complete -- v4.0 milestone complete)
 Resume file: None
