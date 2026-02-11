@@ -52,7 +52,7 @@ Full details: `milestones/v3.0-ROADMAP.md`
 
 - [x] **Phase 14: Style Cleanup** - Strip unnecessary comments, add early returns, normalize formatting across the crate -- completed 2026-02-11
 - [x] **Phase 15: Dead Code Removal** - Eliminate unused error factories, consolidate duplicate constants and functions -- completed 2026-02-11
-- [ ] **Phase 16: Targeted Fixes** - Fix minify_expression_string bug and convert KNOWN_GLOBALS to HashSet
+- [x] **Phase 16: Targeted Fixes** - Fix minify_expression_string bug and convert KNOWN_GLOBALS to HashSet -- completed 2026-02-11
 - [ ] **Phase 17: Extract JSX Transform** - Move JSX transformation code from transform.rs into its own module
 - [ ] **Phase 18: const_replace VisitMut Rewrite** - Replace manual AST walking with OXC VisitMut pattern
 - [ ] **Phase 19: Spec Compliance Verification** - Confirm all changes preserve or improve 157/162 spec match
@@ -100,7 +100,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 16-01-PLAN.md -- Fix minify_expression_string space bug and convert KNOWN_GLOBALS to LazyLock HashSet
+- [x] 16-01-PLAN.md -- Fix minify_expression_string space bug and convert KNOWN_GLOBALS to LazyLock HashSet
 
 ### Phase 17: Extract JSX Transform
 **Goal**: JSX transformation logic lives in its own module, and transform.rs is shorter and focused
@@ -166,11 +166,11 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 | 13. Source Maps + Full Validation | v3.0 | 4/4 | Complete | 2026-02-11 |
 | 14. Style Cleanup | v4.0 | 2/2 | Complete | 2026-02-11 |
 | 15. Dead Code Removal | v4.0 | 2/2 | Complete | 2026-02-11 |
-| 16. Targeted Fixes | v4.0 | 0/1 | Not started | - |
+| 16. Targeted Fixes | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 17. Extract JSX Transform | v4.0 | 0/2 | Not started | - |
 | 18. const_replace VisitMut Rewrite | v4.0 | 0/2 | Not started | - |
 | 19. Spec Compliance Verification | v4.0 | 0/1 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 16 planned)*
+*Last updated: 2026-02-11 (Phase 16 complete)*
