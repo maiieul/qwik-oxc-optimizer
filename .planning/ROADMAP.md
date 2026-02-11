@@ -36,7 +36,7 @@ Full details: `milestones/v2.0-ROADMAP.md`
 
 - [x] **Phase 7: Crate Foundation + Test Harness** - Compilable crate skeleton with spec-based test infrastructure -- completed 2026-02-11
 - [x] **Phase 8: Core Detection + QRL Transforms** - Dollar call detection and QRL wrapping (CONV-01, CONV-02) -- completed 2026-02-10
-- [ ] **Phase 9: Capture Analysis + Props Destructuring** - Scope analysis and props transformation (CONV-11, CONV-05)
+- [x] **Phase 9: Capture Analysis + Props Destructuring** - Scope analysis and props transformation (CONV-11, CONV-05) -- completed 2026-02-10
 - [ ] **Phase 10: Segment Extraction + Codegen** - Multi-module output and lazy imports (CONV-08, CONV-06)
 - [ ] **Phase 11: JSX + Signal Transforms** - JSX compilation and signal optimization (CONV-03, CONV-04, CONV-12, CONV-14)
 - [ ] **Phase 12: Annotations + Stripping** - PURE annotations, const replacement, code stripping, sync$ (CONV-07, CONV-10, CONV-09, CONV-13)
@@ -87,8 +87,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 09-01-PLAN.md -- Props destructuring transform (props_destructuring.rs, CONV-11)
-- [ ] 09-02-PLAN.md -- Capture analysis (collector.rs, transform.rs, CONV-05)
+- [x] 09-01-PLAN.md -- Props destructuring transform (props_destructuring.rs, CONV-11)
+- [x] 09-02-PLAN.md -- Capture analysis (collector.rs, transform.rs, CONV-05)
 
 ### Phase 10: Segment Extraction + Codegen
 **Goal**: Optimizer produces separate module files for extracted segments with correct imports, exports, and lazy loading declarations
@@ -166,7 +166,7 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 6. Secondary Patterns & Cross-Reference | v2.0 | 3/3 | Complete | 2026-02-11 |
 | 7. Crate Foundation + Test Harness | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 8. Core Detection + QRL Transforms | v3.0 | 2/2 | Complete | 2026-02-10 |
-| 9. Capture Analysis + Props Destructuring | v3.0 | 0/2 | Not started | - |
+| 9. Capture Analysis + Props Destructuring | v3.0 | 2/2 | Complete | 2026-02-10 |
 | 10. Segment Extraction + Codegen | v3.0 | 0/2 | Not started | - |
 | 11. JSX + Signal Transforms | v3.0 | 0/2 | Not started | - |
 | 12. Annotations + Stripping | v3.0 | 0/2 | Not started | - |
@@ -174,4 +174,4 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-10 (Phase 9 planned)*
+*Last updated: 2026-02-10 (Phase 9 complete)*
