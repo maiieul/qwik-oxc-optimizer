@@ -110,6 +110,18 @@ pub fn transform_modules(
         // sees the replaced boolean literals instead of the original identifiers.
         const_replace::replace_build_constants(&mut program, &transform_options, &allocator);
 
+        // 3c. Run export stripping pre-pass if strip_exports is configured.
+        // This replaces stripped export bodies with throw stubs BEFORE the
+        // traverse, so $-call detection won't find calls inside stripped exports.
+        if !transform_options.strip_exports.is_empty() {
+            filter_exports::filter_exports(
+                &mut program,
+                &transform_options.strip_exports,
+                &transform_options.strip_ctx_name,
+                &allocator,
+            );
+        }
+
         // 4. Create QwikTransform and run traverse
         let mut qwik_transform =
             transform::QwikTransform::new(&transform_options, collect_result, &input.path);
