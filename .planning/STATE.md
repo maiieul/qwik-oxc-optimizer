@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 17 -- Extract JSX Transform (v4.0 Code Quality Refactor)
+**Current focus:** Phase 18 -- const_replace VisitMut Rewrite (v4.0 Code Quality Refactor)
 
 ## Current Position
 
-Phase: 17 of 19 (Extract JSX Transform) -- COMPLETE
+Phase: 18 of 19 (const_replace VisitMut Rewrite) -- COMPLETE
 Plan: 1 of 1 in current phase (all plans complete)
 Status: Phase Complete
-Last activity: 2026-02-11 -- Completed 17-01-PLAN.md (JSX transform extraction)
+Last activity: 2026-02-11 -- Completed 18-01-PLAN.md (const_replace VisitMut rewrite)
 
-Progress: [=============================.....] 84% (39/43 plans lifetime, 6/10 v4.0)
+Progress: [==============================....] 88% (40/43 plans lifetime, 7/10 v4.0)
 
 ## Performance Metrics
 
@@ -34,9 +34,9 @@ Progress: [=============================.....] 84% (39/43 plans lifetime, 6/10 v
 - Total execution time: ~201min
 
 **Velocity (v4.0):**
-- Total plans completed: 6
-- Average duration: 6min
-- Total execution time: ~33min
+- Total plans completed: 7
+- Average duration: 5min
+- Total execution time: ~37min
 
 ## Accumulated Context
 
@@ -53,6 +53,8 @@ Full decision log in PROJECT.md Key Decisions table.
 - [16-01] Used LazyLock<HashSet> over phf::Set for KNOWN_GLOBALS -- stays in std, no extra dependency
 - [17-01] Used import block instead of qualified paths for jsx_transform delegation
 - [17-01] Kept ImportTracker in transform.rs; jsx_transform imports via crate::transform::ImportTracker
+- [18-01] Used two separate VisitMut impls (ConstReplacer + DeadBranchEliminator) for clean two-pass approach
+- [18-01] Bottom-up traversal in DeadBranchEliminator for correct simplification ordering
 
 ### Pending Todos
 
@@ -65,5 +67,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 17-01-PLAN.md (phase 17 complete -- JSX transform extraction)
+Stopped at: Completed 18-01-PLAN.md (phase 18 complete -- const_replace VisitMut rewrite)
 Resume file: None
