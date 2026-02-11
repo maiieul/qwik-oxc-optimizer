@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 7 -- Crate Foundation + Test Harness
+**Current focus:** Phase 8 -- Core Detection + QRL Transforms
 
 ## Current Position
 
-Phase: 7 of 13 (Crate Foundation + Test Harness) -- COMPLETE
-Plan: 2 of 2 in current phase -- COMPLETE
-Status: Phase 7 complete. Ready for Phase 8.
-Last activity: 2026-02-11 -- Completed 07-02: test harness parsing all 162 spec files
+Phase: 8 of 13 (Core Detection + QRL Transforms)
+Plan: 1 of 2 in current phase -- COMPLETE
+Status: Plan 08-01 complete (parse + collect + hash pipeline). Ready for 08-02.
+Last activity: 2026-02-11 -- Completed 08-01: parse/collect/hash pipeline
 
-Progress: [#######░░░░░░░░░░░░░] 35% (19/31 total plans across all milestones; v3.0 2/14)
+Progress: [########░░░░░░░░░░░░] 37% (20/31 total plans across all milestones; v3.0 3/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [#######░░░░░░░░░░░░░] 35% (19/31 total plan
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 2
-- Average duration: 5.5min
-- Total execution time: 11min
+- Total plans completed: 3
+- Average duration: 5.7min
+- Total execution time: 17min
 
 ## Accumulated Context
 
@@ -48,6 +48,9 @@ Recent decisions affecting current work:
 - oxc_traverse 0.113 TraverseCtx requires State generic parameter
 - Case-insensitive config key matching for spec parser (Transpile TS vs Transpile Ts)
 - EmitMode::Test mapped to EmitMode::Lib (specs mark Test as default)
+- base64 made non-optional in Cargo.toml (hash needs it unconditionally)
+- OXC 0.113 BindingPattern is a flat enum (no kind field); JSXExpression uses inherit_variants! (Expression variants directly on enum)
+- Collector uses two-pass recursive walk (not Traverse trait) for read-only analysis
 
 ### Pending Todos
 
@@ -60,5 +63,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 07-02-PLAN.md (test harness). Phase 7 complete. Ready for Phase 8 (Tier 1: Basic Extraction).
+Stopped at: Completed 08-01-PLAN.md (parse/collect/hash pipeline). Ready for 08-02 (QRL transforms).
 Resume file: None
