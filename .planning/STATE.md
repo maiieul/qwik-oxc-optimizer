@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 ## Current Position
 
-Phase: 12 of 13 (Annotations & Stripping) -- IN PROGRESS
-Plan: 2 of 2 in current phase -- Plan 02 COMPLETE
-Status: Plan 02 complete. Code stripping (_noopQrl for stripped ctx names) and sync$ serialization (_qrlSync with minified function strings) implemented. 139 unit tests + 5 spec tests pass. Plan 01 (PURE annotations) has tests from prior work.
-Last activity: 2026-02-11 -- Completed 12-02: Code stripping and sync$ serialization
+Phase: 12 of 13 (Annotations & Stripping) -- COMPLETE
+Plan: 2 of 2 in current phase -- All plans complete
+Status: Phase 12 complete. PURE annotations on _jsxSorted/_jsxSplit, isServer/isBrowser/isDev const replacement with dead branch elimination, code stripping, and sync$ serialization all implemented. 146 unit tests + 5 spec tests pass.
+Last activity: 2026-02-11 -- Completed 12-01: PURE annotations & const replacement
 
-Progress: [###############░░░░░] 56% (28/31 total plans across all milestones; v3.0 11/14)
+Progress: [################░░░░] 58% (29/31 total plans across all milestones; v3.0 12/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [###############░░░░░] 56% (28/31 total plans across all mil
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 11
+- Total plans completed: 12
 - Average duration: 12min
-- Total execution time: ~150min
+- Total execution time: ~165min
 
 ## Accumulated Context
 
@@ -82,6 +82,10 @@ Recent decisions affecting current work:
 - Capture stack frame pushed for sync$ calls to isolate identifiers (popped on exit, frame discarded)
 - Strategy-aware import tracking: _qrlSync import only added to main module for top-level sync$ calls
 - Filter stripped children from finalize_segments() child_lazy_imports to prevent unnecessary lazy imports in parent
+- const_replace runs as pre-pass before traverse_mut so segment body serialization sees replaced boolean literals
+- AstBuilder::new(&allocator) for AST construction outside traverse context (no TraverseCtx)
+- Build constant imports stripped after identifier replacement for clean output matching spec
+- OXC Box::unbox() for taking ownership of boxed AST nodes in dead branch elimination
 
 ### Pending Todos
 
@@ -94,5 +98,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 12-02-PLAN.md. Code stripping and sync$ serialization implemented. Phase 12 Plan 01 (PURE annotations) still pending.
+Stopped at: Completed 12-01-PLAN.md. Phase 12 fully complete. All annotations and stripping features implemented. Ready for Phase 13.
 Resume file: None
