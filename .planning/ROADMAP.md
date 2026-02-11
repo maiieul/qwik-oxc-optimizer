@@ -83,11 +83,11 @@ Plans:
   2. words.rs has a single constant for the Qwik core package identifier (no BUILDER_IO_QWIK / QWIK_CORE_ID duplication)
   3. collector.rs has one canonical function for collecting binding names from patterns (near-duplicates consolidated)
   4. `cargo build` produces no unused warnings without allow-unused attributes suppressing them
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 15-01: Clean errors.rs unused factories and words.rs duplicate constants
-- [ ] 15-02: Consolidate collector.rs binding-name functions
+- [ ] 15-01-PLAN.md -- Delete unused functions/constants from errors.rs, words.rs, entry_strategy.rs, and 4 other source files
+- [ ] 15-02-PLAN.md -- Consolidate collector.rs binding-name functions and annotate types.rs data-model fields
 
 ### Phase 16: Targeted Fixes
 **Goal**: Known bug fixed and known performance bottleneck addressed
@@ -173,4 +173,4 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 14 complete)*
+*Last updated: 2026-02-11 (Phase 15 planned)*
