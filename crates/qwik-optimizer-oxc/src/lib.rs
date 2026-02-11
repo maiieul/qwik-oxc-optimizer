@@ -68,7 +68,6 @@ pub fn transform_modules(
 
     let emit_options = emit::EmitOptions {
         source_maps: config.source_maps,
-        minify: config.minify.clone(),
     };
 
     for input in &config.input {

@@ -6,12 +6,9 @@
 
 use std::path::PathBuf;
 
-use crate::types::MinifyMode;
-
 /// Options controlling code emission.
 pub(crate) struct EmitOptions {
     pub source_maps: bool,
-    pub minify: MinifyMode,
 }
 
 /// Result of emitting a program to JavaScript source.
@@ -60,26 +57,6 @@ pub(crate) fn emit_module<'a>(
     }
 }
 
-/// Normalize JavaScript code by parsing and re-emitting.
-///
-/// Parses the string as a JavaScript module, then runs Codegen to produce
-/// consistently formatted output. If parsing fails, returns the original
-/// code unchanged (graceful degradation for string-constructed code).
-pub(crate) fn normalize_code(code: &str) -> String {
-    let allocator = oxc::allocator::Allocator::default();
-    let source_in_arena = allocator.alloc_str(code);
-    let source_type = oxc::span::SourceType::mjs();
-    let ret = oxc::parser::Parser::new(&allocator, source_in_arena, source_type).parse();
-    if ret.panicked || !ret.errors.is_empty() {
-        // If parsing fails, return original code unchanged
-        return code.to_string();
-    }
-    oxc::codegen::Codegen::new()
-        .with_source_text(source_in_arena)
-        .build(&ret.program)
-        .code
-}
-
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -99,7 +76,6 @@ mod tests {
 
         let options = EmitOptions {
             source_maps: true,
-            minify: MinifyMode::None,
         };
 
         let result = emit_module(&ret.program, source_in_arena, &options, "test.js");
@@ -142,7 +118,6 @@ mod tests {
 
         let options = EmitOptions {
             source_maps: false,
-            minify: MinifyMode::None,
         };
 
         let result = emit_module(&ret.program, source_in_arena, &options, "test.js");

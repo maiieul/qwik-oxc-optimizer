@@ -11,61 +11,6 @@ use oxc::ast::ast::*;
 use oxc::span::SPAN;
 use oxc_traverse::TraverseCtx;
 
-use crate::types::ImportInfo;
-
-/// Describes what imports to add/remove/keep after transformation.
-pub(crate) struct ImportChanges {
-    /// Import specifiers to add (e.g., "componentQrl", "qrl").
-    pub to_add: Vec<String>,
-
-    /// Import specifiers to remove (e.g., "component$").
-    pub to_remove: Vec<String>,
-
-    /// Import specifiers to keep unchanged.
-    pub to_keep: Vec<String>,
-}
-
-/// Compute what import changes are needed after transformation.
-pub(crate) fn compute_import_changes(
-    original_imports: &[ImportInfo],
-    needed_qrl_names: &[String],
-    needs_qrl: bool,
-    needs_inlined_qrl: bool,
-) -> ImportChanges {
-    let mut to_add = Vec::new();
-    let mut to_remove = Vec::new();
-    let mut to_keep = Vec::new();
-
-    for import in original_imports {
-        if import.is_qwik_core {
-            for spec in &import.specifiers {
-                if spec == "$" || spec.ends_with('$') {
-                    to_remove.push(spec.clone());
-                } else {
-                    to_keep.push(spec.clone());
-                }
-            }
-        }
-    }
-
-    for qrl_name in needed_qrl_names {
-        to_add.push(qrl_name.clone());
-    }
-
-    if needs_qrl {
-        to_add.push("qrl".to_string());
-    }
-    if needs_inlined_qrl {
-        to_add.push("inlinedQrl".to_string());
-    }
-
-    ImportChanges {
-        to_add,
-        to_remove,
-        to_keep,
-    }
-}
-
 /// Build a segment-strategy QRL call expression:
 ///   `qrl(i_hashValue, "SegmentName_hash")`                        -- no captures
 ///   `qrl(i_hashValue, "SegmentName_hash", [captured_vars])`       -- with captures
@@ -406,44 +351,3 @@ pub(crate) fn build_qrl_sync_call<'a>(
     )
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_compute_import_changes_basic() {
-        let imports = vec![ImportInfo {
-            source: "@qwik.dev/core".to_string(),
-            specifiers: vec![
-                "$".to_string(),
-                "component$".to_string(),
-                "useStore".to_string(),
-            ],
-            is_qwik_core: true,
-            span: (0, 50),
-        }];
-
-        let changes = compute_import_changes(&imports, &["componentQrl".to_string()], true, false);
-
-        assert!(changes.to_remove.contains(&"$".to_string()));
-        assert!(changes.to_remove.contains(&"component$".to_string()));
-        assert!(changes.to_keep.contains(&"useStore".to_string()));
-        assert!(changes.to_add.contains(&"componentQrl".to_string()));
-        assert!(changes.to_add.contains(&"qrl".to_string()));
-    }
-
-    #[test]
-    fn test_compute_import_changes_inline() {
-        let imports = vec![ImportInfo {
-            source: "@qwik.dev/core".to_string(),
-            specifiers: vec!["$".to_string()],
-            is_qwik_core: true,
-            span: (0, 30),
-        }];
-
-        let changes = compute_import_changes(&imports, &[], false, true);
-
-        assert!(changes.to_add.contains(&"inlinedQrl".to_string()));
-        assert!(!changes.to_add.contains(&"qrl".to_string()));
-    }
-}

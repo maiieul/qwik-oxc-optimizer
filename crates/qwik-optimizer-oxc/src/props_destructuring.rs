@@ -394,7 +394,7 @@ fn rewrite_call_arguments<'a>(
 ) {
     for i in 0..arguments.len() {
         match &arguments[i] {
-            Argument::SpreadElement(spread) => {
+            Argument::SpreadElement(_spread) => {
                 let placeholder = Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
                 let old = std::mem::replace(&mut arguments[i], placeholder);
                 if let Argument::SpreadElement(mut spread) = old {
@@ -451,84 +451,6 @@ fn argument_as_expression_mut<'b, 'a>(
     _arg: &'b mut Argument<'a>,
 ) -> Option<&'b mut Expression<'a>> {
     None
-}
-
-/// Rewrite identifier references in array expression elements.
-/// Since ArrayExpressionElement inherits Expression variants, we need
-/// to handle the element replacement at the array level.
-pub(crate) fn rewrite_array_elements<'a>(
-    elements: &mut oxc::allocator::Vec<'a, ArrayExpressionElement<'a>>,
-    prop_map: &[(String, String)],
-    raw_props_name: &str,
-    ctx: &mut TraverseCtx<'a, ()>,
-) {
-    for i in 0..elements.len() {
-        let needs_replace = match &elements[i] {
-            ArrayExpressionElement::Identifier(ident) => {
-                let name = ident.name.as_str();
-                prop_map.iter().any(|(local, _)| local == name)
-            }
-            _ => false,
-        };
-
-        if needs_replace {
-            if let ArrayExpressionElement::Identifier(ident) = &elements[i] {
-                let name = ident.name.to_string();
-                if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
-                    let obj = ctx
-                        .ast
-                        .expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
-                    let prop_name = ctx
-                        .ast
-                        .identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
-                    let member = ctx
-                        .ast
-                        .static_member_expression(SPAN, obj, prop_name, false);
-                    let member_expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
-                    elements[i] = ArrayExpressionElement::from(member_expr);
-                }
-            }
-        }
-    }
-}
-
-/// Rewrite identifier references in call expression arguments.
-/// Since Argument inherits Expression variants, we need to handle
-/// the argument replacement at the arguments level.
-pub(crate) fn rewrite_arguments<'a>(
-    arguments: &mut oxc::allocator::Vec<'a, Argument<'a>>,
-    prop_map: &[(String, String)],
-    raw_props_name: &str,
-    ctx: &mut TraverseCtx<'a, ()>,
-) {
-    for i in 0..arguments.len() {
-        let needs_replace = match &arguments[i] {
-            Argument::Identifier(ident) => {
-                let name = ident.name.as_str();
-                prop_map.iter().any(|(local, _)| local == name)
-            }
-            _ => false,
-        };
-
-        if needs_replace {
-            if let Argument::Identifier(ident) = &arguments[i] {
-                let name = ident.name.to_string();
-                if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
-                    let obj = ctx
-                        .ast
-                        .expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
-                    let prop_name = ctx
-                        .ast
-                        .identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
-                    let member = ctx
-                        .ast
-                        .static_member_expression(SPAN, obj, prop_name, false);
-                    let member_expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
-                    arguments[i] = Argument::from(member_expr);
-                }
-            }
-        }
-    }
 }
 
 /// Build a `_restProps(_rawProps, ["key1", "key2"])` call expression.

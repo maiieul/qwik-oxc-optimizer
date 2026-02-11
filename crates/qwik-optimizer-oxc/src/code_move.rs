@@ -7,7 +7,7 @@
 
 use crate::types::{SegmentData, TransformOptions};
 
-/// Build a segment's JavaScript source code.
+/// Build a segment's JavaScript source code with optional hoisted function declarations.
 ///
 /// Takes the serialized body code and segment metadata, constructs a
 /// complete JavaScript module string with:
@@ -19,15 +19,6 @@ use crate::types::{SegmentData, TransformOptions};
 /// 6. Export declaration (`export const name = body`)
 ///
 /// Returns the complete JavaScript module source code.
-pub(crate) fn build_segment_code(
-    body_code: &str,
-    segment: &SegmentData,
-    options: &TransformOptions,
-) -> String {
-    build_segment_code_with_hoisted(body_code, segment, options, &[])
-}
-
-/// Build a segment's JavaScript source code with optional hoisted function declarations.
 pub(crate) fn build_segment_code_with_hoisted(
     body_code: &str,
     segment: &SegmentData,
@@ -315,7 +306,7 @@ mod tests {
         let segment = make_segment("handler");
         let body_code = "() => console.log(\"hello\")";
 
-        let result = build_segment_code(body_code, &segment, &options);
+        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[]);
 
         assert!(
             result.contains("export const handler_abc123 = () => console.log(\"hello\")"),
@@ -338,7 +329,7 @@ mod tests {
 
         let body_code = "() => state.count";
 
-        let result = build_segment_code(body_code, &segment, &options);
+        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[]);
 
         assert!(
             result.contains("import { _captures } from \"@qwik.dev/core\""),
@@ -371,7 +362,7 @@ mod tests {
 
         let body_code = "() => {\n  return state.count;\n}";
 
-        let result = build_segment_code(body_code, &segment, &options);
+        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[]);
 
         assert!(
             result.contains("const state = _captures[0]"),
@@ -397,7 +388,7 @@ mod tests {
 
         let body_code = "() => {\n  return qrl(i_xyz789, \"App_component_1_xyz789\");\n}";
 
-        let result = build_segment_code(body_code, &segment, &options);
+        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[]);
 
         assert!(
             result.contains("import { qrl } from \"@qwik.dev/core\""),
