@@ -77,6 +77,12 @@ pub(crate) struct ImportTracker {
     /// Whether the module needs `import { _chk }` from core (bind:checked).
     pub needs_chk: bool,
 
+    /// Whether the module needs `import { _noopQrl }` from core (stripped ctx calls).
+    pub needs_noop_qrl: bool,
+
+    /// Whether the module needs `import { _qrlSync }` from core (sync$ calls).
+    pub needs_qrl_sync: bool,
+
     /// Monotonic counter for generating unique JSX key suffixes like "u6_0", "u6_1".
     pub jsx_key_counter: u32,
 
@@ -115,6 +121,12 @@ pub(crate) struct QwikTransform {
     /// Each entry is (fn_declaration_code, str_declaration_code).
     /// e.g., ("const _hf0 = (p0)=>p0.value;", "const _hf0_str = \"p0.value\";")
     hoisted_function_stmts: Vec<(String, String)>,
+
+    /// Set of span starts for segments that are stripped (matching strip_ctx_name).
+    stripped_segments: HashSet<u32>,
+
+    /// Set of span starts for sync$() calls.
+    pending_sync_calls: HashSet<u32>,
 }
 
 impl QwikTransform {
@@ -134,6 +146,8 @@ impl QwikTransform {
             capture_stack: Vec::new(),
             segment_body_codes: Vec::new(),
             hoisted_function_stmts: Vec::new(),
+            stripped_segments: HashSet::new(),
+            pending_sync_calls: HashSet::new(),
         }
     }
 
@@ -160,14 +174,32 @@ impl QwikTransform {
         &self.hoisted_function_stmts
     }
 
+    /// Get the set of span starts for stripped segments.
+    pub fn stripped_segments(&self) -> &HashSet<u32> {
+        &self.stripped_segments
+    }
+
+    /// Check if a ctx name should be stripped based on strip_ctx_name config.
+    fn should_strip_ctx_name(&self, ctx_name: &str) -> bool {
+        self.options.strip_ctx_name.iter().any(|stripped| {
+            let name_without_dollar = ctx_name.trim_end_matches('$');
+            name_without_dollar.to_lowercase().contains(&stripped.to_lowercase())
+        })
+    }
+
     /// Post-transform processing: populate child segment metadata.
     /// Must be called after traverse_mut completes.
     pub fn finalize_segments(&mut self) {
         // Build a list of child segment info: (parent_display_name, child_hash, child_import_path)
+        // Skip stripped segments -- they use _noopQrl, not qrl(i_hash, ...), so no lazy import needed.
         let child_info: Vec<(String, String, String)> = self
             .segments
             .iter()
             .filter_map(|seg| {
+                // Skip stripped children -- they don't need lazy imports in parent
+                if self.stripped_segments.contains(&seg.span.0) {
+                    return None;
+                }
                 seg.parent.as_ref().map(|parent_name| {
                     let canonical = format!("{}_{}", seg.display_name, seg.hash);
                     let import_path = format!("./{}", canonical);
@@ -330,21 +362,28 @@ impl QwikTransform {
             needs_qrl_import: false,   // Populated by finalize_segments
         };
 
-        // Track imports based on strategy
-        let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
-                || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
+        // Check if this segment will be stripped
+        let will_be_stripped = match kind {
+            DollarCallKind::Named(name) => self.should_strip_ctx_name(name),
+            _ => false,
+        };
 
-        if is_inline {
-            self.import_tracker.needs_inlined_qrl = true;
-        } else {
-            self.import_tracker.needs_qrl = true;
-            // Add lazy import for segment strategy
-            self.import_tracker
-                .lazy_imports
-                .push((segment_hash.clone(), import_path));
+        // Track imports based on strategy (skip qrl/inlinedQrl + lazy imports for stripped)
+        if !will_be_stripped {
+            let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
+                    || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
+
+            if is_inline {
+                self.import_tracker.needs_inlined_qrl = true;
+            } else {
+                self.import_tracker.needs_qrl = true;
+                self.import_tracker
+                    .lazy_imports
+                    .push((segment_hash.clone(), import_path));
+            }
         }
 
-        // For named calls, track the Qrl-suffixed import
+        // For named calls, track the Qrl-suffixed import (even for stripped)
         if let DollarCallKind::Named(name) = kind {
             let qrl_name = words::dollar_to_qrl_name(name);
             if !self.import_tracker.qrl_imports.contains(&qrl_name) {
@@ -365,10 +404,17 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
         if let Some(kind) = self.is_dollar_call(call) {
+            // Check for sync$ -- handle separately (no segment, no captures)
+            if let DollarCallKind::Named(ref name) = kind {
+                if name == "sync$" {
+                    self.pending_sync_calls.insert(call.span.start);
+                    return;
+                }
+            }
+
             // For component$ calls, check for props destructuring
             if let DollarCallKind::Named(ref name) = kind {
                 if name == "component$" {
-                    // Check if first argument is an ArrowFunctionExpression
                     if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first() {
                         let info = props_destructuring::analyze_props_destructuring(&arrow.params);
                         if info.needs_transform {
@@ -382,7 +428,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
 
             // Push a new capture tracking frame for this $()-body.
-            // Each $()-body gets its own set of identifier refs and local declarations.
             self.capture_stack.push((Vec::new(), HashSet::new()));
 
             // Collect parameter names of the arrow function body as body-local declarations
@@ -391,7 +436,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     for param in &arrow.params.items {
                         self.collect_binding_pattern_names(&param.pattern);
                     }
-                    // Also collect rest parameter
                     if let Some(rest) = &arrow.params.rest {
                         self.collect_binding_pattern_names(&rest.rest.argument);
                     }
@@ -400,6 +444,13 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
             // Record the segment
             let segment = self.record_segment(call, &kind);
+
+            // Check if this segment should be stripped
+            if let DollarCallKind::Named(ref name) = kind {
+                if self.should_strip_ctx_name(name) {
+                    self.stripped_segments.insert(call.span.start);
+                }
+            }
 
             // Mark this call span so exit_expression can find it
             self.pending_dollar_calls.insert(call.span.start);
@@ -491,6 +542,33 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         if let Expression::CallExpression(call) = expr {
+            // Handle sync$() calls -- replace with _qrlSync(fn, "stringified_fn")
+            if self.pending_sync_calls.remove(&call.span.start) {
+                let body_expr = if !call.arguments.is_empty() {
+                    let placeholder =
+                        Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
+                    let body_arg =
+                        std::mem::replace(&mut call.arguments[0], placeholder);
+                    Some(argument_to_expression(body_arg, ctx))
+                } else {
+                    None
+                };
+
+                if let Some(fn_expr) = body_expr {
+                    let mut codegen = oxc::codegen::Codegen::new();
+                    codegen.print_expression(&fn_expr);
+                    let fn_string = codegen.into_source_text();
+                    let minified = minify_fn_string(&fn_string);
+
+                    let replacement = import_rewrite::build_qrl_sync_call(
+                        fn_expr, &minified, ctx,
+                    );
+                    self.import_tracker.needs_qrl_sync = true;
+                    *expr = replacement;
+                }
+                return;
+            }
+
             // Check if this was a detected dollar call
             if !self.pending_dollar_calls.remove(&call.span.start) {
                 return;
@@ -681,43 +759,45 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 None => return,
             };
 
-            // For segment strategy, serialize the body expression to a string
-            // before building the replacement. This captures the transformed body
-            // (after props destructuring + capture analysis have modified it).
-            // The body argument is extracted and serialized, then discarded --
-            // it won't be used again because segment strategy replaces the entire
-            // call expression with qrl(i_hash, "name", captures).
-            if !is_inline && !call.arguments.is_empty() {
-                let placeholder =
-                    Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
-                let body_arg =
-                    std::mem::replace(&mut call.arguments[0], placeholder);
+            // Check if this segment is stripped
+            let is_stripped = self.stripped_segments.contains(&call.span.start);
 
-                // Convert Argument to Expression for serialization
-                let body_expr = match body_arg {
-                    Argument::SpreadElement(_) => None,
-                    _ => Some(argument_to_expression(body_arg, ctx)),
-                };
+            // For stripped segments, skip body serialization entirely
+            if !is_stripped {
+                // For segment strategy, serialize the body expression to a string
+                if !is_inline && !call.arguments.is_empty() {
+                    let placeholder =
+                        Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
+                    let body_arg =
+                        std::mem::replace(&mut call.arguments[0], placeholder);
 
-                if let Some(ref expr_val) = body_expr {
-                    let mut codegen = oxc::codegen::Codegen::new();
-                    codegen.print_expression(expr_val);
-                    let body_code = codegen.into_source_text();
-                    self.segment_body_codes.push((call.span.start, body_code));
+                    let body_expr = match body_arg {
+                        Argument::SpreadElement(_) => None,
+                        _ => Some(argument_to_expression(body_arg, ctx)),
+                    };
+
+                    if let Some(ref expr_val) = body_expr {
+                        let mut codegen = oxc::codegen::Codegen::new();
+                        codegen.print_expression(expr_val);
+                        let body_code = codegen.into_source_text();
+                        self.segment_body_codes.push((call.span.start, body_code));
+                    }
                 }
-                // body_expr is dropped here -- the original call.arguments[0] is
-                // now a placeholder, but the entire call expression will be replaced
-                // by *expr = final_expr below, so this is fine.
             }
 
             // Build the replacement expression
-            let replacement = if is_inline {
+            let replacement = if is_stripped {
+                // Stripped segment: _noopQrl("s_HASH")
+                self.import_tracker.needs_noop_qrl = true;
+                import_rewrite::build_noop_qrl_call(
+                    &segment_info.name,
+                    &capture_result.capture_names,
+                    ctx,
+                )
+            } else if is_inline {
                 // Inline strategy: inlinedQrl(body, "name_hash")
-                // Extract the first argument (the arrow/expression body)
                 let body_expr = if !call.arguments.is_empty() {
-                    // Take the first argument's expression
                     let arg = &mut call.arguments[0];
-                    // Move the argument expression out
                     std::mem::replace(
                         arg,
                         Argument::from(ctx.ast.expression_identifier(SPAN, "undefined")),
@@ -726,16 +806,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"))
                 };
 
-                // Convert Argument to Expression
                 let body_as_expr = match body_expr {
                     Argument::SpreadElement(_) => {
                         ctx.ast.expression_identifier(SPAN, "undefined")
                     }
-                    _ => {
-                        // Argument inherits from Expression via inherit_variants!
-                        // We need to extract the expression
-                        argument_to_expression(body_expr, ctx)
-                    }
+                    _ => argument_to_expression(body_expr, ctx),
                 };
 
                 import_rewrite::build_inlined_qrl_call(
@@ -850,6 +925,14 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
         if self.import_tracker.needs_chk {
             let stmt = import_rewrite::build_named_import("_chk", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+        if self.import_tracker.needs_noop_qrl {
+            let stmt = import_rewrite::build_named_import("_noopQrl", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+        if self.import_tracker.needs_qrl_sync {
+            let stmt = import_rewrite::build_named_import("_qrlSync", core_module, ctx);
             new_stmts.push(stmt);
         }
 
@@ -2244,6 +2327,37 @@ fn transform_jsx_children<'a>(
             (Some(ctx.ast.expression_array(SPAN, elements)), count)
         }
     }
+}
+
+/// Minify a function string for sync$ serialization.
+/// Removes comments and normalizes whitespace via parse+codegen roundtrip.
+fn minify_fn_string(source: &str) -> String {
+    let parse_source = format!("var x = {}", source);
+    let parse_alloc = oxc::allocator::Allocator::default();
+    let source_for_parse = parse_alloc.alloc_str(&parse_source);
+
+    let parser = oxc::parser::Parser::new(
+        &parse_alloc,
+        source_for_parse,
+        oxc::span::SourceType::mjs(),
+    );
+    let parse_result = parser.parse();
+
+    if !parse_result.errors.is_empty() || parse_result.program.body.is_empty() {
+        return source.to_string();
+    }
+
+    if let Some(Statement::VariableDeclaration(decl)) = parse_result.program.body.first() {
+        if let Some(declarator) = decl.declarations.first() {
+            if let Some(ref init) = declarator.init {
+                let mut codegen = oxc::codegen::Codegen::new();
+                codegen.print_expression(init);
+                return codegen.into_source_text();
+            }
+        }
+    }
+
+    source.to_string()
 }
 
 /// Convert an Argument to an Expression.

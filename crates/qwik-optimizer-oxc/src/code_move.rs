@@ -99,6 +99,18 @@ pub(crate) fn build_segment_code_with_hoisted(
             options.core_module
         ));
     }
+    if body_code.contains("_noopQrl") {
+        parts.push(format!(
+            "import {{ _noopQrl }} from \"{}\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("_qrlSync") {
+        parts.push(format!(
+            "import {{ _qrlSync }} from \"{}\";",
+            options.core_module
+        ));
+    }
 
     // 3c. Add hoisted function declarations for _fnSignal
     for (fn_code, str_code) in hoisted_stmts {

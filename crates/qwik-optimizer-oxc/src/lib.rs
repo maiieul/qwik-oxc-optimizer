@@ -182,6 +182,7 @@ pub fn transform_modules(
         // 9. Build segment modules based on entry strategy
         let body_codes = qwik_transform.take_segment_body_codes();
         let segments = qwik_transform.extracted_segments();
+        let stripped_spans = qwik_transform.stripped_segments();
 
         let is_inline_like = entry_strategy::should_inline(&transform_options.entry_strategy)
             || matches!(
@@ -190,6 +191,11 @@ pub fn transform_modules(
             );
 
         for seg in segments {
+            // Skip stripped segments -- they don't produce output modules
+            if stripped_spans.contains(&seg.span.0) {
+                continue;
+            }
+
             let segment_analysis = segment_data_to_analysis(seg, &input.path);
 
             // Use output extension for segment module path
@@ -2248,6 +2254,163 @@ const App = component$(() => <div/>);"#
             !main_code.contains("@__PURE__ */ _fnSignal"),
             "Should NOT have PURE on _fnSignal: {}",
             main_code
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Code Stripping Integration Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_strip_server_code_prod() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$, serverStuff$, $ } from '@qwik.dev/core';
+export const Parent = component$(() => {
+    serverStuff$(async () => {
+        console.log('server only');
+    });
+    return $(() => 'hello');
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            strip_ctx_name: Some(vec!["server".to_string()]),
+            transpile_ts: true,
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Main module should have componentQrl
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("componentQrl"),
+            "Expected componentQrl in main module: {}",
+            main_code
+        );
+
+        // Find the component segment module (the one with the body code)
+        let component_seg = result
+            .modules
+            .iter()
+            .find(|m| m.is_entry && m.code.contains("serverStuffQrl"))
+            .expect("Expected component segment with serverStuffQrl");
+
+        // The component segment should contain _noopQrl for the stripped serverStuff$
+        assert!(
+            component_seg.code.contains("_noopQrl"),
+            "Expected _noopQrl in component segment: {}",
+            component_seg.code
+        );
+        // The wrapper serverStuffQrl should be preserved
+        assert!(
+            component_seg.code.contains("serverStuffQrl"),
+            "Expected serverStuffQrl wrapper preserved: {}",
+            component_seg.code
+        );
+        // The _noopQrl should have PURE annotation (OXC uses `/* @__PURE__ */` format)
+        assert!(
+            component_seg.code.contains("@__PURE__") && component_seg.code.contains("_noopQrl"),
+            "Expected PURE annotation on _noopQrl: {}",
+            component_seg.code
+        );
+
+        // No segment module should be produced for the stripped serverStuff$ callback
+        let server_stuff_modules: Vec<_> = result
+            .modules
+            .iter()
+            .filter(|m| {
+                m.segment
+                    .as_ref()
+                    .map(|s| s.ctx_name == "serverStuff$")
+                    .unwrap_or(false)
+            })
+            .collect();
+        assert!(
+            server_stuff_modules.is_empty(),
+            "Stripped serverStuff$ should NOT produce segment modules, found {}",
+            server_stuff_modules.len()
+        );
+    }
+
+    #[test]
+    fn test_strip_preserves_nested_dollar() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$, serverStuff$, $ } from '@qwik.dev/core';
+export const Parent = component$(() => {
+    serverStuff$(async () => {
+        const a = $(() => { /* nested */ });
+        return a;
+    });
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            strip_ctx_name: Some(vec!["server".to_string()]),
+            transpile_ts: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // The nested $() inside the stripped serverStuff$ should still produce a segment
+        let nested_segments: Vec<_> = result
+            .modules
+            .iter()
+            .filter(|m| {
+                m.segment
+                    .as_ref()
+                    .map(|s| s.ctx_name == "$")
+                    .unwrap_or(false)
+            })
+            .collect();
+        assert!(
+            !nested_segments.is_empty(),
+            "Nested $() inside stripped callback should still produce segments"
+        );
+    }
+
+    #[test]
+    fn test_strip_not_applied_without_config() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$, serverStuff$ } from '@qwik.dev/core';
+export const Parent = component$(() => {
+    serverStuff$(() => { console.log('server'); });
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            // No strip_ctx_name -- should NOT strip
+            transpile_ts: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Without strip_ctx_name, _noopQrl should NOT appear
+        for m in &result.modules {
+            assert!(
+                !m.code.contains("_noopQrl"),
+                "Should NOT contain _noopQrl without strip_ctx_name config: {}",
+                m.code
+            );
+        }
+
+        // serverStuff$ should produce a normal segment
+        let server_segments: Vec<_> = result
+            .modules
+            .iter()
+            .filter(|m| {
+                m.segment
+                    .as_ref()
+                    .map(|s| s.ctx_name == "serverStuff$")
+                    .unwrap_or(false)
+            })
+            .collect();
+        assert!(
+            !server_segments.is_empty(),
+            "Without stripping, serverStuff$ should produce normal segments"
         );
     }
 }
