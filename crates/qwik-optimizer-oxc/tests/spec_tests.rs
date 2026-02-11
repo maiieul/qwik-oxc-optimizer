@@ -132,10 +132,11 @@ mod tests {
         }
     }
 
-    /// Stub test for future: run optimizer on all specs.
-    /// Currently just verifies the stub returns empty output.
+    /// Smoke test: run optimizer on first spec and verify it produces output.
+    /// Phase 8 implemented the real transform pipeline, so we now verify
+    /// that transform_modules returns actual transformed code.
     #[test]
-    fn test_transform_stub() {
+    fn test_transform_produces_output() {
         use qwik_optimizer_oxc::transform_modules;
 
         let specs = spec_parser::load_all_specs();
@@ -143,17 +144,18 @@ mod tests {
         let options = spec_parser::build_options(spec);
 
         let result = transform_modules(options);
-        assert!(result.is_ok(), "transform_modules stub should not fail");
+        assert!(result.is_ok(), "transform_modules should not fail");
 
         let output = result.unwrap();
-        // Stub returns empty -- this will change in Phase 8
+        // Real pipeline produces at least a main module per input
         assert!(
-            output.modules.is_empty(),
-            "stub should return empty modules"
+            !output.modules.is_empty(),
+            "transform should produce at least one output module"
         );
+        // First module should have code
         assert!(
-            output.diagnostics.is_empty(),
-            "stub should return no diagnostics"
+            !output.modules[0].code.is_empty(),
+            "main module should have emitted code"
         );
     }
 }
