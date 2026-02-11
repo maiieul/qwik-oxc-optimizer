@@ -38,7 +38,7 @@ Full details: `milestones/v2.0-ROADMAP.md`
 - [x] **Phase 8: Core Detection + QRL Transforms** - Dollar call detection and QRL wrapping (CONV-01, CONV-02) -- completed 2026-02-10
 - [x] **Phase 9: Capture Analysis + Props Destructuring** - Scope analysis and props transformation (CONV-11, CONV-05) -- completed 2026-02-10
 - [x] **Phase 10: Segment Extraction + Codegen** - Multi-module output and lazy imports (CONV-08, CONV-06) -- completed 2026-02-11
-- [ ] **Phase 11: JSX + Signal Transforms** - JSX compilation and signal optimization (CONV-03, CONV-04, CONV-12, CONV-14)
+- [x] **Phase 11: JSX + Signal Transforms** - JSX compilation and signal optimization (CONV-03, CONV-04, CONV-12, CONV-14) -- completed 2026-02-11
 - [ ] **Phase 12: Annotations + Stripping** - PURE annotations, const replacement, code stripping, sync$ (CONV-07, CONV-10, CONV-09, CONV-13)
 - [ ] **Phase 13: Source Maps + Full Validation** - Source map generation and 162/162 spec test pass
 
@@ -106,7 +106,7 @@ Plans:
 - [x] 10-01-PLAN.md -- Segment body extraction in transform.rs + code_move.rs segment Program construction with imports, captures restoration, and lazy imports
 - [x] 10-02-PLAN.md -- Entry strategy routing for all 7 variants, output path/extension handling, and spec test validation
 
-### Phase 11: JSX + Signal Transforms
+### Phase 11: JSX + Signal Transforms -- COMPLETE 2026-02-11
 **Goal**: Optimizer transforms JSX elements to _jsxSorted/_jsxSplit calls with signal optimization and hoisted helpers
 **Depends on**: Phase 10
 **Requirements**: JSX-01, JSX-02, JSX-03, JSX-04, JSX-05, JSX-06, JSX-07, JSX-08
@@ -119,8 +119,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 11-01-PLAN.md -- JSX element and fragment transformation (_jsxSorted, _jsxSplit, prop var/const classification, children encoding, flags, key, event handler renaming, Fragment import)
-- [ ] 11-02-PLAN.md -- Signal optimization (_wrapProp, _fnSignal, hoisted _hfN functions) and input binding (bind:value, bind:checked, _val/_chk QRL handlers)
+- [x] 11-01-PLAN.md -- JSX element and fragment transformation (_jsxSorted, _jsxSplit, prop var/const classification, children encoding, flags, key, event handler renaming, Fragment import)
+- [x] 11-02-PLAN.md -- Signal optimization (_wrapProp, _fnSignal, hoisted _hfN functions) and input binding (bind:value, bind:checked, _val/_chk QRL handlers)
 
 ### Phase 12: Annotations + Stripping
 **Goal**: Optimizer adds PURE annotations, replaces build constants, strips dead code, and handles sync$ serialization
@@ -168,10 +168,10 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 8. Core Detection + QRL Transforms | v3.0 | 2/2 | Complete | 2026-02-10 |
 | 9. Capture Analysis + Props Destructuring | v3.0 | 2/2 | Complete | 2026-02-10 |
 | 10. Segment Extraction + Codegen | v3.0 | 2/2 | Complete | 2026-02-11 |
-| 11. JSX + Signal Transforms | v3.0 | 0/2 | Not started | - |
+| 11. JSX + Signal Transforms | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Annotations + Stripping | v3.0 | 0/2 | Not started | - |
 | 13. Source Maps + Full Validation | v3.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 10 complete)*
+*Last updated: 2026-02-11 (Phase 11 complete)*
