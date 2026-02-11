@@ -37,7 +37,7 @@ Full details: `milestones/v2.0-ROADMAP.md`
 - [x] **Phase 7: Crate Foundation + Test Harness** - Compilable crate skeleton with spec-based test infrastructure -- completed 2026-02-11
 - [x] **Phase 8: Core Detection + QRL Transforms** - Dollar call detection and QRL wrapping (CONV-01, CONV-02) -- completed 2026-02-10
 - [x] **Phase 9: Capture Analysis + Props Destructuring** - Scope analysis and props transformation (CONV-11, CONV-05) -- completed 2026-02-10
-- [ ] **Phase 10: Segment Extraction + Codegen** - Multi-module output and lazy imports (CONV-08, CONV-06)
+- [x] **Phase 10: Segment Extraction + Codegen** - Multi-module output and lazy imports (CONV-08, CONV-06) -- completed 2026-02-11
 - [ ] **Phase 11: JSX + Signal Transforms** - JSX compilation and signal optimization (CONV-03, CONV-04, CONV-12, CONV-14)
 - [ ] **Phase 12: Annotations + Stripping** - PURE annotations, const replacement, code stripping, sync$ (CONV-07, CONV-10, CONV-09, CONV-13)
 - [ ] **Phase 13: Source Maps + Full Validation** - Source map generation and 162/162 spec test pass
@@ -90,7 +90,7 @@ Plans:
 - [x] 09-01-PLAN.md -- Props destructuring transform (props_destructuring.rs, CONV-11)
 - [x] 09-02-PLAN.md -- Capture analysis (collector.rs, transform.rs, CONV-05)
 
-### Phase 10: Segment Extraction + Codegen
+### Phase 10: Segment Extraction + Codegen -- COMPLETE 2026-02-11
 **Goal**: Optimizer produces separate module files for extracted segments with correct imports, exports, and lazy loading declarations
 **Depends on**: Phase 9
 **Requirements**: SEGM-01, SEGM-02, SEGM-03, SEGM-04, EMIT-01, EMIT-03
@@ -103,8 +103,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 10-01-PLAN.md -- Segment body extraction in transform.rs + code_move.rs segment Program construction with imports, captures restoration, and lazy imports
-- [ ] 10-02-PLAN.md -- Entry strategy routing for all 7 variants, output path/extension handling, and spec test validation
+- [x] 10-01-PLAN.md -- Segment body extraction in transform.rs + code_move.rs segment Program construction with imports, captures restoration, and lazy imports
+- [x] 10-02-PLAN.md -- Entry strategy routing for all 7 variants, output path/extension handling, and spec test validation
 
 ### Phase 11: JSX + Signal Transforms
 **Goal**: Optimizer transforms JSX elements to _jsxSorted/_jsxSplit calls with signal optimization and hoisted helpers
@@ -167,11 +167,11 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 7. Crate Foundation + Test Harness | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 8. Core Detection + QRL Transforms | v3.0 | 2/2 | Complete | 2026-02-10 |
 | 9. Capture Analysis + Props Destructuring | v3.0 | 2/2 | Complete | 2026-02-10 |
-| 10. Segment Extraction + Codegen | v3.0 | 0/2 | Not started | - |
+| 10. Segment Extraction + Codegen | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 11. JSX + Signal Transforms | v3.0 | 0/2 | Not started | - |
 | 12. Annotations + Stripping | v3.0 | 0/2 | Not started | - |
 | 13. Source Maps + Full Validation | v3.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-10 (Phase 9 complete)*
+*Last updated: 2026-02-11 (Phase 10 complete)*
