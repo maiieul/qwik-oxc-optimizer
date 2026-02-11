@@ -1776,7 +1776,9 @@ fn minify_expression_string(s: &str) -> String {
             continue;
         }
 
-        if prev_was_space && is_ident_char(c) {}
+        if prev_was_space && is_ident_char(c) {
+            result.push(' ');
+        }
         prev_was_space = false;
         result.push(c);
     }
@@ -2714,5 +2716,30 @@ mod tests {
         assert!(!tracker.needs_inlined_qrl);
         assert!(!tracker.needs_captures);
         assert!(tracker.lazy_imports.is_empty());
+    }
+
+    #[test]
+    fn test_minify_expression_string_preserves_ident_space() {
+        // BUG-01: spaces between identifier characters must be preserved
+        assert_eq!(minify_expression_string("a b"), "a b");
+        assert_eq!(minify_expression_string("foo bar"), "foo bar");
+        assert_eq!(minify_expression_string("return value"), "return value");
+    }
+
+    #[test]
+    fn test_minify_expression_string_removes_extra_whitespace() {
+        // Multiple spaces collapse to one
+        assert_eq!(minify_expression_string("a    b"), "a b");
+        // Leading/trailing whitespace removed
+        assert_eq!(minify_expression_string("  a  "), "a");
+        // Spaces around operators removed
+        assert_eq!(minify_expression_string("a + b"), "a+b");
+        assert_eq!(minify_expression_string("a  +  b"), "a+b");
+    }
+
+    #[test]
+    fn test_minify_expression_string_preserves_strings() {
+        assert_eq!(minify_expression_string("'hello world'"), "'hello world'");
+        assert_eq!(minify_expression_string("\"hello world\""), "\"hello world\"");
     }
 }
