@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 
 ## Current Position
 
-Phase: 15 of 19 (Dead Code Removal)
-Plan: 1 of 2 in current phase
-Status: Executing
-Last activity: 2026-02-11 -- Completed 15-01-PLAN.md (dead code removal)
+Phase: 15 of 19 (Dead Code Removal) -- COMPLETE
+Plan: 2 of 2 in current phase (all plans complete)
+Status: Phase Complete
+Last activity: 2026-02-11 -- Completed 15-02-PLAN.md (collector consolidation + warning elimination)
 
-Progress: [==========================........] 76% (36/43 plans lifetime, 3/10 v4.0)
+Progress: [===========================.......] 79% (37/43 plans lifetime, 4/10 v4.0)
 
 ## Performance Metrics
 
@@ -34,9 +34,9 @@ Progress: [==========================........] 76% (36/43 plans lifetime, 3/10 v
 - Total execution time: ~201min
 
 **Velocity (v4.0):**
-- Total plans completed: 3
+- Total plans completed: 4
 - Average duration: 6min
-- Total execution time: ~19min
+- Total execution time: ~22min
 
 ## Accumulated Context
 
@@ -48,6 +48,8 @@ Full decision log in PROJECT.md Key Decisions table.
 - [14-02] Standardized import grouping: std, external, crate-local with blank line separators
 - [15-01] Delete dead code rather than suppress with #![allow(unused)]
 - [15-01] Kept props_destructuring helpers that plan incorrectly marked as unused
+- [15-02] Used Statement::as_declaration() for collector consolidation
+- [15-02] Applied #[allow(dead_code)] at struct level for data-model structs with test-only fields
 
 ### Pending Todos
 
@@ -60,5 +62,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 15-01-PLAN.md (dead code removal -- functions, constants, structs)
+Stopped at: Completed 15-02-PLAN.md (phase 15 complete -- zero warnings)
 Resume file: None
