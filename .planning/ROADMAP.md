@@ -84,11 +84,11 @@ Plans:
   3. Variables referenced inside a `$()` body but declared outside it are identified as captures and listed in the correct order
   4. Capture arrays appear as the third argument to `qrl()`/`inlinedQrl()` calls (e.g., `qrl(i_HASH, "name", [capturedVar1, capturedVar2])`)
   5. Extracted segment bodies contain `const varName = _captures[N];` restoration statements for each captured variable
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 09-01: Props destructuring transform (props_destructuring.rs, CONV-11)
-- [ ] 09-02: Capture analysis via oxc_semantic scoping (CONV-05, capture detection + array generation + restoration)
+- [ ] 09-01-PLAN.md -- Props destructuring transform (props_destructuring.rs, CONV-11)
+- [ ] 09-02-PLAN.md -- Capture analysis (collector.rs, transform.rs, CONV-05)
 
 ### Phase 10: Segment Extraction + Codegen
 **Goal**: Optimizer produces separate module files for extracted segments with correct imports, exports, and lazy loading declarations
@@ -174,4 +174,4 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-10 (Phase 8 complete)*
+*Last updated: 2026-02-10 (Phase 9 planned)*
