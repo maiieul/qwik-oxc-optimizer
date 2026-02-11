@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 ## Current Position
 
-Phase: 8 of 13 (Core Detection + QRL Transforms)
-Plan: 1 of 2 in current phase -- COMPLETE
-Status: Plan 08-01 complete (parse + collect + hash pipeline). Ready for 08-02.
-Last activity: 2026-02-11 -- Completed 08-01: parse/collect/hash pipeline
+Phase: 8 of 13 (Core Detection + QRL Transforms) -- COMPLETE
+Plan: 2 of 2 in current phase -- COMPLETE
+Status: Phase 8 complete. QwikTransform + pipeline wired. Ready for Phase 9.
+Last activity: 2026-02-10 -- Completed 08-02: QwikTransform Traverse + pipeline wiring
 
-Progress: [########░░░░░░░░░░░░] 37% (20/31 total plans across all milestones; v3.0 3/14)
+Progress: [########░░░░░░░░░░░░] 40% (21/31 total plans across all milestones; v3.0 4/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [########░░░░░░░░░░░░] 37% (20/31 total plans 
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 3
-- Average duration: 5.7min
-- Total execution time: 17min
+- Total plans completed: 4
+- Average duration: 7.3min
+- Total execution time: 29min
 
 ## Accumulated Context
 
@@ -51,6 +51,11 @@ Recent decisions affecting current work:
 - base64 made non-optional in Cargo.toml (hash needs it unconditionally)
 - OXC 0.113 BindingPattern is a flat enum (no kind field); JSXExpression uses inherit_variants! (Expression variants directly on enum)
 - Collector uses two-pass recursive walk (not Traverse trait) for read-only analysis
+- Use exit_expression (not exit_call_expression) for QRL replacement -- gives mutable &mut Expression
+- Arena string allocation via ctx.ast.atom() for runtime-constructed strings in AstBuilder
+- std::mem::swap with ctx.ast.vec() for OXC Vec mutation (no Default impl)
+- expression_call_with_pure for PURE annotations on qrl/inlinedQrl calls
+- Pending dollar calls tracked by span.start u32 in HashSet for O(1) lookup
 
 ### Pending Todos
 
@@ -62,6 +67,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-11
-Stopped at: Completed 08-01-PLAN.md (parse/collect/hash pipeline). Ready for 08-02 (QRL transforms).
+Last session: 2026-02-10
+Stopped at: Completed 08-02-PLAN.md (QwikTransform + pipeline wiring). Phase 8 complete. Ready for Phase 9.
 Resume file: None
