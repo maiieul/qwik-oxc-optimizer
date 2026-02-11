@@ -34,7 +34,7 @@ Progress: [███████████████████████
 | 05    | 01   | 8min     | 2     | 2     |
 | 05    | 02   | 10min    | 2     | 2     |
 | 05    | 03   | 12min    | 2     | 3     |
-| 06    | 01   | 7min     | 2     | 1     |
+| 06    | 01   | 8min     | 2     | 2     |
 | 06    | 02   | 6min     | 2     | 1     |
 
 ## Accumulated Context
@@ -63,6 +63,11 @@ Recent decisions affecting current work:
 - [05-03]: Segment hash exact values vary by Rust toolchain; validate structure (11-char base64url) not exact match
 - [05-03]: Program span must encompass all preserved child spans for source map generation
 - [05-03]: Segments with preserved spans require Program.source_text = original source
+- [06-01]: Prop classification uses match on expression type with reactive source detection for component targets; simpler rules for native elements
+- [06-01]: _wrapProp has two distinct forms: Form 1 (signal only) strips .value; Form 2 (source, propName) for named property access
+- [06-01]: _fnSignal string representation generated via oxc_codegen in minify mode
+- [06-01]: Props destructuring detection checks BindingPatternKind::ObjectPattern on first param of component$ callback
+- [06-01]: Flags values pattern-matched from spec files: 0=spread, 1=multiple/dynamic children, 2=event-only, 3=leaf/simple
 - [06-02]: Entry strategy is pure configuration-driven branching of two existing API patterns (qrl vs inlinedQrl) -- no new AstBuilder patterns needed
 - [06-02]: CONV-10 (const replacement) must run before CONV-09 (code stripping) to enable dead branch elimination prior to noop replacement
 - [06-02]: Side effect analysis uses post-stripping reference counting via oxc_semantic -- declarations with zero live references after stripping are removed
