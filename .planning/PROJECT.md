@@ -2,21 +2,21 @@
 
 ## What This Is
 
-A project to port the Qwik framework's code optimizer from SWC to OXC. The v1.0 milestone produced a complete behavioral specification of all 162 SWC optimizer snapshot tests — documenting every transformation, convention, function call, and OXC-parsed AST. This spec is the single source of truth for building the OXC optimizer without ever referencing SWC internals.
+A project to port the Qwik framework's code optimizer from SWC to OXC. The v1.0 milestone produced a complete behavioral specification of all 162 SWC optimizer snapshot tests. The v2.0 milestone mapped every transformation pattern to concrete OXC APIs with Rust code examples, built working proof-of-concept programs, and produced an architectural blueprint — so the v3.0 port can proceed with zero guesswork.
 
-## Current Milestone: v2.0 OXC API Research & Architecture
+## Current Status
 
-**Goal:** Deeply research OXC APIs and Rust libraries to map every spec transformation pattern to concrete implementation approaches, so the port milestone can proceed with zero guesswork.
+v1.0 and v2.0 milestones shipped. Ready for v3.0 (the actual port).
 
-**Target features:**
-- Comprehensive OXC API mapping for all transformation categories
-- Deep-dive research on complex patterns (capture analysis, cross-module code movement, source maps)
-- Rust library survey for gaps OXC doesn't cover directly
-- Architectural blueprint for the optimizer crate
+**v2.0 delivered:**
+- 7 comprehensive API mapping documents (~16K lines, 99 Rust code blocks)
+- 4 working Rust POCs (dollar detection, capture analysis, multi-module output, source maps)
+- Architecture blueprint with crate module layout, public API, data flow, and Cargo.toml
+- Master cross-reference for all 14 CONV types with dependency ordering and implementation roadmap
 
 ## Core Value
 
-A complete, SWC-independent behavioral specification of every optimizer transformation so the OXC port can be built from spec, not from reverse-engineering SWC code.
+A complete, SWC-independent behavioral specification and OXC API mapping of every optimizer transformation so the OXC port can be built from spec and research, not from reverse-engineering SWC code.
 
 ## Requirements
 
@@ -31,25 +31,26 @@ A complete, SWC-independent behavioral specification of every optimizer transfor
 - ✓ Specs capture segment metadata (SegmentAnalysis JSON) for extracted segments — v1.0
 - ✓ All 162 specs structurally consistent and human-readable — v1.0
 
+- ✓ OXC API mapping for every transformation pattern in the 162 specs — v2.0 (7 mapping documents, 99 Rust code blocks)
+- ✓ Deep research on complex patterns: capture analysis, cross-module code movement, source maps — v2.0 (validated with working POCs)
+- ✓ Rust library survey for capabilities OXC doesn't provide directly — v2.0 (oxc 0.113 covers all needs)
+- ✓ Architectural blueprint for the oxc-optimizer crate — v2.0 (module layout, public API, data flow, Cargo.toml)
+
 ### Active
 
-- [ ] OXC API mapping for every transformation pattern in the 162 specs
-- [ ] Deep research on complex patterns: capture analysis, cross-module code movement, source maps
-- [ ] Rust library survey for capabilities OXC doesn't provide directly
-- [ ] Architectural blueprint for the oxc-optimizer crate
+(None — next milestone requirements defined via `/gsd:new-milestone`)
 
 ### Out of Scope
 
 - Byte-for-byte SWC output matching — the OXC optimizer will produce semantically equivalent output, not identical bytes
 - Modifying any existing SWC code — read-only against SWC codebase
 - TypeScript plugin layer changes — the TS/Vite/Rollup plugins are untouched until port milestone
-- Writing actual optimizer code — this milestone is research only, implementation comes in v3.0
 - Modifying the 162 spec files — specs are locked as the source of truth
 
 ## Context
 
-Shipped v1.0 with 162 spec files, 166K lines of documentation, and a Rust AST utility.
-Tech stack: Rust (oxc_parser 0.113), Python (spec generation/audit scripts), Markdown.
+Shipped v1.0 (162 spec files, 166K lines) and v2.0 (7 API mapping docs, 4 working POCs, architecture blueprint, ~16K lines).
+Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap), Python (spec generation/audit scripts), Markdown.
 
 - The existing optimizer lives in `swc-optimizer/core/` as a Rust crate using SWC (`swc_ecmascript`, `swc_common`, `swc_atoms`)
 - 163 test functions in `swc-optimizer/core/src/test.rs` produce 162 snapshot files in `swc-optimizer/core/src/snapshots/`
@@ -77,6 +78,14 @@ Tech stack: Rust (oxc_parser 0.113), Python (spec generation/audit scripts), Mar
 | Collapsed 8 phases to 3 | Spec generation is documentation, not software engineering; each spec is independent | ✓ Good — simpler roadmap, faster execution |
 | Regex convention detection | Pattern matching against all 14 CONV types rather than AST analysis | ✓ Good — 100% accuracy, fast execution |
 | oxc ast_visit feature flag | serialize alone does not re-export Utf8ToUtf16; ast_visit feature required | ✓ Good — resolved OXC API quirk |
+| Traverse enter_*/exit_* for detection + mutation | Standard OXC pattern, avoids modifying program.body during iteration | ✓ Good — validated in POC-01/02 |
+| exit_program for deferred import insertion | Collect imports during traversal, insert all at end | ✓ Good — avoids iterator invalidation |
+| Separate types.rs as universal leaf module | Prevents circular dependencies in crate architecture | ✓ Good — clean module DAG |
+| Props destructuring before capture analysis | Destructuring changes variable references that capture analysis reads | ✓ Good — correct ordering validated against specs |
+| Shared allocator for POCs, separate for production | Shared is simpler; separate enables parallel codegen per segment | ✓ Good — both approaches validated |
+| CONV-10 before CONV-09 execution order | isServer replacement creates dead branches that stripping can then eliminate | ✓ Good — matches SWC behavior |
+| Two-option PURE annotation strategy | Option A (OXC built-in) preferred; Option B (manual comment) as fallback | — Pending (decide during v3.0) |
+| 9-tier CONV implementation order | Dependency graph + frequency analysis determines build order for v3.0 | — Pending (validated during port) |
 
 ---
-*Last updated: 2026-02-10 after v2.0 milestone start*
+*Last updated: 2026-02-11 after v2.0 milestone*
