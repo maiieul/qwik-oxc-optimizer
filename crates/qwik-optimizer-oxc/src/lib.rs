@@ -5,27 +5,27 @@
 //! transformations. The output matches the SWC optimizer's JSON wire format,
 //! enabling drop-in replacement at the TypeScript binding layer.
 
-mod types;
-mod errors;
-mod words;
-mod hash;
-mod parse;
-mod collector;
-mod transform;
-mod import_rewrite;
 mod code_move;
-mod entry_strategy;
-mod emit;
-mod filter_exports;
-mod props_destructuring;
-mod is_const;
+mod collector;
 mod const_replace;
+mod emit;
+mod entry_strategy;
+mod errors;
+mod filter_exports;
+mod hash;
+mod import_rewrite;
+mod is_const;
+mod parse;
+mod props_destructuring;
+mod transform;
+mod types;
+mod words;
 
 // Re-export public types
 pub use types::{
-    CtxKind, Diagnostic, DiagnosticCategory, EmitMode, EntryStrategy, MinifyMode,
-    SegmentAnalysis, SourceLocation, TransformModule, TransformModuleInput,
-    TransformModulesOptions, TransformOutput,
+    CtxKind, Diagnostic, DiagnosticCategory, EmitMode, EntryStrategy, MinifyMode, SegmentAnalysis,
+    SourceLocation, TransformModule, TransformModuleInput, TransformModulesOptions,
+    TransformOutput,
 };
 
 use types::{SegmentData, TransformOptions};
@@ -96,11 +96,7 @@ pub fn transform_modules(
         let mut program = parse_result.program;
         let scoping = parse_result.scoping;
 
-        let collect_result = collector::collect(
-            &program,
-            &scoping,
-            config.core_module.as_deref(),
-        );
+        let collect_result = collector::collect(&program, &scoping, config.core_module.as_deref());
 
         // Must happen before traverse_mut so segment body serialization sees replaced values
         const_replace::replace_build_constants(&mut program, &transform_options, &allocator);
@@ -122,13 +118,8 @@ pub fn transform_modules(
             qwik_transform.set_custom_jsx_import_source(true);
         }
 
-        let _scoping = oxc_traverse::traverse_mut(
-            &mut qwik_transform,
-            &allocator,
-            &mut program,
-            scoping,
-            (),
-        );
+        let _scoping =
+            oxc_traverse::traverse_mut(&mut qwik_transform, &allocator, &mut program, scoping, ());
 
         qwik_transform.finalize_segments();
 
@@ -155,7 +146,12 @@ pub fn transform_modules(
                 pos = line_end;
             }
             if last_import_end > 0 {
-                format!("{}{}{}", &code[..last_import_end], hoisted_code, &code[last_import_end..])
+                format!(
+                    "{}{}{}",
+                    &code[..last_import_end],
+                    hoisted_code,
+                    &code[last_import_end..]
+                )
             } else {
                 format!("{}{}", hoisted_code, code)
             }
@@ -190,10 +186,7 @@ pub fn transform_modules(
         let stripped_spans = qwik_transform.stripped_segments();
 
         let is_inline_like = entry_strategy::should_inline(&transform_options.entry_strategy)
-            || matches!(
-                transform_options.entry_strategy,
-                EntryStrategy::Hoist
-            );
+            || matches!(transform_options.entry_strategy, EntryStrategy::Hoist);
 
         for seg in segments {
             if stripped_spans.contains(&seg.span.0) {
@@ -217,13 +210,12 @@ pub fn transform_modules(
                 let seg_path = format!("{}.{}", segment_analysis.canonical_filename, seg_ext);
                 let (segment_code, segment_map) = if !body_code.is_empty() {
                     let raw_code = code_move::build_segment_code_with_hoisted(
-                        body_code, seg, &transform_options, &hoisted_stmts,
+                        body_code,
+                        seg,
+                        &transform_options,
+                        &hoisted_stmts,
                     );
-                    code_move::emit_segment_with_map(
-                        &raw_code,
-                        &seg_path,
-                        emit_options.source_maps,
-                    )
+                    code_move::emit_segment_with_map(&raw_code, &seg_path, emit_options.source_maps)
                 } else {
                     (String::new(), None)
                 };
@@ -272,10 +264,7 @@ fn output_extension(input_path: &str, transpile_ts: bool) -> String {
 
 /// Convert internal SegmentData to public SegmentAnalysis.
 fn segment_data_to_analysis(seg: &SegmentData, origin_path: &str) -> SegmentAnalysis {
-    let canonical_filename = format!(
-        "{}_{}",
-        seg.display_name, seg.hash
-    );
+    let canonical_filename = format!("{}_{}", seg.display_name, seg.hash);
 
     SegmentAnalysis {
         origin: origin_path.to_string(),
@@ -398,7 +387,7 @@ export const handler = $(() => console.log('hello'));"#
 const App = component$(() => {
     return <div>Hello</div>;
 });"#
-                .to_string(),
+                    .to_string(),
                 path: "test.tsx".to_string(),
             }],
             ..TransformModulesOptions::default()
@@ -659,7 +648,9 @@ const App = component$(({count: c}) => {
         // It should be replaced with _rawProps.count, not _rawProps.c.
         // (which would mean the alias was used as a key)
         assert!(
-            !main_code.contains("_rawProps.c ") && !main_code.contains("_rawProps.c;") && !main_code.contains("_rawProps.c\n"),
+            !main_code.contains("_rawProps.c ")
+                && !main_code.contains("_rawProps.c;")
+                && !main_code.contains("_rawProps.c\n"),
             "Should not contain _rawProps.c (the alias as a member access): {}",
             main_code
         );
@@ -1072,10 +1063,7 @@ export const App = component$(() => {
             .iter()
             .find(|s| s.ctx_name == "component$")
             .expect("Expected a component$ segment");
-        assert!(
-            !component.captures,
-            "component$ should have captures=false"
-        );
+        assert!(!component.captures, "component$ should have captures=false");
     }
 
     #[test]
@@ -1324,10 +1312,7 @@ export const handler = $(() => console.log('hello'));"#
                     "Inline strategy segment should have empty code: {}",
                     m.code
                 );
-                assert!(
-                    !m.is_entry,
-                    "Inline strategy segment should not be entry"
-                );
+                assert!(!m.is_entry, "Inline strategy segment should not be entry");
             }
         }
     }
@@ -1365,10 +1350,7 @@ export const handler = $(() => console.log('hello'));"#
                     "Hoist strategy segment should have empty code: {}",
                     m.code
                 );
-                assert!(
-                    !m.is_entry,
-                    "Hoist strategy segment should not be entry"
-                );
+                assert!(!m.is_entry, "Hoist strategy segment should not be entry");
             }
         }
     }
@@ -1510,7 +1492,7 @@ export const handler = $(() => 1);"#
                 code: r#"export const Lightweight = (props) => {
     return <div><span>hello</span></div>;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1553,7 +1535,7 @@ export const handler = $(() => 1);"#
                 code: r#"export const App = () => {
     return <><div/><span/></>;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1581,7 +1563,7 @@ export const handler = $(() => 1);"#
                 code: r#"export const App = (props) => {
     return <button {...props}/>;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1650,7 +1632,7 @@ const App = component$(() => {
                 code: r#"export const App = () => {
     return <div class="foo" id={someVar}>text</div>;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1674,7 +1656,7 @@ const App = component$(() => {
                 code: r#"export const App = () => <div>hello</div>;"#.to_string(),
                 path: "test.tsx".to_string(),
             }],
-            transpile_jsx: false,  // JSX should NOT be transformed
+            transpile_jsx: false, // JSX should NOT be transformed
             ..TransformModulesOptions::default()
         };
         let result = transform_modules(config).unwrap();
@@ -1692,8 +1674,7 @@ const App = component$(() => {
     fn test_jsx_key_attribute() {
         let config = TransformModulesOptions {
             input: vec![TransformModuleInput {
-                code: r#"export const App = () => <div key="mykey">hello</div>;"#
-                    .to_string(),
+                code: r#"export const App = () => <div key="mykey">hello</div>;"#.to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1720,7 +1701,7 @@ const App = component$(() => {
         <span>b</span>
     </div>
 );"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1771,7 +1752,7 @@ const App = component$(() => {
     const signal = useSignal(0);
     return <div value={signal.value} />;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1801,7 +1782,7 @@ const App = component$(() => {
     const signal = useSignal(0);
     return <div value={signal.value()} />;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1854,7 +1835,7 @@ export const App = component$(({fromProps}) => {
     const value = useSignal(0);
     return <div>{value.value}</div>;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1880,7 +1861,7 @@ export const App = component$(({fromProps}) => {
     const signal = useSignal(0);
     return <div count={signal.value + 1}></div>;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1921,7 +1902,7 @@ export const App = component$(({fromProps}) => {
     const store = useStore({});
     return <div city={store.address.city}></div>;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1951,7 +1932,7 @@ export const App = component$(({fromProps}) => {
     const signal = useSignal(0);
     return <div x={signal.value + unknown()}></div>;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -1976,7 +1957,7 @@ export const App = component$(({fromProps}) => {
     const value = useSignal(0);
     return <input bind:value={value} />;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -2016,7 +1997,7 @@ export const App = component$(({fromProps}) => {
     const checked = useSignal(false);
     return <input bind:checked={checked} />;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -2046,7 +2027,7 @@ export const App = component$(({fromProps}) => {
     const stuff = useSignal();
     return <input bind:stuff={stuff} />;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -2180,7 +2161,7 @@ const App = component$(() => <div/>);"#
     const signal = useSignal(0);
     return <div value={signal.value} count={signal.value + 1}></div>;
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             transpile_jsx: true,
@@ -2551,7 +2532,7 @@ export const result = () => {
     }
     return 'done';
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             is_server: Some(true),
@@ -2588,7 +2569,7 @@ export const fn1 = () => {
     }
     return 'done';
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             is_server: Some(true),
@@ -2630,7 +2611,7 @@ export const functionThatNeedsWindow = () => {
         window.alert('hey');
     }
 };"#
-                    .to_string(),
+                .to_string(),
                 path: "test.tsx".to_string(),
             }],
             is_server: Some(true),

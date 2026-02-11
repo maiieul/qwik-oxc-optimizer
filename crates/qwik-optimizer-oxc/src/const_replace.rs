@@ -7,8 +7,8 @@
 
 use std::collections::HashMap;
 
-use oxc::ast::ast::*;
 use oxc::ast::AstBuilder;
+use oxc::ast::ast::*;
 use oxc::span::SPAN;
 
 use crate::types::{EmitMode, TransformOptions};
@@ -152,11 +152,7 @@ fn replace_identifiers_in_statement<'a>(
             replace_identifiers_in_expression(&mut throw_stmt.argument, replacements, ast);
         }
         Statement::SwitchStatement(switch_stmt) => {
-            replace_identifiers_in_expression(
-                &mut switch_stmt.discriminant,
-                replacements,
-                ast,
-            );
+            replace_identifiers_in_expression(&mut switch_stmt.discriminant, replacements, ast);
             for case in switch_stmt.cases.iter_mut() {
                 if let Some(ref mut test) = case.test {
                     replace_identifiers_in_expression(test, replacements, ast);
@@ -169,27 +165,17 @@ fn replace_identifiers_in_statement<'a>(
                 replace_identifiers_in_declaration(decl, replacements, ast);
             }
         }
-        Statement::ExportDefaultDeclaration(export) => {
-            match &mut export.declaration {
-                ExportDefaultDeclarationKind::ArrowFunctionExpression(arrow) => {
-                    replace_identifiers_in_statements(
-                        &mut arrow.body.statements,
-                        replacements,
-                        ast,
-                    );
-                }
-                ExportDefaultDeclarationKind::FunctionDeclaration(func) => {
-                    if let Some(ref mut body) = func.body {
-                        replace_identifiers_in_statements(
-                            &mut body.statements,
-                            replacements,
-                            ast,
-                        );
-                    }
-                }
-                _ => {}
+        Statement::ExportDefaultDeclaration(export) => match &mut export.declaration {
+            ExportDefaultDeclarationKind::ArrowFunctionExpression(arrow) => {
+                replace_identifiers_in_statements(&mut arrow.body.statements, replacements, ast);
             }
-        }
+            ExportDefaultDeclarationKind::FunctionDeclaration(func) => {
+                if let Some(ref mut body) = func.body {
+                    replace_identifiers_in_statements(&mut body.statements, replacements, ast);
+                }
+            }
+            _ => {}
+        },
         Statement::FunctionDeclaration(func) => {
             if let Some(ref mut body) = func.body {
                 replace_identifiers_in_statements(&mut body.statements, replacements, ast);
@@ -222,11 +208,7 @@ fn replace_identifiers_in_declaration<'a>(
             for element in class.body.body.iter_mut() {
                 if let ClassElement::MethodDefinition(method) = element {
                     if let Some(ref mut body) = method.value.body {
-                        replace_identifiers_in_statements(
-                            &mut body.statements,
-                            replacements,
-                            ast,
-                        );
+                        replace_identifiers_in_statements(&mut body.statements, replacements, ast);
                     }
                 }
             }
@@ -394,9 +376,8 @@ fn replace_identifiers_in_array_element<'a>(
     match elem {
         ArrayExpressionElement::Identifier(ident) => {
             if let Some(&value) = replacements.get(ident.name.as_str()) {
-                *elem = ArrayExpressionElement::BooleanLiteral(
-                    ast.alloc_boolean_literal(SPAN, value),
-                );
+                *elem =
+                    ArrayExpressionElement::BooleanLiteral(ast.alloc_boolean_literal(SPAN, value));
             }
         }
         ArrayExpressionElement::LogicalExpression(logical) => {
@@ -419,11 +400,7 @@ fn replace_identifiers_in_jsx_element<'a>(
     for attr in jsx.opening_element.attributes.iter_mut() {
         if let JSXAttributeItem::Attribute(a) = attr {
             if let Some(JSXAttributeValue::ExpressionContainer(container)) = &mut a.value {
-                replace_identifiers_in_jsx_expression(
-                    &mut container.expression,
-                    replacements,
-                    ast,
-                );
+                replace_identifiers_in_jsx_expression(&mut container.expression, replacements, ast);
             }
         }
     }
@@ -439,11 +416,7 @@ fn replace_identifiers_in_jsx_children<'a>(
     for child in children.iter_mut() {
         match child {
             JSXChild::ExpressionContainer(container) => {
-                replace_identifiers_in_jsx_expression(
-                    &mut container.expression,
-                    replacements,
-                    ast,
-                );
+                replace_identifiers_in_jsx_expression(&mut container.expression, replacements, ast);
             }
             JSXChild::Element(elem) => {
                 replace_identifiers_in_jsx_element(elem, replacements, ast);
@@ -601,14 +574,11 @@ fn eliminate_dead_branches<'a>(
             continue;
         };
         if test_val {
-            let placeholder =
-                Statement::EmptyStatement(ast.alloc_empty_statement(SPAN));
-            let consequent =
-                std::mem::replace(&mut if_stmt.consequent, placeholder);
+            let placeholder = Statement::EmptyStatement(ast.alloc_empty_statement(SPAN));
+            let consequent = std::mem::replace(&mut if_stmt.consequent, placeholder);
             if let Statement::BlockStatement(block) = consequent {
                 let block_inner = block.unbox();
-                let body_stmts: Vec<Statement<'a>> =
-                    block_inner.body.into_iter().collect();
+                let body_stmts: Vec<Statement<'a>> = block_inner.body.into_iter().collect();
                 actions.push((i, StmtAction::ReplaceWith(body_stmts)));
             } else {
                 actions.push((i, StmtAction::ReplaceWith(vec![consequent])));
@@ -617,8 +587,7 @@ fn eliminate_dead_branches<'a>(
             let alternate = if_stmt.alternate.take().unwrap();
             if let Statement::BlockStatement(block) = alternate {
                 let block_inner = block.unbox();
-                let body_stmts: Vec<Statement<'a>> =
-                    block_inner.body.into_iter().collect();
+                let body_stmts: Vec<Statement<'a>> = block_inner.body.into_iter().collect();
                 actions.push((i, StmtAction::ReplaceWith(body_stmts)));
             } else {
                 actions.push((i, StmtAction::ReplaceWith(vec![alternate])));
@@ -629,8 +598,7 @@ fn eliminate_dead_branches<'a>(
     }
 
     if !actions.is_empty() {
-        let mut action_map: HashMap<usize, StmtAction<'a>> =
-            actions.into_iter().collect();
+        let mut action_map: HashMap<usize, StmtAction<'a>> = actions.into_iter().collect();
         let all_stmts: Vec<Statement<'a>> = stmts.drain(..).collect();
         let mut result: Vec<Statement<'a>> = Vec::new();
 
@@ -689,32 +657,27 @@ fn simplify_expressions_in_statement<'a>(stmt: &mut Statement<'a>, ast: &AstBuil
                 simplify_expressions_in_declaration(decl, ast);
             }
         }
-        Statement::ExportDefaultDeclaration(export) => {
-            match &mut export.declaration {
-                ExportDefaultDeclarationKind::ArrowFunctionExpression(arrow) => {
-                    for inner_stmt in arrow.body.statements.iter_mut() {
+        Statement::ExportDefaultDeclaration(export) => match &mut export.declaration {
+            ExportDefaultDeclarationKind::ArrowFunctionExpression(arrow) => {
+                for inner_stmt in arrow.body.statements.iter_mut() {
+                    simplify_expressions_in_statement(inner_stmt, ast);
+                }
+            }
+            ExportDefaultDeclarationKind::FunctionDeclaration(func) => {
+                if let Some(ref mut body) = func.body {
+                    for inner_stmt in body.statements.iter_mut() {
                         simplify_expressions_in_statement(inner_stmt, ast);
                     }
                 }
-                ExportDefaultDeclarationKind::FunctionDeclaration(func) => {
-                    if let Some(ref mut body) = func.body {
-                        for inner_stmt in body.statements.iter_mut() {
-                            simplify_expressions_in_statement(inner_stmt, ast);
-                        }
-                    }
-                }
-                _ => {}
             }
-        }
+            _ => {}
+        },
         _ => {}
     }
 }
 
 /// Simplify logical expressions in a declaration.
-fn simplify_expressions_in_declaration<'a>(
-    decl: &mut Declaration<'a>,
-    ast: &AstBuilder<'a>,
-) {
+fn simplify_expressions_in_declaration<'a>(decl: &mut Declaration<'a>, ast: &AstBuilder<'a>) {
     match decl {
         Declaration::VariableDeclaration(var_decl) => {
             for declarator in var_decl.declarations.iter_mut() {
@@ -776,19 +739,17 @@ fn recurse_dead_branches_in_statement<'a>(stmt: &mut Statement<'a>, ast: &AstBui
                 recurse_dead_branches_in_declaration(decl, ast);
             }
         }
-        Statement::ExportDefaultDeclaration(export) => {
-            match &mut export.declaration {
-                ExportDefaultDeclarationKind::ArrowFunctionExpression(arrow) => {
-                    eliminate_dead_branches(&mut arrow.body.statements, ast);
-                }
-                ExportDefaultDeclarationKind::FunctionDeclaration(func) => {
-                    if let Some(ref mut body) = func.body {
-                        eliminate_dead_branches(&mut body.statements, ast);
-                    }
-                }
-                _ => {}
+        Statement::ExportDefaultDeclaration(export) => match &mut export.declaration {
+            ExportDefaultDeclarationKind::ArrowFunctionExpression(arrow) => {
+                eliminate_dead_branches(&mut arrow.body.statements, ast);
             }
-        }
+            ExportDefaultDeclarationKind::FunctionDeclaration(func) => {
+                if let Some(ref mut body) = func.body {
+                    eliminate_dead_branches(&mut body.statements, ast);
+                }
+            }
+            _ => {}
+        },
         Statement::FunctionDeclaration(func) => {
             if let Some(ref mut body) = func.body {
                 eliminate_dead_branches(&mut body.statements, ast);
@@ -799,10 +760,7 @@ fn recurse_dead_branches_in_statement<'a>(stmt: &mut Statement<'a>, ast: &AstBui
 }
 
 /// Recurse into a declaration for dead branch elimination.
-fn recurse_dead_branches_in_declaration<'a>(
-    decl: &mut Declaration<'a>,
-    ast: &AstBuilder<'a>,
-) {
+fn recurse_dead_branches_in_declaration<'a>(decl: &mut Declaration<'a>, ast: &AstBuilder<'a>) {
     match decl {
         Declaration::VariableDeclaration(var_decl) => {
             for declarator in var_decl.declarations.iter_mut() {
@@ -821,10 +779,7 @@ fn recurse_dead_branches_in_declaration<'a>(
 }
 
 /// Recurse into expressions for dead branch elimination in nested arrow functions.
-fn recurse_dead_branches_in_expression<'a>(
-    expr: &mut Expression<'a>,
-    ast: &AstBuilder<'a>,
-) {
+fn recurse_dead_branches_in_expression<'a>(expr: &mut Expression<'a>, ast: &AstBuilder<'a>) {
     match expr {
         Expression::ArrowFunctionExpression(arrow) => {
             eliminate_dead_branches(&mut arrow.body.statements, ast);

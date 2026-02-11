@@ -195,7 +195,9 @@ impl QwikTransform {
     fn should_strip_ctx_name(&self, ctx_name: &str) -> bool {
         self.options.strip_ctx_name.iter().any(|stripped| {
             let name_without_dollar = ctx_name.trim_end_matches('$');
-            name_without_dollar.to_lowercase().contains(&stripped.to_lowercase())
+            name_without_dollar
+                .to_lowercase()
+                .contains(&stripped.to_lowercase())
         })
     }
 
@@ -291,11 +293,7 @@ impl QwikTransform {
 
     /// Detect file extension from filename.
     fn file_extension(&self) -> String {
-        self.filename
-            .rsplit('.')
-            .next()
-            .unwrap_or("js")
-            .to_string()
+        self.filename.rsplit('.').next().unwrap_or("js").to_string()
     }
 
     /// Collect all binding names from a BindingPattern into the current
@@ -329,11 +327,7 @@ impl QwikTransform {
     }
 
     /// Record a segment and track imports. Returns the segment data.
-    fn record_segment(
-        &mut self,
-        call: &CallExpression<'_>,
-        kind: &DollarCallKind,
-    ) -> SegmentData {
+    fn record_segment(&mut self, call: &CallExpression<'_>, kind: &DollarCallKind) -> SegmentData {
         let display_name = self.derive_display_name_for_call(call);
 
         let full_display_name = format!("{}_{}", self.filename, display_name);
@@ -345,8 +339,7 @@ impl QwikTransform {
         );
 
         let segment_name = hash::format_segment_name(&display_name, &segment_hash);
-        let canonical_filename =
-            self.build_canonical_filename(&display_name, &segment_hash);
+        let canonical_filename = self.build_canonical_filename(&display_name, &segment_hash);
         let import_path = self.build_segment_import_path(&canonical_filename);
 
         let ctx_name = match kind {
@@ -367,14 +360,14 @@ impl QwikTransform {
             extension: self.file_extension(),
             span: (call.span.start, call.span.end),
             parent,
-            captures: false,       // Computed in exit_expression
-            capture_names: vec![], // Computed in exit_expression
+            captures: false,        // Computed in exit_expression
+            capture_names: vec![],  // Computed in exit_expression
             needed_imports: vec![], // Populated by finalize_segments
             body_span: (call.span.start, call.span.end),
-            param_names: vec![],   // Set by props destructuring if needed
-            body_code: String::new(), // Populated in exit_expression for segment strategy
+            param_names: vec![],        // Set by props destructuring if needed
+            body_code: String::new(),   // Populated in exit_expression for segment strategy
             child_lazy_imports: vec![], // Populated by finalize_segments
-            needs_qrl_import: false,   // Populated by finalize_segments
+            needs_qrl_import: false,    // Populated by finalize_segments
         };
 
         // Check if this segment will be stripped
@@ -385,7 +378,10 @@ impl QwikTransform {
 
         if !will_be_stripped {
             let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
-                    || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
+                || matches!(
+                    self.options.entry_strategy,
+                    crate::types::EntryStrategy::Hoist
+                );
 
             if is_inline {
                 self.import_tracker.needs_inlined_qrl = true;
@@ -428,8 +424,7 @@ impl QwikTransform {
         );
 
         let segment_name = hash::format_segment_name(display_name, &segment_hash);
-        let canonical_filename =
-            self.build_canonical_filename(display_name, &segment_hash);
+        let canonical_filename = self.build_canonical_filename(display_name, &segment_hash);
         let import_path = self.build_segment_import_path(&canonical_filename);
 
         // attribute name pattern. This includes onClick$, onInput$, custom$, etc.
@@ -461,7 +456,10 @@ impl QwikTransform {
 
         if !will_be_stripped {
             let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
-                || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
+                || matches!(
+                    self.options.entry_strategy,
+                    crate::types::EntryStrategy::Hoist
+                );
 
             if is_inline {
                 self.import_tracker.needs_inlined_qrl = true;
@@ -507,9 +505,7 @@ impl QwikTransform {
         for attr_item in &element.opening_element.attributes {
             if let JSXAttributeItem::Attribute(attr) = attr_item {
                 let (attr_name_str, namespace_prefix) = match &attr.name {
-                    JSXAttributeName::Identifier(ident) => {
-                        (ident.name.as_str().to_string(), None)
-                    }
+                    JSXAttributeName::Identifier(ident) => (ident.name.as_str().to_string(), None),
                     JSXAttributeName::NamespacedName(ns) => {
                         let name = ns.name.name.as_str();
                         let prefix = ns.namespace.name.as_str();
@@ -534,19 +530,18 @@ impl QwikTransform {
                                 } else {
                                     transform_attr_name_for_display(&attr_name_str)
                                 };
-                                let display_name = self.derive_jsx_event_display_name(
-                                    &element_name, &event_suffix,
-                                );
+                                let display_name = self
+                                    .derive_jsx_event_display_name(&element_name, &event_suffix);
                                 let ctx_name = if namespace_prefix.is_some() {
-                                    format!("{}:{}", namespace_prefix.as_ref().unwrap(), attr_name_str)
+                                    format!(
+                                        "{}:{}",
+                                        namespace_prefix.as_ref().unwrap(),
+                                        attr_name_str
+                                    )
                                 } else {
                                     attr_name_str.clone()
                                 };
-                                self.record_jsx_event_segment(
-                                    &display_name,
-                                    span,
-                                    &ctx_name,
-                                );
+                                self.record_jsx_event_segment(&display_name, span, &ctx_name);
                             }
                         }
                     }
@@ -558,7 +553,10 @@ impl QwikTransform {
     }
 
     /// Scan JSX children for elements with $-suffixed attributes.
-    fn create_jsx_event_segments_in_children<'b>(&mut self, children: &oxc::allocator::Vec<'b, JSXChild<'b>>) {
+    fn create_jsx_event_segments_in_children<'b>(
+        &mut self,
+        children: &oxc::allocator::Vec<'b, JSXChild<'b>>,
+    ) {
         for child in children {
             match child {
                 JSXChild::Element(el) => {
@@ -573,12 +571,10 @@ impl QwikTransform {
     }
 
     /// Build display name for a JSX event handler segment.
-    fn derive_jsx_event_display_name(
-        &self,
-        element_name: &str,
-        event_suffix: &str,
-    ) -> String {
-        let parent_ctx = self.dollar_call_stack.last()
+    fn derive_jsx_event_display_name(&self, element_name: &str, event_suffix: &str) -> String {
+        let parent_ctx = self
+            .dollar_call_stack
+            .last()
             .map(|s| s.as_str())
             .unwrap_or("");
 
@@ -703,11 +699,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
     }
 
-    fn exit_expression(
-        &mut self,
-        expr: &mut Expression<'a>,
-        ctx: &mut TraverseCtx<'a, ()>,
-    ) {
+    fn exit_expression(&mut self, expr: &mut Expression<'a>, ctx: &mut TraverseCtx<'a, ()>) {
         // Pre-scan JSX elements for $-suffixed event handler attributes.
         match expr {
             Expression::JSXElement(_) => {
@@ -724,9 +716,13 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         if self.options.transpile_jsx {
-            let destr_props: Option<Vec<(String, String)>> = self.active_props_info.as_ref().map(|info| {
-                info.prop_keys.iter().map(|(key, local)| (local.clone(), key.clone())).collect()
-            });
+            let destr_props: Option<Vec<(String, String)>> =
+                self.active_props_info.as_ref().map(|info| {
+                    info.prop_keys
+                        .iter()
+                        .map(|(key, local)| (local.clone(), key.clone()))
+                        .collect()
+                });
             let destr_props_ref = destr_props.as_deref();
 
             // Take hoisted_function_stmts out to avoid borrow conflict with &mut self
@@ -781,8 +777,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 let body_expr = if !call.arguments.is_empty() {
                     let placeholder =
                         Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
-                    let body_arg =
-                        std::mem::replace(&mut call.arguments[0], placeholder);
+                    let body_arg = std::mem::replace(&mut call.arguments[0], placeholder);
                     Some(argument_to_expression(body_arg, ctx))
                 } else {
                     None
@@ -794,13 +789,15 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     let fn_string = codegen.into_source_text();
                     let minified = minify_fn_string(&fn_string);
 
-                    let replacement = import_rewrite::build_qrl_sync_call(
-                        fn_expr, &minified, ctx,
-                    );
+                    let replacement = import_rewrite::build_qrl_sync_call(fn_expr, &minified, ctx);
 
                     // the top level (not inside a $-body that will be extracted).
-                    let is_segment_strategy = !entry_strategy::should_inline(&self.options.entry_strategy)
-                        && !matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
+                    let is_segment_strategy =
+                        !entry_strategy::should_inline(&self.options.entry_strategy)
+                            && !matches!(
+                                self.options.entry_strategy,
+                                crate::types::EntryStrategy::Hoist
+                            );
                     let inside_dollar_body = !self.capture_stack.is_empty();
                     if !(is_segment_strategy && inside_dollar_body) {
                         self.import_tracker.needs_qrl_sync = true;
@@ -822,7 +819,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
             self.dollar_call_stack.pop();
 
-            let is_component_exit = matches!(&kind, DollarCallKind::Named(name) if name == "component$");
+            let is_component_exit =
+                matches!(&kind, DollarCallKind::Named(name) if name == "component$");
             let props_info = if is_component_exit {
                 self.active_props_info.take()
             } else {
@@ -831,9 +829,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             // props_info is only Some when is_component_exit is true, so the
             // inner kind/name checks are unnecessary -- flatten to one level.
             if let Some(ref info) = props_info {
-                if let Some(Argument::ArrowFunctionExpression(arrow)) =
-                    call.arguments.first_mut()
-                {
+                if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first_mut() {
                     if !arrow.params.items.is_empty() {
                         let new_pattern = ctx.ast.binding_pattern_binding_identifier(
                             SPAN,
@@ -855,11 +851,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     }
 
                     if let Some(ref rest_name) = info.rest_name {
-                        let excluded_keys: Vec<String> = info
-                            .prop_keys
-                            .iter()
-                            .map(|(key, _)| key.clone())
-                            .collect();
+                        let excluded_keys: Vec<String> =
+                            info.prop_keys.iter().map(|(key, _)| key.clone()).collect();
                         let rest_stmt = props_destructuring::build_rest_props_declaration(
                             rest_name,
                             &info.raw_props_name,
@@ -869,8 +862,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
                         let mut old_stmts = ctx.ast.vec();
                         std::mem::swap(&mut arrow.body.statements, &mut old_stmts);
-                        let mut new_stmts =
-                            ctx.ast.vec_with_capacity(1 + old_stmts.len());
+                        let mut new_stmts = ctx.ast.vec_with_capacity(1 + old_stmts.len());
                         new_stmts.push(rest_stmt);
                         for s in old_stmts {
                             new_stmts.push(s);
@@ -894,9 +886,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     }
                 }
 
-                if let Some(seg) = self.segments.iter_mut().find(|s| {
-                    s.span.0 == call.span.start && s.span.1 == call.span.end
-                }) {
+                if let Some(seg) = self
+                    .segments
+                    .iter_mut()
+                    .find(|s| s.span.0 == call.span.start && s.span.1 == call.span.end)
+                {
                     seg.param_names = vec![info.raw_props_name.clone()];
                 }
 
@@ -915,7 +909,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
                 if let Some(parent_name) = component_display_name {
                     for seg in self.segments.iter_mut() {
-                        if seg.parent.as_ref() != Some(&parent_name) || seg.capture_names.is_empty() {
+                        if seg.parent.as_ref() != Some(&parent_name) || seg.capture_names.is_empty()
+                        {
                             continue;
                         }
                         let mut needs_rawprops = false;
@@ -935,23 +930,19 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 }
             }
 
-            let (body_ident_refs, body_local_decls) = self
-                .capture_stack
-                .pop()
-                .unwrap_or_default();
+            let (body_ident_refs, body_local_decls) = self.capture_stack.pop().unwrap_or_default();
 
             // enclosing function scope.
             let is_top_level_dollar_call = self.capture_stack.is_empty();
 
-            let capture_result = collector::compute_captures(
-                &body_ident_refs,
-                &body_local_decls,
-                &self.collected,
-            );
+            let capture_result =
+                collector::compute_captures(&body_ident_refs, &body_local_decls, &self.collected);
 
-            if let Some(seg) = self.segments.iter_mut().find(|s| {
-                s.span.0 == call.span.start && s.span.1 == call.span.end
-            }) {
+            if let Some(seg) = self
+                .segments
+                .iter_mut()
+                .find(|s| s.span.0 == call.span.start && s.span.1 == call.span.end)
+            {
                 if is_top_level_dollar_call {
                     // Top-level $()-calls never have captures
                     seg.captures = false;
@@ -963,11 +954,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
 
             let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
-                || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
-            if !is_top_level_dollar_call
-                && !capture_result.capture_names.is_empty()
-                && is_inline
-            {
+                || matches!(
+                    self.options.entry_strategy,
+                    crate::types::EntryStrategy::Hoist
+                );
+            if !is_top_level_dollar_call && !capture_result.capture_names.is_empty() && is_inline {
                 self.import_tracker.needs_captures = true;
             }
 
@@ -988,8 +979,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 if !is_inline && !call.arguments.is_empty() {
                     let placeholder =
                         Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
-                    let body_arg =
-                        std::mem::replace(&mut call.arguments[0], placeholder);
+                    let body_arg = std::mem::replace(&mut call.arguments[0], placeholder);
 
                     let body_expr = match body_arg {
                         Argument::SpreadElement(_) => None,
@@ -1024,9 +1014,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 };
 
                 let body_as_expr = match body_expr {
-                    Argument::SpreadElement(_) => {
-                        ctx.ast.expression_identifier(SPAN, "undefined")
-                    }
+                    Argument::SpreadElement(_) => ctx.ast.expression_identifier(SPAN, "undefined"),
                     _ => argument_to_expression(body_expr, ctx),
                 };
 
@@ -1070,11 +1058,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
     }
 
-    fn exit_program(
-        &mut self,
-        program: &mut Program<'a>,
-        ctx: &mut TraverseCtx<'a, ()>,
-    ) {
+    fn exit_program(&mut self, program: &mut Program<'a>, ctx: &mut TraverseCtx<'a, ()>) {
         let core_module = &self.options.core_module;
 
         let mut new_stmts: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
@@ -1474,8 +1458,12 @@ fn collect_reactive_deps_inner(
             }
 
             collect_reactive_deps_inner(
-                &member.object, destructured_props, collected_imports,
-                deps, seen, has_non_reactive_non_const,
+                &member.object,
+                destructured_props,
+                collected_imports,
+                deps,
+                seen,
+                has_non_reactive_non_const,
             );
         }
 
@@ -1512,32 +1500,56 @@ fn collect_reactive_deps_inner(
 
         Expression::BinaryExpression(bin) => {
             collect_reactive_deps_inner(
-                &bin.left, destructured_props, collected_imports,
-                deps, seen, has_non_reactive_non_const,
+                &bin.left,
+                destructured_props,
+                collected_imports,
+                deps,
+                seen,
+                has_non_reactive_non_const,
             );
             collect_reactive_deps_inner(
-                &bin.right, destructured_props, collected_imports,
-                deps, seen, has_non_reactive_non_const,
+                &bin.right,
+                destructured_props,
+                collected_imports,
+                deps,
+                seen,
+                has_non_reactive_non_const,
             );
         }
         Expression::ConditionalExpression(cond) => {
             collect_reactive_deps_inner(
-                &cond.test, destructured_props, collected_imports,
-                deps, seen, has_non_reactive_non_const,
+                &cond.test,
+                destructured_props,
+                collected_imports,
+                deps,
+                seen,
+                has_non_reactive_non_const,
             );
             collect_reactive_deps_inner(
-                &cond.consequent, destructured_props, collected_imports,
-                deps, seen, has_non_reactive_non_const,
+                &cond.consequent,
+                destructured_props,
+                collected_imports,
+                deps,
+                seen,
+                has_non_reactive_non_const,
             );
             collect_reactive_deps_inner(
-                &cond.alternate, destructured_props, collected_imports,
-                deps, seen, has_non_reactive_non_const,
+                &cond.alternate,
+                destructured_props,
+                collected_imports,
+                deps,
+                seen,
+                has_non_reactive_non_const,
             );
         }
         Expression::UnaryExpression(unary) => {
             collect_reactive_deps_inner(
-                &unary.argument, destructured_props, collected_imports,
-                deps, seen, has_non_reactive_non_const,
+                &unary.argument,
+                destructured_props,
+                collected_imports,
+                deps,
+                seen,
+                has_non_reactive_non_const,
             );
         }
         Expression::ObjectExpression(obj) => {
@@ -1545,14 +1557,22 @@ fn collect_reactive_deps_inner(
                 match prop {
                     ObjectPropertyKind::ObjectProperty(p) => {
                         collect_reactive_deps_inner(
-                            &p.value, destructured_props, collected_imports,
-                            deps, seen, has_non_reactive_non_const,
+                            &p.value,
+                            destructured_props,
+                            collected_imports,
+                            deps,
+                            seen,
+                            has_non_reactive_non_const,
                         );
                     }
                     ObjectPropertyKind::SpreadProperty(s) => {
                         collect_reactive_deps_inner(
-                            &s.argument, destructured_props, collected_imports,
-                            deps, seen, has_non_reactive_non_const,
+                            &s.argument,
+                            destructured_props,
+                            collected_imports,
+                            deps,
+                            seen,
+                            has_non_reactive_non_const,
                         );
                     }
                 }
@@ -1560,8 +1580,12 @@ fn collect_reactive_deps_inner(
         }
         Expression::ParenthesizedExpression(paren) => {
             collect_reactive_deps_inner(
-                &paren.expression, destructured_props, collected_imports,
-                deps, seen, has_non_reactive_non_const,
+                &paren.expression,
+                destructured_props,
+                collected_imports,
+                deps,
+                seen,
+                has_non_reactive_non_const,
             );
         }
 
@@ -1593,7 +1617,9 @@ fn has_chain_depth(expr: &Expression<'_>, min_depth: usize) -> bool {
 
 /// Check if an identifier is an imported name.
 fn is_imported_identifier(name: &str, imports: &[crate::types::ImportInfo]) -> bool {
-    imports.iter().any(|imp| imp.specifiers.iter().any(|spec| spec == name))
+    imports
+        .iter()
+        .any(|imp| imp.specifiers.iter().any(|spec| spec == name))
 }
 
 /// Build an _fnSignal call and hoisted function declarations.
@@ -1621,7 +1647,11 @@ fn build_fn_signal_wrapping<'a>(
         if dep.root_name == "_rawProps" {
             if let Some(props) = destructured_props {
                 for (local_alias, original_key) in props {
-                    body_str = replace_identifier_in_code(&body_str, local_alias, &format!("{}.{}", dep.param_name, original_key));
+                    body_str = replace_identifier_in_code(
+                        &body_str,
+                        local_alias,
+                        &format!("{}.{}", dep.param_name, original_key),
+                    );
                 }
             }
             body_str = replace_identifier_in_code(&body_str, "_rawProps", &dep.param_name);
@@ -1645,7 +1675,11 @@ fn build_fn_signal_wrapping<'a>(
     let fn_code = format!("const {} = ({}) => {};", hf_name, params_str, body_for_fn);
 
     let minified = minify_expression_string(&body_str);
-    let str_code = format!("const {} = \"{}\";", hf_str_name, escape_string_literal(&minified));
+    let str_code = format!(
+        "const {} = \"{}\";",
+        hf_str_name,
+        escape_string_literal(&minified)
+    );
 
     let callee = ctx.ast.expression_identifier(SPAN, "_fnSignal");
     let mut arguments = ctx.ast.vec_with_capacity(3);
@@ -1663,7 +1697,9 @@ fn build_fn_signal_wrapping<'a>(
     arguments.push(Argument::from(ctx.ast.expression_array(SPAN, dep_elements)));
 
     let str_atom = ctx.ast.atom(&hf_str_name);
-    arguments.push(Argument::from(ctx.ast.expression_identifier(SPAN, str_atom)));
+    arguments.push(Argument::from(
+        ctx.ast.expression_identifier(SPAN, str_atom),
+    ));
 
     let fn_signal_call = ctx.ast.expression_call(
         SPAN,
@@ -1742,8 +1778,7 @@ fn minify_expression_string(s: &str) -> String {
             continue;
         }
 
-        if prev_was_space && is_ident_char(c) {
-        }
+        if prev_was_space && is_ident_char(c) {}
         prev_was_space = false;
         result.push(c);
     }
@@ -1785,11 +1820,15 @@ fn build_bind_event_handler<'a>(
 
     let mut arguments = ctx.ast.vec_with_capacity(3);
 
-    arguments.push(Argument::from(ctx.ast.expression_identifier(SPAN, handler_atom)));
-
     arguments.push(Argument::from(
-        ctx.ast.expression_string_literal(SPAN, handler_str_atom, None),
+        ctx.ast.expression_identifier(SPAN, handler_atom),
     ));
+
+    arguments.push(Argument::from(ctx.ast.expression_string_literal(
+        SPAN,
+        handler_str_atom,
+        None,
+    )));
 
     let mut elements = ctx.ast.vec_with_capacity(1);
     elements.push(ArrayExpressionElement::from(
@@ -1814,11 +1853,7 @@ fn build_tag_expression<'a>(
     match name {
         JSXElementName::Identifier(ident) => {
             let tag_name = ident.name.as_str();
-            if tag_name
-                .chars()
-                .next()
-                .map_or(false, |c| c.is_lowercase())
-            {
+            if tag_name.chars().next().map_or(false, |c| c.is_lowercase()) {
                 let atom = ctx.ast.atom(tag_name);
                 ctx.ast.expression_string_literal(SPAN, atom, None)
             } else {
@@ -1855,9 +1890,10 @@ fn build_jsx_member_expr<'a>(
     };
     let property_atom = ctx.ast.atom(member.property.name.as_str());
     let property = ctx.ast.identifier_name(SPAN, property_atom);
-    Expression::StaticMemberExpression(ctx.ast.alloc_static_member_expression(
-        SPAN, object, property, false,
-    ))
+    Expression::StaticMemberExpression(
+        ctx.ast
+            .alloc_static_member_expression(SPAN, object, property, false),
+    )
 }
 
 /// Convert a JSXExpression to an Expression. JSXExpression uses inherit_variants!
@@ -1936,11 +1972,23 @@ fn jsx_attr_value_to_expression<'a>(
         }
         JSXAttributeValue::Element(el) => {
             // JSX element as attribute value: transform it
-            transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts)
+            transform_jsx_element_inner(
+                el.unbox(),
+                tracker,
+                ctx,
+                destructured_props,
+                module_imports,
+                hoisted_stmts,
+            )
         }
-        JSXAttributeValue::Fragment(frag) => {
-            transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts)
-        }
+        JSXAttributeValue::Fragment(frag) => transform_jsx_fragment_inner(
+            frag.unbox(),
+            tracker,
+            ctx,
+            destructured_props,
+            module_imports,
+            hoisted_stmts,
+        ),
     }
 }
 
@@ -1986,7 +2034,14 @@ fn transform_jsx_element_inner<'a>(
                 // Handle key attribute
                 if attr_name == "key" {
                     if let Some(val) = attr.value {
-                        key_value = Some(jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts));
+                        key_value = Some(jsx_attr_value_to_expression(
+                            val,
+                            tracker,
+                            ctx,
+                            destructured_props,
+                            module_imports,
+                            hoisted_stmts,
+                        ));
                     }
                     continue;
                 }
@@ -1995,7 +2050,14 @@ fn transform_jsx_element_inner<'a>(
                 if let Some(event_name) = transform_event_attr_name(&attr_name) {
                     // Event handler: value goes into const props with renamed key
                     let value = if let Some(val) = attr.value {
-                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts)
+                        jsx_attr_value_to_expression(
+                            val,
+                            tracker,
+                            ctx,
+                            destructured_props,
+                            module_imports,
+                            hoisted_stmts,
+                        )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
@@ -2004,9 +2066,18 @@ fn transform_jsx_element_inner<'a>(
                 }
 
                 // Check for host: prefix (kept as-is) or custom$ (kept as-is)
-                if attr_name.starts_with("host:") || (attr_name.ends_with('$') && !attr_name.starts_with("on")) {
+                if attr_name.starts_with("host:")
+                    || (attr_name.ends_with('$') && !attr_name.starts_with("on"))
+                {
                     let value = if let Some(val) = attr.value {
-                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts)
+                        jsx_attr_value_to_expression(
+                            val,
+                            tracker,
+                            ctx,
+                            destructured_props,
+                            module_imports,
+                            hoisted_stmts,
+                        )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
@@ -2017,7 +2088,14 @@ fn transform_jsx_element_inner<'a>(
                 // Check for bind: directive (CONV-12)
                 if let Some(bind_prop) = attr_name.strip_prefix("bind:") {
                     let signal_value = if let Some(val) = attr.value {
-                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts)
+                        jsx_attr_value_to_expression(
+                            val,
+                            tracker,
+                            ctx,
+                            destructured_props,
+                            module_imports,
+                            hoisted_stmts,
+                        )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
@@ -2034,9 +2112,7 @@ fn transform_jsx_element_inner<'a>(
                             // We need to clone the signal expression for the captures array.
                             // Since we can't clone AST nodes, we serialize and re-identify.
                             let signal_name = extract_identifier_name(&signal_value);
-                            let event_handler = build_bind_event_handler(
-                                "_val", &signal_name, ctx,
-                            );
+                            let event_handler = build_bind_event_handler("_val", &signal_name, ctx);
                             const_props.push(("value".to_string(), signal_value));
                             const_props.push(("q-e:input".to_string(), event_handler));
                             continue;
@@ -2049,9 +2125,7 @@ fn transform_jsx_element_inner<'a>(
                             tracker.needs_inlined_qrl = true;
 
                             let signal_name = extract_identifier_name(&signal_value);
-                            let event_handler = build_bind_event_handler(
-                                "_chk", &signal_name, ctx,
-                            );
+                            let event_handler = build_bind_event_handler("_chk", &signal_name, ctx);
                             const_props.push(("checked".to_string(), signal_value));
                             const_props.push(("q-e:input".to_string(), event_handler));
                             continue;
@@ -2068,7 +2142,14 @@ fn transform_jsx_element_inner<'a>(
                 has_any_visible_prop = true;
                 _has_only_events = false;
                 let value = if let Some(val) = attr.value {
-                    jsx_attr_value_to_expression(val, tracker, ctx, destructured_props, module_imports, hoisted_stmts)
+                    jsx_attr_value_to_expression(
+                        val,
+                        tracker,
+                        ctx,
+                        destructured_props,
+                        module_imports,
+                        hoisted_stmts,
+                    )
                 } else {
                     // Boolean attribute: <input disabled /> -> disabled: true
                     ctx.ast.expression_boolean_literal(SPAN, true)
@@ -2094,12 +2175,13 @@ fn transform_jsx_element_inner<'a>(
                             // Build _wrapProp(source, "propName") in const props.
                             // Source is either _rawProps (for destructured props) or extracted from
                             // a StaticMemberExpression (for _rawProps.propName).
-                            let source_obj = if let Expression::StaticMemberExpression(member) = value {
-                                member.unbox().object
-                            } else {
-                                // For destructured prop identifiers, build _rawProps reference
-                                ctx.ast.expression_identifier(SPAN, "_rawProps")
-                            };
+                            let source_obj =
+                                if let Expression::StaticMemberExpression(member) = value {
+                                    member.unbox().object
+                                } else {
+                                    // For destructured prop identifiers, build _rawProps reference
+                                    ctx.ast.expression_identifier(SPAN, "_rawProps")
+                                };
                             let wrapped = import_rewrite::build_wrap_prop_call_named(
                                 source_obj, &prop_name, ctx,
                             );
@@ -2115,13 +2197,16 @@ fn transform_jsx_element_inner<'a>(
                     const_props.push((attr_name, value));
                 } else if !contains_function_call(&value) {
                     // Check if expression has reactive deps -> _fnSignal wrapping
-                    let (deps, has_non_reactive) = collect_reactive_deps(
-                        &value, destructured_props, module_imports,
-                    );
+                    let (deps, has_non_reactive) =
+                        collect_reactive_deps(&value, destructured_props, module_imports);
                     if !deps.is_empty() && !has_non_reactive {
                         // Wrap with _fnSignal
                         let (wrapped, fn_code, str_code) = build_fn_signal_wrapping(
-                            value, &deps, destructured_props, tracker, ctx,
+                            value,
+                            &deps,
+                            destructured_props,
+                            tracker,
+                            ctx,
                         );
                         tracker.needs_fn_signal = true;
                         hoisted_stmts.push((fn_code, str_code));
@@ -2137,8 +2222,14 @@ fn transform_jsx_element_inner<'a>(
     }
 
     // Build children
-    let (children_expr, children_count) =
-        transform_jsx_children(&mut element.children, tracker, ctx, destructured_props, module_imports, hoisted_stmts);
+    let (children_expr, children_count) = transform_jsx_children(
+        &mut element.children,
+        tracker,
+        ctx,
+        destructured_props,
+        module_imports,
+        hoisted_stmts,
+    );
 
     // Compute flags
     let flags = if has_spread {
@@ -2152,7 +2243,11 @@ fn transform_jsx_element_inner<'a>(
     // Generate key
     let key_expr = if let Some(key) = key_value {
         key
-    } else if children_count > 0 || has_any_visible_prop || !const_props.is_empty() || !var_props.is_empty() {
+    } else if children_count > 0
+        || has_any_visible_prop
+        || !const_props.is_empty()
+        || !var_props.is_empty()
+    {
         // Generate auto-key for elements with content (they may be siblings)
         let key_str = format!("u6_{}", tracker.jsx_key_counter);
         tracker.jsx_key_counter += 1;
@@ -2183,13 +2278,14 @@ fn transform_jsx_element_inner<'a>(
         let get_var_callee = ctx.ast.expression_identifier(SPAN, "_getVarProps");
         let mut get_var_args = ctx.ast.vec_with_capacity(1);
         // Clone the spread source expression for _getVarProps
-        let spread_source_clone = ctx.ast.expression_identifier(SPAN,
+        let spread_source_clone = ctx.ast.expression_identifier(
+            SPAN,
             // Try to extract name from spread_source
             if let Expression::Identifier(ref ident) = spread_source {
                 ctx.ast.atom(ident.name.as_str())
             } else {
                 ctx.ast.atom("props")
-            }
+            },
         );
         get_var_args.push(Argument::from(spread_source_clone));
         let get_var_call = ctx.ast.expression_call(
@@ -2199,11 +2295,16 @@ fn transform_jsx_element_inner<'a>(
             get_var_args,
             false,
         );
-        var_obj_props.push(ctx.ast.object_property_kind_spread_property(SPAN, get_var_call));
+        var_obj_props.push(
+            ctx.ast
+                .object_property_kind_spread_property(SPAN, get_var_call),
+        );
 
         // Add non-spread var props
         for (name, value) in var_props {
-            let key = ctx.ast.property_key_static_identifier(SPAN, ctx.ast.atom(&name));
+            let key = ctx
+                .ast
+                .property_key_static_identifier(SPAN, ctx.ast.atom(&name));
             var_obj_props.push(ctx.ast.object_property_kind_object_property(
                 SPAN,
                 PropertyKind::Init,
@@ -2263,7 +2364,9 @@ fn transform_jsx_element_inner<'a>(
         } else {
             let mut props_vec = ctx.ast.vec_with_capacity(var_props.len());
             for (name, value) in var_props {
-                let key = ctx.ast.property_key_static_identifier(SPAN, ctx.ast.atom(&name));
+                let key = ctx
+                    .ast
+                    .property_key_static_identifier(SPAN, ctx.ast.atom(&name));
                 props_vec.push(ctx.ast.object_property_kind_object_property(
                     SPAN,
                     PropertyKind::Init,
@@ -2288,7 +2391,8 @@ fn transform_jsx_element_inner<'a>(
                     let atom = ctx.ast.atom(&name);
                     PropertyKey::from(ctx.ast.expression_string_literal(SPAN, atom, None))
                 } else {
-                    ctx.ast.property_key_static_identifier(SPAN, ctx.ast.atom(&name))
+                    ctx.ast
+                        .property_key_static_identifier(SPAN, ctx.ast.atom(&name))
                 };
                 props_vec.push(ctx.ast.object_property_kind_object_property(
                     SPAN,
@@ -2345,8 +2449,14 @@ fn transform_jsx_fragment_inner<'a>(
     let tag = ctx.ast.expression_identifier(SPAN, "_Fragment");
 
     // Build children
-    let (children_expr, children_count) =
-        transform_jsx_children(&mut fragment.children, tracker, ctx, destructured_props, module_imports, hoisted_stmts);
+    let (children_expr, children_count) = transform_jsx_children(
+        &mut fragment.children,
+        tracker,
+        ctx,
+        destructured_props,
+        module_imports,
+        hoisted_stmts,
+    );
 
     // Flags: 1 for multiple children, 3 for single/no children
     let flags: u32 = if children_count > 1 { 1 } else { 3 };
@@ -2410,12 +2520,26 @@ fn transform_jsx_children<'a>(
             }
             JSXChild::Element(el) => {
                 // Recursively transform child JSXElement
-                let transformed = transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts);
+                let transformed = transform_jsx_element_inner(
+                    el.unbox(),
+                    tracker,
+                    ctx,
+                    destructured_props,
+                    module_imports,
+                    hoisted_stmts,
+                );
                 child_exprs.push(transformed);
             }
             JSXChild::Fragment(frag) => {
                 // Recursively transform child JSXFragment
-                let transformed = transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts);
+                let transformed = transform_jsx_fragment_inner(
+                    frag.unbox(),
+                    tracker,
+                    ctx,
+                    destructured_props,
+                    module_imports,
+                    hoisted_stmts,
+                );
                 child_exprs.push(transformed);
             }
             JSXChild::ExpressionContainer(container) => {
@@ -2432,22 +2556,38 @@ fn transform_jsx_children<'a>(
                         // If it's a JSXElement or JSXFragment, transform it
                         match transformed {
                             Expression::JSXElement(el) => {
-                                let result =
-                                    transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts);
+                                let result = transform_jsx_element_inner(
+                                    el.unbox(),
+                                    tracker,
+                                    ctx,
+                                    destructured_props,
+                                    module_imports,
+                                    hoisted_stmts,
+                                );
                                 child_exprs.push(result);
                             }
                             Expression::JSXFragment(frag) => {
-                                let result =
-                                    transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props, module_imports, hoisted_stmts);
+                                let result = transform_jsx_fragment_inner(
+                                    frag.unbox(),
+                                    tracker,
+                                    ctx,
+                                    destructured_props,
+                                    module_imports,
+                                    hoisted_stmts,
+                                );
                                 child_exprs.push(result);
                             }
                             other => {
                                 // Check if child expression is signal.value -> _wrapProp(signal)
                                 if !is_call_on_value(&other) {
-                                    if let SignalWrapResult::WrapPropSignal = detect_signal_wrap(&other, destructured_props) {
+                                    if let SignalWrapResult::WrapPropSignal =
+                                        detect_signal_wrap(&other, destructured_props)
+                                    {
                                         if let Expression::StaticMemberExpression(member) = other {
                                             let signal_obj = member.unbox().object;
-                                            let wrapped = import_rewrite::build_wrap_prop_call(signal_obj, ctx);
+                                            let wrapped = import_rewrite::build_wrap_prop_call(
+                                                signal_obj, ctx,
+                                            );
                                             tracker.needs_wrap_prop = true;
                                             child_exprs.push(wrapped);
                                             continue;
@@ -2488,11 +2628,8 @@ fn minify_fn_string(source: &str) -> String {
     let parse_alloc = oxc::allocator::Allocator::default();
     let source_for_parse = parse_alloc.alloc_str(&parse_source);
 
-    let parser = oxc::parser::Parser::new(
-        &parse_alloc,
-        source_for_parse,
-        oxc::span::SourceType::mjs(),
-    );
+    let parser =
+        oxc::parser::Parser::new(&parse_alloc, source_for_parse, oxc::span::SourceType::mjs());
     let parse_result = parser.parse();
 
     if !parse_result.errors.is_empty() || parse_result.program.body.is_empty() {

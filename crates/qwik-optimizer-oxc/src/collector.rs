@@ -182,11 +182,7 @@ pub(crate) fn compute_captures(
                 let is_default = import_info.specifiers.len() == 1
                     && import_info.specifiers[0] == *name
                     && !import_info.is_qwik_core;
-                reemitted_imports.push((
-                    name.clone(),
-                    import_info.source.clone(),
-                    is_default,
-                ));
+                reemitted_imports.push((name.clone(), import_info.source.clone(), is_default));
                 is_import = true;
                 break;
             }
@@ -389,8 +385,7 @@ pub(crate) fn collect<'a>(
 
     for stmt in &program.body {
         match stmt {
-            Statement::ImportDeclaration(_) => {
-            }
+            Statement::ImportDeclaration(_) => {}
             Statement::ExportNamedDeclaration(export) => {
                 if let Some(decl) = &export.declaration {
                     collect_declaration_names(&mut ctx.module_level_decls, decl);
@@ -480,7 +475,10 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
 
                     if name.ends_with('$')
                         && !ctx.dollar_imports.contains(&name)
-                        && declarator.init.as_ref().is_some_and(|init| is_wrap_call(init))
+                        && declarator
+                            .init
+                            .as_ref()
+                            .is_some_and(|init| is_wrap_call(init))
                     {
                         ctx.dollar_imports.insert(name.clone());
                     }
@@ -581,7 +579,10 @@ fn walk_statement_for_calls(ctx: &mut CollectContext, stmt: &Statement<'_>) {
                 if let Some(ref name) = var_name {
                     if name.ends_with('$')
                         && !ctx.dollar_imports.contains(name)
-                        && declarator.init.as_ref().is_some_and(|init| is_wrap_call(init))
+                        && declarator
+                            .init
+                            .as_ref()
+                            .is_some_and(|init| is_wrap_call(init))
                     {
                         ctx.dollar_imports.insert(name.clone());
                     }
@@ -630,11 +631,7 @@ fn walk_expression_for_calls(ctx: &mut CollectContext, expr: &Expression<'_>) {
             if let Expression::Identifier(ident) = &call.callee {
                 let name = ident.name.as_str();
                 if ctx.dollar_imports.contains(name) {
-                    let original_name = ctx
-                        .alias_map
-                        .get(name)
-                        .map(|s| s.as_str())
-                        .unwrap_or(name);
+                    let original_name = ctx.alias_map.get(name).map(|s| s.as_str()).unwrap_or(name);
                     let display_name = derive_display_name(ctx, original_name);
                     let is_nested = ctx.nesting_depth > 0;
                     let parent_name = ctx.parent_display_name.clone();
@@ -775,11 +772,7 @@ fn walk_jsx_expression_for_calls(ctx: &mut CollectContext, jsx_expr: &JSXExpress
             if let Expression::Identifier(ident) = &call.callee {
                 let name = ident.name.as_str();
                 if ctx.dollar_imports.contains(name) {
-                    let original_name = ctx
-                        .alias_map
-                        .get(name)
-                        .map(|s| s.as_str())
-                        .unwrap_or(name);
+                    let original_name = ctx.alias_map.get(name).map(|s| s.as_str()).unwrap_or(name);
                     let display_name = derive_display_name(ctx, original_name);
                     let is_nested = ctx.nesting_depth > 0;
                     let parent_name = ctx.parent_display_name.clone();
@@ -853,15 +846,15 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
                     if let JSXAttributeValue::ExpressionContainer(container) = value {
                         let expr_span = match &container.expression {
                             JSXExpression::EmptyExpression(_) => None,
-                            _ => {
-                                get_jsx_expression_span(&container.expression)
-                            }
+                            _ => get_jsx_expression_span(&container.expression),
                         };
 
                         if let Some((start, end)) = expr_span {
                             let event_suffix = transform_attr_name_for_display(attr_name);
                             let display_name = derive_jsx_event_display_name(
-                                ctx, element_name.as_deref(), &event_suffix,
+                                ctx,
+                                element_name.as_deref(),
+                                &event_suffix,
                             );
                             let is_nested = ctx.nesting_depth > 0;
                             let parent_name = ctx.parent_display_name.clone();
@@ -937,7 +930,9 @@ fn derive_jsx_event_display_name(
     element_name: Option<&str>,
     event_suffix: &str,
 ) -> String {
-    let parent_ctx = ctx.parent_display_name.as_deref()
+    let parent_ctx = ctx
+        .parent_display_name
+        .as_deref()
         .or(ctx.current_var_name.as_deref())
         .unwrap_or("");
 
@@ -951,7 +946,10 @@ fn derive_jsx_event_display_name(
 }
 
 /// Walk JSX children for dollar calls.
-fn walk_jsx_children_for_calls<'a>(ctx: &mut CollectContext, children: &oxc::allocator::Vec<'a, JSXChild<'a>>) {
+fn walk_jsx_children_for_calls<'a>(
+    ctx: &mut CollectContext,
+    children: &oxc::allocator::Vec<'a, JSXChild<'a>>,
+) {
     for child in children {
         match child {
             JSXChild::Element(el) => {
@@ -1008,9 +1006,8 @@ mod tests {
 
     #[test]
     fn test_collect_dollar_imports() {
-        let result = parse_and_collect(
-            r#"import { $, component$, useStore } from '@qwik.dev/core';"#,
-        );
+        let result =
+            parse_and_collect(r#"import { $, component$, useStore } from '@qwik.dev/core';"#);
 
         assert!(result.dollar_imports.contains("$"));
         assert!(result.dollar_imports.contains("component$"));
@@ -1097,7 +1094,11 @@ export function helper() { return 1; }"#,
         );
 
         assert_eq!(result.module_exports.len(), 2);
-        let names: Vec<&str> = result.module_exports.iter().map(|e| e.name.as_str()).collect();
+        let names: Vec<&str> = result
+            .module_exports
+            .iter()
+            .map(|e| e.name.as_str())
+            .collect();
         assert!(names.contains(&"App"));
         assert!(names.contains(&"helper"));
     }
@@ -1111,14 +1112,22 @@ import { thing } from './utils';"#,
 
         assert_eq!(result.module_imports.len(), 2);
 
-        let qwik_import = result.module_imports.iter().find(|i| i.is_qwik_core).unwrap();
+        let qwik_import = result
+            .module_imports
+            .iter()
+            .find(|i| i.is_qwik_core)
+            .unwrap();
         assert_eq!(qwik_import.source, "@qwik.dev/core");
         assert_eq!(qwik_import.specifiers.len(), 3);
         assert!(qwik_import.specifiers.contains(&"$".to_string()));
         assert!(qwik_import.specifiers.contains(&"component$".to_string()));
         assert!(qwik_import.specifiers.contains(&"useStore".to_string()));
 
-        let other_import = result.module_imports.iter().find(|i| !i.is_qwik_core).unwrap();
+        let other_import = result
+            .module_imports
+            .iter()
+            .find(|i| !i.is_qwik_core)
+            .unwrap();
         assert_eq!(other_import.source, "./utils");
     }
 
@@ -1137,13 +1146,25 @@ export const App = component$(() => {
 
         assert_eq!(result.dollar_calls.len(), 3);
 
-        let component_call = result.dollar_calls.iter().find(|c| c.callee_name == "component$").unwrap();
+        let component_call = result
+            .dollar_calls
+            .iter()
+            .find(|c| c.callee_name == "component$")
+            .unwrap();
         assert_eq!(component_call.display_name, "App_component");
 
-        let task_call = result.dollar_calls.iter().find(|c| c.callee_name == "useTask$").unwrap();
+        let task_call = result
+            .dollar_calls
+            .iter()
+            .find(|c| c.callee_name == "useTask$")
+            .unwrap();
         assert!(task_call.is_nested);
 
-        let styles_call = result.dollar_calls.iter().find(|c| c.callee_name == "useStyles$").unwrap();
+        let styles_call = result
+            .dollar_calls
+            .iter()
+            .find(|c| c.callee_name == "useStyles$")
+            .unwrap();
         assert!(styles_call.is_nested);
     }
 
@@ -1174,7 +1195,11 @@ const renderHeader2 = component($(() => {
             3,
             "Expected 3 $-call sites, found {}: {:?}",
             result.dollar_calls.len(),
-            result.dollar_calls.iter().map(|c| &c.callee_name).collect::<Vec<_>>()
+            result
+                .dollar_calls
+                .iter()
+                .map(|c| &c.callee_name)
+                .collect::<Vec<_>>()
         );
 
         // All should be '$' callee
@@ -1192,8 +1217,16 @@ const x = $(() => 1);"#,
 
         assert_eq!(result.dollar_calls.len(), 1);
         let (start, end) = result.dollar_calls[0].span;
-        assert!(start < end, "Span start ({}) should be less than end ({})", start, end);
-        assert!(start > 0, "Span start should be > 0 (not at beginning of file)");
+        assert!(
+            start < end,
+            "Span start ({}) should be less than end ({})",
+            start,
+            end
+        );
+        assert!(
+            start > 0,
+            "Span start should be > 0 (not at beginning of file)"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -1211,14 +1244,15 @@ const handler = $(() => {
 });"#,
         );
 
-        let body_ident_refs = vec![
-            "x".to_string(),
-            "console".to_string(),
-        ];
+        let body_ident_refs = vec!["x".to_string(), "console".to_string()];
         let body_local_decls: HashSet<String> = ["x".to_string()].into_iter().collect();
 
         let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
-        assert!(result.capture_names.is_empty(), "Expected no captures, got {:?}", result.capture_names);
+        assert!(
+            result.capture_names.is_empty(),
+            "Expected no captures, got {:?}",
+            result.capture_names
+        );
         assert!(result.reemitted_imports.is_empty());
         assert!(result.diagnostics.is_empty());
     }
@@ -1258,26 +1292,33 @@ export const App = component$(() => {
         );
 
         // The inner $() body references "thing" (import) and "useStore" (qwik core import)
-        let body_ident_refs = vec![
-            "thing".to_string(),
-            "useStore".to_string(),
-        ];
+        let body_ident_refs = vec!["thing".to_string(), "useStore".to_string()];
         let body_local_decls: HashSet<String> = HashSet::new();
 
         let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
         // "thing" is an import -> reemitted, not captured
         // "useStore" is a qwik core import (specifier on a qwik import) -> reemitted, not captured
-        assert!(result.capture_names.is_empty(), "Expected no captures, got {:?}", result.capture_names);
+        assert!(
+            result.capture_names.is_empty(),
+            "Expected no captures, got {:?}",
+            result.capture_names
+        );
 
         // "thing" should be in reemitted_imports
         assert!(
-            result.reemitted_imports.iter().any(|(name, _, _)| name == "thing"),
+            result
+                .reemitted_imports
+                .iter()
+                .any(|(name, _, _)| name == "thing"),
             "Expected 'thing' in reemitted_imports, got {:?}",
             result.reemitted_imports
         );
         // "useStore" should also be in reemitted_imports (it's in the qwik core import specifiers)
         assert!(
-            result.reemitted_imports.iter().any(|(name, _, _)| name == "useStore"),
+            result
+                .reemitted_imports
+                .iter()
+                .any(|(name, _, _)| name == "useStore"),
             "Expected 'useStore' in reemitted_imports, got {:?}",
             result.reemitted_imports
         );
@@ -1286,14 +1327,10 @@ export const App = component$(() => {
     #[test]
     fn test_compute_captures_dollar_import_skipped() {
         // $-suffixed imports (framework) should be skipped entirely
-        let collect_result = parse_and_collect(
-            r#"import { $, component$ } from '@qwik.dev/core';"#,
-        );
+        let collect_result =
+            parse_and_collect(r#"import { $, component$ } from '@qwik.dev/core';"#);
 
-        let body_ident_refs = vec![
-            "$".to_string(),
-            "component$".to_string(),
-        ];
+        let body_ident_refs = vec!["$".to_string(), "component$".to_string()];
         let body_local_decls: HashSet<String> = HashSet::new();
 
         let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
@@ -1310,17 +1347,20 @@ import { thing } from './sibling';"#,
         );
 
         let body_ident_refs = vec![
-            "state".to_string(),       // outer variable -> capture
-            "count".to_string(),       // outer variable -> capture
-            "thing".to_string(),       // import -> reemitted
-            "localVar".to_string(),    // body-local -> skip
-            "console".to_string(),     // global -> skip
-            "$".to_string(),           // dollar import -> skip
+            "state".to_string(),    // outer variable -> capture
+            "count".to_string(),    // outer variable -> capture
+            "thing".to_string(),    // import -> reemitted
+            "localVar".to_string(), // body-local -> skip
+            "console".to_string(),  // global -> skip
+            "$".to_string(),        // dollar import -> skip
         ];
         let body_local_decls: HashSet<String> = ["localVar".to_string()].into_iter().collect();
 
         let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
-        assert_eq!(result.capture_names, vec!["state".to_string(), "count".to_string()]);
+        assert_eq!(
+            result.capture_names,
+            vec!["state".to_string(), "count".to_string()]
+        );
         assert_eq!(result.reemitted_imports.len(), 1);
         assert_eq!(result.reemitted_imports[0].0, "thing");
     }
@@ -1328,9 +1368,7 @@ import { thing } from './sibling';"#,
     #[test]
     fn test_compute_captures_deduplication() {
         // Same name referenced multiple times -> only counted once
-        let collect_result = parse_and_collect(
-            r#"import { $ } from '@qwik.dev/core';"#,
-        );
+        let collect_result = parse_and_collect(r#"import { $ } from '@qwik.dev/core';"#);
 
         let body_ident_refs = vec![
             "state".to_string(),
@@ -1347,9 +1385,8 @@ import { thing } from './sibling';"#,
     #[test]
     fn test_compute_captures_rawprops() {
         // After props destructuring, _rawProps is referenced in inner $() -> captured
-        let collect_result = parse_and_collect(
-            r#"import { $, component$ } from '@qwik.dev/core';"#,
-        );
+        let collect_result =
+            parse_and_collect(r#"import { $, component$ } from '@qwik.dev/core';"#);
 
         let body_ident_refs = vec!["_rawProps".to_string()];
         let body_local_decls: HashSet<String> = HashSet::new();
@@ -1370,15 +1407,33 @@ import { thing } from './sibling';"#,
         );
 
         // Both aliased imports should be in dollar_imports (under local names)
-        assert!(result.dollar_imports.contains("Component"), "Component should be in dollar_imports");
-        assert!(result.dollar_imports.contains("onRender"), "onRender should be in dollar_imports");
-        assert!(!result.dollar_imports.contains("component$"), "original name should NOT be in dollar_imports");
-        assert!(!result.dollar_imports.contains("$"), "original '$' should NOT be in dollar_imports");
+        assert!(
+            result.dollar_imports.contains("Component"),
+            "Component should be in dollar_imports"
+        );
+        assert!(
+            result.dollar_imports.contains("onRender"),
+            "onRender should be in dollar_imports"
+        );
+        assert!(
+            !result.dollar_imports.contains("component$"),
+            "original name should NOT be in dollar_imports"
+        );
+        assert!(
+            !result.dollar_imports.contains("$"),
+            "original '$' should NOT be in dollar_imports"
+        );
         assert_eq!(result.dollar_imports.len(), 2);
 
         // Alias map should record the mapping
-        assert_eq!(result.alias_map.get("Component").map(|s| s.as_str()), Some("component$"));
-        assert_eq!(result.alias_map.get("onRender").map(|s| s.as_str()), Some("$"));
+        assert_eq!(
+            result.alias_map.get("Component").map(|s| s.as_str()),
+            Some("component$")
+        );
+        assert_eq!(
+            result.alias_map.get("onRender").map(|s| s.as_str()),
+            Some("$")
+        );
         assert_eq!(result.alias_map.len(), 2);
     }
 
@@ -1395,20 +1450,26 @@ export const App = Component(() => {
         assert_eq!(result.dollar_calls.len(), 2);
 
         // Component call should resolve to component$
-        let component_call = result.dollar_calls.iter().find(|c| c.display_name.contains("component")).unwrap();
+        let component_call = result
+            .dollar_calls
+            .iter()
+            .find(|c| c.display_name.contains("component"))
+            .unwrap();
         assert_eq!(component_call.callee_name, "component$");
 
         // onRender call should resolve to $
-        let dollar_call = result.dollar_calls.iter().find(|c| c.callee_name == "$").unwrap();
+        let dollar_call = result
+            .dollar_calls
+            .iter()
+            .find(|c| c.callee_name == "$")
+            .unwrap();
         assert_eq!(dollar_call.callee_name, "$");
     }
 
     #[test]
     fn test_collect_no_alias_when_same_name() {
         // No alias when local == imported
-        let result = parse_and_collect(
-            r#"import { component$, $ } from '@qwik.dev/core';"#,
-        );
+        let result = parse_and_collect(r#"import { component$, $ } from '@qwik.dev/core';"#);
 
         assert!(result.alias_map.is_empty(), "No aliases when names match");
         assert!(result.dollar_imports.contains("$"));
@@ -1419,7 +1480,10 @@ export const App = Component(() => {
     // Custom Core Module Tests
     // -----------------------------------------------------------------------
 
-    fn parse_and_collect_with_core_module(source: &str, core_module: Option<&str>) -> CollectResult {
+    fn parse_and_collect_with_core_module(
+        source: &str,
+        core_module: Option<&str>,
+    ) -> CollectResult {
         let allocator = Allocator::default();
         let (result, _diags) = parse_module(&allocator, source, "test.tsx").expect("parse failed");
         collect(&result.program, &result.scoping, core_module)
@@ -1428,9 +1492,7 @@ export const App = Component(() => {
     #[test]
     fn test_collect_builder_io_qwik_legacy() {
         // Legacy @builder.io/qwik imports should be recognized
-        let result = parse_and_collect(
-            r#"import { $, component$ } from '@builder.io/qwik';"#,
-        );
+        let result = parse_and_collect(r#"import { $, component$ } from '@builder.io/qwik';"#);
 
         assert!(result.dollar_imports.contains("$"));
         assert!(result.dollar_imports.contains("component$"));
@@ -1453,9 +1515,7 @@ import { component$ } from '@builder.io/qwik';"#,
     #[test]
     fn test_collect_qwik_dev_react() {
         // @qwik.dev/react should be recognized for $-suffixed imports
-        let result = parse_and_collect(
-            r#"import { qwikify$ } from '@qwik.dev/react';"#,
-        );
+        let result = parse_and_collect(r#"import { qwikify$ } from '@qwik.dev/react';"#);
 
         assert!(result.dollar_imports.contains("qwikify$"));
         assert_eq!(result.dollar_imports.len(), 1);
@@ -1477,9 +1537,7 @@ import { component$ } from '@builder.io/qwik';"#,
     fn test_collect_qwik_core_subpath_not_recognized() {
         // Sub-paths like @qwik.dev/core/build should NOT be recognized
         // (they export build constants, not $-APIs)
-        let result = parse_and_collect(
-            r#"import { isDev } from '@qwik.dev/core/build';"#,
-        );
+        let result = parse_and_collect(r#"import { isDev } from '@qwik.dev/core/build';"#);
 
         assert!(result.dollar_imports.is_empty());
     }
