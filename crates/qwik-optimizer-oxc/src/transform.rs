@@ -73,6 +73,10 @@ pub(crate) struct QwikTransform {
     /// Each entry is (body_ident_refs, body_local_decls) for one $()-body.
     /// Pushed on entering a $()-call, popped on exiting.
     capture_stack: Vec<(Vec<String>, HashSet<String>)>,
+
+    /// Serialized body code for each segment (segment strategy only).
+    /// Keyed by call span.start for matching to SegmentData.
+    segment_body_codes: Vec<(u32, String)>,
 }
 
 impl QwikTransform {
@@ -90,6 +94,7 @@ impl QwikTransform {
             pending_dollar_calls: HashSet::new(),
             active_props_info: None,
             capture_stack: Vec::new(),
+            segment_body_codes: Vec::new(),
         }
     }
 
@@ -101,6 +106,44 @@ impl QwikTransform {
     /// Get any diagnostics generated during traversal.
     pub fn diagnostics(&self) -> &[Diagnostic] {
         &self.diagnostics
+    }
+
+    /// Take the serialized body codes for segment strategy.
+    /// Each entry is (span_start, body_code_string).
+    pub fn take_segment_body_codes(&mut self) -> Vec<(u32, String)> {
+        std::mem::take(&mut self.segment_body_codes)
+    }
+
+    /// Post-transform processing: populate child segment metadata.
+    /// Must be called after traverse_mut completes.
+    pub fn finalize_segments(&mut self) {
+        // Build a list of child segment info: (parent_display_name, child_hash, child_import_path)
+        let child_info: Vec<(String, String, String)> = self
+            .segments
+            .iter()
+            .filter_map(|seg| {
+                seg.parent.as_ref().map(|parent_name| {
+                    let canonical = format!("{}_{}", seg.display_name, seg.hash);
+                    let import_path = format!("./{}", canonical);
+                    (parent_name.clone(), seg.hash.clone(), import_path)
+                })
+            })
+            .collect();
+
+        // For each parent segment, add child lazy imports
+        for seg in self.segments.iter_mut() {
+            let children: Vec<_> = child_info
+                .iter()
+                .filter(|(parent, _, _)| parent == &seg.display_name)
+                .collect();
+
+            if !children.is_empty() {
+                seg.needs_qrl_import = true;
+                for (_, hash, path) in children {
+                    seg.child_lazy_imports.push((hash.clone(), path.clone()));
+                }
+            }
+        }
     }
 
     /// Check if a CallExpression is a Qwik $-call.
@@ -231,11 +274,14 @@ impl QwikTransform {
             extension: self.file_extension(),
             span: (call.span.start, call.span.end),
             parent,
-            captures: false,       // Phase 9 will compute captures
-            capture_names: vec![], // Phase 9
-            needed_imports: vec![], // Phase 10 (code_move)
+            captures: false,       // Computed in exit_expression
+            capture_names: vec![], // Computed in exit_expression
+            needed_imports: vec![], // Populated by finalize_segments
             body_span: (call.span.start, call.span.end),
             param_names: vec![],   // Set by props destructuring if needed
+            body_code: String::new(), // Populated in exit_expression for segment strategy
+            child_lazy_imports: vec![], // Populated by finalize_segments
+            needs_qrl_import: false,   // Populated by finalize_segments
         };
 
         // Track imports based on strategy
@@ -533,6 +579,35 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 Some(s) => s,
                 None => return,
             };
+
+            // For segment strategy, serialize the body expression to a string
+            // before building the replacement. This captures the transformed body
+            // (after props destructuring + capture analysis have modified it).
+            // The body argument is extracted and serialized, then discarded --
+            // it won't be used again because segment strategy replaces the entire
+            // call expression with qrl(i_hash, "name", captures).
+            if !is_inline && !call.arguments.is_empty() {
+                let placeholder =
+                    Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
+                let body_arg =
+                    std::mem::replace(&mut call.arguments[0], placeholder);
+
+                // Convert Argument to Expression for serialization
+                let body_expr = match body_arg {
+                    Argument::SpreadElement(_) => None,
+                    _ => Some(argument_to_expression(body_arg, ctx)),
+                };
+
+                if let Some(ref expr_val) = body_expr {
+                    let mut codegen = oxc::codegen::Codegen::new();
+                    codegen.print_expression(expr_val);
+                    let body_code = codegen.into_source_text();
+                    self.segment_body_codes.push((call.span.start, body_code));
+                }
+                // body_expr is dropped here -- the original call.arguments[0] is
+                // now a placeholder, but the entire call expression will be replaced
+                // by *expr = final_expr below, so this is fine.
+            }
 
             // Build the replacement expression
             let replacement = if is_inline {

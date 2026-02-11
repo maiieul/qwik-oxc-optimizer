@@ -37,3 +37,23 @@ pub(crate) fn emit_module<'a>(
         map: None, // Source maps deferred to Phase 13
     }
 }
+
+/// Normalize JavaScript code by parsing and re-emitting.
+///
+/// Parses the string as a JavaScript module, then runs Codegen to produce
+/// consistently formatted output. If parsing fails, returns the original
+/// code unchanged (graceful degradation for string-constructed code).
+pub(crate) fn normalize_code(code: &str) -> String {
+    let allocator = oxc::allocator::Allocator::default();
+    let source_in_arena = allocator.alloc_str(code);
+    let source_type = oxc::span::SourceType::mjs();
+    let ret = oxc::parser::Parser::new(&allocator, source_in_arena, source_type).parse();
+    if ret.panicked || !ret.errors.is_empty() {
+        // If parsing fails, return original code unchanged
+        return code.to_string();
+    }
+    oxc::codegen::Codegen::new()
+        .with_source_text(source_in_arena)
+        .build(&ret.program)
+        .code
+}

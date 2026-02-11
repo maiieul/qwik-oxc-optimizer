@@ -523,6 +523,19 @@ pub(crate) struct SegmentData {
     /// Parameter names after props destructuring transformation.
     /// E.g., `["_rawProps"]` for component$ with destructured props.
     pub param_names: Vec<String>,
+
+    /// Serialized JavaScript code of the extracted segment body.
+    /// For segment strategy, this is the arrow function body serialized to JS
+    /// after all transforms (props destructuring, capture analysis) have been applied.
+    /// For inline strategy, this is empty (body stays in main module).
+    pub body_code: String,
+
+    /// Lazy imports needed by this segment for its child $()-calls.
+    /// Each entry: (child_hash, child_import_path).
+    pub child_lazy_imports: Vec<(String, String)>,
+
+    /// Whether this segment needs a qrl import (has child $()-calls).
+    pub needs_qrl_import: bool,
 }
 
 /// Per-module options derived from TransformModulesOptions.
