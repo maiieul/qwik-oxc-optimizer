@@ -423,6 +423,228 @@ mod tests {
         );
     }
 
+    /// Diagnostic test: categorize all module count mismatches by failure type.
+    ///
+    /// Top failure categories (updated after running):
+    /// - alias: specs using `import { component$ as X }` or similar alias patterns
+    /// - core_module: specs with custom core_module (e.g., @qwik.dev/react, @builder.io/qwik)
+    /// - strip_exports: specs using strip_exports config
+    /// - strip_ctx_name: specs using strip_ctx_name config
+    /// - reg_ctx_name: specs using reg_ctx_name config
+    /// - transpile_only: specs with transpile_ts/transpile_jsx but no $ in input
+    /// - diagnostics_expected: specs expecting diagnostics (error cases)
+    /// - other: remaining mismatches not fitting above categories
+    #[test]
+    fn test_diagnose_module_count_mismatches() {
+        use qwik_optimizer_oxc::transform_modules;
+        use std::collections::HashMap;
+
+        let specs = spec_parser::load_all_specs();
+        let mut categories: HashMap<&str, Vec<String>> = HashMap::new();
+        let mut all_mismatches: Vec<String> = Vec::new();
+
+        for cat in &[
+            "alias",
+            "core_module",
+            "strip_exports",
+            "strip_ctx_name",
+            "reg_ctx_name",
+            "transpile_only",
+            "diagnostics_expected",
+            "other",
+        ] {
+            categories.insert(cat, Vec::new());
+        }
+
+        for spec in &specs {
+            let options = spec_parser::build_options(spec);
+            let result = match transform_modules(options) {
+                Ok(r) => r,
+                Err(_) => continue,
+            };
+
+            let expected_count = spec.expected_modules.len();
+            let actual_count = result.modules.len();
+
+            if expected_count == actual_count {
+                continue;
+            }
+
+            let delta = actual_count as i64 - expected_count as i64;
+
+            let expected_paths: Vec<&str> = spec
+                .expected_modules
+                .iter()
+                .map(|m| m.path.as_str())
+                .collect();
+            let actual_paths: Vec<&str> = result
+                .modules
+                .iter()
+                .map(|m| m.path.as_str())
+                .collect();
+
+            // Determine entry strategy from config
+            let entry_strategy = spec
+                .config_overrides
+                .iter()
+                .find(|(k, _)| k.trim().to_lowercase() == "entry strategy")
+                .map(|(_, v)| v.as_str())
+                .unwrap_or("Segment");
+
+            let mode = spec
+                .config_overrides
+                .iter()
+                .find(|(k, _)| k.trim().to_lowercase() == "mode")
+                .map(|(_, v)| v.as_str())
+                .unwrap_or("Lib");
+
+            let transpile_ts = spec
+                .config_overrides
+                .iter()
+                .any(|(k, v)| k.trim().to_lowercase() == "transpile ts" && v.trim().to_lowercase() == "true");
+
+            let transpile_jsx = spec
+                .config_overrides
+                .iter()
+                .any(|(k, v)| k.trim().to_lowercase() == "transpile jsx" && v.trim().to_lowercase() == "true");
+
+            let core_module = spec
+                .config_overrides
+                .iter()
+                .find(|(k, _)| k.trim().to_lowercase() == "core module")
+                .map(|(_, v)| v.clone());
+
+            let strip_exports = spec
+                .config_overrides
+                .iter()
+                .find(|(k, _)| k.trim().to_lowercase() == "strip exports")
+                .map(|(_, v)| v.clone());
+
+            let strip_ctx_name = spec
+                .config_overrides
+                .iter()
+                .find(|(k, _)| k.trim().to_lowercase() == "strip ctx name")
+                .map(|(_, v)| v.clone());
+
+            let reg_ctx_name = spec
+                .config_overrides
+                .iter()
+                .find(|(k, _)| k.trim().to_lowercase() == "reg ctx name")
+                .map(|(_, v)| v.clone());
+
+            // Print diagnostic line
+            let mut detail = format!(
+                "MISMATCH {}: expected={} actual={} delta={}\n  expected_paths: {:?}\n  actual_paths: {:?}\n  config: entry_strategy={}, mode={}, transpile_ts={}, transpile_jsx={}",
+                spec.name,
+                expected_count,
+                actual_count,
+                delta,
+                expected_paths,
+                actual_paths,
+                entry_strategy,
+                mode,
+                transpile_ts,
+                transpile_jsx
+            );
+            if let Some(cm) = &core_module {
+                detail.push_str(&format!("\n  core_module: {}", cm));
+            }
+            if let Some(se) = &strip_exports {
+                detail.push_str(&format!("\n  strip_exports: {}", se));
+            }
+            if let Some(scn) = &strip_ctx_name {
+                detail.push_str(&format!("\n  strip_ctx_name: {}", scn));
+            }
+            if let Some(rcn) = &reg_ctx_name {
+                detail.push_str(&format!("\n  reg_ctx_name: {}", rcn));
+            }
+            all_mismatches.push(detail);
+
+            // Categorize the mismatch
+            // Check alias: input contains `as ` pattern after a $-suffixed import name
+            let has_alias = spec.input_code.contains(" as ")
+                && (spec.input_code.contains("$ as ") || spec.input_code.contains("$,"));
+
+            // More precise alias check: look for `X$ as Y` in import lines
+            let has_import_alias = spec.input_code.lines().any(|line| {
+                line.trim_start().starts_with("import ")
+                    && line.contains("$ as ")
+            });
+
+            let has_non_default_core_module = core_module.as_ref().map_or(false, |cm| {
+                let clean = cm
+                    .replace("(default)", "")
+                    .replace("(non-default)", "")
+                    .trim()
+                    .to_string();
+                clean != "@qwik.dev/core"
+            });
+
+            let has_strip_exports = strip_exports.is_some();
+            let has_strip_ctx_name = strip_ctx_name.is_some();
+            let has_reg_ctx_name = reg_ctx_name.is_some();
+            let has_no_dollar = !spec.input_code.contains('$');
+            let has_diagnostics = !spec.expected_diagnostics.is_empty();
+
+            // Assign to category (priority order)
+            let category = if has_import_alias {
+                "alias"
+            } else if has_non_default_core_module {
+                "core_module"
+            } else if has_strip_exports {
+                "strip_exports"
+            } else if has_strip_ctx_name {
+                "strip_ctx_name"
+            } else if has_reg_ctx_name {
+                "reg_ctx_name"
+            } else if (transpile_ts || transpile_jsx) && has_no_dollar {
+                "transpile_only"
+            } else if has_diagnostics {
+                "diagnostics_expected"
+            } else {
+                "other"
+            };
+
+            categories.get_mut(category).unwrap().push(spec.name.clone());
+        }
+
+        // Print all mismatches
+        eprintln!("\n=== Module Count Mismatch Diagnostics ===");
+        for line in &all_mismatches {
+            eprintln!("{}\n", line);
+        }
+
+        // Print summary by category
+        eprintln!("\n=== Mismatch Categories ===");
+        let mut total = 0;
+        for cat in &[
+            "alias",
+            "core_module",
+            "strip_exports",
+            "strip_ctx_name",
+            "reg_ctx_name",
+            "transpile_only",
+            "diagnostics_expected",
+            "other",
+        ] {
+            let specs_in_cat = categories.get(cat).unwrap();
+            if !specs_in_cat.is_empty() {
+                eprintln!(
+                    "{} ({}): {}",
+                    cat,
+                    specs_in_cat.len(),
+                    specs_in_cat.join(", ")
+                );
+                total += specs_in_cat.len();
+            }
+        }
+        eprintln!("\nTotal mismatches: {}", total);
+        eprintln!("===========================\n");
+
+        // This test is purely diagnostic -- it does not assert anything.
+        // Run with --nocapture to see output.
+    }
+
     fn _normalize_whitespace(s: &str) -> String {
         s.split_whitespace().collect::<Vec<_>>().join(" ")
     }
