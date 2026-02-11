@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 10 -- Segment Extraction + Codegen
+**Current focus:** Phase 11 -- JSX + Signal Transforms
 
 ## Current Position
 
-Phase: 10 of 13 (Segment Extraction + Codegen) -- COMPLETE
-Plan: 2 of 2 in current phase -- COMPLETE
-Status: Phase 10 complete. All entry strategies produce correct output shapes. 162 specs transform without errors.
-Last activity: 2026-02-11 -- Completed 10-02: Entry strategy routing + spec test validation
+Phase: 11 of 13 (JSX + Signal Transforms) -- IN PROGRESS
+Plan: 1 of 2 in current phase -- COMPLETE
+Status: Plan 11-01 complete. JSX elements/fragments transformed to _jsxSorted/_jsxSplit calls. 162 specs, 0 errors.
+Last activity: 2026-02-11 -- Completed 11-01: JSX element and fragment transformation
 
-Progress: [############░░░░░░░░] 50% (25/31 total plans across all milestones; v3.0 8/14)
+Progress: [#############░░░░░░░] 52% (26/31 total plans across all milestones; v3.0 9/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [############░░░░░░░░] 50% (25/31 total plans across a
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: 8min
-- Total execution time: 65min
+- Total execution time: 80min
 
 ## Accumulated Context
 
@@ -70,6 +70,10 @@ Recent decisions affecting current work:
 - Hoist treated as inline-like for code output (body in main module via inlinedQrl, segments have empty code)
 - Smart/Component/Hook/Single treated as Segment for now (separate files with code, grouping deferred to Phase 13)
 - Structural spec testing: verify module counts, is_entry, metadata properties (not exact hash/code matching)
+- Recursive free functions for JSX transform (JSXChild::Element calls walk_jsx_element, not walk_expression)
+- Exhaustive JSXExpression->Expression match covering all 39 inherited variants (no catch-all to undefined)
+- Auto-key u6_N generation for elements with content; null key for empty self-closing
+- Event handlers to const props with q-e: prefix; non-const values to var props
 
 ### Pending Todos
 
@@ -82,5 +86,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 10-02-PLAN.md. Phase 10 complete. All entry strategies working. 162 specs transform OK.
+Stopped at: Completed 11-01-PLAN.md. JSX element/fragment transformation done. Proceeding to 11-02.
 Resume file: None
