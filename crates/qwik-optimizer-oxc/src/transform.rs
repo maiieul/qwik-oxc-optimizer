@@ -370,7 +370,6 @@ impl QwikTransform {
             needs_qrl_import: false,    // Populated by finalize_segments
         };
 
-        // Check if this segment will be stripped
         let will_be_stripped = match kind {
             DollarCallKind::Named(name) => self.should_strip_ctx_name(name),
             _ => false,
@@ -451,7 +450,6 @@ impl QwikTransform {
             needs_qrl_import: false,
         };
 
-        // Check if this segment will be stripped
         let will_be_stripped = self.should_strip_ctx_name(ctx_name);
 
         if !will_be_stripped {
@@ -2196,7 +2194,7 @@ fn transform_jsx_element_inner<'a>(
                 if is_const_jsx_value(&value) {
                     const_props.push((attr_name, value));
                 } else if !contains_function_call(&value) {
-                    // Check if expression has reactive deps -> _fnSignal wrapping
+                    // Reactive deps without non-reactive refs -> _fnSignal wrapping
                     let (deps, has_non_reactive) =
                         collect_reactive_deps(&value, destructured_props, module_imports);
                     if !deps.is_empty() && !has_non_reactive {
@@ -2578,7 +2576,7 @@ fn transform_jsx_children<'a>(
                                 child_exprs.push(result);
                             }
                             other => {
-                                // Check if child expression is signal.value -> _wrapProp(signal)
+                                // signal.value access -> _wrapProp(signal)
                                 if !is_call_on_value(&other) {
                                     if let SignalWrapResult::WrapPropSignal =
                                         detect_signal_wrap(&other, destructured_props)
