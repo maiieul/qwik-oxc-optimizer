@@ -50,7 +50,7 @@ Full details: `milestones/v3.0-ROADMAP.md`
 
 **Milestone Goal:** Refactor the qwik-optimizer-oxc crate for maintainability -- clean style, remove dead code, fix bugs, extract modules, rewrite boilerplate -- while maintaining or improving 157/162 spec compliance.
 
-- [ ] **Phase 14: Style Cleanup** - Strip unnecessary comments, add early returns, normalize formatting across the crate
+- [x] **Phase 14: Style Cleanup** - Strip unnecessary comments, add early returns, normalize formatting across the crate -- completed 2026-02-11
 - [ ] **Phase 15: Dead Code Removal** - Eliminate unused error factories, consolidate duplicate constants and functions
 - [ ] **Phase 16: Targeted Fixes** - Fix minify_expression_string bug and convert KNOWN_GLOBALS to HashSet
 - [ ] **Phase 17: Extract JSX Transform** - Move JSX transformation code from transform.rs into its own module
@@ -71,8 +71,8 @@ Full details: `milestones/v3.0-ROADMAP.md`
 **Plans**: 2 plans
 
 Plans:
-- [ ] 14-01-PLAN.md -- Strip unnecessary comments and add early returns across 8 high-comment source files
-- [ ] 14-02-PLAN.md -- Normalize formatting and clean match arms across all 16 source files
+- [x] 14-01-PLAN.md -- Strip unnecessary comments and add early returns across 8 high-comment source files
+- [x] 14-02-PLAN.md -- Normalize formatting and clean match arms across all 16 source files
 
 ### Phase 15: Dead Code Removal
 **Goal**: No unused code, no duplicate definitions -- every function and constant earns its place
@@ -164,7 +164,7 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 | 11. JSX + Signal Transforms | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Annotations + Stripping | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 13. Source Maps + Full Validation | v3.0 | 4/4 | Complete | 2026-02-11 |
-| 14. Style Cleanup | v4.0 | 0/2 | Not started | - |
+| 14. Style Cleanup | v4.0 | 2/2 | Complete | 2026-02-11 |
 | 15. Dead Code Removal | v4.0 | 0/2 | Not started | - |
 | 16. Targeted Fixes | v4.0 | 0/1 | Not started | - |
 | 17. Extract JSX Transform | v4.0 | 0/2 | Not started | - |
@@ -173,4 +173,4 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (v4.0 roadmap created)*
+*Last updated: 2026-02-11 (Phase 14 complete)*

@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 14 -- Style Cleanup (v4.0 Code Quality Refactor)
+**Current focus:** Phase 15 -- Dead Code Removal (v4.0 Code Quality Refactor)
 
 ## Current Position
 
-Phase: 14 of 19 (Style Cleanup) -- COMPLETE
-Plan: 2 of 2 in current phase (all plans complete)
-Status: Phase 14 complete, ready for phase 15
-Last activity: 2026-02-11 -- Completed 14-02 (formatting normalization)
+Phase: 15 of 19 (Dead Code Removal)
+Plan: 0 of 2 in current phase
+Status: Ready to plan
+Last activity: 2026-02-11 -- Phase 14 complete (verified, gap fixed)
 
 Progress: [=========================.........] 74% (35/43 plans lifetime, 2/10 v4.0)
 
