@@ -137,10 +137,10 @@ Plans:
   1. Spec test harness reports 157/162 or better module count match
   2. All 250 metadata assertions pass
   3. No new test failures introduced compared to v3.0 baseline
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 19-01: Full spec compliance run and regression comparison
+- [ ] 19-01-PLAN.md -- Full spec compliance run and regression comparison
 
 ## Progress
 
