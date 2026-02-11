@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 12 -- Annotations & Stripping
+**Current focus:** Phase 13 -- Source Maps & Full Validation
 
 ## Current Position
 
-Phase: 12 of 13 (Annotations & Stripping) -- COMPLETE
-Plan: 2 of 2 in current phase -- All plans complete
-Status: Phase 12 complete. PURE annotations on _jsxSorted/_jsxSplit, isServer/isBrowser/isDev const replacement with dead branch elimination, code stripping, and sync$ serialization all implemented. 146 unit tests + 5 spec tests pass.
-Last activity: 2026-02-11 -- Completed 12-01: PURE annotations & const replacement
+Phase: 13 of 13 (Source Maps & Full Validation)
+Plan: 1 of 4 in current phase -- 13-01 complete
+Status: Source map wiring complete. emit_module() generates v3 source maps via OXC codegen. Main and segment modules receive maps when source_maps=true. 150 unit tests + 5 spec tests + 162/162 spec transforms pass.
+Last activity: 2026-02-11 -- Completed 13-01: Source map wiring
 
-Progress: [################░░░░] 58% (29/31 total plans across all milestones; v3.0 12/14)
+Progress: [################░░░░] 60% (30/31 total plans across all milestones; v3.0 13/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [################░░░░] 58% (29/31 total plans across all miles
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 12
+- Total plans completed: 13
 - Average duration: 12min
-- Total execution time: ~165min
+- Total execution time: ~168min
 
 ## Accumulated Context
 
@@ -86,6 +86,9 @@ Recent decisions affecting current work:
 - AstBuilder::new(&allocator) for AST construction outside traverse context (no TraverseCtx)
 - Build constant imports stripped after identifier replacement for clean output matching spec
 - OXC Box::unbox() for taking ownership of boxed AST nodes in dead branch elimination
+- Segment source maps from re-parsed string-constructed code (identity-like mappings, not original-position mappings)
+- emit_segment_with_map() replaces normalize_code() for segment codegen with optional source maps
+- emit_module() source_filename parameter sets source map "file" field via CodegenOptions source_map_path
 
 ### Pending Todos
 
@@ -98,5 +101,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 12-01-PLAN.md. Phase 12 fully complete. All annotations and stripping features implemented. Ready for Phase 13.
+Stopped at: Completed 13-01-PLAN.md. Source map wiring complete. Ready for 13-02 (source map validation).
 Resume file: None
