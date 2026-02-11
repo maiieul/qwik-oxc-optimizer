@@ -348,6 +348,52 @@ pub(crate) fn build_lazy_import_declaration<'a>(
     ))
 }
 
+/// Build a _wrapProp(signal) call expression (Form 1: signal.value access).
+///
+/// Strips the `.value` access and passes just the signal identifier.
+/// Used when a JSX prop value is `signal.value`.
+pub(crate) fn build_wrap_prop_call<'a>(
+    signal_expr: Expression<'a>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    let callee = ctx.ast.expression_identifier(SPAN, "_wrapProp");
+    let mut args = ctx.ast.vec_with_capacity(1);
+    args.push(Argument::from(signal_expr));
+
+    ctx.ast.expression_call(
+        SPAN,
+        callee,
+        None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+        args,
+        false,
+    )
+}
+
+/// Build a _wrapProp(source, "propName") call expression (Form 2: named property wrapping).
+///
+/// Used when a JSX prop value is `_rawProps.propName` or `store.propName`.
+pub(crate) fn build_wrap_prop_call_named<'a>(
+    source_expr: Expression<'a>,
+    prop_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Expression<'a> {
+    let callee = ctx.ast.expression_identifier(SPAN, "_wrapProp");
+    let prop_atom = ctx.ast.atom(prop_name);
+    let mut args = ctx.ast.vec_with_capacity(2);
+    args.push(Argument::from(source_expr));
+    args.push(Argument::from(
+        ctx.ast.expression_string_literal(SPAN, prop_atom, None),
+    ));
+
+    ctx.ast.expression_call(
+        SPAN,
+        callee,
+        None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+        args,
+        false,
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

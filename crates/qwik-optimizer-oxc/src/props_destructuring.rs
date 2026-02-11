@@ -180,18 +180,7 @@ pub(crate) fn rewrite_props_references<'a>(
 
         Expression::CallExpression(call) => {
             rewrite_props_references(&mut call.callee, prop_map, raw_props_name, ctx);
-            for arg in call.arguments.iter_mut() {
-                match arg {
-                    Argument::SpreadElement(spread) => {
-                        rewrite_props_references(&mut spread.argument, prop_map, raw_props_name, ctx);
-                    }
-                    _ => {
-                        if let Some(e) = argument_as_expression_mut(arg) {
-                            rewrite_props_references(e, prop_map, raw_props_name, ctx);
-                        }
-                    }
-                }
-            }
+            rewrite_call_arguments(&mut call.arguments, prop_map, raw_props_name, ctx);
         }
 
         Expression::BinaryExpression(bin) => {
@@ -380,6 +369,54 @@ fn rewrite_statement<'a>(
             rewrite_props_references(&mut throw_stmt.argument, prop_map, raw_props_name, ctx);
         }
         _ => {}
+    }
+}
+
+/// Rewrite identifier references in call expression arguments.
+///
+/// Since Argument uses inherit_variants! from Expression, each Argument variant
+/// corresponds to an Expression variant. We match the ones that can contain
+/// identifier references that need rewriting.
+fn rewrite_call_arguments<'a>(
+    arguments: &mut oxc::allocator::Vec<'a, Argument<'a>>,
+    prop_map: &[(String, String)],
+    raw_props_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    for i in 0..arguments.len() {
+        match &arguments[i] {
+            Argument::SpreadElement(spread) => {
+                // For spread, we need to take ownership and replace
+                let placeholder = Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
+                let old = std::mem::replace(&mut arguments[i], placeholder);
+                if let Argument::SpreadElement(mut spread) = old {
+                    rewrite_props_references(&mut spread.argument, prop_map, raw_props_name, ctx);
+                    arguments[i] = Argument::SpreadElement(spread);
+                }
+            }
+            Argument::Identifier(ident) => {
+                // Check if this identifier matches a destructured prop
+                let name = ident.name.as_str().to_string();
+                if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
+                    // Replace with _rawProps.originalKey
+                    let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+                    let prop_name_ident = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
+                    let member = ctx.ast.static_member_expression(SPAN, obj, prop_name_ident, false);
+                    let member_expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
+                    arguments[i] = Argument::from(member_expr);
+                }
+            }
+            _ => {
+                // For compound expressions that are arguments, take ownership,
+                // rewrite, and put back.
+                let placeholder = Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
+                let old = std::mem::replace(&mut arguments[i], placeholder);
+                // Convert Argument to Expression, rewrite, convert back
+                let mut expr = crate::transform::argument_to_expression(old, ctx);
+                rewrite_props_references(&mut expr, prop_map, raw_props_name, ctx);
+                arguments[i] = Argument::from(expr);
+            }
+        }
     }
 }
 

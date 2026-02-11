@@ -1760,4 +1760,116 @@ const App = component$(() => {
             main_code
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Signal Wrapping Integration Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_jsx_signal_value_wrapprop() {
+        // signal.value in JSX props should become _wrapProp(signal) in const props
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const signal = useSignal(0);
+    return <div value={signal.value} />;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("_wrapProp(signal)"),
+            "Expected _wrapProp(signal) in output: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("import { _wrapProp }"),
+            "Expected _wrapProp import: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_signal_value_not_wrapped_for_call() {
+        // signal.value() should NOT be wrapped with _wrapProp (it's a function call)
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const signal = useSignal(0);
+    return <div value={signal.value()} />;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            !main_code.contains("_wrapProp"),
+            "Should NOT contain _wrapProp for signal.value(): {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_rawprops_wrapprop_named() {
+        // _rawProps.propName in JSX should become _wrapProp(_rawProps, "propName")
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+export const App = component$(({fromProps}) => {
+    return <div propswrap={fromProps} />;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // After props destructuring, fromProps becomes _rawProps.fromProps
+        // In JSX, _rawProps.fromProps should become _wrapProp(_rawProps, "fromProps")
+        assert!(
+            main_code.contains("_wrapProp(_rawProps"),
+            "Expected _wrapProp(_rawProps, ...) in output: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_signal_value_child_wrapprop() {
+        // {signal.value} as a child should become _wrapProp(signal) as the children argument
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const value = useSignal(0);
+    return <div>{value.value}</div>;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("_wrapProp(value)"),
+            "Expected _wrapProp(value) for child signal.value: {}",
+            main_code
+        );
+    }
 }

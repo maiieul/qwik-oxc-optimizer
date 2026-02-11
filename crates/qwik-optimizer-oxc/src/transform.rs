@@ -65,8 +65,23 @@ pub(crate) struct ImportTracker {
     /// Whether the module needs `import { Fragment as _Fragment }` from jsx-runtime.
     pub needs_fragment: bool,
 
+    /// Whether the module needs `import { _wrapProp }` from core.
+    pub needs_wrap_prop: bool,
+
+    /// Whether the module needs `import { _fnSignal }` from core.
+    pub needs_fn_signal: bool,
+
+    /// Whether the module needs `import { _val }` from core (bind:value).
+    pub needs_val: bool,
+
+    /// Whether the module needs `import { _chk }` from core (bind:checked).
+    pub needs_chk: bool,
+
     /// Monotonic counter for generating unique JSX key suffixes like "u6_0", "u6_1".
     pub jsx_key_counter: u32,
+
+    /// Monotonic counter for hoisted function names (_hf0, _hf1, ...).
+    pub hoisted_fn_counter: u32,
 }
 
 /// The core Qwik transform traversal state.
@@ -95,6 +110,11 @@ pub(crate) struct QwikTransform {
     /// Serialized body code for each segment (segment strategy only).
     /// Keyed by call span.start for matching to SegmentData.
     segment_body_codes: Vec<(u32, String)>,
+
+    /// Hoisted function declarations to insert at module top level.
+    /// Each entry is (fn_declaration_code, str_declaration_code).
+    /// e.g., ("const _hf0 = (p0)=>p0.value;", "const _hf0_str = \"p0.value\";")
+    hoisted_function_stmts: Vec<(String, String)>,
 }
 
 impl QwikTransform {
@@ -113,6 +133,7 @@ impl QwikTransform {
             active_props_info: None,
             capture_stack: Vec::new(),
             segment_body_codes: Vec::new(),
+            hoisted_function_stmts: Vec::new(),
         }
     }
 
@@ -411,6 +432,12 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
     ) {
         // JSX transformation: replace JSXElement/JSXFragment with _jsxSorted/_jsxSplit calls
         if self.options.transpile_jsx {
+            // Build destructured props map for signal wrapping detection
+            let destr_props: Option<Vec<(String, String)>> = self.active_props_info.as_ref().map(|info| {
+                info.prop_keys.iter().map(|(key, local)| (local.clone(), key.clone())).collect()
+            });
+            let destr_props_ref = destr_props.as_deref();
+
             match expr {
                 Expression::JSXElement(_) => {
                     // Take the JSXElement out to process it
@@ -421,6 +448,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             el.unbox(),
                             &mut self.import_tracker,
                             ctx,
+                            destr_props_ref,
                         );
                         *expr = result;
                     }
@@ -434,6 +462,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             frag.unbox(),
                             &mut self.import_tracker,
                             ctx,
+                            destr_props_ref,
                         );
                         *expr = result;
                     }
@@ -788,6 +817,24 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
+        // 4b. Add signal/binding-related imports
+        if self.import_tracker.needs_wrap_prop {
+            let stmt = import_rewrite::build_named_import("_wrapProp", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+        if self.import_tracker.needs_fn_signal {
+            let stmt = import_rewrite::build_named_import("_fnSignal", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+        if self.import_tracker.needs_val {
+            let stmt = import_rewrite::build_named_import("_val", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+        if self.import_tracker.needs_chk {
+            let stmt = import_rewrite::build_named_import("_chk", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+
         // 5. Add lazy import constants (segment strategy)
         for (hash, import_path) in &self.import_tracker.lazy_imports {
             let stmt = import_rewrite::build_lazy_import_declaration(hash, import_path, ctx);
@@ -916,14 +963,83 @@ fn transform_event_attr_name(attr_name: &str) -> Option<String> {
 
 /// Check if a JSX attribute value is a compile-time constant for prop classification.
 fn is_const_jsx_value(value: &Expression<'_>) -> bool {
+    crate::is_const::is_const_expression(value)
+}
+
+/// Result of analyzing a JSX prop value for signal wrapping.
+enum SignalWrapResult {
+    /// Expression should be wrapped with _wrapProp(signal) -- Form 1.
+    /// The String is the signal identifier name (object of .value).
+    WrapPropSignal,
+    /// Expression should be wrapped with _wrapProp(source, "propName") -- Form 2.
+    /// The Strings are (source_name, prop_name).
+    WrapPropNamed(String),
+    /// No signal wrapping needed; use normal var/const classification.
+    None,
+}
+
+/// Detect if a JSX prop value expression needs signal wrapping.
+///
+/// Rules:
+/// - `X.value` where X is a simple identifier -> WrapPropSignal
+///   BUT NOT `X.value()` (call on .value)
+/// - `_rawProps.propName` where _rawProps is the props parameter -> WrapPropNamed
+/// - Identifier matching a destructured prop key -> WrapPropNamed (with original key)
+///
+/// `destructured_props` is an optional map of (local_alias, original_key) pairs
+/// from active props destructuring. If an identifier matches a local alias,
+/// it will be treated as _rawProps.originalKey.
+fn detect_signal_wrap(
+    value: &Expression<'_>,
+    destructured_props: Option<&[(String, String)]>,
+) -> SignalWrapResult {
     match value {
-        Expression::StringLiteral(_)
-        | Expression::NumericLiteral(_)
-        | Expression::BooleanLiteral(_)
-        | Expression::NullLiteral(_) => true,
-        Expression::TemplateLiteral(tpl) => tpl.expressions.is_empty(),
-        _ => false,
+        Expression::StaticMemberExpression(member) => {
+            let prop_name = member.property.name.as_str();
+
+            // Check if it's X.value where X is a simple identifier
+            if prop_name == "value" {
+                if let Expression::Identifier(ident) = &member.object {
+                    let _name = ident.name.as_str();
+                    return SignalWrapResult::WrapPropSignal;
+                }
+            }
+
+            // Check if it's _rawProps.propName (props parameter member access)
+            if let Expression::Identifier(ident) = &member.object {
+                if ident.name.as_str() == "_rawProps" && prop_name != "value" {
+                    return SignalWrapResult::WrapPropNamed(prop_name.to_string());
+                }
+            }
+
+            SignalWrapResult::None
+        }
+        // Check for destructured prop identifier: if `fromProps` matches a
+        // destructured prop alias, treat as _wrapProp(_rawProps, "fromProps")
+        Expression::Identifier(ident) => {
+            if let Some(props) = destructured_props {
+                let name = ident.name.as_str();
+                for (local_alias, original_key) in props {
+                    if local_alias == name {
+                        return SignalWrapResult::WrapPropNamed(original_key.clone());
+                    }
+                }
+            }
+            SignalWrapResult::None
+        }
+        _ => SignalWrapResult::None,
     }
+}
+
+/// Check if an expression is a call expression on a .value member.
+/// E.g., `signal.value()` -- this should NOT be wrapped.
+fn is_call_on_value(value: &Expression<'_>) -> bool {
+    if let Expression::CallExpression(call) = value {
+        if let Expression::StaticMemberExpression(member) = &call.callee {
+            return member.property.name.as_str() == "value";
+        }
+    }
+    false
 }
 
 /// Build the tag expression for a JSX element name.
@@ -1045,6 +1161,7 @@ fn jsx_attr_value_to_expression<'a>(
     value: JSXAttributeValue<'a>,
     tracker: &mut ImportTracker,
     ctx: &mut TraverseCtx<'a, ()>,
+    destructured_props: Option<&[(String, String)]>,
 ) -> Expression<'a> {
     match value {
         JSXAttributeValue::StringLiteral(lit) => Expression::StringLiteral(lit),
@@ -1053,10 +1170,10 @@ fn jsx_attr_value_to_expression<'a>(
         }
         JSXAttributeValue::Element(el) => {
             // JSX element as attribute value: transform it
-            transform_jsx_element_inner(el.unbox(), tracker, ctx)
+            transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props)
         }
         JSXAttributeValue::Fragment(frag) => {
-            transform_jsx_fragment_inner(frag.unbox(), tracker, ctx)
+            transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props)
         }
     }
 }
@@ -1066,6 +1183,7 @@ fn transform_jsx_element_inner<'a>(
     mut element: JSXElement<'a>,
     tracker: &mut ImportTracker,
     ctx: &mut TraverseCtx<'a, ()>,
+    destructured_props: Option<&[(String, String)]>,
 ) -> Expression<'a> {
     let tag = build_tag_expression(&element.opening_element.name, ctx);
 
@@ -1100,7 +1218,7 @@ fn transform_jsx_element_inner<'a>(
                 // Handle key attribute
                 if attr_name == "key" {
                     if let Some(val) = attr.value {
-                        key_value = Some(jsx_attr_value_to_expression(val, tracker, ctx));
+                        key_value = Some(jsx_attr_value_to_expression(val, tracker, ctx, destructured_props));
                     }
                     continue;
                 }
@@ -1109,7 +1227,7 @@ fn transform_jsx_element_inner<'a>(
                 if let Some(event_name) = transform_event_attr_name(&attr_name) {
                     // Event handler: value goes into const props with renamed key
                     let value = if let Some(val) = attr.value {
-                        jsx_attr_value_to_expression(val, tracker, ctx)
+                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props)
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
@@ -1120,7 +1238,7 @@ fn transform_jsx_element_inner<'a>(
                 // Check for host: prefix (kept as-is) or custom$ (kept as-is)
                 if attr_name.starts_with("host:") || (attr_name.ends_with('$') && !attr_name.starts_with("on")) {
                     let value = if let Some(val) = attr.value {
-                        jsx_attr_value_to_expression(val, tracker, ctx)
+                        jsx_attr_value_to_expression(val, tracker, ctx, destructured_props)
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
@@ -1132,11 +1250,48 @@ fn transform_jsx_element_inner<'a>(
                 has_any_visible_prop = true;
                 _has_only_events = false;
                 let value = if let Some(val) = attr.value {
-                    jsx_attr_value_to_expression(val, tracker, ctx)
+                    jsx_attr_value_to_expression(val, tracker, ctx, destructured_props)
                 } else {
                     // Boolean attribute: <input disabled /> -> disabled: true
                     ctx.ast.expression_boolean_literal(SPAN, true)
                 };
+
+                // Check for signal wrapping BEFORE const/var classification.
+                // signal.value -> _wrapProp(signal) in const props
+                // _rawProps.propName -> _wrapProp(_rawProps, "propName") in const props
+                // But NOT signal.value() (function call on .value)
+                if !is_call_on_value(&value) {
+                    match detect_signal_wrap(&value, destructured_props) {
+                        SignalWrapResult::WrapPropSignal => {
+                            // Extract the signal identifier from X.value
+                            if let Expression::StaticMemberExpression(member) = value {
+                                let signal_obj = member.unbox().object;
+                                let wrapped = import_rewrite::build_wrap_prop_call(signal_obj, ctx);
+                                tracker.needs_wrap_prop = true;
+                                const_props.push((attr_name, wrapped));
+                                continue;
+                            }
+                        }
+                        SignalWrapResult::WrapPropNamed(prop_name) => {
+                            // Build _wrapProp(source, "propName") in const props.
+                            // Source is either _rawProps (for destructured props) or extracted from
+                            // a StaticMemberExpression (for _rawProps.propName).
+                            let source_obj = if let Expression::StaticMemberExpression(member) = value {
+                                member.unbox().object
+                            } else {
+                                // For destructured prop identifiers, build _rawProps reference
+                                ctx.ast.expression_identifier(SPAN, "_rawProps")
+                            };
+                            let wrapped = import_rewrite::build_wrap_prop_call_named(
+                                source_obj, &prop_name, ctx,
+                            );
+                            tracker.needs_wrap_prop = true;
+                            const_props.push((attr_name, wrapped));
+                            continue;
+                        }
+                        SignalWrapResult::None => {}
+                    }
+                }
 
                 if is_const_jsx_value(&value) {
                     const_props.push((attr_name, value));
@@ -1149,7 +1304,7 @@ fn transform_jsx_element_inner<'a>(
 
     // Build children
     let (children_expr, children_count) =
-        transform_jsx_children(&mut element.children, tracker, ctx);
+        transform_jsx_children(&mut element.children, tracker, ctx, destructured_props);
 
     // Compute flags
     let flags = if has_spread {
@@ -1348,6 +1503,7 @@ fn transform_jsx_fragment_inner<'a>(
     mut fragment: JSXFragment<'a>,
     tracker: &mut ImportTracker,
     ctx: &mut TraverseCtx<'a, ()>,
+    destructured_props: Option<&[(String, String)]>,
 ) -> Expression<'a> {
     tracker.needs_jsx_sorted = true;
     tracker.needs_fragment = true;
@@ -1356,7 +1512,7 @@ fn transform_jsx_fragment_inner<'a>(
 
     // Build children
     let (children_expr, children_count) =
-        transform_jsx_children(&mut fragment.children, tracker, ctx);
+        transform_jsx_children(&mut fragment.children, tracker, ctx, destructured_props);
 
     // Flags: 1 for multiple children, 3 for single/no children
     let flags: u32 = if children_count > 1 { 1 } else { 3 };
@@ -1399,6 +1555,7 @@ fn transform_jsx_children<'a>(
     children: &mut oxc::allocator::Vec<'a, JSXChild<'a>>,
     tracker: &mut ImportTracker,
     ctx: &mut TraverseCtx<'a, ()>,
+    destructured_props: Option<&[(String, String)]>,
 ) -> (Option<Expression<'a>>, usize) {
     let mut child_exprs: Vec<Expression<'a>> = Vec::new();
 
@@ -1417,12 +1574,12 @@ fn transform_jsx_children<'a>(
             }
             JSXChild::Element(el) => {
                 // Recursively transform child JSXElement
-                let transformed = transform_jsx_element_inner(el.unbox(), tracker, ctx);
+                let transformed = transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props);
                 child_exprs.push(transformed);
             }
             JSXChild::Fragment(frag) => {
                 // Recursively transform child JSXFragment
-                let transformed = transform_jsx_fragment_inner(frag.unbox(), tracker, ctx);
+                let transformed = transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props);
                 child_exprs.push(transformed);
             }
             JSXChild::ExpressionContainer(container) => {
@@ -1440,15 +1597,27 @@ fn transform_jsx_children<'a>(
                         match transformed {
                             Expression::JSXElement(el) => {
                                 let result =
-                                    transform_jsx_element_inner(el.unbox(), tracker, ctx);
+                                    transform_jsx_element_inner(el.unbox(), tracker, ctx, destructured_props);
                                 child_exprs.push(result);
                             }
                             Expression::JSXFragment(frag) => {
                                 let result =
-                                    transform_jsx_fragment_inner(frag.unbox(), tracker, ctx);
+                                    transform_jsx_fragment_inner(frag.unbox(), tracker, ctx, destructured_props);
                                 child_exprs.push(result);
                             }
                             other => {
+                                // Check if child expression is signal.value -> _wrapProp(signal)
+                                if !is_call_on_value(&other) {
+                                    if let SignalWrapResult::WrapPropSignal = detect_signal_wrap(&other, destructured_props) {
+                                        if let Expression::StaticMemberExpression(member) = other {
+                                            let signal_obj = member.unbox().object;
+                                            let wrapped = import_rewrite::build_wrap_prop_call(signal_obj, ctx);
+                                            tracker.needs_wrap_prop = true;
+                                            child_exprs.push(wrapped);
+                                            continue;
+                                        }
+                                    }
+                                }
                                 child_exprs.push(other);
                             }
                         }
@@ -1480,7 +1649,7 @@ fn transform_jsx_children<'a>(
 ///
 /// In OXC 0.113, Argument uses inherit_variants! from Expression, meaning
 /// all Expression variants are directly on Argument. We need to match and convert.
-fn argument_to_expression<'a>(
+pub(crate) fn argument_to_expression<'a>(
     arg: Argument<'a>,
     ctx: &mut TraverseCtx<'a, ()>,
 ) -> Expression<'a> {
