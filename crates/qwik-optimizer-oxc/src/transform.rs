@@ -127,6 +127,11 @@ pub(crate) struct QwikTransform {
 
     /// Set of span starts for sync$() calls.
     pending_sync_calls: HashSet<u32>,
+
+    /// Whether this module has a custom JSX import source (e.g., `@jsxImportSource react`).
+    /// When true, JSX event handler `$`-attributes are NOT extracted as segments
+    /// because the JSX is not Qwik JSX.
+    has_custom_jsx_import_source: bool,
 }
 
 impl QwikTransform {
@@ -148,6 +153,7 @@ impl QwikTransform {
             hoisted_function_stmts: Vec::new(),
             stripped_segments: HashSet::new(),
             pending_sync_calls: HashSet::new(),
+            has_custom_jsx_import_source: false,
         }
     }
 
@@ -177,6 +183,12 @@ impl QwikTransform {
     /// Get the set of span starts for stripped segments.
     pub fn stripped_segments(&self) -> &HashSet<u32> {
         &self.stripped_segments
+    }
+
+    /// Mark this module as having a custom JSX import source (e.g., `@jsxImportSource react`).
+    /// When set, JSX event handler `$`-attributes are NOT extracted as segments.
+    pub fn set_custom_jsx_import_source(&mut self, has: bool) {
+        self.has_custom_jsx_import_source = has;
     }
 
     /// Check if a ctx name should be stripped based on strip_ctx_name config.
@@ -480,7 +492,20 @@ impl QwikTransform {
     /// Pre-scan a JSXElement (recursively) for $-suffixed attributes and create
     /// segments for each. This ensures segment modules are produced for JSX event
     /// handlers like onClick$, onInput$, render$, etc.
+    ///
+    /// When `strip_event_handlers` is true, no JSX event segments are created.
+    /// When the module has a custom `@jsxImportSource`, JSX events are also skipped
+    /// since they are not Qwik JSX attributes.
     fn create_jsx_event_segments_recursive(&mut self, element: &JSXElement<'_>) {
+        // When strip_event_handlers is enabled, skip all JSX event handler extraction
+        if self.options.strip_event_handlers {
+            return;
+        }
+        // When a custom JSX import source is set (e.g., React), JSX $-attributes
+        // are not Qwik event handlers -- do not extract them.
+        if self.has_custom_jsx_import_source {
+            return;
+        }
         // Determine element name for display name context
         let element_name = match &element.opening_element.name {
             JSXElementName::Identifier(ident) => ident.name.as_str().to_string(),
@@ -490,28 +515,57 @@ impl QwikTransform {
             _ => "_".to_string(),
         };
 
-        // Scan attributes for $-suffixed names
+        // Scan attributes for $-suffixed names (including namespaced like document:onFocus$)
         for attr_item in &element.opening_element.attributes {
             if let JSXAttributeItem::Attribute(attr) = attr_item {
-                let attr_name = match &attr.name {
-                    JSXAttributeName::Identifier(ident) => ident.name.as_str(),
-                    JSXAttributeName::NamespacedName(_) => continue,
+                // Extract the attribute name, handling both simple and namespaced forms.
+                // Simple: onClick$, onBlur$, on-anotherCustom$
+                // Namespaced: document:onFocus$, window:onClick$, host:onClick$
+                let (attr_name_str, namespace_prefix) = match &attr.name {
+                    JSXAttributeName::Identifier(ident) => {
+                        (ident.name.as_str().to_string(), None)
+                    }
+                    JSXAttributeName::NamespacedName(ns) => {
+                        let name = ns.name.name.as_str();
+                        let prefix = ns.namespace.name.as_str();
+                        (name.to_string(), Some(prefix.to_string()))
+                    }
                 };
 
-                if attr_name.ends_with('$') {
+                if attr_name_str.ends_with('$') {
                     if let Some(value) = &attr.value {
                         if let JSXAttributeValue::ExpressionContainer(container) = value {
                             let expr_span = get_jsx_lambda_span(&container.expression);
                             if let Some(span) = expr_span {
-                                // Build display name matching the collector
-                                let event_suffix = transform_attr_name_for_display(attr_name);
+                                // Build display name matching the collector.
+                                // For namespaced attributes, include the prefix in
+                                // the event suffix (e.g., document:onFocus$ -> q_d_focus).
+                                let event_suffix = if let Some(ref prefix) = namespace_prefix {
+                                    let base = transform_attr_name_for_display(&attr_name_str);
+                                    // Map namespace prefixes to Qwik convention:
+                                    // document: -> q_d, window: -> q_w, host: -> q_e (?)
+                                    let prefix_code = match prefix.as_str() {
+                                        "document" => "q_d",
+                                        "window" => "q_w",
+                                        _ => "q_e",
+                                    };
+                                    format!("{}_{}", prefix_code, base.trim_start_matches("q_e_"))
+                                } else {
+                                    transform_attr_name_for_display(&attr_name_str)
+                                };
                                 let display_name = self.derive_jsx_event_display_name(
                                     &element_name, &event_suffix,
                                 );
+                                let ctx_name = if namespace_prefix.is_some() {
+                                    // Use the full namespaced attribute as ctx_name
+                                    format!("{}:{}", namespace_prefix.as_ref().unwrap(), attr_name_str)
+                                } else {
+                                    attr_name_str.clone()
+                                };
                                 self.record_jsx_event_segment(
                                     &display_name,
                                     span,
-                                    attr_name,
+                                    &ctx_name,
                                 );
                             }
                         }
@@ -593,6 +647,20 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
         if let Some(kind) = self.is_dollar_call(call) {
+            // Skip $-calls with zero arguments (e.g., `component$()` with no callback).
+            // These don't produce segments in the SWC optimizer.
+            if call.arguments.is_empty() {
+                // No arguments at all -- skip segment creation but still
+                // track the Qrl-suffixed import transformation.
+                if let DollarCallKind::Named(ref name) = kind {
+                    let qrl_name = crate::words::dollar_to_qrl_name(name);
+                    if !self.import_tracker.qrl_imports.contains(&qrl_name) {
+                        self.import_tracker.qrl_imports.push(qrl_name);
+                    }
+                }
+                return;
+            }
+
             // Check for sync$ -- handle separately (no segment, no captures)
             if let DollarCallKind::Named(ref name) = kind {
                 if name == "sync$" {

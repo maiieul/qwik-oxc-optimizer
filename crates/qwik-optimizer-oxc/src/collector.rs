@@ -365,10 +365,10 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
                     let local_name = s.local.name.as_str();
                     specifiers_vec.push(local_name.to_string());
 
-                    // Track dollar imports from Qwik core (or custom core_module)
-                    if is_qwik_core
-                        && (imported_name == "$" || imported_name.ends_with('$'))
-                    {
+                    // Track dollar imports: recognize $-suffixed functions from any module.
+                    // The SWC optimizer treats all $-suffixed imports as segment
+                    // boundaries, including from non-core modules like @auth/qwik.
+                    if imported_name == "$" || imported_name.ends_with('$') {
                         // Insert the local name since that is what call sites will use
                         ctx.dollar_imports.insert(local_name.to_string());
 
@@ -410,6 +410,16 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
                             is_reexport: false,
                             span: (export.span.start, export.span.end),
                         });
+
+                        // Track locally-defined $-suffixed exports as dollar imports
+                        // ONLY when defined via wrap() or implicit$FirstArg() calls.
+                        if name.ends_with('$') && !ctx.dollar_imports.contains(&name) {
+                            if let Some(init) = &declarator.init {
+                                if is_wrap_call(init) {
+                                    ctx.dollar_imports.insert(name.clone());
+                                }
+                            }
+                        }
 
                         // Also walk the init for dollar call sites
                         ctx.current_var_name = Some(name);
@@ -482,6 +492,18 @@ fn collect_default_export(ctx: &mut CollectContext, export: &ExportDefaultDeclar
     }
 }
 
+/// Check if an expression is a `wrap(...)` or `implicit$FirstArg(...)` call.
+/// These are the Qwik conventions for creating custom $-APIs from Qrl variants.
+fn is_wrap_call(expr: &Expression<'_>) -> bool {
+    if let Expression::CallExpression(call) = expr {
+        if let Expression::Identifier(ident) = &call.callee {
+            let name = ident.name.as_str();
+            return name == "wrap" || name == "implicit$FirstArg";
+        }
+    }
+    false
+}
+
 /// Extract the first identifier name from a binding pattern.
 fn binding_pattern_name(pattern: &BindingPattern<'_>) -> Option<String> {
     match pattern {
@@ -496,6 +518,18 @@ fn walk_statement_for_calls(ctx: &mut CollectContext, stmt: &Statement<'_>) {
         Statement::VariableDeclaration(var_decl) => {
             for declarator in &var_decl.declarations {
                 let var_name = binding_pattern_name(&declarator.id);
+                // Track locally-defined $-suffixed variables as dollar imports
+                // ONLY when defined via wrap() or implicit$FirstArg() calls.
+                // These are the Qwik conventions for creating custom $-APIs.
+                if let Some(ref name) = var_name {
+                    if name.ends_with('$') && !ctx.dollar_imports.contains(name) {
+                        if let Some(init) = &declarator.init {
+                            if is_wrap_call(init) {
+                                ctx.dollar_imports.insert(name.clone());
+                            }
+                        }
+                    }
+                }
                 ctx.current_var_name = var_name;
                 if let Some(init) = &declarator.init {
                     walk_expression_for_calls(ctx, init);
@@ -938,7 +972,7 @@ mod tests {
     /// Helper: parse source and run collector
     fn parse_and_collect(source: &str) -> CollectResult {
         let allocator = Allocator::default();
-        let result = parse_module(&allocator, source, "test.tsx").expect("parse failed");
+        let (result, _diags) = parse_module(&allocator, source, "test.tsx").expect("parse failed");
         collect(&result.program, &result.scoping, None)
     }
 
@@ -962,9 +996,12 @@ mod tests {
 import { $ } from '@qwik.dev/core';"#,
         );
 
-        // Only $ from @qwik.dev/core should be in dollar_imports
-        assert_eq!(result.dollar_imports.len(), 1);
+        // All $-suffixed imports are recognized as dollar imports,
+        // regardless of source module (SWC behavior: any $-suffixed
+        // function call creates a segment boundary).
+        assert_eq!(result.dollar_imports.len(), 2);
         assert!(result.dollar_imports.contains("$"));
+        assert!(result.dollar_imports.contains("something$"));
 
         // Both imports should be in module_imports
         assert_eq!(result.module_imports.len(), 2);
@@ -1358,7 +1395,7 @@ export const App = Component(() => {
 
     fn parse_and_collect_with_core_module(source: &str, core_module: Option<&str>) -> CollectResult {
         let allocator = Allocator::default();
-        let result = parse_module(&allocator, source, "test.tsx").expect("parse failed");
+        let (result, _diags) = parse_module(&allocator, source, "test.tsx").expect("parse failed");
         collect(&result.program, &result.scoping, core_module)
     }
 

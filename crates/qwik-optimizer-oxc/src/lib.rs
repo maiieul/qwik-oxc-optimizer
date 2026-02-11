@@ -78,14 +78,17 @@ pub fn transform_modules(
         // Allocate source into the arena so it lives for 'a
         let source_in_arena = allocator.alloc_str(&input.code);
 
-        // 2. Parse the module
-        let parse_result = match parse::parse_module(&allocator, source_in_arena, &input.path) {
-            Ok(result) => result,
-            Err(diagnostics) => {
-                all_diagnostics.extend(diagnostics);
-                continue;
-            }
-        };
+        // 2. Parse the module (error-recovering: partial AST on recoverable errors)
+        let (parse_result, parse_diags) =
+            match parse::parse_module(&allocator, source_in_arena, &input.path) {
+                Ok((result, diags)) => (result, diags),
+                Err(diagnostics) => {
+                    // Unrecoverable parse error (parser panicked) -- skip this input
+                    all_diagnostics.extend(diagnostics);
+                    continue;
+                }
+            };
+        all_diagnostics.extend(parse_diags);
 
         // Track source type flags
         if parse_result.source_type.is_typescript() {
@@ -125,6 +128,13 @@ pub fn transform_modules(
         // 4. Create QwikTransform and run traverse
         let mut qwik_transform =
             transform::QwikTransform::new(&transform_options, collect_result, &input.path);
+
+        // Detect @jsxImportSource in the source code (e.g., `/* @jsxImportSource react */`).
+        // When present, JSX $-attributes are NOT Qwik event handlers and should not
+        // be extracted as segments.
+        if input.code.contains("@jsxImportSource") {
+            qwik_transform.set_custom_jsx_import_source(true);
+        }
 
         let _scoping = oxc_traverse::traverse_mut(
             &mut qwik_transform,

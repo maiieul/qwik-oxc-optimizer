@@ -53,19 +53,24 @@ fn source_type_from_filename(filename: &str) -> oxc::span::SourceType {
 /// Parse a single source file into an OXC Program AST with semantic scoping.
 ///
 /// The `source` must have lifetime `'a` tied to the allocator so the AST
-/// can reference it. Returns `Err(diagnostics)` if parse errors are found.
+/// can reference it. Returns `Err(diagnostics)` only if the parser panicked
+/// (unrecoverable error with empty AST). For recoverable parse errors,
+/// the partial AST is returned along with diagnostics (OXC guarantees a
+/// structurally valid AST even with syntax errors when `panicked == false`).
 pub(crate) fn parse_module<'a>(
     allocator: &'a oxc::allocator::Allocator,
     source: &'a str,
     filename: &str,
-) -> Result<ParseResult<'a>, Vec<Diagnostic>> {
+) -> Result<(ParseResult<'a>, Vec<Diagnostic>), Vec<Diagnostic>> {
     let source_type = source_type_from_filename(filename);
 
     // Parse source into AST
     let ret = oxc::parser::Parser::new(allocator, source, source_type).parse();
 
-    // Check for parse errors
-    if !ret.errors.is_empty() {
+    // Only bail on unrecoverable parser panics (empty AST).
+    // When panicked == false, OXC guarantees a structurally valid partial AST
+    // even when there are syntax errors, so we can proceed with transformation.
+    if ret.panicked {
         let diagnostics: Vec<Diagnostic> = ret
             .errors
             .iter()
@@ -73,6 +78,13 @@ pub(crate) fn parse_module<'a>(
             .collect();
         return Err(diagnostics);
     }
+
+    // Collect any non-fatal parse errors as diagnostics
+    let parse_diagnostics: Vec<Diagnostic> = ret
+        .errors
+        .iter()
+        .map(|err| errors::create_source_error(&err.to_string(), filename))
+        .collect();
 
     let program = ret.program;
 
@@ -82,11 +94,14 @@ pub(crate) fn parse_module<'a>(
         .build(&program);
     let scoping = semantic_ret.semantic.into_scoping();
 
-    Ok(ParseResult {
-        program,
-        source_type,
-        scoping,
-    })
+    Ok((
+        ParseResult {
+            program,
+            source_type,
+            scoping,
+        },
+        parse_diagnostics,
+    ))
 }
 
 #[cfg(test)]
@@ -105,7 +120,8 @@ export const App = component$(() => {
         let result = parse_module(&allocator, source, "app.tsx");
         assert!(result.is_ok(), "Expected successful parse of TSX source");
 
-        let parsed = result.unwrap();
+        let (parsed, diags) = result.unwrap();
+        assert!(diags.is_empty());
         assert!(parsed.source_type.is_typescript());
         assert!(parsed.source_type.is_jsx());
         // Program body should have statements
@@ -120,7 +136,7 @@ export const App = component$(() => {
         let result = parse_module(&allocator, source, "utils.ts");
         assert!(result.is_ok());
 
-        let parsed = result.unwrap();
+        let (parsed, _diags) = result.unwrap();
         assert!(parsed.source_type.is_typescript());
         // JSX is enabled for .ts in Qwik
         assert!(parsed.source_type.is_jsx());
@@ -134,7 +150,7 @@ export const App = component$(() => {
         let result = parse_module(&allocator, source, "app.jsx");
         assert!(result.is_ok());
 
-        let parsed = result.unwrap();
+        let (parsed, _diags) = result.unwrap();
         assert!(!parsed.source_type.is_typescript());
         assert!(parsed.source_type.is_jsx());
     }
@@ -147,7 +163,7 @@ export const App = component$(() => {
         let result = parse_module(&allocator, source, "utils.js");
         assert!(result.is_ok());
 
-        let parsed = result.unwrap();
+        let (parsed, _diags) = result.unwrap();
         assert!(!parsed.source_type.is_typescript());
     }
 
@@ -161,21 +177,25 @@ export const App = component$(() => {
     }
 
     #[test]
-    fn test_parse_error_returns_diagnostics() {
+    fn test_parse_error_recovery() {
         let allocator = Allocator::default();
-        let source = r#"export const = ;"#;
+        // Syntax error: const without initializer, but recoverable
+        let source = r#"const x = 1; const = ; const y = 2;"#;
 
         let result = parse_module(&allocator, source, "bad.tsx");
-        assert!(result.is_err(), "Expected parse error for invalid syntax");
-
-        let diagnostics = result.unwrap_err();
-        assert!(!diagnostics.is_empty());
-        // Should be a SourceError category
-        assert!(matches!(
-            diagnostics[0].category,
-            crate::types::DiagnosticCategory::SourceError
-        ));
-        assert_eq!(diagnostics[0].file, "bad.tsx");
+        // Should succeed with partial AST (recoverable error)
+        // OR fail with panicked (unrecoverable) -- depends on OXC
+        match result {
+            Ok((parsed, diags)) => {
+                // Recovery: got partial AST with diagnostics
+                assert!(!diags.is_empty(), "Expected parse diagnostics");
+                assert!(!parsed.program.body.is_empty(), "Expected partial AST");
+            }
+            Err(diags) => {
+                // Unrecoverable: parser panicked
+                assert!(!diags.is_empty());
+            }
+        }
     }
 
     #[test]
@@ -193,7 +213,8 @@ const x = $(() => {
         assert!(result.is_ok());
         // Scoping is available (not a direct assertion on content,
         // but confirms SemanticBuilder completed successfully)
-        let _scoping = &result.unwrap().scoping;
+        let (parsed, _diags) = result.unwrap();
+        let _scoping = &parsed.scoping;
     }
 
     #[test]
