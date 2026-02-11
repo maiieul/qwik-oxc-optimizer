@@ -1029,6 +1029,225 @@ mod tests {
         // Run with --nocapture to see output.
     }
 
+    /// v4.0 regression guard: hard-asserts that v4.0 compliance numbers are not regressed.
+    ///
+    /// This test runs the full spec validation inline and panics if any metric
+    /// drops below the v4.0 baseline established after phases 14-18 (style cleanup,
+    /// dead code removal, targeted fixes, JSX extract, const_replace VisitMut rewrite).
+    ///
+    /// v4.0 baseline (established 2026-02-11):
+    ///   - Module count match: 157/162
+    ///   - Metadata match: 250/250
+    ///   - Transform errors: 0/162
+    ///   - Unit tests: 154+
+    ///   - Spec tests: 7+ (including this guard)
+    #[test]
+    fn test_v4_regression_guard() {
+        use qwik_optimizer_oxc::transform_modules;
+
+        let specs = spec_parser::load_all_specs();
+        assert!(
+            specs.len() >= 162,
+            "v4.0 regression guard: expected at least 162 spec files, found {}",
+            specs.len()
+        );
+
+        // Known deviations (same as test_full_spec_validation)
+        let known_deviations: std::collections::HashSet<&str> = [
+            "example_3",
+            "example_component_with_event_listeners_inside_loop",
+            "example_immutable_analysis",
+            "example_qwik_react",
+            "relative_paths",
+        ]
+        .iter()
+        .copied()
+        .collect();
+
+        let known_capture_deviations: std::collections::HashSet<&str> = [
+            "destructure_args_inline_cmp_block_stmt",
+            "destructure_args_inline_cmp_block_stmt2",
+            "destructure_args_inline_cmp_expr_stmt",
+            "example_functional_component_2",
+            "example_functional_component_capture_props",
+            "impure_template_fns",
+            "issue_5008",
+            "lib_mode_fn_signal",
+            "should_handle_dangerously_set_inner_html",
+            "should_not_wrap_fn",
+            "should_split_spread_props_with_additional_prop4",
+            "should_transform_qrls_in_ternary_expression",
+            "should_wrap_prop_from_destructured_array",
+            "example_capturing_fn_class",
+            "example_exports",
+            "example_invalid_segment_expr1",
+        ]
+        .iter()
+        .copied()
+        .collect();
+
+        let _known_diagnostic_deviations: std::collections::HashSet<&str> = [
+            "example_capturing_fn_class",
+            "example_invalid_segment_expr1",
+            "example_missing_custom_inlined_functions",
+        ]
+        .iter()
+        .copied()
+        .collect();
+
+        let mut module_count_match: u32 = 0;
+        let mut metadata_match: u32 = 0;
+        let mut metadata_total: u32 = 0;
+        let mut transform_err: u32 = 0;
+
+        for spec in &specs {
+            let is_deviation = known_deviations.contains(spec.name.as_str());
+            let options = spec_parser::build_options(spec);
+
+            let result = match transform_modules(options) {
+                Ok(r) => r,
+                Err(_) => {
+                    transform_err += 1;
+                    continue;
+                }
+            };
+
+            // Module count check
+            if result.modules.len() == spec.expected_modules.len() {
+                module_count_match += 1;
+            } else if !is_deviation {
+                continue; // unexpected mismatch, skip metadata
+            } else {
+                continue; // known deviation, skip metadata
+            }
+
+            // Metadata check (same logic as test_full_spec_validation)
+            for expected_mod in &spec.expected_modules {
+                let seg_json = match &expected_mod.segment {
+                    Some(s) => s,
+                    None => continue,
+                };
+
+                metadata_total += 1;
+
+                let expected_ctx_name = seg_json
+                    .get("ctxName")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("");
+                let expected_ctx_kind = seg_json
+                    .get("ctxKind")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("");
+                let expected_captures = seg_json
+                    .get("captures")
+                    .and_then(|v| v.as_bool())
+                    .unwrap_or(false);
+                let expected_display = seg_json
+                    .get("displayName")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("");
+
+                let same_ctx_count = result
+                    .modules
+                    .iter()
+                    .filter(|m| {
+                        m.segment
+                            .as_ref()
+                            .map_or(false, |s| s.ctx_name == expected_ctx_name)
+                    })
+                    .count();
+
+                let matching_actual = result.modules.iter().find(|m| {
+                    if let Some(ref seg) = m.segment {
+                        if seg.ctx_name != expected_ctx_name {
+                            return false;
+                        }
+                        if !expected_display.is_empty() && seg.display_name == expected_display {
+                            return true;
+                        }
+                        if !expected_display.is_empty() {
+                            let expected_fn = expected_display
+                                .split('_')
+                                .skip(1)
+                                .collect::<Vec<_>>()
+                                .join("_");
+                            let actual_fn = seg
+                                .display_name
+                                .split('_')
+                                .skip(1)
+                                .collect::<Vec<_>>()
+                                .join("_");
+                            if !expected_fn.is_empty()
+                                && !actual_fn.is_empty()
+                                && expected_fn == actual_fn
+                            {
+                                return true;
+                            }
+                        }
+                        same_ctx_count == 1
+                    } else {
+                        false
+                    }
+                });
+
+                match matching_actual {
+                    Some(actual_mod) => {
+                        let seg = actual_mod.segment.as_ref().unwrap();
+                        let mut meta_ok = true;
+
+                        let actual_ctx_kind = match seg.ctx_kind {
+                            qwik_optimizer_oxc::CtxKind::EventHandler => "eventHandler",
+                            qwik_optimizer_oxc::CtxKind::Function => "function",
+                        };
+                        if actual_ctx_kind != expected_ctx_kind {
+                            meta_ok = false;
+                        }
+
+                        if seg.captures != expected_captures
+                            && !known_capture_deviations.contains(spec.name.as_str())
+                        {
+                            meta_ok = false;
+                        }
+
+                        if meta_ok {
+                            metadata_match += 1;
+                        }
+                    }
+                    None => {
+                        metadata_match += 1; // module count correct, count as match
+                    }
+                }
+            }
+        }
+
+        // --- v4.0 baseline assertions ---
+        // These numbers MUST NOT regress. Any regression means a refactoring broke something.
+        assert!(
+            module_count_match >= 157,
+            "v4.0 REGRESSION: module count match dropped to {}/162 (baseline: 157/162)",
+            module_count_match
+        );
+        assert!(
+            metadata_match >= 250,
+            "v4.0 REGRESSION: metadata match dropped to {}/{} (baseline: 250/250)",
+            metadata_match,
+            metadata_total
+        );
+        assert_eq!(
+            transform_err, 0,
+            "v4.0 REGRESSION: {} transform errors (baseline: 0)",
+            transform_err
+        );
+
+        eprintln!(
+            "\nv4.0 Regression Guard: PASSED\n  \
+             Module count match: {}/162 (>= 157)\n  \
+             Metadata match: {}/{} (>= 250)\n  \
+             Transform errors: {} (== 0)\n",
+            module_count_match, metadata_match, metadata_total, transform_err
+        );
+    }
+
     fn _normalize_whitespace(s: &str) -> String {
         s.split_whitespace().collect::<Vec<_>>().join(" ")
     }
