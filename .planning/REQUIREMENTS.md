@@ -49,7 +49,7 @@ Requirements for the OXC optimizer port. Each maps to roadmap phases.
 
 ### Annotations + Stripping
 
-- [ ] **ANNO-01**: Optimizer adds `/*#__PURE__*/` annotations to all framework replacement calls (_jsxSorted, _jsxSplit, componentQrl, qrl, inlinedQrl, _wrapProp, _fnSignal, _qrlSync, _noopQrl, _restProps)
+- [ ] **ANNO-01**: Optimizer adds `/*#__PURE__*/` annotations to tree-shakeable framework calls (_jsxSorted, _jsxSplit, componentQrl, qrl, inlinedQrl, _noopQrl, _noopQrlDEV) but NOT to runtime-required calls (_wrapProp, _fnSignal, _restProps, _qrlSync)
 - [ ] **ANNO-02**: Optimizer replaces `isServer`/`isDev`/`isBrowser` with boolean literals based on build mode
 - [ ] **ANNO-03**: Optimizer eliminates dead branches after const replacement (if (false) { ... } -> removed)
 - [ ] **ANNO-04**: Optimizer replaces stripped $() calls with `_noopQrl("s_HASH")` in prod mode

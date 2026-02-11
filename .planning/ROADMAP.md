@@ -39,7 +39,7 @@ Full details: `milestones/v2.0-ROADMAP.md`
 - [x] **Phase 9: Capture Analysis + Props Destructuring** - Scope analysis and props transformation (CONV-11, CONV-05) -- completed 2026-02-10
 - [x] **Phase 10: Segment Extraction + Codegen** - Multi-module output and lazy imports (CONV-08, CONV-06) -- completed 2026-02-11
 - [x] **Phase 11: JSX + Signal Transforms** - JSX compilation and signal optimization (CONV-03, CONV-04, CONV-12, CONV-14) -- completed 2026-02-11
-- [ ] **Phase 12: Annotations + Stripping** - PURE annotations, const replacement, code stripping, sync$ (CONV-07, CONV-10, CONV-09, CONV-13)
+- [x] **Phase 12: Annotations + Stripping** - PURE annotations, const replacement, code stripping, sync$ (CONV-07, CONV-10, CONV-09, CONV-13) -- completed 2026-02-11
 - [ ] **Phase 13: Source Maps + Full Validation** - Source map generation and 162/162 spec test pass
 
 ## Phase Details
@@ -122,7 +122,7 @@ Plans:
 - [x] 11-01-PLAN.md -- JSX element and fragment transformation (_jsxSorted, _jsxSplit, prop var/const classification, children encoding, flags, key, event handler renaming, Fragment import)
 - [x] 11-02-PLAN.md -- Signal optimization (_wrapProp, _fnSignal, hoisted _hfN functions) and input binding (bind:value, bind:checked, _val/_chk QRL handlers)
 
-### Phase 12: Annotations + Stripping
+### Phase 12: Annotations + Stripping -- COMPLETE 2026-02-11
 **Goal**: Optimizer adds PURE annotations, replaces build constants, strips dead code, and handles sync$ serialization
 **Depends on**: Phase 11
 **Requirements**: ANNO-01, ANNO-02, ANNO-03, ANNO-04, ANNO-05
@@ -134,8 +134,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 12-01-PLAN.md -- PURE annotations on _jsxSorted/_jsxSplit calls and const replacement with dead branch elimination (CONV-07, CONV-10)
-- [ ] 12-02-PLAN.md -- Code stripping (_noopQrl for stripped ctx names) and sync$ serialization (_qrlSync) (CONV-09, CONV-13)
+- [x] 12-01-PLAN.md -- PURE annotations on _jsxSorted/_jsxSplit calls and const replacement with dead branch elimination (CONV-07, CONV-10)
+- [x] 12-02-PLAN.md -- Code stripping (_noopQrl for stripped ctx names) and sync$ serialization (_qrlSync) (CONV-09, CONV-13)
 
 ### Phase 13: Source Maps + Full Validation
 **Goal**: All 162 spec tests pass with source map generation
@@ -169,9 +169,9 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 9. Capture Analysis + Props Destructuring | v3.0 | 2/2 | Complete | 2026-02-10 |
 | 10. Segment Extraction + Codegen | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 11. JSX + Signal Transforms | v3.0 | 2/2 | Complete | 2026-02-11 |
-| 12. Annotations + Stripping | v3.0 | 0/2 | Not started | - |
+| 12. Annotations + Stripping | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 13. Source Maps + Full Validation | v3.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 12 planned)*
+*Last updated: 2026-02-11 (Phase 12 complete)*
