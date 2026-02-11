@@ -3,7 +3,7 @@
 ## Milestones
 
 - v1.0 Spec Generation -- Phases 1-3 (shipped 2026-02-10)
-- v2.0 OXC API Research & Architecture -- Phases 4-6 (in progress)
+- v2.0 OXC API Research & Architecture -- Phases 4-6 (shipped 2026-02-11)
 
 ## Phases
 
@@ -18,13 +18,13 @@ Full details: `milestones/v1.0-ROADMAP.md`
 
 </details>
 
-### v2.0 OXC API Research & Architecture (In Progress)
+### v2.0 OXC API Research & Architecture (SHIPPED 2026-02-11)
 
 **Milestone Goal:** Deeply research OXC APIs and Rust libraries to map every spec transformation pattern to concrete implementation approaches, producing API mapping guides, working proof-of-concept Rust programs, and an architectural blueprint -- so the port milestone (v3.0) can proceed with zero guesswork.
 
 - [x] **Phase 4: Core API Mapping & Architecture** - Map foundational transformation patterns to OXC APIs and design the optimizer crate architecture -- completed 2026-02-10
 - [x] **Phase 5: Deep Research & Proof of Concept** - Investigate complex patterns (capture analysis, multi-module output) and validate with working Rust programs -- completed 2026-02-10
-- [ ] **Phase 6: Secondary Patterns & Cross-Reference** - Map remaining transformation patterns (JSX, source maps, signals, entry strategy) and produce complete CONV cross-reference
+- [x] **Phase 6: Secondary Patterns & Cross-Reference** - Map remaining transformation patterns (JSX, source maps, signals, entry strategy) and produce complete CONV cross-reference -- completed 2026-02-11
 
 ## Phase Details
 
@@ -73,9 +73,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md -- JSX transformation + props destructuring + signal optimization OXC API mapping (APIM-04, APIM-09)
-- [ ] 06-02-PLAN.md -- Entry strategy, code stripping, const folding, input binding, sync$, dev mode OXC API mapping (APIM-10)
-- [ ] 06-03-PLAN.md -- 14 CONV type cross-reference table + source map span strategy + PURE annotations (APIM-07, APIM-08)
+- [x] 06-01-PLAN.md -- JSX transformation + props destructuring + signal optimization OXC API mapping (APIM-04, APIM-09)
+- [x] 06-02-PLAN.md -- Entry strategy, code stripping, const folding, input binding, sync$, dev mode OXC API mapping (APIM-10)
+- [x] 06-03-PLAN.md -- 14 CONV type cross-reference table + source map span strategy + PURE annotations (APIM-07, APIM-08)
 
 ## Progress
 
@@ -89,8 +89,8 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 3. Verify Completeness | v1.0 | 2/2 | Complete | 2026-02-10 |
 | 4. Core API Mapping & Architecture | v2.0 | 2/2 | Complete | 2026-02-10 |
 | 5. Deep Research & Proof of Concept | v2.0 | 3/3 | Complete | 2026-02-10 |
-| 6. Secondary Patterns & Cross-Reference | v2.0 | 0/3 | Not started | - |
+| 6. Secondary Patterns & Cross-Reference | v2.0 | 3/3 | Complete | 2026-02-11 |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-10 (Phase 6 planned)*
+*Last updated: 2026-02-11 (Phase 6 complete, v2.0 shipped)*
