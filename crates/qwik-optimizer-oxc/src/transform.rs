@@ -14,6 +14,7 @@ use oxc_traverse::{Traverse, TraverseCtx};
 use crate::entry_strategy;
 use crate::hash;
 use crate::import_rewrite;
+use crate::props_destructuring::{self, PropsDestructuringInfo};
 use crate::types::{CollectResult, Diagnostic, SegmentData, TransformOptions};
 use crate::words;
 
@@ -41,6 +42,9 @@ pub(crate) struct ImportTracker {
     /// Whether the module needs `import { _captures }` (inline + captures).
     pub needs_captures: bool,
 
+    /// Whether the module needs `import { _restProps }` (props destructuring with rest).
+    pub needs_rest_props: bool,
+
     /// Lazy import constants to insert (segment strategy).
     /// Each entry: (hash, import_path).
     pub lazy_imports: Vec<(String, String)>,
@@ -59,6 +63,10 @@ pub(crate) struct QwikTransform {
     /// Set of span starts for dollar calls that we've already recorded,
     /// so exit_expression can identify them.
     pending_dollar_calls: HashSet<u32>,
+
+    /// Active props destructuring info for the current component$ call.
+    /// Set in enter_call_expression, consumed in exit_expression.
+    active_props_info: Option<PropsDestructuringInfo>,
 }
 
 impl QwikTransform {
@@ -74,6 +82,7 @@ impl QwikTransform {
             segment_counter: 0,
             dollar_call_stack: Vec::new(),
             pending_dollar_calls: HashSet::new(),
+            active_props_info: None,
         }
     }
 
@@ -226,6 +235,22 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
         if let Some(kind) = self.is_dollar_call(call) {
+            // For component$ calls, check for props destructuring
+            if let DollarCallKind::Named(ref name) = kind {
+                if name == "component$" {
+                    // Check if first argument is an ArrowFunctionExpression
+                    if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first() {
+                        let info = props_destructuring::analyze_props_destructuring(&arrow.params);
+                        if info.needs_transform {
+                            if info.rest_name.is_some() {
+                                self.import_tracker.needs_rest_props = true;
+                            }
+                            self.active_props_info = Some(info);
+                        }
+                    }
+                }
+            }
+
             // Record the segment
             let segment = self.record_segment(call, &kind);
 
@@ -255,6 +280,92 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
             // Pop from nesting stack
             self.dollar_call_stack.pop();
+
+            // Apply props destructuring if active for this component$ call
+            let props_info = self.active_props_info.take();
+            if let Some(ref info) = props_info {
+                if let DollarCallKind::Named(ref name) = kind {
+                    if name == "component$" {
+                        // Apply the transformation to the arrow function argument
+                        if let Some(Argument::ArrowFunctionExpression(arrow)) =
+                            call.arguments.first_mut()
+                        {
+                            // 1. Replace the ObjectPattern parameter with _rawProps BindingIdentifier
+                            if !arrow.params.items.is_empty() {
+                                let new_pattern = ctx.ast.binding_pattern_binding_identifier(
+                                    SPAN,
+                                    ctx.ast.atom(&info.raw_props_name),
+                                );
+                                let new_param = ctx.ast.formal_parameter(
+                                    SPAN,
+                                    ctx.ast.vec(),  // no decorators
+                                    new_pattern,
+                                    None::<oxc::allocator::Box<'a, TSTypeAnnotation<'a>>>,
+                                    None::<oxc::allocator::Box<'a, Expression<'a>>>,
+                                    false,          // not optional
+                                    None,           // no accessibility
+                                    false,          // not readonly
+                                    false,          // no override
+                                );
+                                arrow.params.items[0] = new_param;
+                                // Remove rest param from FormalParameters if present
+                                // (the rest is handled via _restProps call)
+                                arrow.params.rest = None;
+                            }
+
+                            // 2. If rest_name is present, prepend _restProps declaration to body
+                            if let Some(ref rest_name) = info.rest_name {
+                                let excluded_keys: Vec<String> = info
+                                    .prop_keys
+                                    .iter()
+                                    .map(|(key, _)| key.clone())
+                                    .collect();
+                                let rest_stmt = props_destructuring::build_rest_props_declaration(
+                                    rest_name,
+                                    &info.raw_props_name,
+                                    &excluded_keys,
+                                    ctx,
+                                );
+
+                                // Prepend to body statements
+                                let mut old_stmts = ctx.ast.vec();
+                                std::mem::swap(&mut arrow.body.statements, &mut old_stmts);
+                                let mut new_stmts =
+                                    ctx.ast.vec_with_capacity(1 + old_stmts.len());
+                                new_stmts.push(rest_stmt);
+                                for s in old_stmts {
+                                    new_stmts.push(s);
+                                }
+                                arrow.body.statements = new_stmts;
+                            }
+
+                            // 3. Rewrite identifier references in the body
+                            // Build (local_alias, original_key) pairs for the rewriter
+                            let prop_map: Vec<(String, String)> = info
+                                .prop_keys
+                                .iter()
+                                .map(|(key, local)| (local.clone(), key.clone()))
+                                .collect();
+
+                            if !prop_map.is_empty() {
+                                props_destructuring::rewrite_body_statements(
+                                    &mut arrow.body.statements,
+                                    &prop_map,
+                                    &info.raw_props_name,
+                                    ctx,
+                                );
+                            }
+                        }
+
+                        // Update the segment's param_names
+                        if let Some(seg) = self.segments.iter_mut().find(|s| {
+                            s.span.0 == call.span.start && s.span.1 == call.span.end
+                        }) {
+                            seg.param_names = vec![info.raw_props_name.clone()];
+                        }
+                    }
+                }
+            }
 
             // Find the segment info we recorded for this call
             let segment_info = self
@@ -363,6 +474,12 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         // 3. Add _captures import if needed
         if self.import_tracker.needs_captures {
             let stmt = import_rewrite::build_named_import("_captures", core_module, ctx);
+            new_stmts.push(stmt);
+        }
+
+        // 3b. Add _restProps import if needed (props destructuring with rest patterns)
+        if self.import_tracker.needs_rest_props {
+            let stmt = import_rewrite::build_named_import("_restProps", core_module, ctx);
             new_stmts.push(stmt);
         }
 

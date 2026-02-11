@@ -441,4 +441,289 @@ const handler = $(() => 1);"#
             "Should have no modules for parse error"
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Props Destructuring Integration Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_props_destructuring_basic() {
+        // Use inline strategy so arrow body stays in same module for easy verification
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+const App = component$(({foo, bar}) => {
+    return foo + bar;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        assert!(!result.modules.is_empty());
+        let main_code = &result.modules[0].code;
+
+        // Should contain _rawProps parameter (not destructured {foo, bar})
+        assert!(
+            main_code.contains("_rawProps"),
+            "Expected _rawProps in output: {}",
+            main_code
+        );
+        // Should contain _rawProps.foo and _rawProps.bar member access
+        assert!(
+            main_code.contains("_rawProps.foo"),
+            "Expected _rawProps.foo in output: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("_rawProps.bar"),
+            "Expected _rawProps.bar in output: {}",
+            main_code
+        );
+        // Should NOT contain the original destructuring pattern
+        assert!(
+            !main_code.contains("{foo, bar}"),
+            "Should not contain original destructuring: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_props_destructuring_rest() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+const App = component$(({foo, ...rest}) => {
+    return foo;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        assert!(!result.modules.is_empty());
+        let main_code = &result.modules[0].code;
+
+        // Should contain _rawProps parameter
+        assert!(
+            main_code.contains("_rawProps"),
+            "Expected _rawProps in output: {}",
+            main_code
+        );
+        // Should contain _restProps call
+        assert!(
+            main_code.contains("_restProps"),
+            "Expected _restProps in output: {}",
+            main_code
+        );
+        // Should contain the excluded key "foo" in the _restProps call
+        assert!(
+            main_code.contains("\"foo\""),
+            "Expected \"foo\" key in _restProps call: {}",
+            main_code
+        );
+        // Should contain _restProps import
+        assert!(
+            main_code.contains("_restProps"),
+            "Expected _restProps import: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_props_destructuring_renamed() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+const App = component$(({count: c}) => {
+    return c;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        assert!(!result.modules.is_empty());
+        let main_code = &result.modules[0].code;
+
+        // Should contain _rawProps.count (the original key, not the alias "c")
+        assert!(
+            main_code.contains("_rawProps.count"),
+            "Expected _rawProps.count in output (not _rawProps.c): {}",
+            main_code
+        );
+        // The variable `c` should NOT appear as a standalone identifier reference.
+        // It should be replaced with _rawProps.count, not _rawProps.c.
+        // Verify we don't have _rawProps.c followed by a non-alphanumeric
+        // (which would mean the alias was used as a key)
+        assert!(
+            !main_code.contains("_rawProps.c ") && !main_code.contains("_rawProps.c;") && !main_code.contains("_rawProps.c\n"),
+            "Should not contain _rawProps.c (the alias as a member access): {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_props_destructuring_plain_param() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+const App = component$((props) => {
+    return props.foo;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        assert!(!result.modules.is_empty());
+        let main_code = &result.modules[0].code;
+
+        // Should NOT contain _rawProps -- plain identifier params are unchanged
+        assert!(
+            !main_code.contains("_rawProps"),
+            "Should NOT contain _rawProps for plain param: {}",
+            main_code
+        );
+        // Should contain original props reference
+        assert!(
+            main_code.contains("props"),
+            "Expected original props reference: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_props_destructuring_no_params() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+const App = component$(() => {
+    return 'hello';
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        assert!(!result.modules.is_empty());
+        let main_code = &result.modules[0].code;
+
+        // Should NOT contain _rawProps -- no params to destructure
+        assert!(
+            !main_code.contains("_rawProps"),
+            "Should NOT contain _rawProps for no params: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_props_destructuring_segment_metadata() {
+        // Use segment strategy to check param_names in SegmentAnalysis
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+const App = component$(({foo}) => {
+    return foo;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default() // segment strategy by default
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find the segment module with segment metadata
+        let segment_module = result
+            .modules
+            .iter()
+            .find(|m| m.segment.is_some())
+            .expect("Expected a segment module");
+
+        let segment = segment_module.segment.as_ref().unwrap();
+
+        // Should have param_names = ["_rawProps"]
+        assert_eq!(
+            segment.param_names,
+            Some(vec!["_rawProps".to_string()]),
+            "Expected paramNames [\"_rawProps\"] in segment metadata"
+        );
+        assert_eq!(segment.ctx_name, "component$");
+    }
+
+    #[test]
+    fn test_props_destructuring_rest_only() {
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+const App = component$(({...props}) => {
+    return props;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        assert!(!result.modules.is_empty());
+        let main_code = &result.modules[0].code;
+
+        // Should contain _rawProps parameter
+        assert!(
+            main_code.contains("_rawProps"),
+            "Expected _rawProps in output: {}",
+            main_code
+        );
+        // Should contain _restProps(_rawProps) call (no excluded keys)
+        assert!(
+            main_code.contains("_restProps(_rawProps)"),
+            "Expected _restProps(_rawProps) without excluded keys: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_props_destructuring_non_component_unchanged() {
+        // useTask$ with destructured params should NOT get props treatment
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, useTask$ } from '@qwik.dev/core';
+useTask$(({track}) => {
+    track(someSignal);
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            entry_strategy: EntryStrategy::Inline,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        assert!(!result.modules.is_empty());
+        let main_code = &result.modules[0].code;
+
+        // Should NOT contain _rawProps -- only component$ gets this treatment
+        assert!(
+            !main_code.contains("_rawProps"),
+            "useTask$ should NOT get _rawProps transformation: {}",
+            main_code
+        );
+    }
 }
