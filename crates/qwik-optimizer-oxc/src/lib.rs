@@ -2116,4 +2116,138 @@ export const App = component$(({fromProps}) => {
             main_code
         );
     }
+
+    // -----------------------------------------------------------------------
+    // PURE Annotation Integration Tests (Phase 12-01)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_jsx_pure_annotation() {
+        // Verify _jsxSorted calls contain PURE annotation in output.
+        // OXC emits /* @__PURE__ */ (standard format recognized by all bundlers).
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => <div>hello</div>;"#.to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("@__PURE__") && main_code.contains("_jsxSorted"),
+            "Expected PURE annotation on _jsxSorted in output: {}",
+            main_code
+        );
+        // Specifically check the PURE annotation is directly before _jsxSorted
+        assert!(
+            main_code.contains("/* @__PURE__ */ _jsxSorted"),
+            "Expected /* @__PURE__ */ _jsxSorted in output: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_pure_annotation_fragment() {
+        // Verify _jsxSorted on fragments also has PURE annotation
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => <><div/><span/></>;"#.to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("/* @__PURE__ */ _jsxSorted"),
+            "Expected /* @__PURE__ */ _jsxSorted for fragment: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_pure_annotation_spread_jsxsplit() {
+        // Verify _jsxSplit calls also have PURE annotation
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = (props) => <button {...props}/>;"#.to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("/* @__PURE__ */ _jsxSplit"),
+            "Expected /* @__PURE__ */ _jsxSplit for spread: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_pure_annotation_qrl_calls() {
+        // Verify componentQrl and qrl also have PURE annotation
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+const App = component$(() => <div/>);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("/* @__PURE__ */ componentQrl"),
+            "Expected /* @__PURE__ */ componentQrl in output: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("/* @__PURE__ */ qrl("),
+            "Expected /* @__PURE__ */ qrl( in output: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_no_pure_on_wrapprop_fnsignal() {
+        // _wrapProp and _fnSignal should NOT have PURE annotation
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"export const App = () => {
+    const signal = useSignal(0);
+    return <div value={signal.value} count={signal.value + 1}></div>;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        // _wrapProp should NOT have PURE
+        assert!(
+            !main_code.contains("@__PURE__ */ _wrapProp"),
+            "Should NOT have PURE on _wrapProp: {}",
+            main_code
+        );
+        // _fnSignal should NOT have PURE
+        assert!(
+            !main_code.contains("@__PURE__ */ _fnSignal"),
+            "Should NOT have PURE on _fnSignal: {}",
+            main_code
+        );
+    }
 }
