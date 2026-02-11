@@ -34,7 +34,19 @@ A working OXC-based Qwik optimizer crate that passes all 162 spec tests — buil
 
 ### Active
 
-(None — all v3.0 requirements shipped. Define new requirements with `/gsd:new-milestone`.)
+## Current Milestone: v4.0 Code Quality Refactor
+
+**Goal:** Refactor the `qwik-optimizer-oxc` crate for maintainability — extract modules, eliminate boilerplate, fix bugs, clean up code style — while maintaining or improving 157/162 spec compliance.
+
+**Target improvements:**
+- Extract JSX transform from transform.rs into its own module
+- Rewrite const_replace.rs using OXC VisitMut to eliminate ~750 lines of manual AST walking
+- Fix minify_expression_string bug (drops spaces between identifiers)
+- Remove dead code and duplicate constants
+- Strip unnecessary comments, add early returns, flatten nesting
+- KNOWN_GLOBALS as HashSet for O(1) lookup
+- Consolidate duplicate binding-name collection functions in collector.rs
+- Opportunistic spec compliance improvements
 
 ### Out of Scope
 
@@ -90,4 +102,4 @@ Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap),
 | Known deviation sets | 5 module count + 16 capture + 3 diagnostic deviations categorized with rationale | ✓ Good — transparent tracking of limitations |
 
 ---
-*Last updated: 2026-02-11 after v3.0 milestone shipped*
+*Last updated: 2026-02-11 after v4.0 milestone started*
