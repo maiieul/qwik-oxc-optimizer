@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 9 -- Capture Analysis + Props Destructuring
+**Current focus:** Phase 10 -- Segment Extraction + Codegen
 
 ## Current Position
 
-Phase: 9 of 13 (Capture Analysis + Props Destructuring) -- COMPLETE
-Plan: 2 of 2 in current phase -- COMPLETE
-Status: Phase 9 complete. Props destructuring + capture analysis implemented. Ready for Phase 10.
-Last activity: 2026-02-11 -- Completed 09-02: Capture analysis
+Phase: 10 of 13 (Segment Extraction + Codegen) -- IN PROGRESS
+Plan: 1 of 2 in current phase -- COMPLETE
+Status: Plan 10-01 complete. Segment code generation wired into pipeline. Real JavaScript produced for each segment.
+Last activity: 2026-02-11 -- Completed 10-01: Segment extraction + code generation
 
-Progress: [##########░░░░░░░░░░] 45% (23/31 total plans across all milestones; v3.0 6/14)
+Progress: [###########░░░░░░░░░] 48% (24/31 total plans across all milestones; v3.0 7/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [##########░░░░░░░░░░] 45% (23/31 total plans acro
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 9min
-- Total execution time: 54min
+- Total execution time: 60min
 
 ## Accumulated Context
 
@@ -63,6 +63,10 @@ Recent decisions affecting current work:
 - Stack-based capture_stack Vec for nested $()-body tracking (each frame independent)
 - Post-process child segment captures during component$ exit for props destructuring interaction
 - capture_names as Option<Vec<String>> on SegmentAnalysis with skip_serializing_if
+- String-based segment code construction (code_move builds JS as string, normalize_code formats via parse+codegen)
+- Codegen::print_expression + into_source_text for serializing AST expressions to strings during traverse
+- finalize_segments() as post-traverse pass for child segment metadata (avoids nested mutation during traverse)
+- Extract-and-discard pattern: body extracted from call.arguments, serialized, dropped (segment strategy replaces entire call)
 
 ### Pending Todos
 
@@ -75,5 +79,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed Phase 9 (09-02-PLAN.md). Capture analysis + props destructuring complete. Ready for Phase 10.
+Stopped at: Completed 10-01-PLAN.md. Segment code generation wired. Ready for 10-02.
 Resume file: None
