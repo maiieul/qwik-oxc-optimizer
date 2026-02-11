@@ -122,7 +122,7 @@ pub fn transform_modules(
         qwik_transform.finalize_segments();
 
         // 6. Emit the transformed module
-        let emit_result = emit::emit_module(&program, source_in_arena, &emit_options);
+        let emit_result = emit::emit_module(&program, source_in_arena, &emit_options, &input.path);
 
         // 6b. Prepend hoisted function declarations for _fnSignal.
         // These are string-based const declarations that go after imports but before
