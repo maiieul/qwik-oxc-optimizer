@@ -407,6 +407,183 @@ impl QwikTransform {
         self.segments.push(segment.clone());
         segment
     }
+
+    /// Record a segment for a JSX event handler attribute (e.g., onClick$).
+    ///
+    /// Unlike `record_segment`, this doesn't require a CallExpression -- it takes
+    /// the display name, span, and ctx_name directly from JSX attribute info.
+    pub(crate) fn record_jsx_event_segment(
+        &mut self,
+        display_name: &str,
+        span: (u32, u32),
+        ctx_name: &str,
+    ) -> SegmentData {
+        let full_display_name = format!("{}_{}", self.filename, display_name);
+
+        let segment_hash = hash::compute_segment_hash(
+            self.options.scope.as_deref(),
+            &self.filename,
+            &full_display_name,
+        );
+
+        let segment_name = hash::format_segment_name(display_name, &segment_hash);
+        let canonical_filename =
+            self.build_canonical_filename(display_name, &segment_hash);
+        let import_path = self.build_segment_import_path(&canonical_filename);
+
+        let ctx_kind = words::classify_ctx_kind(ctx_name);
+        let parent = self.dollar_call_stack.last().cloned();
+
+        let segment = SegmentData {
+            display_name: full_display_name.clone(),
+            hash: segment_hash.clone(),
+            name: segment_name,
+            ctx_name: ctx_name.to_string(),
+            ctx_kind,
+            origin: self.filename.clone(),
+            extension: self.file_extension(),
+            span,
+            parent,
+            captures: false,
+            capture_names: vec![],
+            needed_imports: vec![],
+            body_span: span,
+            param_names: vec![],
+            body_code: String::new(),
+            child_lazy_imports: vec![],
+            needs_qrl_import: false,
+        };
+
+        // Check if this segment will be stripped
+        let will_be_stripped = self.should_strip_ctx_name(ctx_name);
+
+        // Track imports based on strategy
+        if !will_be_stripped {
+            let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
+                || matches!(self.options.entry_strategy, crate::types::EntryStrategy::Hoist);
+
+            if is_inline {
+                self.import_tracker.needs_inlined_qrl = true;
+            } else {
+                self.import_tracker.needs_qrl = true;
+                self.import_tracker
+                    .lazy_imports
+                    .push((segment_hash.clone(), import_path));
+            }
+        }
+
+        self.segment_counter += 1;
+        self.segments.push(segment.clone());
+        segment
+    }
+
+    /// Pre-scan a JSXElement (recursively) for $-suffixed attributes and create
+    /// segments for each. This ensures segment modules are produced for JSX event
+    /// handlers like onClick$, onInput$, render$, etc.
+    fn create_jsx_event_segments_recursive(&mut self, element: &JSXElement<'_>) {
+        // Determine element name for display name context
+        let element_name = match &element.opening_element.name {
+            JSXElementName::Identifier(ident) => ident.name.as_str().to_string(),
+            JSXElementName::NamespacedName(ns) => {
+                format!("{}_{}", ns.namespace.name, ns.name.name)
+            }
+            _ => "_".to_string(),
+        };
+
+        // Scan attributes for $-suffixed names
+        for attr_item in &element.opening_element.attributes {
+            if let JSXAttributeItem::Attribute(attr) = attr_item {
+                let attr_name = match &attr.name {
+                    JSXAttributeName::Identifier(ident) => ident.name.as_str(),
+                    JSXAttributeName::NamespacedName(_) => continue,
+                };
+
+                if attr_name.ends_with('$') {
+                    if let Some(value) = &attr.value {
+                        if let JSXAttributeValue::ExpressionContainer(container) = value {
+                            let expr_span = get_jsx_lambda_span(&container.expression);
+                            if let Some(span) = expr_span {
+                                // Build display name matching the collector
+                                let event_suffix = transform_attr_name_for_display(attr_name);
+                                let display_name = self.derive_jsx_event_display_name(
+                                    &element_name, &event_suffix,
+                                );
+                                self.record_jsx_event_segment(
+                                    &display_name,
+                                    span,
+                                    attr_name,
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Recurse into children
+        self.create_jsx_event_segments_in_children(&element.children);
+    }
+
+    /// Scan JSX children for elements with $-suffixed attributes.
+    fn create_jsx_event_segments_in_children<'b>(&mut self, children: &oxc::allocator::Vec<'b, JSXChild<'b>>) {
+        for child in children {
+            match child {
+                JSXChild::Element(el) => {
+                    self.create_jsx_event_segments_recursive(el);
+                }
+                JSXChild::Fragment(frag) => {
+                    self.create_jsx_event_segments_in_children(&frag.children);
+                }
+                _ => {}
+            }
+        }
+    }
+
+    /// Build display name for a JSX event handler segment.
+    fn derive_jsx_event_display_name(
+        &self,
+        element_name: &str,
+        event_suffix: &str,
+    ) -> String {
+        let parent_ctx = self.dollar_call_stack.last()
+            .map(|s| s.as_str())
+            .unwrap_or("");
+
+        if parent_ctx.is_empty() {
+            format!("{}_{}", element_name, event_suffix)
+        } else {
+            // Strip filename prefix from parent context if present
+            let parent = parent_ctx
+                .strip_prefix(&format!("{}_", self.filename))
+                .unwrap_or(parent_ctx);
+            format!("{}_{}_{}", parent, element_name, event_suffix)
+        }
+    }
+}
+
+/// Get the span of a JSXExpression's inner expression, but ONLY for arrow/function
+/// expressions that represent inline lambda bodies needing segment extraction.
+///
+/// Identifier references (e.g., `onClick$={handler}`) are skipped because the
+/// referenced binding is already extracted elsewhere. Call expressions (e.g.,
+/// `onClick$={sync$(...)}`) are skipped because they're handled by enter_call_expression.
+fn get_jsx_lambda_span(expr: &JSXExpression<'_>) -> Option<(u32, u32)> {
+    match expr {
+        JSXExpression::ArrowFunctionExpression(arrow) => Some((arrow.span.start, arrow.span.end)),
+        JSXExpression::FunctionExpression(func) => Some((func.span.start, func.span.end)),
+        _ => None,
+    }
+}
+
+/// Transform a JSX attribute name to a display name suffix.
+fn transform_attr_name_for_display(attr_name: &str) -> String {
+    let base = attr_name.strip_suffix('$').unwrap_or(attr_name);
+    if base.starts_with("on") && base.len() > 2 {
+        let event_part = &base[2..];
+        format!("q_e_{}", event_part.to_lowercase())
+    } else {
+        base.to_string()
+    }
 }
 
 impl<'a> Traverse<'a, ()> for QwikTransform {
@@ -504,6 +681,24 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         expr: &mut Expression<'a>,
         ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        // Pre-scan JSX elements for $-suffixed event handler attributes.
+        // This creates segments for inline lambda bodies (arrow/function expressions).
+        // Must run REGARDLESS of transpile_jsx since segment extraction is orthogonal
+        // to JSX-to-JS transformation.
+        match expr {
+            Expression::JSXElement(_) => {
+                if let Expression::JSXElement(el) = &*expr {
+                    self.create_jsx_event_segments_recursive(el);
+                }
+            }
+            Expression::JSXFragment(_) => {
+                if let Expression::JSXFragment(frag) = &*expr {
+                    self.create_jsx_event_segments_in_children(&frag.children);
+                }
+            }
+            _ => {}
+        }
+
         // JSX transformation: replace JSXElement/JSXFragment with _jsxSorted/_jsxSplit calls
         if self.options.transpile_jsx {
             // Build destructured props map for signal wrapping detection

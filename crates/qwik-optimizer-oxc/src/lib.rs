@@ -217,23 +217,19 @@ pub fn transform_modules(
                 continue;
             }
 
+            // Inline/Hoist strategies: all code stays in the main module via
+            // inlinedQrl. The SWC optimizer produces only the main module for
+            // these strategies -- no separate segment TransformModule entries.
+            if is_inline_like {
+                continue;
+            }
+
             let segment_analysis = segment_data_to_analysis(seg, &input.path);
 
             // Use output extension for segment module path
             let seg_ext = output_extension(&input.path, transform_options.transpile_ts);
 
-            if is_inline_like {
-                // Inline/Hoist: segment metadata only, no separate code
-                let segment_module = TransformModule {
-                    path: format!("{}.{}", segment_analysis.canonical_filename, seg_ext),
-                    is_entry: false,
-                    code: String::new(),
-                    map: None,
-                    segment: Some(segment_analysis),
-                    orig_path: Some(input.path.clone()),
-                };
-                all_modules.push(segment_module);
-            } else {
+            {
                 // Segment/Single/Component/Smart/Hook: separate file with code
                 let body_code = body_codes
                     .iter()

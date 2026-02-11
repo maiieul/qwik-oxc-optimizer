@@ -744,9 +744,77 @@ fn walk_jsx_expression_for_calls(ctx: &mut CollectContext, jsx_expr: &JSXExpress
 
 /// Walk JSX element and its children for dollar calls.
 fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>) {
+    // Determine the element/component name for display name context
+    let element_name = match &element.opening_element.name {
+        JSXElementName::Identifier(ident) => Some(ident.name.as_str().to_string()),
+        JSXElementName::NamespacedName(ns) => {
+            Some(format!("{}_{}", ns.namespace.name, ns.name.name))
+        }
+        JSXElementName::MemberExpression(_) => None,
+        _ => None,
+    };
+
     // Walk attributes for dollar calls in attribute values
     for attr in &element.opening_element.attributes {
         if let JSXAttributeItem::Attribute(attr) = attr {
+            let attr_name = match &attr.name {
+                JSXAttributeName::Identifier(ident) => ident.name.as_str(),
+                JSXAttributeName::NamespacedName(ns) => {
+                    // For namespace:name pattern, we don't treat as $-call
+                    // Walk the value for nested calls
+                    if let Some(value) = &attr.value {
+                        if let JSXAttributeValue::ExpressionContainer(container) = value {
+                            walk_jsx_expression_for_calls(ctx, &container.expression);
+                        }
+                    }
+                    continue;
+                }
+            };
+
+            // Check if this is a $-suffixed attribute (event handler or custom $ prop)
+            if attr_name.ends_with('$') {
+                if let Some(value) = &attr.value {
+                    if let JSXAttributeValue::ExpressionContainer(container) = value {
+                        // Get the expression span for the DollarCallSite
+                        let expr_span = match &container.expression {
+                            JSXExpression::EmptyExpression(_) => None,
+                            _ => {
+                                // Get span from the expression inside the container
+                                get_jsx_expression_span(&container.expression)
+                            }
+                        };
+
+                        if let Some((start, end)) = expr_span {
+                            // Build display name: parent_context + element_name + attr_name_transformed
+                            let event_suffix = transform_attr_name_for_display(attr_name);
+                            let display_name = derive_jsx_event_display_name(
+                                ctx, element_name.as_deref(), &event_suffix,
+                            );
+                            let is_nested = ctx.nesting_depth > 0;
+                            let parent_name = ctx.parent_display_name.clone();
+
+                            ctx.dollar_calls.push(DollarCallSite {
+                                callee_name: attr_name.to_string(),
+                                span: (start, end),
+                                display_name: display_name.clone(),
+                                is_nested,
+                                parent_name,
+                            });
+
+                            // Walk the value expression for nested dollar calls
+                            let prev_parent = ctx.parent_display_name.take();
+                            ctx.parent_display_name = Some(display_name);
+                            ctx.nesting_depth += 1;
+                            walk_jsx_expression_for_calls(ctx, &container.expression);
+                            ctx.nesting_depth -= 1;
+                            ctx.parent_display_name = prev_parent;
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            // Non-$ attribute: walk value for nested dollar calls normally
             if let Some(value) = &attr.value {
                 if let JSXAttributeValue::ExpressionContainer(container) = value {
                     walk_jsx_expression_for_calls(ctx, &container.expression);
@@ -756,6 +824,61 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
     }
     // Walk children
     walk_jsx_children_for_calls(ctx, &element.children);
+}
+
+/// Get the span of a JSXExpression.
+fn get_jsx_expression_span(expr: &JSXExpression<'_>) -> Option<(u32, u32)> {
+    match expr {
+        JSXExpression::EmptyExpression(_) => None,
+        JSXExpression::ArrowFunctionExpression(arrow) => Some((arrow.span.start, arrow.span.end)),
+        JSXExpression::FunctionExpression(func) => Some((func.span.start, func.span.end)),
+        JSXExpression::CallExpression(call) => Some((call.span.start, call.span.end)),
+        JSXExpression::Identifier(ident) => Some((ident.span.start, ident.span.end)),
+        _ => {
+            // For other inherited expression variants, try to extract span
+            // from the expression type. Many expression variants have a span field.
+            None
+        }
+    }
+}
+
+/// Transform a JSX attribute name to a display name suffix.
+///
+/// - `onClick$` -> `q_e_click`
+/// - `onInput$` -> `q_e_input`
+/// - `render$` -> `render`
+/// - `shouldRemove$` -> `shouldRemove`
+fn transform_attr_name_for_display(attr_name: &str) -> String {
+    // Strip trailing $
+    let base = attr_name.strip_suffix('$').unwrap_or(attr_name);
+
+    // Handle onX -> q_e_x pattern
+    if base.starts_with("on") && base.len() > 2 {
+        let event_part = &base[2..]; // Everything after "on"
+        // Convert camelCase to lowercase
+        format!("q_e_{}", event_part.to_lowercase())
+    } else {
+        base.to_string()
+    }
+}
+
+/// Derive display name for a JSX event handler.
+fn derive_jsx_event_display_name(
+    ctx: &CollectContext,
+    element_name: Option<&str>,
+    event_suffix: &str,
+) -> String {
+    let parent_ctx = ctx.parent_display_name.as_deref()
+        .or(ctx.current_var_name.as_deref())
+        .unwrap_or("");
+
+    let elem = element_name.unwrap_or("_");
+
+    if parent_ctx.is_empty() {
+        format!("{}_{}", elem, event_suffix)
+    } else {
+        format!("{}_{}_{}", parent_ctx, elem, event_suffix)
+    }
 }
 
 /// Walk JSX children for dollar calls.
