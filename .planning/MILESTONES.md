@@ -37,3 +37,24 @@
 
 ---
 
+
+## v3.0 OXC Optimizer Port (Shipped: 2026-02-11)
+
+**Delivered:** Complete OXC-based Qwik optimizer crate implementing all 14 CONV transformation types, validated at 157/162 spec match (96.9%) with 250/250 metadata assertions passing.
+
+**Phases completed:** 7 phases, 16 plans | 16 Rust source files, 11,758 LOC | 2 days
+**Git range:** `feat(07-01)` → `docs(phase-13)` (~70 commits)
+
+**Key accomplishments:**
+1. Built `qwik-optimizer-oxc` crate with 16 modules, serde-annotated public types, and spec test harness parsing all 162 behavioral specs
+2. Full detection-to-codegen pipeline: OXC parser, recursive AST collector, dollar-call detection, QwikTransform with `qrl()`/`inlinedQrl()` output
+3. Capture analysis with stack-based cross-boundary variable tracking and props destructuring (`_rawProps`/`_restProps`)
+4. End-to-end segment extraction: body extraction, string-based module construction, all 7 entry strategies, lazy import declarations
+5. JSX transforms: `_jsxSorted`/`_jsxSplit` with prop classification, `_wrapProp`/`_fnSignal` signal optimization, `bind:value`/`bind:checked` expansion
+6. Annotations + stripping: `/*#__PURE__*/` tree-shaking, `isServer`/`isBrowser`/`isDev` replacement, dead branch elimination, `_noopQrl`, `_qrlSync`
+7. Source maps for all modules, 157/162 spec match with comprehensive validation (5 known deviations: 3 parser limitations, 2 out-of-scope)
+
+**Archives:** `milestones/v3.0-ROADMAP.md`, `milestones/v3.0-REQUIREMENTS.md`, `milestones/v3.0-MILESTONE-AUDIT.md`
+
+---
+
