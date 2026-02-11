@@ -1,37 +1,9 @@
 //! String constants and dollar API helpers.
 //!
-//! Centralized string constants prevent typos and provide a single location
-//! to update package names or API lists. Also provides helpers for classifying
-//! dollar API call sites by context kind.
+//! Provides helpers for classifying dollar API call sites by context kind
+//! and converting $-suffixed names to their Qrl-suffixed equivalents.
 
 use crate::types::CtxKind;
-
-/// The core Qwik module path.
-pub(crate) const BUILDER_IO_QWIK: &str = "@qwik.dev/core";
-
-/// Alternate import path for the Qwik core module.
-pub(crate) const QWIK_CORE_ID: &str = "@qwik.dev/core";
-
-/// List of known $-suffixed Qwik APIs.
-pub(crate) const KNOWN_DOLLAR_APIS: &[&str] = &[
-    "$",
-    "component$",
-    "useTask$",
-    "useVisibleTask$",
-    "useBrowserVisibleTask$",
-    "useStyles$",
-    "useStylesScoped$",
-    "useOnDocument$",
-    "useOnWindow$",
-    "useOn$",
-    "event$",
-    "eventQrl",
-];
-
-/// Check if a name is a known $-suffixed Qwik API.
-pub(crate) fn is_known_dollar_api(name: &str) -> bool {
-    KNOWN_DOLLAR_APIS.contains(&name)
-}
 
 /// Convert a $-suffixed name to its Qrl-suffixed equivalent.
 ///
@@ -80,27 +52,9 @@ pub(crate) fn classify_ctx_kind(callee_name: &str) -> CtxKind {
     CtxKind::Function
 }
 
-/// Check if an import source is the Qwik core module.
-///
-/// Returns true for `"@qwik.dev/core"`. The collector can also pass in
-/// a custom `core_module` override to check against.
-pub(crate) fn is_qwik_core_import(source: &str) -> bool {
-    source == BUILDER_IO_QWIK
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_is_known_dollar_api() {
-        assert!(is_known_dollar_api("$"));
-        assert!(is_known_dollar_api("component$"));
-        assert!(is_known_dollar_api("useTask$"));
-        assert!(is_known_dollar_api("useVisibleTask$"));
-        assert!(!is_known_dollar_api("unknownFunc$"));
-        assert!(!is_known_dollar_api("component"));
-    }
 
     #[test]
     fn test_dollar_to_qrl_name() {
@@ -163,13 +117,5 @@ mod tests {
         // Not event handlers (no on[A-Z] pattern)
         assert!(matches!(classify_ctx_kind("onl$"), CtxKind::Function));
         assert!(matches!(classify_ctx_kind("$"), CtxKind::Function));
-    }
-
-    #[test]
-    fn test_is_qwik_core_import() {
-        assert!(is_qwik_core_import("@qwik.dev/core"));
-        assert!(!is_qwik_core_import("@builder.io/qwik"));
-        assert!(!is_qwik_core_import("./utils"));
-        assert!(!is_qwik_core_import("react"));
     }
 }

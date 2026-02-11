@@ -16,7 +16,6 @@ use oxc::ast::ast::*;
 use oxc::semantic::Scoping;
 
 use crate::types::{CollectResult, DollarCallSite, ExportInfo, ImportInfo};
-use crate::words;
 
 // ---------------------------------------------------------------------------
 // Capture Analysis
@@ -831,7 +830,7 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
         if let JSXAttributeItem::Attribute(attr) = attr {
             let attr_name = match &attr.name {
                 JSXAttributeName::Identifier(ident) => ident.name.as_str(),
-                JSXAttributeName::NamespacedName(ns) => {
+                JSXAttributeName::NamespacedName(_ns) => {
                     if let Some(value) = &attr.value {
                         if let JSXAttributeValue::ExpressionContainer(container) = value {
                             walk_jsx_expression_for_calls(ctx, &container.expression);
