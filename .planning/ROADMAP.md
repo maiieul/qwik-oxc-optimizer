@@ -97,10 +97,10 @@ Plans:
   1. `minify_expression_string("a b")` preserves the space between identifiers (does not produce `"ab"`)
   2. KNOWN_GLOBALS is a `HashSet` (or equivalent O(1) lookup structure), not a linear-scan array/slice
   3. All 165 tests still pass after these changes
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 16-01: Fix minify_expression_string and convert KNOWN_GLOBALS to HashSet
+- [ ] 16-01-PLAN.md -- Fix minify_expression_string space bug and convert KNOWN_GLOBALS to LazyLock HashSet
 
 ### Phase 17: Extract JSX Transform
 **Goal**: JSX transformation logic lives in its own module, and transform.rs is shorter and focused
@@ -173,4 +173,4 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 15 complete)*
+*Last updated: 2026-02-11 (Phase 16 planned)*
