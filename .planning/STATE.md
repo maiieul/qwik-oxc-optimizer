@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 ## Current Position
 
-Phase: 10 of 13 (Segment Extraction + Codegen) -- IN PROGRESS
-Plan: 1 of 2 in current phase -- COMPLETE
-Status: Plan 10-01 complete. Segment code generation wired into pipeline. Real JavaScript produced for each segment.
-Last activity: 2026-02-11 -- Completed 10-01: Segment extraction + code generation
+Phase: 10 of 13 (Segment Extraction + Codegen) -- COMPLETE
+Plan: 2 of 2 in current phase -- COMPLETE
+Status: Phase 10 complete. All entry strategies produce correct output shapes. 162 specs transform without errors.
+Last activity: 2026-02-11 -- Completed 10-02: Entry strategy routing + spec test validation
 
-Progress: [###########░░░░░░░░░] 48% (24/31 total plans across all milestones; v3.0 7/14)
+Progress: [############░░░░░░░░] 50% (25/31 total plans across all milestones; v3.0 8/14)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [###########░░░░░░░░░] 48% (24/31 total plans across
 - Total execution time: ~1.1 hours
 
 **Velocity (v3.0):**
-- Total plans completed: 7
-- Average duration: 9min
-- Total execution time: 60min
+- Total plans completed: 8
+- Average duration: 8min
+- Total execution time: 65min
 
 ## Accumulated Context
 
@@ -67,6 +67,9 @@ Recent decisions affecting current work:
 - Codegen::print_expression + into_source_text for serializing AST expressions to strings during traverse
 - finalize_segments() as post-traverse pass for child segment metadata (avoids nested mutation during traverse)
 - Extract-and-discard pattern: body extracted from call.arguments, serialized, dropped (segment strategy replaces entire call)
+- Hoist treated as inline-like for code output (body in main module via inlinedQrl, segments have empty code)
+- Smart/Component/Hook/Single treated as Segment for now (separate files with code, grouping deferred to Phase 13)
+- Structural spec testing: verify module counts, is_entry, metadata properties (not exact hash/code matching)
 
 ### Pending Todos
 
@@ -79,5 +82,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 10-01-PLAN.md. Segment code generation wired. Ready for 10-02.
+Stopped at: Completed 10-02-PLAN.md. Phase 10 complete. All entry strategies working. 162 specs transform OK.
 Resume file: None
