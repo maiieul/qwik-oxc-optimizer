@@ -4,7 +4,7 @@
 
 - v1.0 Spec Generation -- Phases 1-3 (shipped 2026-02-10)
 - v2.0 OXC API Research & Architecture -- Phases 4-6 (shipped 2026-02-11)
-- v3.0 OXC Optimizer Port -- Phases 7-13 (in progress)
+- v3.0 OXC Optimizer Port -- Phases 7-13 (shipped 2026-02-11)
 
 ## Phases
 
@@ -40,7 +40,7 @@ Full details: `milestones/v2.0-ROADMAP.md`
 - [x] **Phase 10: Segment Extraction + Codegen** - Multi-module output and lazy imports (CONV-08, CONV-06) -- completed 2026-02-11
 - [x] **Phase 11: JSX + Signal Transforms** - JSX compilation and signal optimization (CONV-03, CONV-04, CONV-12, CONV-14) -- completed 2026-02-11
 - [x] **Phase 12: Annotations + Stripping** - PURE annotations, const replacement, code stripping, sync$ (CONV-07, CONV-10, CONV-09, CONV-13) -- completed 2026-02-11
-- [ ] **Phase 13: Source Maps + Full Validation** - Source map generation and 162/162 spec test pass
+- [x] **Phase 13: Source Maps + Full Validation** - Source map generation and 162/162 spec test pass -- completed 2026-02-11
 
 ## Phase Details
 
@@ -148,10 +148,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 13-01-PLAN.md -- Source map generation for main and segment modules (EMIT-02)
-- [ ] 13-02-PLAN.md -- Diagnose mismatches and fix import alias/core_module detection
-- [ ] 13-03-PLAN.md -- Fix strip_exports, reg_ctx_name, and transpile-only edge cases
-- [ ] 13-04-PLAN.md -- Fix remaining edge cases and build 162/162 validation test (TEST-02, TEST-03)
+- [x] 13-01-PLAN.md -- Source map generation for main and segment modules (EMIT-02)
+- [x] 13-02-PLAN.md -- Diagnose mismatches and fix import alias/core_module detection
+- [x] 13-03-PLAN.md -- Fix strip_exports, reg_ctx_name, and transpile-only edge cases
+- [x] 13-04-PLAN.md -- Fix remaining edge cases and build 162/162 validation test (TEST-02, TEST-03)
 
 ## Progress
 
@@ -172,7 +172,7 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 10. Segment Extraction + Codegen | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 11. JSX + Signal Transforms | v3.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Annotations + Stripping | v3.0 | 2/2 | Complete | 2026-02-11 |
-| 13. Source Maps + Full Validation | v3.0 | 0/4 | In progress | - |
+| 13. Source Maps + Full Validation | v3.0 | 4/4 | Complete | 2026-02-11 |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
