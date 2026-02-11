@@ -68,11 +68,11 @@ Plans:
   2. `component$()` becomes `componentQrl(qrl(...))` and `useTask$()` becomes `useTaskQrl(qrl(...))` (dollar-to-QRL suffix renaming works for all known APIs)
   3. Segment entry strategy produces `qrl(i_HASH, "segment_name")` calls with correct hash and import identifier
   4. Inline/hoist entry strategy produces `inlinedQrl(fn_body, "name_HASH")` calls with function body preserved
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 08-01: Parse + semantic + collector pipeline (parse.rs, collector.rs, words.rs, hash.rs)
-- [ ] 08-02: QwikTransform traverse with $() detection and QRL wrapping (transform.rs, import_rewrite.rs, entry_strategy.rs)
+- [ ] 08-01-PLAN.md -- Parse + semantic + collector pipeline (parse.rs, collector.rs, words.rs, hash.rs)
+- [ ] 08-02-PLAN.md -- QwikTransform traverse with $() detection and QRL wrapping (transform.rs, import_rewrite.rs, entry_strategy.rs, lib.rs)
 
 ### Phase 9: Capture Analysis + Props Destructuring
 **Goal**: Optimizer correctly identifies captured variables and transforms props destructuring patterns
@@ -165,7 +165,7 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 5. Deep Research & Proof of Concept | v2.0 | 3/3 | Complete | 2026-02-10 |
 | 6. Secondary Patterns & Cross-Reference | v2.0 | 3/3 | Complete | 2026-02-11 |
 | 7. Crate Foundation + Test Harness | v3.0 | 2/2 | Complete | 2026-02-11 |
-| 8. Core Detection + QRL Transforms | v3.0 | 0/2 | Not started | - |
+| 8. Core Detection + QRL Transforms | v3.0 | 0/2 | Planned | - |
 | 9. Capture Analysis + Props Destructuring | v3.0 | 0/2 | Not started | - |
 | 10. Segment Extraction + Codegen | v3.0 | 0/2 | Not started | - |
 | 11. JSX + Signal Transforms | v3.0 | 0/2 | Not started | - |
@@ -174,4 +174,4 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 7 complete)*
+*Last updated: 2026-02-11 (Phase 8 planned)*
