@@ -1,0 +1,25 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_jN9ZUuuADmk = () => import("./test_default_component_jN9ZUuuADmk");
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { $, component$, useStore, useSignal } from "@qwik.dev/core";
+export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
+
+=== test.tsx_default_component_jN9ZUuuADmk.jsx === (ENTRY)
+import { _jsxSorted } from "@qwik.dev/core";
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+export const default_component_jN9ZUuuADmk = (props: {
+	id: number;
+}) => {
+	const renders = useStore({ count: 0 }, { reactive: false });
+	renders.count++;
+	const rerenders = renders.count + 0;
+	const Id = (props: any) => /* @__PURE__ */ _jsxSorted("div", null, null, ["Id:", props.id], 1, "u6_0");
+	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [/* @__PURE__ */ _jsxSorted(Id, { id: props.id }, null, null, 3, "u6_1"), rerenders], 1, "u6_2");
+}

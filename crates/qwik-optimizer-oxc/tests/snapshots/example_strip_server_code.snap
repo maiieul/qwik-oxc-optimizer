@@ -1,0 +1,60 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { useTaskQrl } from "@qwik.dev/core";
+import { serverStuffQrl } from "@qwik.dev/core";
+import { clientQrl } from "@qwik.dev/core";
+import { serverLoaderQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+import { _noopQrl } from "@qwik.dev/core";
+const i_fxETLug1yE4 = () => import("./test_Parent_component_fxETLug1yE4");
+const i_ZxfKmWQYEwc = () => import("./test_useTask_ZxfKmWQYEwc");
+const i_JsST9uKvaf4 = () => import("./test_a_JsST9uKvaf4");
+const i_0DD514zgBzU = () => import("./test_b_client_0DD514zgBzU");
+const i_ZxfKmWQYEwc = () => import("./test_useTask_ZxfKmWQYEwc");
+const i_N8VjxooYvus = () => import("./test_Parent_component_div_q_e_click_N8VjxooYvus");
+import { component$, serverLoader$, serverStuff$, $, client$, useStore, useTask$ } from "@qwik.dev/core";
+import mongo from "mongodb";
+import redis from "redis";
+import { handler } from "serverless";
+export const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_fxETLug1yE4, "Parent_component_fxETLug1yE4"));
+
+=== test.tsx_Parent_component_fxETLug1yE4.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
+const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
+const i_N8VjxooYvus = () => import("./test.tsx_Parent_component_div_q_e_click_N8VjxooYvus");
+import { _jsxSorted } from "@qwik.dev/core";
+import { _noopQrl } from "@qwik.dev/core";
+export const Parent_component_fxETLug1yE4 = () => {
+	const state = useStore({ text: "" });
+	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
+	/* @__PURE__ */ serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw"));
+	/* @__PURE__ */ serverLoaderQrl(/* @__PURE__ */ _noopQrl("serverLoader_kkNmag62Eb0"));
+	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc"));
+	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log("parent") }, state.text, 3, "u6_0");
+};
+
+=== test.tsx_useTask_ZxfKmWQYEwc.jsx === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const useTask_ZxfKmWQYEwc = async () => {
+	const state = _captures[0];
+	return;
+	state.text = await mongo.users();
+	redis.set(state.text);
+};
+
+=== test.tsx_a_JsST9uKvaf4.jsx === (ENTRY)
+export const a_JsST9uKvaf4 = () => {};
+
+=== test.tsx_b_client_0DD514zgBzU.jsx === (ENTRY)
+export const b_client_0DD514zgBzU = () => {};
+
+=== test.tsx_useTask_ZxfKmWQYEwc.jsx === (ENTRY)
+export const useTask_ZxfKmWQYEwc = () => {};
+
+=== test.tsx_Parent_component_div_q_e_click_N8VjxooYvus.jsx === (ENTRY)

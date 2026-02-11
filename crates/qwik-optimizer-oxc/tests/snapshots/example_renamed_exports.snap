@@ -1,0 +1,28 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_XumqEURaLxI = () => import("./test_App_component_XumqEURaLxI");
+const i_Ma8uJBKLX2o = () => import("./test_s__Ma8uJBKLX2o");
+import { component$ as Component, $ as onRender, useStore } from "@qwik.dev/core";
+export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
+
+=== test.tsx_App_component_XumqEURaLxI.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
+export const App_component_XumqEURaLxI = (props) => {
+	const state = useStore({ thing: 0 });
+	return /* @__PURE__ */ qrl(i_Ma8uJBKLX2o, "s__Ma8uJBKLX2o", [state]);
+};
+
+=== test.tsx_s__Ma8uJBKLX2o.jsx === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+export const s__Ma8uJBKLX2o = () => {
+	const state = _captures[0];
+	return /* @__PURE__ */ _jsxSorted("div", null, null, state.thing, 3, "u6_0");
+};

@@ -1,0 +1,95 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_gZqPatVoDqw = () => import("./test_Foo_component_gZqPatVoDqw");
+const i_T0dY5k6mBgU = () => import("./test_Foo_T0dY5k6mBgU");
+const i_u4Tb48t5JC8 = () => import("./test_handler_u4Tb48t5JC8");
+const i_KKzu5KN5Myk = () => import("./test_Foo_div_q_e_click_KKzu5KN5Myk");
+const i_o1AVWCNjT0c = () => import("./test_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
+const i_o1AVWCNjT0c = () => import("./test_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
+const i_7EsQAjtgDrQ = () => import("./test_Foo_div_q_e_-click_7EsQAjtgDrQ");
+const i_SgoZQWmAm94 = () => import("./test_Foo_div_q_e_document-scroll_SgoZQWmAm94");
+const i_SgoZQWmAm94 = () => import("./test_Foo_div_q_e_document-scroll_SgoZQWmAm94");
+const i_KKzu5KN5Myk = () => import("./test_Foo_div_q_e_click_KKzu5KN5Myk");
+const i_o1AVWCNjT0c = () => import("./test_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
+const i_o1AVWCNjT0c = () => import("./test_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
+const i_Co0pSPo5J9E = () => import("./test_Foo_div_custom_Co0pSPo5J9E");
+import { $, component$ } from "@qwik.dev/core";
+export const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
+
+=== test.tsx_Foo_component_gZqPatVoDqw.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
+export const Foo_component_gZqPatVoDqw = () => {
+	return /* @__PURE__ */ qrl(i_T0dY5k6mBgU, "Foo_T0dY5k6mBgU");
+};
+
+=== test.tsx_Foo_T0dY5k6mBgU.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_u4Tb48t5JC8 = () => import("./test.tsx_handler_u4Tb48t5JC8");
+const i_KKzu5KN5Myk = () => import("./test.tsx_Foo_div_q_e_click_KKzu5KN5Myk");
+const i_o1AVWCNjT0c = () => import("./test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
+const i_o1AVWCNjT0c = () => import("./test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
+const i_7EsQAjtgDrQ = () => import("./test.tsx_Foo_div_q_e_-click_7EsQAjtgDrQ");
+const i_SgoZQWmAm94 = () => import("./test.tsx_Foo_div_q_e_document-scroll_SgoZQWmAm94");
+const i_SgoZQWmAm94 = () => import("./test.tsx_Foo_div_q_e_document-scroll_SgoZQWmAm94");
+const i_KKzu5KN5Myk = () => import("./test.tsx_Foo_div_q_e_click_KKzu5KN5Myk");
+const i_o1AVWCNjT0c = () => import("./test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
+const i_o1AVWCNjT0c = () => import("./test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
+const i_Co0pSPo5J9E = () => import("./test.tsx_Foo_div_custom_Co0pSPo5J9E");
+import { _jsxSorted } from "@qwik.dev/core";
+export const Foo_T0dY5k6mBgU = () => {
+	const handler = /* @__PURE__ */ qrl(i_u4Tb48t5JC8, "handler_u4Tb48t5JC8");
+	return /* @__PURE__ */ _jsxSorted("div", null, {
+		"q-e:click": () => console.log("onClick$"),
+		"q-e:documentscroll": () => console.log("onDocumentScroll"),
+		"q-e:documentscroll": () => console.log("onWindowScroll"),
+		"q-e:-click": () => console.log("on-cLick$"),
+		"q-e:document-scroll": () => console.log("onDocument-sCroll"),
+		"q-e:document-scroll": () => console.log("onDocument-scroLL"),
+		"host:onClick$": () => console.log("host:onClick$"),
+		"host:onDocumentScroll$": () => console.log("host:onDocument:scroll"),
+		"host:onDocumentScroll$": () => console.log("host:onWindow:scroll"),
+		"q-e:keyup": handler,
+		"q-e:document:keyup": handler,
+		"q-e:window:keyup": handler,
+		"custom$": () => console.log("custom")
+	}, null, 3, "u6_0");
+};
+
+=== test.tsx_handler_u4Tb48t5JC8.jsx === (ENTRY)
+export const handler_u4Tb48t5JC8 = () => console.log("reused");
+
+=== test.tsx_Foo_div_q_e_click_KKzu5KN5Myk.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_div_q_e_-click_7EsQAjtgDrQ.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_div_q_e_document-scroll_SgoZQWmAm94.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_div_q_e_document-scroll_SgoZQWmAm94.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_div_q_e_click_KKzu5KN5Myk.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_div_custom_Co0pSPo5J9E.jsx === (ENTRY)

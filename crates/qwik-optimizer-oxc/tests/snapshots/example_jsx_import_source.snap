@@ -1,0 +1,17 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { qwikifyQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_4Tc4MzcFY0U = () => import("./test_App2_qwikify_4Tc4MzcFY0U");
+/* @jsxImportSource react */
+import { qwikify$ } from "./qwikfy";
+export const App = () => /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log("App") }, null, 3, "u6_0");
+export const App2 = /* @__PURE__ */ qwikifyQrl(/* @__PURE__ */ qrl(i_4Tc4MzcFY0U, "App2_qwikify_4Tc4MzcFY0U"));
+
+=== test.tsx_App2_qwikify_4Tc4MzcFY0U.jsx === (ENTRY)
+import { _jsxSorted } from "@qwik.dev/core";
+export const App2_qwikify_4Tc4MzcFY0U = () => /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log("App2") }, null, 3, "u6_1");

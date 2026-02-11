@@ -1,0 +1,29 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { useTaskQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _restProps } from "@qwik.dev/core";
+const i_jN9ZUuuADmk = () => import("./test_default_component_jN9ZUuuADmk");
+const i_cu78f7005P4 = () => import("./test_default_useTask_cu78f7005P4");
+import { component$, useTask$ } from "@qwik.dev/core";
+export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
+
+=== test.tsx_default_component_jN9ZUuuADmk.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_cu78f7005P4 = () => import("./test.tsx_default_useTask_cu78f7005P4");
+export const default_component_jN9ZUuuADmk = (_rawProps) => {
+	const props = _restProps(_rawProps);
+	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ qrl(i_cu78f7005P4, "default_useTask_cu78f7005P4", [props]));
+	return "hi";
+};
+
+=== test.tsx_default_useTask_cu78f7005P4.jsx === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const default_useTask_cu78f7005P4 = () => {
+	const props = _captures[0];
+	props.checked;
+};

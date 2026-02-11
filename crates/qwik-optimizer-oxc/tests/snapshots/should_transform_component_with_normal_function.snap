@@ -1,0 +1,35 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_gZqPatVoDqw = () => import("./test_Foo_component_gZqPatVoDqw");
+const i_7dSOr7rhY8c = () => import("./test_Inner_component_7dSOr7rhY8c");
+const i_Kwn9b5UeNMU = () => import("./test_Inner_component_p_q_e_click_Kwn9b5UeNMU");
+import { $, component$, useSignal, Signal } from "@qwik.dev/core";
+const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
+
+=== test.tsx_Foo_component_gZqPatVoDqw.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_7dSOr7rhY8c = () => import("./test.tsx_Inner_component_7dSOr7rhY8c");
+import { _jsxSorted } from "@qwik.dev/core";
+export const Foo_component_gZqPatVoDqw = (function() {
+	const data = useSignal < Signal < any > [] > [];
+	const Inner = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_7dSOr7rhY8c, "Inner_component_7dSOr7rhY8c", [props, item]));
+	return /* @__PURE__ */ _jsxSorted(Inner, { data }, null, null, 3, "u6_2");
+});
+
+=== test.tsx_Inner_component_7dSOr7rhY8c.jsx === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_Kwn9b5UeNMU = () => import("./test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU");
+import { _jsxSorted } from "@qwik.dev/core";
+export const Inner_component_7dSOr7rhY8c = (function(props) {
+	const data = props.data;
+	return /* @__PURE__ */ _jsxSorted("div", null, null, data.value.map((item) => /* @__PURE__ */ _jsxSorted("p", null, { "q-e:click": () => console.log(item.value.id) }, item.value.id, 3, "u6_0")), 3, "u6_1");
+});
+
+=== test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU.jsx === (ENTRY)

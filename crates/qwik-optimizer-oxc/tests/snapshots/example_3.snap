@@ -1,0 +1,7 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+
+=== DIAGNOSTICS ===
+[SourceError] Expected a semicolon or an implicit semicolon after a statement, but found none

@@ -1,0 +1,23 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== src/routes/_repl/[id]/[[...slug]].jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_rMtkV4ZNQIA = () => import("./src/routes/_repl/[id]/[[...slug]]_default_component_rMtkV4ZNQIA");
+const i_DIVjyCI2VsA = () => import("./src/routes/_repl/[id]/[[...slug]]_default_component_div_q_e_click_DIVjyCI2VsA");
+import { component$ } from "@qwik.dev/core";
+import { sibling } from "./sibling";
+export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_rMtkV4ZNQIA, "default_component_rMtkV4ZNQIA"));
+
+=== src/routes/_repl/[id]/[[...slug]].tsx_default_component_rMtkV4ZNQIA.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_DIVjyCI2VsA = () => import("./src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA");
+import { _jsxSorted } from "@qwik.dev/core";
+export const default_component_rMtkV4ZNQIA = () => {
+	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log(mongodb, sibling) }, null, 3, "u6_0");
+};
+
+=== src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA.jsx === (ENTRY)

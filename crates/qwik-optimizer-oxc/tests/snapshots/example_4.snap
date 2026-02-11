@@ -1,0 +1,25 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.tsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_7qRdElk79Fw = () => import("./test_s_0_7qRdElk79Fw");
+const i_axfrT8CMT4s = () => import("./test_s_1_axfrT8CMT4s");
+import { $, component$ } from "@qwik.dev/core";
+export function App() {
+	const Header = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_7qRdElk79Fw, "s_0_7qRdElk79Fw"));
+	return Header;
+}
+
+=== test.tsx_s_0_7qRdElk79Fw.tsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_axfrT8CMT4s = () => import("./test.tsx_s_1_axfrT8CMT4s");
+export const s_0_7qRdElk79Fw = () => {
+	console.log("mount");
+	return <div onClick={/* @__PURE__ */ qrl(i_axfrT8CMT4s, "s_1_axfrT8CMT4s")} />;
+}
+
+=== test.tsx_s_1_axfrT8CMT4s.tsx === (ENTRY)
+export const s_1_axfrT8CMT4s = (ctx) => console.log(ctx);

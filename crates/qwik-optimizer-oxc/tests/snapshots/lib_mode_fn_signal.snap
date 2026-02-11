@@ -1,0 +1,25 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.tsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+import { _wrapProp } from "@qwik.dev/core";
+const i_g2b301BY00s = () => import("./test_Counter_component_g2b301BY00s");
+const i_RfKynUVX1qo = () => import("./test_Counter_component_button_q_e_click_RfKynUVX1qo");
+import { component$ } from "@qwik.dev/core";
+export const Counter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_g2b301BY00s, "Counter_component_g2b301BY00s"));
+
+=== test.tsx_Counter_component_g2b301BY00s.tsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_RfKynUVX1qo = () => import("./test.tsx_Counter_component_button_q_e_click_RfKynUVX1qo");
+import { _jsxSorted } from "@qwik.dev/core";
+import { _wrapProp } from "@qwik.dev/core";
+export const Counter_component_g2b301BY00s = () => {
+	const count = useSignal(0);
+	return /* @__PURE__ */ _jsxSorted("div", null, null, [/* @__PURE__ */ _jsxSorted("p", null, null, ["Count:", _wrapProp(count)], 1, "u6_0"), /* @__PURE__ */ _jsxSorted("p", null, null, /* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": () => count.value++ }, "Increment", 3, "u6_1"), 3, "u6_2")], 1, "u6_3");
+};
+
+=== test.tsx_Counter_component_button_q_e_click_RfKynUVX1qo.tsx === (ENTRY)

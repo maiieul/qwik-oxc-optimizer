@@ -1,0 +1,50 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== project/test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_sHTSaq0AU4w = () => import("./project/test_Header_component_sHTSaq0AU4w");
+const i_0hncTFTaevI = () => import("./project/test_Header_0hncTFTaevI");
+import { $, component$ } from "@qwik.dev/core";
+export const [a, { b, v1: [c], d = v2, ...e }, f = v3, ...g] = obj;
+const exp1 = 1;
+const internal = 2;
+export { exp1, internal as expr2 };
+export function foo() {}
+export class bar {}
+export default function DefaultFn() {}
+export const Header = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_sHTSaq0AU4w, "Header_component_sHTSaq0AU4w"));
+export const Footer = component$();
+
+=== project/test.tsx_Header_component_sHTSaq0AU4w.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_0hncTFTaevI = () => import("./project/test.tsx_Header_0hncTFTaevI");
+export const Header_component_sHTSaq0AU4w = () => {
+	return /* @__PURE__ */ qrl(i_0hncTFTaevI, "Header_0hncTFTaevI", [
+		d,
+		f,
+		DefaultFn,
+		v1,
+		v2,
+		v3,
+		obj
+	]);
+};
+
+=== project/test.tsx_Header_0hncTFTaevI.jsx === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const Header_0hncTFTaevI = () => {
+const d = _captures[0];
+const f = _captures[1];
+const DefaultFn = _captures[2];
+const v1 = _captures[3];
+const v2 = _captures[4];
+const v3 = _captures[5];
+const obj = _captures[6];
+return <Footer>
+			<div>{a}{b}{c}{d}{e}{f}{exp1}{internal}{foo}{bar}{DefaultFn}</div>
+			<div>{v1}{v2}{v3}{obj}</div>
+		</Footer>;
+}

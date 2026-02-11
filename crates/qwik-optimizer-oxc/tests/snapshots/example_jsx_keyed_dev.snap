@@ -1,0 +1,25 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== project/index.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_M1CbC3Yh9lM = () => import("./project/index_App_component_M1CbC3Yh9lM");
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { component$, useStore } from "@qwik.dev/core";
+export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_M1CbC3Yh9lM, "App_component_M1CbC3Yh9lM"));
+
+=== project/index.tsx_App_component_M1CbC3Yh9lM.jsx === (ENTRY)
+import { _jsxSorted } from "@qwik.dev/core";
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+export const App_component_M1CbC3Yh9lM = (props: Stuff) => {
+	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [
+		/* @__PURE__ */ _jsxSorted(Cmp, null, null, null, 3, "stuff"),
+		/* @__PURE__ */ _jsxSorted(Cmp, null, null, null, 3, null),
+		/* @__PURE__ */ _jsxSorted(Cmp, null, { prop: "23" }, null, 3, "u6_0"),
+		/* @__PURE__ */ _jsxSorted(Cmp, null, { prop: "23" }, null, 3, props.stuff),
+		/* @__PURE__ */ _jsxSorted("p", null, null, "Hello Qwik", 3, props.stuff)
+	], 1, "u6_1");
+}

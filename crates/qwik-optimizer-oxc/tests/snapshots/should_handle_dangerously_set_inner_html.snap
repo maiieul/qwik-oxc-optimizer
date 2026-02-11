@@ -1,0 +1,40 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+import { _wrapProp } from "@qwik.dev/core";
+const i_qsBJpzBk9qc = () => import("./test_Cmp_component_qsBJpzBk9qc");
+const i_hiQTyBUK0Yk = () => import("./test_Cmp_component_button_q_e_click_hiQTyBUK0Yk");
+import { component$ } from "@qwik.dev/core";
+const Cmp = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_qsBJpzBk9qc, "Cmp_component_qsBJpzBk9qc"));
+
+=== test.tsx_Cmp_component_qsBJpzBk9qc.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_hiQTyBUK0Yk = () => import("./test.tsx_Cmp_component_button_q_e_click_hiQTyBUK0Yk");
+import { _jsxSorted } from "@qwik.dev/core";
+import { _wrapProp } from "@qwik.dev/core";
+export const Cmp_component_qsBJpzBk9qc = () => {
+	const htmlSignal = useSignal("<h2><span>I'm a signal value!</span></h2>");
+	return /* @__PURE__ */ _jsxSorted("div", null, null, [
+		/* @__PURE__ */ _jsxSorted("div", null, null, /* @__PURE__ */ _jsxSorted("span", null, {
+			id: "first",
+			dangerouslySetInnerHTML: "vanilla HTML here"
+		}, null, 3, "u6_0"), 3, "u6_1"),
+		/* @__PURE__ */ _jsxSorted("div", null, null, /* @__PURE__ */ _jsxSorted("span", null, {
+			id: "second",
+			dangerouslySetInnerHTML: "<h1>I'm an h1!</h1>",
+			class: "after"
+		}, null, 3, "u6_2"), 3, "u6_3"),
+		/* @__PURE__ */ _jsxSorted("div", null, null, [/* @__PURE__ */ _jsxSorted("span", null, {
+			id: "third",
+			dangerouslySetInnerHTML: _wrapProp(htmlSignal),
+			class: "after"
+		}, null, 3, "u6_4"), /* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": () => htmlSignal.value = "<h2><span>I'm a updated signal value!</span></h2>" }, null, 3, "u6_5")], 1, "u6_6")
+	], 1, "u6_7");
+};
+
+=== test.tsx_Cmp_component_button_q_e_click_hiQTyBUK0Yk.jsx === (ENTRY)

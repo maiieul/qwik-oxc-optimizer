@@ -1,0 +1,38 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.tsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_l5Al0251s9w = () => import("./test_Greeter_component_l5Al0251s9w");
+const i_Rxdt6XL5GRU = () => import("./test_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+const i_Rxdt6XL5GRU = () => import("./test_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+const i_Rxdt6XL5GRU = () => import("./test_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+import { component$, $ } from "@qwik.dev/core";
+import mongo from "mongodb";
+export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"));
+
+=== test.tsx_Greeter_component_l5Al0251s9w.tsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+export const Greeter_component_l5Al0251s9w = () => {
+	useTask$(async () => {
+		await mongo.users();
+	});
+	return <div>
+			<div onClick$={() => {}} />
+			<div onClick$={() => {}} />
+			<div onClick$={() => {}} />
+		</div>;
+}
+
+=== test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU.tsx === (ENTRY)
+
+
+=== test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU.tsx === (ENTRY)
+
+
+=== test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU.tsx === (ENTRY)

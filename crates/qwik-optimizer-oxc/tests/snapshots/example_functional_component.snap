@@ -1,0 +1,17 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.tsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_Qw9nV3mG0KQ = () => import("./test_Header_component_Qw9nV3mG0KQ");
+import { $, component$, useStore } from "@qwik.dev/core";
+const Header = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_Qw9nV3mG0KQ, "Header_component_Qw9nV3mG0KQ"));
+
+=== test.tsx_Header_component_Qw9nV3mG0KQ.tsx === (ENTRY)
+export const Header_component_Qw9nV3mG0KQ = () => {
+	const thing = useStore();
+	const { foo, bar } = foo();
+	return <div>{thing}</div>;
+}

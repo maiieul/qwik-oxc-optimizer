@@ -1,0 +1,36 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== ../../node_modules/dep/dist/lib.mjs ===
+import { componentQrl, inlinedQrl, useStore, useLexicalScope } from "@qwik.dev/core";
+import { jsx, jsxs } from "@qwik.dev/core/jsx-runtime";
+import { state } from "./sibling";
+const useData = () => {
+	return useStore({ count: 0 });
+};
+export const App = /* @__PURE__ */ componentQrl(inlinedQrl(() => {
+	const store = useData();
+	return /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsxs("p", { children: ["Count: ", store.count] }), /* @__PURE__ */ jsx("p", { children: /* @__PURE__ */ jsx("button", {
+		onClick$: inlinedQrl(() => {
+			const [store] = useLexicalScope();
+			return store.count++;
+		}, "App_component_div_p_button_onClick_8dWUa0cJAr4", [store]),
+		children: "Click"
+	}) })] });
+}, "App_component_AkbU84a8zes"));
+
+=== components/main.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_OCSspQ0ICD8 = () => import("./components/main_Local_component_OCSspQ0ICD8");
+import { component$, $ } from "@qwik.dev/core";
+import { state } from "./sibling";
+export const Local = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_OCSspQ0ICD8, "Local_component_OCSspQ0ICD8"));
+
+=== components/main.tsx_Local_component_OCSspQ0ICD8.jsx === (ENTRY)
+import { _jsxSorted } from "@qwik.dev/core";
+export const Local_component_OCSspQ0ICD8 = () => {
+	return /* @__PURE__ */ _jsxSorted("div", null, null, state, 3, "u6_0");
+};

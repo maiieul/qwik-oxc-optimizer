@@ -1,0 +1,32 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.tsx ===
+import { qrl } from "@qwik.dev/core";
+const i_AcV95hWr76k = () => import("./test_renderHeader_AcV95hWr76k");
+const i_AcV95hWr76k = () => import("./test_renderHeader_AcV95hWr76k");
+const i_AcV95hWr76k = () => import("./test_renderHeader_AcV95hWr76k");
+import { $, component, onRender } from "@qwik.dev/core";
+export const renderHeader = /* @__PURE__ */ qrl(i_AcV95hWr76k, "renderHeader_AcV95hWr76k");
+const renderHeader = component(/* @__PURE__ */ qrl(i_AcV95hWr76k, "renderHeader_AcV95hWr76k"));
+
+=== test.tsx_renderHeader_AcV95hWr76k.tsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
+export const renderHeader_AcV95hWr76k = () => {
+	return <div onClick={/* @__PURE__ */ qrl(i_AcV95hWr76k, "renderHeader_AcV95hWr76k")} />;
+}
+
+=== test.tsx_renderHeader_AcV95hWr76k.tsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
+export const renderHeader_AcV95hWr76k = (ctx) => console.log(ctx);
+
+=== test.tsx_renderHeader_AcV95hWr76k.tsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
+export const renderHeader_AcV95hWr76k = () => {
+	console.log("mount");
+	return render;
+};

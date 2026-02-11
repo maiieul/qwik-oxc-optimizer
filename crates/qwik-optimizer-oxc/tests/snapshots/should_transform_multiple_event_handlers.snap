@@ -1,0 +1,36 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_gZqPatVoDqw = () => import("./test_Foo_component_gZqPatVoDqw");
+const i_OJboCLusyIA = () => import("./test_Foo_component_div_q_e_click_OJboCLusyIA");
+const i_vfd9BKEsGeE = () => import("./test_Foo_component_div_q_e_mouseover_vfd9BKEsGeE");
+const i_MWp7oW4SJcQ = () => import("./test_Foo_component_p_q_e_click_MWp7oW4SJcQ");
+import { component$, useSignal, Signal } from "@qwik.dev/core";
+const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
+
+=== test.tsx_Foo_component_gZqPatVoDqw.jsx === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA");
+const i_vfd9BKEsGeE = () => import("./test.tsx_Foo_component_div_q_e_mouseover_vfd9BKEsGeE");
+const i_MWp7oW4SJcQ = () => import("./test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ");
+import { _jsxSorted } from "@qwik.dev/core";
+export const Foo_component_gZqPatVoDqw = (function() {
+	const data = useSignal < Signal < any > [] > [];
+	return /* @__PURE__ */ _jsxSorted("div", null, null, data.value.map((row) => /* @__PURE__ */ _jsxSorted("div", null, {
+		"q-e:click": () => console.log(row.value.id),
+		"q-e:mouseover": () => console.log("over" + row.value.id)
+	}, /* @__PURE__ */ _jsxSorted("p", null, { "q-e:click": () => console.log("inner" + row.value.id) }, item.value.id, 3, "u6_0"), 3, "u6_1")), 3, "u6_2");
+});
+
+=== test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_component_div_q_e_mouseover_vfd9BKEsGeE.jsx === (ENTRY)
+
+
+=== test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ.jsx === (ENTRY)

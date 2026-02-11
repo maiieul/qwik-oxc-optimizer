@@ -1,0 +1,21 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== ../node_modules/@qwik.dev/router/index.qwik.mjs ===
+import * as qwikRouterConfig from "@qwik-router-config";
+import swRegister from "@qwik-router-sw-register";
+import { _deserializeData, _fnSignal, _getContextElement, _jsxBranch, _jsxSplit, _restProps, _serializeData, _weakSerialize, _wrapSignal, componentQrl, createContextId, eventQrl, getLocale, implicit$FirstArg, inlinedQrl, noSerialize, SkipRender, Slot, untrack, useContext, useContextProvider, useLexicalScope, useOnDocument, useServerData, useSignal, useStore, useStylesQrl, useTaskQrl, withLocale } from "@qwik.dev/core";
+import { z, z as z2 } from "zod";
+const RouteStateContext = /* @__PURE__ */ createContextId("qc-s");
+// ... 7 context IDs ...
+const RouterOutlet = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
+	_jsxBranch();
+	useOnDocument("qinit", eventQrl(/* @__PURE__ */ inlinedQrl(() => {	/* popstate fallback */}, "RouterOutlet_component_useOnDocument_event_KnNE9eL0qfc")));
+	// ... content rendering with _jsxSplit ...
+}, "RouterOutlet_component_AKetNByE5TM"));
+// ... QwikRouterProvider with complex navigation logic ...
+// ... Link component with _restProps, _fnSignal, _wrapSignal ...
+// ... Form, GetForm components ...
+// ... routeAction$, routeLoader$, globalAction$, server$, validator$, zod$ ...
+export { Form, globalAction$, globalActionQrl, Link, QwikRouterMockProvider, QwikRouterProvider, routeAction$, routeActionQrl, routeLoader$, routeLoaderQrl, RouterOutlet, server$, serverQrl, ServiceWorkerRegister, useContent, useDocumentHead, useLocation, useNavigate, validator$, validatorQrl, z2 as z, zod$, zodQrl };

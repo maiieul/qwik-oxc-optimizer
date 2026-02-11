@@ -1,0 +1,23 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.tsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { useStylesQrl } from "@qwik.dev/core";
+import { useBrowserVisibleTaskQrl } from "@qwik.dev/core";
+import { inlinedQrl } from "@qwik.dev/core";
+import { _captures } from "@qwik.dev/core";
+import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from "@qwik.dev/core";
+import { thing } from "./sibling";
+import mongodb from "mongodb";
+export const Child = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
+	/* @__PURE__ */ useStylesQrl(/* @__PURE__ */ inlinedQrl("somestring", "Child_useStyles_g6bzNLMa4kA"));
+	const state = useStore({ count: 0 });
+	// Double count watch
+	/* @__PURE__ */ useBrowserVisibleTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
+		state.count = thing.doStuff() + import("./sibling");
+	}, "useBrowserVisibleTask_0qCMfawldvU", [state]));
+	return <div onClick$={() => console.log(mongodb)}>
+		</div>;
+}, "Child_component_80js9RUUsfM"));

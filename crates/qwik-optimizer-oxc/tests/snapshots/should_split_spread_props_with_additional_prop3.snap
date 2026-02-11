@@ -1,0 +1,23 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.jsx ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _getVarProps } from "@qwik.dev/core";
+import { _getConstProps } from "@qwik.dev/core";
+import { _jsxSplit } from "@qwik.dev/core";
+const i_jN9ZUuuADmk = () => import("./test_default_component_jN9ZUuuADmk");
+import { component$ } from "@qwik.dev/core";
+import { Foo } from "./foo";
+export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
+
+=== test.tsx_default_component_jN9ZUuuADmk.jsx === (ENTRY)
+import { _jsxSplit } from "@qwik.dev/core";
+export const default_component_jN9ZUuuADmk = (props) => {
+	return /* @__PURE__ */ _jsxSplit(Foo, {
+		..._getVarProps(props),
+		s: Math.random()
+	}, _getConstProps(props), null, 0, "u6_0");
+};
