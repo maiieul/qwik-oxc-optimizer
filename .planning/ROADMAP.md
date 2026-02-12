@@ -80,10 +80,10 @@ Full details: `milestones/v4.0-ROADMAP.md`
   2. Lazy `import()` paths in main module output match the actual segment filenames (no mismatch between import path and file)
   3. When `explicit_extensions: true`, lazy import paths end with the file extension (e.g., `import("./seg.tsx")` not `import("./seg")`)
   4. When both `transpile_ts` and `transpile_jsx` are true, output segment files have `.js` extension (not `.jsx`)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 20-01: TBD
+- [ ] 20-01-PLAN.md -- Fix path resolution logic and add tests (PATH-01 through PATH-04)
 
 ### Phase 21: Import Correctness
 **Goal**: Main module and segment modules contain only the imports they actually need
@@ -137,10 +137,10 @@ Phases execute in numeric order: 20 -> 21 -> 22
 | 17. Extract JSX Transform | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 18. const_replace VisitMut Rewrite | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 19. Spec Compliance Verification | v4.0 | 1/1 | Complete | 2026-02-11 |
-| 20. Path Resolution | v5.0 | 0/? | Not started | - |
+| 20. Path Resolution | v5.0 | 0/1 | Not started | - |
 | 21. Import Correctness | v5.0 | 0/? | Not started | - |
 | 22. Display Names and Annotations | v5.0 | 0/? | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (v5.0 milestone roadmap created)*
+*Last updated: 2026-02-11 (v5.0 Phase 20 planned)*
