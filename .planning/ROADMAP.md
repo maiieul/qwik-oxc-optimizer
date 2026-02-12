@@ -93,10 +93,10 @@ Plans:
   1. After transformation, consumed `$`-suffixed imports (e.g., `component$`, `useTask$`) do not appear in the main module output
   2. Qrl-suffixed runtime imports (e.g., `useStylesQrl`) appear only in modules where they are actually called, not in the main module when only segments reference them
   3. Main module retains non-consumed imports (imports not related to `$()` extraction remain untouched)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 21-01: TBD
+- [ ] 21-01-PLAN.md -- Fix import stripping and scoping (IMPORT-01 + IMPORT-02)
 
 ### Phase 22: Display Names and Annotations
 **Goal**: Segment metadata and tree-shaking annotations match SWC optimizer behavior
@@ -138,9 +138,9 @@ Phases execute in numeric order: 20 -> 21 -> 22
 | 18. const_replace VisitMut Rewrite | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 19. Spec Compliance Verification | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 20. Path Resolution | v5.0 | 1/1 | Complete | 2026-02-12 |
-| 21. Import Correctness | v5.0 | 0/? | Not started | - |
+| 21. Import Correctness | v5.0 | 0/1 | Not started | - |
 | 22. Display Names and Annotations | v5.0 | 0/? | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-12 (v5.0 Phase 20 complete)*
+*Last updated: 2026-02-12 (v5.0 Phase 21 planned)*
