@@ -37,3 +37,4 @@ export const Cmp_component_qsBJpzBk9qc = () => {
 };
 
 === test.tsx_Cmp_component_button_q_e_click_hiQTyBUK0Yk.js === (ENTRY)
+export const Cmp_component_button_q_e_click_hiQTyBUK0Yk = () => htmlSignal.value = "<h2><span>I'm a updated signal value!</span></h2>";

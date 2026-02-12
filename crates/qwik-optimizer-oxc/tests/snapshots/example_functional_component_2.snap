@@ -21,6 +21,7 @@ import { qrl } from "@qwik.dev/core";
 const i_vbEaih0SxYg = () => import("./test.tsx_App_component_button_q_e_click_vbEaih0SxYg");
 const i_wANYt0I0EHI = () => import("./test.tsx_App_component_div_q_e_click_wANYt0I0EHI");
 import { _jsxSorted } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const App_component_XumqEURaLxI = (props) => {
 	const state = useCounter();
 	const thing = useStore({ thing: 0 });
@@ -30,6 +31,7 @@ export const App_component_XumqEURaLxI = (props) => {
 };
 
 === test.tsx_App_component_button_q_e_click_vbEaih0SxYg.js === (ENTRY)
-
+export const App_component_button_q_e_click_vbEaih0SxYg = () => state.count += btn.offset + thing + STEP + STEP_2 + props.step;
 
 === test.tsx_App_component_div_q_e_click_wANYt0I0EHI.js === (ENTRY)
+export const App_component_div_q_e_click_wANYt0I0EHI = () => state.count += count2;

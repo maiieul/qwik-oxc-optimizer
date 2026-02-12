@@ -5,7 +5,7 @@
 //! extracted segment. Each segment becomes its own module file containing
 //! the extracted function body as an exported const, with any needed imports.
 
-use crate::types::{SegmentData, TransformOptions};
+use crate::types::{ImportKind, SegmentData, TransformOptions};
 
 /// Build a segment's JavaScript source code with optional hoisted function declarations.
 ///
@@ -103,6 +103,42 @@ pub(crate) fn build_segment_code_with_hoisted(
             "import {{ _qrlSync }} from \"{}\";",
             options.core_module
         ));
+    }
+
+    // Emit user-code imports needed by this segment body.
+    // These are imports from the original module that the segment references
+    // (e.g., `import dep3 from "dep3/something"`, `import { bar as bbar } from "../state"`).
+    for import_info in &segment.needed_imports {
+        for (idx, spec_name) in import_info.specifiers.iter().enumerate() {
+            let kind = import_info
+                .specifier_kinds
+                .get(idx)
+                .unwrap_or(&ImportKind::Named);
+            match kind {
+                ImportKind::Default => {
+                    parts.push(format!("import {} from \"{}\";", spec_name, import_info.source));
+                }
+                ImportKind::Namespace => {
+                    parts.push(format!(
+                        "import * as {} from \"{}\";",
+                        spec_name, import_info.source
+                    ));
+                }
+                ImportKind::Named => {
+                    if let Some(imported_name) = import_info.specifier_aliases.get(spec_name) {
+                        parts.push(format!(
+                            "import {{ {} as {} }} from \"{}\";",
+                            imported_name, spec_name, import_info.source
+                        ));
+                    } else {
+                        parts.push(format!(
+                            "import {{ {} }} from \"{}\";",
+                            spec_name, import_info.source
+                        ));
+                    }
+                }
+            }
+        }
     }
 
     for (fn_code, str_code) in hoisted_stmts {

@@ -74,6 +74,9 @@ import { qrl } from "@qwik.dev/core";
 const i_zo9wkw0NBzs = () => import("./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs");
 import { _jsxSorted } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
+import { useForm } from "./some-file.ts";
+import { useForm2 } from "./some-file.ts";
 const _hf0 = (p0) => p0.errors.test;
 const _hf0_str = "p0.errors.test";
 const _hf1 = (p0) => p0.errors.test;
@@ -112,3 +115,17 @@ export const default_component_jN9ZUuuADmk = () => {
 };
 
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)
+import { _fnSignal } from "@qwik.dev/core";
+const _hf0 = (p0) => p0.errors.test;
+const _hf0_str = "p0.errors.test";
+const _hf1 = (p0) => p0.errors.test;
+const _hf1_str = "p0.errors.test";
+const _hf2 = (p0) => p0.errors.test;
+const _hf2_str = "p0.errors.test";
+const _hf3 = (p0) => p0.errors.test;
+const _hf3_str = "p0.errors.test";
+const _hf4 = (p0) => p0.errors.test;
+const _hf4_str = "p0.errors.test";
+export const default_component_button_q_e_click_zo9wkw0NBzs = () => {
+	store.errors.test = store.errors.test ? undefined : "ERROR TEST";
+};

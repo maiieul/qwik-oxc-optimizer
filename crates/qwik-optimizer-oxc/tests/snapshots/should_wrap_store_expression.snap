@@ -18,6 +18,7 @@ export const PANELS: ActivePanel[] = [
 
 === test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const default_component_jN9ZUuuADmk = () => {
 	const panelStore = useStore(() => ({
 		active: "Input",

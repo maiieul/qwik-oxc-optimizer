@@ -24,7 +24,10 @@ export const App_component_XumqEURaLxI = () => {
 };
 
 === test.tsx_App_useStyles_IUcvUpNH0v8.js === (ENTRY)
+import css1 from "./global.css";
+import css2 from "./style.css";
 export const App_useStyles_IUcvUpNH0v8 = `${css1}${css2}`;
 
 === test.tsx_App_useStyles_IUcvUpNH0v8.js === (ENTRY)
+import css3 from "./style.css";
 export const App_useStyles_IUcvUpNH0v8 = css3;

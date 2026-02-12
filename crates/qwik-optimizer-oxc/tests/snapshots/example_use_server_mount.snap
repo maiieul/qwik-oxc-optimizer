@@ -24,6 +24,7 @@ const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
 const i_N8VjxooYvus = () => import("./test.tsx_Parent_component_div_q_e_click_N8VjxooYvus");
 import { useTaskQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const Parent_component_fxETLug1yE4 = () => {
 	const state = useStore({ text: "" });
 	useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
@@ -32,6 +33,8 @@ export const Parent_component_fxETLug1yE4 = () => {
 
 === test.tsx_useTask_ZxfKmWQYEwc.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
+import mongo from "mongodb";
+import redis from "redis";
 export const useTask_ZxfKmWQYEwc = async () => {
 	const state = _captures[0];
 	state.text = await mongo.users();
@@ -39,7 +42,7 @@ export const useTask_ZxfKmWQYEwc = async () => {
 };
 
 === test.tsx_Parent_component_div_q_e_click_N8VjxooYvus.js === (ENTRY)
-
+export const Parent_component_div_q_e_click_N8VjxooYvus = () => console.log("parent");
 
 === test.tsx_Child_component_80js9RUUsfM.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -47,6 +50,7 @@ const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
 const i_atbV2f006AU = () => import("./test.tsx_Child_component_div_q_e_click_atbV2f006AU");
 import { useTaskQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const Child_component_80js9RUUsfM = () => {
 	const state = useStore({ text: "" });
 	useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
@@ -55,9 +59,11 @@ export const Child_component_80js9RUUsfM = () => {
 
 === test.tsx_useTask_ZxfKmWQYEwc.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
+import mongo from "mongodb";
 export const useTask_ZxfKmWQYEwc = async () => {
 	const state = _captures[0];
 	state.text = await mongo.users();
 };
 
 === test.tsx_Child_component_div_q_e_click_atbV2f006AU.js === (ENTRY)
+export const Child_component_div_q_e_click_atbV2f006AU = () => console.log("child");

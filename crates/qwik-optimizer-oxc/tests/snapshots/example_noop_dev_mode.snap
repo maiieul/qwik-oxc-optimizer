@@ -15,6 +15,7 @@ export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLx
 import { serverStuffQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrl } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const App_component_XumqEURaLxI = () => {
 	const stuff = useStore();
 	serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw", [stuff]));

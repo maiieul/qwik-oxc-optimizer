@@ -16,6 +16,9 @@ export const { onRequest, logout, getSession, signup } = serverAuthQrl(/* @__PUR
 export const { onRequest, logout, getSession, signup } = authQrl(/* @__PURE__ */ qrl(i_axfrT8CMT4s, "s_1_axfrT8CMT4s"));
 
 === test.tsx_s_0_7qRdElk79Fw.js === (ENTRY)
+import GitHub from "@auth/core/providers/github";
+import Facebook from "next-auth/providers/facebook";
+import Google from "next-auth/providers/google";
 export const s_0_7qRdElk79Fw = { providers: [
 	GitHub({
 		clientId: process.env.GITHUB_ID,
@@ -32,6 +35,9 @@ export const s_0_7qRdElk79Fw = { providers: [
 ] };
 
 === test.tsx_s_1_axfrT8CMT4s.js === (ENTRY)
+import GitHub from "@auth/core/providers/github";
+import Facebook from "next-auth/providers/facebook";
+import Google from "next-auth/providers/google";
 export const s_1_axfrT8CMT4s = { providers: [
 	GitHub({
 		clientId: process.env.GITHUB_ID,

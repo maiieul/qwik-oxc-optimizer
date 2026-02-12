@@ -16,3 +16,6 @@ export default (props: {
 };
 
 === test.tsx_div_q_e_click_Lo4b850Oi8I.js === (ENTRY)
+export const div_q_e_click_Lo4b850Oi8I = () => {
+	data.selectedOutputDetail = "options";
+};

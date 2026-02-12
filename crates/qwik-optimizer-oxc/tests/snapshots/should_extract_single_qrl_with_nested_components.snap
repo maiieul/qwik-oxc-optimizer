@@ -18,6 +18,8 @@ import { qrl } from "@qwik.dev/core";
 const i_7dSOr7rhY8c = () => import("./test.tsx_Inner_component_7dSOr7rhY8c");
 import { componentQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+import { Signal } from "@qwik.dev/core";
 export const Foo_component_gZqPatVoDqw = () => {
 	const data = useSignal < Signal < any > [] > [];
 	const Inner = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_7dSOr7rhY8c, "Inner_component_7dSOr7rhY8c", [item]));
@@ -36,3 +38,4 @@ export const Inner_component_7dSOr7rhY8c = (props) => {
 };
 
 === test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU.js === (ENTRY)
+export const Inner_component_p_q_e_click_Kwn9b5UeNMU = () => console.log(item.value.id);

@@ -24,6 +24,10 @@ export const Foo_qwikify_WtIyP0H0lSk = MyReactComponent;
 export const Bar_MSAJNhrvHtQ = "a thing";
 
 === test.tsx_App_component_XumqEURaLxI.ts === (ENTRY)
+import sdk from "@builder.io/sdk";
+import { isDev } from "@builder.io/qwik/build";
+import { stuff } from "@builder.io/qwik-city";
+import { moreStuff } from "@builder.io/qwik-city/more/here";
 export const App_component_XumqEURaLxI = () => {
 	sdk.hello();
 	if (isDev) {

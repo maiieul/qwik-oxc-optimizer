@@ -29,6 +29,8 @@ const i_bT0HZe0FfwQ = () => import("./test.tsx_imgLoc_useResource_bT0HZe0FfwQ");
 import { useResourceQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { ModelProps } from "./modelMenu";
+import { Resource } from "@qwik.dev/core";
 export const ModelImg_component_N1fNAC4qw7Q = (props) => {
 	const imgLoc = useResourceQrl(/* @__PURE__ */ qrl(i_bT0HZe0FfwQ, "imgLoc_useResource_bT0HZe0FfwQ", [props]));
 	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(Resource, {
@@ -40,6 +42,7 @@ export const ModelImg_component_N1fNAC4qw7Q = (props) => {
 
 === test.tsx_imgLoc_useResource_bT0HZe0FfwQ.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
+import { serverImg } from "~/routes/(authenticated)/layout";
 export const imgLoc_useResource_bT0HZe0FfwQ = async ({ track }) => {
 	const props = _captures[0];
 	track(() => props.store.model);

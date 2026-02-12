@@ -20,6 +20,8 @@ const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboC
 const i_vfd9BKEsGeE = () => import("./test.tsx_Foo_component_div_q_e_mouseover_vfd9BKEsGeE");
 const i_MWp7oW4SJcQ = () => import("./test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ");
 import { _jsxSorted } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+import { Signal } from "@qwik.dev/core";
 export const Foo_component_gZqPatVoDqw = (function() {
 	const data = useSignal < Signal < any > [] > [];
 	return /* @__PURE__ */ _jsxSorted("div", null, null, data.value.map((row) => /* @__PURE__ */ _jsxSorted("div", null, {
@@ -29,9 +31,10 @@ export const Foo_component_gZqPatVoDqw = (function() {
 });
 
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js === (ENTRY)
-
+export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(row.value.id);
 
 === test.tsx_Foo_component_div_q_e_mouseover_vfd9BKEsGeE.js === (ENTRY)
-
+export const Foo_component_div_q_e_mouseover_vfd9BKEsGeE = () => console.log("over" + row.value.id);
 
 === test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ.js === (ENTRY)
+export const Foo_component_p_q_e_click_MWp7oW4SJcQ = () => console.log("inner" + row.value.id);

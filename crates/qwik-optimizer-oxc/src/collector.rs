@@ -16,11 +16,25 @@ use std::sync::LazyLock;
 use oxc::ast::ast::*;
 use oxc::semantic::Scoping;
 
-use crate::types::{CollectResult, DollarCallSite, ExportInfo, ImportInfo};
+use crate::types::{CollectResult, DollarCallSite, ExportInfo, ImportInfo, ImportKind};
 
 // ---------------------------------------------------------------------------
 // Capture Analysis
 // ---------------------------------------------------------------------------
+
+/// A single import binding that needs to be re-emitted in a segment module.
+#[derive(Debug, Clone)]
+pub(crate) struct ReemittedImport {
+    /// The local binding name (e.g., "dep3", "bbar", "dep2").
+    pub local_name: String,
+    /// The module source path (e.g., "dep3/something", "../state").
+    pub source: String,
+    /// The kind of import (default, namespace, or named).
+    pub kind: ImportKind,
+    /// For aliased named imports, the original imported name (e.g., "bar" for `import { bar as bbar }`).
+    /// None if the local name matches the imported name.
+    pub imported_name: Option<String>,
+}
 
 /// Result of capture analysis for a single $()-body.
 #[derive(Debug, Clone)]
@@ -31,8 +45,8 @@ pub(crate) struct CaptureAnalysisResult {
     pub capture_names: Vec<String>,
 
     /// Import bindings referenced in the body that should be re-emitted
-    /// in the segment module (NOT captured). Each entry is (local_name, source, is_default).
-    pub reemitted_imports: Vec<(String, String, bool)>,
+    /// in the segment module (NOT captured).
+    pub reemitted_imports: Vec<ReemittedImport>,
 
     /// Diagnostic messages for invalid captures (function/class declarations).
     pub diagnostics: Vec<String>,
@@ -154,7 +168,7 @@ pub(crate) fn compute_captures(
     collect_result: &CollectResult,
 ) -> CaptureAnalysisResult {
     let mut capture_names = Vec::new();
-    let mut reemitted_imports: Vec<(String, String, bool)> = Vec::new();
+    let mut reemitted_imports: Vec<ReemittedImport> = Vec::new();
     let diagnostics = Vec::new();
     let mut seen: HashSet<String> = HashSet::new();
 
@@ -181,11 +195,19 @@ pub(crate) fn compute_captures(
 
         let mut is_import = false;
         for import_info in &collect_result.module_imports {
-            if import_info.specifiers.contains(name) {
-                let is_default = import_info.specifiers.len() == 1
-                    && import_info.specifiers[0] == *name
-                    && !import_info.is_qwik_core;
-                reemitted_imports.push((name.clone(), import_info.source.clone(), is_default));
+            if let Some(idx) = import_info.specifiers.iter().position(|s| s == name) {
+                let kind = import_info
+                    .specifier_kinds
+                    .get(idx)
+                    .cloned()
+                    .unwrap_or(ImportKind::Named);
+                let imported_name = import_info.specifier_aliases.get(name).cloned();
+                reemitted_imports.push(ReemittedImport {
+                    local_name: name.clone(),
+                    source: import_info.source.clone(),
+                    kind,
+                    imported_name,
+                });
                 is_import = true;
                 break;
             }
@@ -413,6 +435,7 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
     let is_qwik_core = ctx.is_qwik_core_import(source);
 
     let mut specifiers_vec = Vec::new();
+    let mut specifier_kinds_vec = Vec::new();
     let mut specifier_aliases = HashMap::new();
 
     if let Some(specifiers) = &import.specifiers {
@@ -426,6 +449,7 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
                     };
                     let local_name = s.local.name.as_str();
                     specifiers_vec.push(local_name.to_string());
+                    specifier_kinds_vec.push(ImportKind::Named);
 
                     // Track alias mapping for all aliased specifiers (not just $-suffixed)
                     if local_name != imported_name {
@@ -443,9 +467,11 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
                 }
                 ImportDeclarationSpecifier::ImportDefaultSpecifier(s) => {
                     specifiers_vec.push(s.local.name.as_str().to_string());
+                    specifier_kinds_vec.push(ImportKind::Default);
                 }
                 ImportDeclarationSpecifier::ImportNamespaceSpecifier(s) => {
                     specifiers_vec.push(s.local.name.as_str().to_string());
+                    specifier_kinds_vec.push(ImportKind::Namespace);
                 }
             }
         }
@@ -454,6 +480,7 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
     ctx.module_imports.push(ImportInfo {
         source: source.to_string(),
         specifiers: specifiers_vec,
+        specifier_kinds: specifier_kinds_vec,
         specifier_aliases,
         is_qwik_core,
         span: (import.span.start, import.span.end),
@@ -1357,7 +1384,7 @@ export const App = component$(() => {
             result
                 .reemitted_imports
                 .iter()
-                .any(|(name, _, _)| name == "thing"),
+                .any(|ri| ri.local_name == "thing"),
             "Expected 'thing' in reemitted_imports, got {:?}",
             result.reemitted_imports
         );
@@ -1366,7 +1393,7 @@ export const App = component$(() => {
             result
                 .reemitted_imports
                 .iter()
-                .any(|(name, _, _)| name == "useStore"),
+                .any(|ri| ri.local_name == "useStore"),
             "Expected 'useStore' in reemitted_imports, got {:?}",
             result.reemitted_imports
         );
@@ -1410,7 +1437,7 @@ import { thing } from './sibling';"#,
             vec!["state".to_string(), "count".to_string()]
         );
         assert_eq!(result.reemitted_imports.len(), 1);
-        assert_eq!(result.reemitted_imports[0].0, "thing");
+        assert_eq!(result.reemitted_imports[0].local_name, "thing");
     }
 
     #[test]

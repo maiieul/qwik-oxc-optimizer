@@ -33,6 +33,7 @@ export const Local = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_OCSspQ0I
 
 === components/main.tsx_Local_component_OCSspQ0ICD8.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
+import { state } from "./sibling";
 export const Local_component_OCSspQ0ICD8 = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, state, 3, "u6_0");
 };

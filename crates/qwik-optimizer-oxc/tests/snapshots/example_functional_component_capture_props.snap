@@ -15,6 +15,7 @@ export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLx
 === test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
+import { useStore } from "@qwik.dev/core";
 export const App_component_XumqEURaLxI = (_rawProps) => {
 	const state = useStore({ count: 0 });
 	const { rest: [C2, { C3, v1: [C4], C5 = v2, ...C6 }, C7 = v3, ...C8] } = foo();
@@ -90,3 +91,4 @@ export const s__Ma8uJBKLX2o = () => {
 };
 
 === test.tsx_s__div_q_e_click_BvZjBcCes4s.js === (ENTRY)
+export const s__div_q_e_click_BvZjBcCes4s = () => state.count += count + total;

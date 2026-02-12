@@ -65,30 +65,31 @@ export const Foo_T0dY5k6mBgU = () => {
 export const handler_u4Tb48t5JC8 = () => console.log("reused");
 
 === test.tsx_Foo_div_q_e_click_KKzu5KN5Myk.js === (ENTRY)
-
-
-=== test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.js === (ENTRY)
-
+export const Foo_div_q_e_click_KKzu5KN5Myk = () => console.log("onClick$");
 
 === test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.js === (ENTRY)
+export const Foo_div_q_e_documentscroll_o1AVWCNjT0c = () => console.log("onDocumentScroll");
 
+=== test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.js === (ENTRY)
+export const Foo_div_q_e_documentscroll_o1AVWCNjT0c = () => console.log("onWindowScroll");
 
 === test.tsx_Foo_div_q_e_-click_7EsQAjtgDrQ.js === (ENTRY)
-
-
-=== test.tsx_Foo_div_q_e_document-scroll_SgoZQWmAm94.js === (ENTRY)
-
+export const Foo_div_q_e_-click_7EsQAjtgDrQ = () => console.log("on-cLick$")
 
 === test.tsx_Foo_div_q_e_document-scroll_SgoZQWmAm94.js === (ENTRY)
+export const Foo_div_q_e_document-scroll_SgoZQWmAm94 = () => console.log("onDocument-sCroll")
 
+=== test.tsx_Foo_div_q_e_document-scroll_SgoZQWmAm94.js === (ENTRY)
+export const Foo_div_q_e_document-scroll_SgoZQWmAm94 = () => console.log("onDocument-scroLL")
 
 === test.tsx_Foo_div_q_e_click_KKzu5KN5Myk.js === (ENTRY)
-
-
-=== test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.js === (ENTRY)
-
+export const Foo_div_q_e_click_KKzu5KN5Myk = () => console.log("host:onClick$");
 
 === test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.js === (ENTRY)
+export const Foo_div_q_e_documentscroll_o1AVWCNjT0c = () => console.log("host:onDocument:scroll");
 
+=== test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c.js === (ENTRY)
+export const Foo_div_q_e_documentscroll_o1AVWCNjT0c = () => console.log("host:onWindow:scroll");
 
 === test.tsx_Foo_div_custom_Co0pSPo5J9E.js === (ENTRY)
+export const Foo_div_custom_Co0pSPo5J9E = () => console.log("custom");

@@ -25,3 +25,4 @@ export const App_component_XumqEURaLxI = (props: Stuff) => {
 }
 
 === test.tsx_App_component_p_q_e_click_0VoFXPYUR5E.js === (ENTRY)
+export const App_component_p_q_e_click_0VoFXPYUR5E = () => console.log("warn");

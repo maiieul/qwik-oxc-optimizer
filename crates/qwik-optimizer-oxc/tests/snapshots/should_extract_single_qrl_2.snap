@@ -18,6 +18,8 @@ import { qrl } from "@qwik.dev/core";
 const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
 const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
 import { _jsxSorted } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
 export const Parent_component_fxETLug1yE4 = () => {
 	const cart = useStore < Cart > [];
 	const results = useSignal(["foo", "bar"]);
@@ -34,6 +36,9 @@ export const Parent_component_fxETLug1yE4 = () => {
 };
 
 === test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
-
+export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
+	cart.push(item);
+};
 
 === test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
+export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => results.value = ["item1", "item2"];

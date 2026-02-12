@@ -23,6 +23,7 @@ export const default_component_jN9ZUuuADmk = (props) => {
 };
 
 === test.tsx_default_component_p_q_e_hi_2p9z0XXdr7M.js === (ENTRY)
-
+export const default_component_p_q_e_hi_2p9z0XXdr7M = () => "hi";
 
 === test.tsx_default_component_p_q_e_const_W7e7jpgFEgw.js === (ENTRY)
+export const default_component_p_q_e_const_W7e7jpgFEgw = () => "const";

@@ -19,6 +19,7 @@ const i_zo9wkw0NBzs = () => import("./test.tsx_default_component_button_q_e_clic
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { useStore } from "@qwik.dev/core";
 export const default_component_jN9ZUuuADmk = () => {
 	const store = useStore([{ value: 0 }]);
 	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [
@@ -31,3 +32,4 @@ export const default_component_jN9ZUuuADmk = () => {
 };
 
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)
+export const default_component_button_q_e_click_zo9wkw0NBzs = () => store[0].value++;

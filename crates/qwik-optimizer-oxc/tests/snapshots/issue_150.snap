@@ -24,6 +24,7 @@ export const Greeter_component_l5Al0251s9w = () => {
 === test.tsx_s__Ma8uJBKLX2o.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
+import { hola } from "sdfds";
 export const s__Ma8uJBKLX2o = () => {
 	const stuff = _captures[0];
 	return /* @__PURE__ */ _jsxSorted("div", { class: {

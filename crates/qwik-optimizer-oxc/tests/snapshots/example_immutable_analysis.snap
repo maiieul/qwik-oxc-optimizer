@@ -2,6 +2,99 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
+=== test.js ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
+const i_qkje5irpghU = () => import("./test.tsx_remove_qkje5irpghU");
+const i_j3XFTutAFbA = () => import("./test.tsx_App_component___q_e_event_j3XFTutAFbA");
+const i_R37Ah6P7YK8 = () => import("./test.tsx_App_component___transparent_R37Ah6P7YK8");
+const i_fo6pletGN1s = () => import("./test.tsx_App_component___immutable4_fo6pletGN1s");
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { useStore } from "@qwik.dev/core";
+import importedValue from "v";
+import styles from "./styles.module.css";
+export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
 
-=== DIAGNOSTICS ===
-[SourceError] Unexpected token. Did you mean `{'>'}` or `&gt;`?
+=== test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_qkje5irpghU = () => import("./test.tsx_remove_qkje5irpghU");
+const i_j3XFTutAFbA = () => import("./test.tsx_App_component___q_e_event_j3XFTutAFbA");
+const i_R37Ah6P7YK8 = () => import("./test.tsx_App_component___transparent_R37Ah6P7YK8");
+const i_fo6pletGN1s = () => import("./test.tsx_App_component___immutable4_fo6pletGN1s");
+import { _jsxSorted } from "@qwik.dev/core";
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { useStore } from "@qwik.dev/core";
+import styles from "./styles.module.css";
+import importedValue from "v";
+export const App_component_XumqEURaLxI = (props) => {
+	const { Model } = props;
+	const state = useStore({ count: 0 });
+	const remove = /* @__PURE__ */ qrl(i_qkje5irpghU, "remove_qkje5irpghU", [state]);
+	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [
+		/* @__PURE__ */ _jsxSorted("p", null, {
+			class: "stuff",
+			"q-e:click": props.onClick$
+		}, "Hello Qwik", 3, "u6_1"),
+		/* @__PURE__ */ _jsxSorted(Div, {
+			class: styles.foo,
+			document: window.document,
+			immutable2: {
+				foo: "bar",
+				baz: importedValue ? true : false
+			},
+			immutable5: [
+				1,
+				2,
+				importedValue,
+				null,
+				{}
+			]
+		}, {
+			"q-e:click": props.onClick$,
+			"q-e:event": () => console.log("stuff"),
+			"transparent$": () => {
+				console.log("stuff");
+			},
+			immutable1: "stuff",
+			immutable3: 2,
+			"immutable4$": (ev) => console.log(state.count)
+		}, /* @__PURE__ */ _jsxSorted("p", null, null, "Hello Qwik", 3, "u6_2"), 3, "u6_3"),
+		[].map(() => /* @__PURE__ */ _jsxSorted(Model, {
+			class: state,
+			mutable1: {
+				foo: "bar",
+				baz: state.count ? true : false
+			},
+			mutable2: (() => console.log(state.count))(),
+			mutable3: [
+				1,
+				2,
+				state,
+				null,
+				{}
+			]
+		}, { "remove$": remove }, null, 3, "u6_0"))
+	], 1, "u6_4");
+};
+
+=== test.tsx_remove_qkje5irpghU.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const remove_qkje5irpghU = (id: number) => {
+const state = _captures[0];
+
+	const d = state.data;
+	d.splice(d.findIndex((d) => d.id === id), 1);
+}
+
+=== test.tsx_App_component___q_e_event_j3XFTutAFbA.js === (ENTRY)
+export const App_component___q_e_event_j3XFTutAFbA = () => console.log("stuff");
+
+=== test.tsx_App_component___transparent_R37Ah6P7YK8.js === (ENTRY)
+export const App_component___transparent_R37Ah6P7YK8 = () => {
+	console.log("stuff");
+};
+
+=== test.tsx_App_component___immutable4_fo6pletGN1s.js === (ENTRY)
+export const App_component___immutable4_fo6pletGN1s = (ev) => console.log(state.count);

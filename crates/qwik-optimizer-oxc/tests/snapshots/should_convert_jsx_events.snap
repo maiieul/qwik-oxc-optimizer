@@ -40,21 +40,22 @@ export const ManyEventsComponent_component_d0rUoq0Y7Qo = () => {
 };
 
 === test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.js === (ENTRY)
-
+export const ManyEventsComponent_component_button_q_e_click_ygm370W5KJY = () => {};
 
 === test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04.js === (ENTRY)
-
+export const ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04 = () => {};
 
 === test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.js === (ENTRY)
-
+export const ManyEventsComponent_component_button_q_e_click_ygm370W5KJY = () => {};
 
 === test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04.js === (ENTRY)
-
+export const ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04 = () => {};
 
 === test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc.js === (ENTRY)
-
+export const ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc = () => {}
 
 === test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE.js === (ENTRY)
-
+export const ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE = () => {};
 
 === test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4.js === (ENTRY)
+export const ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4 = () => {};

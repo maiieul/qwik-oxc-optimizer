@@ -21,3 +21,4 @@ export const default_component_jN9ZUuuADmk = (props: any) => {
 }
 
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)
+export const default_component_button_q_e_click_zo9wkw0NBzs = () => props.onClick$();

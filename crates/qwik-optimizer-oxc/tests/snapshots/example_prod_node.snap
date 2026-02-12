@@ -25,9 +25,10 @@ export const Foo_component_gZqPatVoDqw = () => {
 }
 
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.tsx === (ENTRY)
-
-
-=== test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.tsx === (ENTRY)
-
+export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log("first");
 
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.tsx === (ENTRY)
+export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log("second");
+
+=== test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.tsx === (ENTRY)
+export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log("third");

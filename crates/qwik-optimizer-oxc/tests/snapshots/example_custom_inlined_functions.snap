@@ -28,6 +28,7 @@ import { qrl } from "@qwik.dev/core";
 const i_920F189NvqI = () => import("./test.tsx_useMemo_920F189NvqI");
 const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
 import { useMemoQrl } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const App_component_XumqEURaLxI = (props) => {
 	const state = useStore({ count: 0 });
 	useMemoQrl(/* @__PURE__ */ qrl(i_920F189NvqI, "useMemo_920F189NvqI", [state]));

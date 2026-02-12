@@ -18,3 +18,4 @@ export const default_component_PS0fTRVnPOE = () => {
 }
 
 === src/components/mongo/404.tsx_default_component_div_q_e_click_41GceC3v3n8.tsx === (ENTRY)
+export const default_component_div_q_e_click_41GceC3v3n8 = () => console.log(mongodb);

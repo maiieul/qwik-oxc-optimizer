@@ -17,6 +17,8 @@ export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_36z8l5vFtd
 === project/test.tsx_Header_component_sHTSaq0AU4w.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_0hncTFTaevI = () => import("./project/test.tsx_Header_0hncTFTaevI");
+import * as dep2 from "dep2";
+import { bar as bbar } from "../state";
 export const Header_component_sHTSaq0AU4w = () => {
 	return <Header onClick={/* @__PURE__ */ qrl(i_0hncTFTaevI, "Header_0hncTFTaevI")}>
 			{dep2.stuff()}{bbar()}
@@ -24,9 +26,11 @@ export const Header_component_sHTSaq0AU4w = () => {
 }
 
 === project/test.tsx_Header_0hncTFTaevI.tsx === (ENTRY)
+import dep3 from "dep3/something";
 export const Header_0hncTFTaevI = (ev) => dep3(ev);
 
 === project/test.tsx_App_component_36z8l5vFtdk.tsx === (ENTRY)
+import { foo } from "../state";
 export const App_component_36z8l5vFtdk = () => {
 	return <Header>{foo()}</Header>;
 }

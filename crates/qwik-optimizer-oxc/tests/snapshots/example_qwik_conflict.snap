@@ -33,12 +33,13 @@ export const Foo_component_gZqPatVoDqw = () => {
 };
 
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js === (ENTRY)
-
+export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(qrl);
 
 === test.tsx_Root_component_YvjM3SoLvrM.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
 const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
+import { useStyles } from "@qwik.dev/core";
 export const Root_component_YvjM3SoLvrM = () => {
 	useStyles(/* @__PURE__ */ qrl(i_JSvK9zVuQxw, "Root_JSvK9zVuQxw"));
 	return /* @__PURE__ */ qrl(i_JSvK9zVuQxw, "Root_JSvK9zVuQxw");

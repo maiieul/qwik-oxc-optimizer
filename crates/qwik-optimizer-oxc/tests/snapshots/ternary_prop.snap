@@ -15,6 +15,7 @@ export const Cmp = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_qsBJpzBk9q
 import { qrl } from "@qwik.dev/core";
 const i_RtcZLg0Jc1I = () => import("./test.tsx_handleClick$_RtcZLg0Jc1I");
 import { _jsxSorted } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
 export const Cmp_component_qsBJpzBk9qc = () => {
 	const toggleSig = useSignal(false);
 	const handleClick$ = /* @__PURE__ */ qrl(i_RtcZLg0Jc1I, "handleClick$_RtcZLg0Jc1I", [toggleSig]);

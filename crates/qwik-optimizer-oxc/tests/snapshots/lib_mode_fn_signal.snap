@@ -22,3 +22,4 @@ export const Counter_component_g2b301BY00s = () => {
 };
 
 === test.tsx_Counter_component_button_q_e_click_RfKynUVX1qo.ts === (ENTRY)
+export const Counter_component_button_q_e_click_RfKynUVX1qo = () => count.value++;

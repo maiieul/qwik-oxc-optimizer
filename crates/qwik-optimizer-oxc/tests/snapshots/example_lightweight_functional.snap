@@ -25,6 +25,7 @@ export const Foo_component_gZqPatVoDqw = (props) => {
 }
 
 === test.tsx_button_q_e_click_ODPc00H0FSA.tsx === (ENTRY)
-
+export const button_q_e_click_ODPc00H0FSA = () => console.log(text, color);
 
 === test.tsx_button_q_e_click_ODPc00H0FSA.tsx === (ENTRY)
+export const button_q_e_click_ODPc00H0FSA = () => console.log(text, color);

@@ -35,7 +35,7 @@ export const default_component_jN9ZUuuADmk = () => {
 }
 
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)
-
+export const default_component_button_q_e_click_zo9wkw0NBzs = () => await api()
 
 === DIAGNOSTICS ===
 [SourceError] `await` is only allowed within async functions and at the top levels of modules

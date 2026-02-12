@@ -461,6 +461,17 @@ pub(crate) struct DollarCallSite {
     pub parent_name: Option<String>,
 }
 
+/// The kind of import specifier (default, namespace, or named).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum ImportKind {
+    /// Default import: `import dep3 from "source"`
+    Default,
+    /// Namespace import: `import * as dep2 from "source"`
+    Namespace,
+    /// Named import: `import { foo } from "source"` or `import { bar as bbar } from "source"`
+    Named,
+}
+
 /// Recorded import declaration from the source module.
 #[derive(Debug, Clone)]
 #[allow(dead_code)]
@@ -471,6 +482,10 @@ pub(crate) struct ImportInfo {
     /// Named import specifiers (e.g., ["$", "component$", "useStore"]).
     /// These are LOCAL names (after any aliasing).
     pub specifiers: Vec<String>,
+
+    /// The kind of each specifier (default, namespace, or named).
+    /// Parallel to `specifiers` -- `specifier_kinds[i]` is the kind for `specifiers[i]`.
+    pub specifier_kinds: Vec<ImportKind>,
 
     /// Mapping from local_name -> imported_name for aliased specifiers.
     /// Only contains entries where local != imported (e.g., "myServer" -> "isServer").

@@ -17,6 +17,7 @@ import { qrl } from "@qwik.dev/core";
 const i_axfrT8CMT4s = () => import("./test.tsx_s_1_axfrT8CMT4s");
 const i_gyY7eQpsQgo = () => import("./test.tsx_FieldInput_component_input_q_e_focus_gyY7eQpsQgo");
 import { _jsxSorted } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
 export const FieldInput_component_O84bGdeej0g = () => {
 	const enabled = useSignal(false);
 	const input = useSignal("");
@@ -37,3 +38,6 @@ export const s_1_axfrT8CMT4s = (ev, el) => {
 };
 
 === test.tsx_FieldInput_component_input_q_e_focus_gyY7eQpsQgo.js === (ENTRY)
+export const FieldInput_component_input_q_e_focus_gyY7eQpsQgo = () => {
+	enabled.value = true;
+};

@@ -18,6 +18,8 @@ import { qrl } from "@qwik.dev/core";
 const i_MWp7oW4SJcQ = () => import("./test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ");
 const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA");
 import { _jsxSorted } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+import { Signal } from "@qwik.dev/core";
 export const Foo_component_gZqPatVoDqw = (function() {
 	const data = useSignal < Signal < any > [] > [];
 	const data2 = useSignal < Signal < any > [] > [];
@@ -29,6 +31,7 @@ export const Foo_component_gZqPatVoDqw = (function() {
 });
 
 === test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ.js === (ENTRY)
-
+export const Foo_component_p_q_e_click_MWp7oW4SJcQ = () => console.log(row.value.id, item.value.id);
 
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js === (ENTRY)
+export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(row.value.id);

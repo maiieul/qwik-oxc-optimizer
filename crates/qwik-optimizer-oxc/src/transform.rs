@@ -1002,6 +1002,27 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             let capture_result =
                 collector::compute_captures(&body_ident_refs, &body_local_decls, &self.collected);
 
+            // Convert reemitted_imports into ImportInfo entries for the segment's needed_imports.
+            // These imports will be emitted in the segment module by code_move.rs.
+            let needed_imports: Vec<crate::types::ImportInfo> = capture_result
+                .reemitted_imports
+                .iter()
+                .map(|ri| {
+                    let mut aliases = std::collections::HashMap::new();
+                    if let Some(ref imported) = ri.imported_name {
+                        aliases.insert(ri.local_name.clone(), imported.clone());
+                    }
+                    crate::types::ImportInfo {
+                        source: ri.source.clone(),
+                        specifiers: vec![ri.local_name.clone()],
+                        specifier_kinds: vec![ri.kind.clone()],
+                        specifier_aliases: aliases,
+                        is_qwik_core: false,
+                        span: (0, 0),
+                    }
+                })
+                .collect();
+
             if let Some(seg) = self
                 .segments
                 .iter_mut()
@@ -1015,6 +1036,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     seg.captures = !capture_result.capture_names.is_empty();
                     seg.capture_names = capture_result.capture_names.clone();
                 }
+                // Store needed imports for the segment module (applies to all segments,
+                // both top-level and nested)
+                seg.needed_imports = needed_imports;
             }
 
             let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
