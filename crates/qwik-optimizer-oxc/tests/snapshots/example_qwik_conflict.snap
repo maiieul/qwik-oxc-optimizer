@@ -29,7 +29,7 @@ export const Foo_component_gZqPatVoDqw = () => {
 	const qwik = hW + handleWatch;
 	console.log(qwik);
 	const qrl = 23;
-	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log(qrl) }, null, 3, "u6_0");
+	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA") }, null, 3, "u6_0");
 };
 
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js === (ENTRY)

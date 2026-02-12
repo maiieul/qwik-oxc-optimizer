@@ -31,8 +31,8 @@ import { qrl } from "@qwik.dev/core";
 const i_zo9wkw0NBzs = () => import("./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs");
 import { _jsxSorted } from "@qwik.dev/core";
 export const default_component_jN9ZUuuADmk = () => {
-	return /* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": () => await api() }, null, 3, "u6_0");
-}
+	return /* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": /* @__PURE__ */ qrl(i_zo9wkw0NBzs, "default_component_button_q_e_click_zo9wkw0NBzs") }, null, 3, "u6_0");
+};
 
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)
 export const default_component_button_q_e_click_zo9wkw0NBzs = () => await api()

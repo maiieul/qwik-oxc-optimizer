@@ -16,6 +16,6 @@ export const Child = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() 
 	useBrowserVisibleTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
 		state.count = thing.doStuff() + import("./sibling");
 	}, "useBrowserVisibleTask_0qCMfawldvU", [state]));
-	return <div onClick$={() => console.log(mongodb)}>
+	return <div onClick$={/* @__PURE__ */ inlinedQrl(() => console.log(mongodb), "Child_component_div_q_e_click_atbV2f006AU")}>
 		</div>;
 }, "Child_component_80js9RUUsfM"));

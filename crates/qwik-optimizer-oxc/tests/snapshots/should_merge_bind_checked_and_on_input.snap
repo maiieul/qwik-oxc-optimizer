@@ -22,9 +22,7 @@ import { useSignal } from "@qwik.dev/core";
 export const FieldInput_component_O84bGdeej0g = () => {
 	const localValue = useSignal(false);
 	return /* @__PURE__ */ _jsxSorted("input", null, {
-		"q-e:input": () => {
-			console.log("test");
-		},
+		"q-e:input": /* @__PURE__ */ qrl(i_0pI6Lozv5Ow, "FieldInput_component_input_q_e_input_0pI6Lozv5Ow"),
 		checked: localValue,
 		"q-e:input": inlinedQrl(_chk, "_chk", [localValue])
 	}, null, 3, "u6_0");

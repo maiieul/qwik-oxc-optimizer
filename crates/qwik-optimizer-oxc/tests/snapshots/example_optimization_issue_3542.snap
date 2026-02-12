@@ -12,7 +12,7 @@ export const AtomStatus = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQr
 	} else if (JSON.stringify(undefined) == JSON.stringify(undefined)) {
 		status = "WTFED";
 	}
-	return <span title={atom.ID} onClick$={(ev) => atomStatusClick(ctx, ev, [atom])} class={[
+	return <span title={atom.ID} onClick$={/* @__PURE__ */ inlinedQrl((ev) => atomStatusClick(ctx, ev, [atom]), "AtomStatus_component_span_q_e_click_umHjCmk9egM", [ctx, atom])} class={[
 		"atom",
 		status,
 		ctx.store[atom.ID] ? "selected" : null

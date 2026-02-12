@@ -32,34 +32,26 @@ export const App_component_XumqEURaLxI = () => {
 	const cart = useStore<string[]>([]);
 	const results = useSignal(["foo"]);
 	function loopArrowFn(results: string[]) {
-		return results.map((item) => /* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": (_, _1, item) => {
-			cart.push(item);
-		} }, item, 3, "u6_0"));
+		return results.map((item) => /* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart]) }, item, 3, "u6_0"));
 	}
 	function loopForI(results: string[]) {
 		const output = [];
 		for (let i = 0; i < results.length; i++) {
-			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": (_, _1, i) => {
-				cart.push(results[i]);
-			} }, results[i], 3, "u6_1"));
+			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart, results]) }, results[i], 3, "u6_1"));
 		}
 		return output;
 	}
 	function loopForOf(results: string[]) {
 		const output = [];
 		for (const item of results) {
-			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": (_, _1, item) => {
-				cart.push(item);
-			} }, item, 3, "u6_2"));
+			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart]) }, item, 3, "u6_2"));
 		}
 		return output;
 	}
 	function loopForIn(results: string[]) {
 		const output = [];
 		for (const key in results) {
-			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": (_, _1, key) => {
-				cart.push(results[key]);
-			} }, results[key], 3, "u6_3"));
+			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart, results]) }, results[key], 3, "u6_3"));
 		}
 		return output;
 	}
@@ -67,9 +59,7 @@ export const App_component_XumqEURaLxI = () => {
 		const output = [];
 		let i = 0;
 		while (i < results.length) {
-			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": (_, _1, i) => {
-				cart.push(results[i]);
-			} }, results[i], 3, "u6_4"));
+			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart, results]) }, results[i], 3, "u6_4"));
 			i++;
 		}
 		return output;
@@ -77,9 +67,7 @@ export const App_component_XumqEURaLxI = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, [
 		results.value.map((item) => /* @__PURE__ */ _jsxSorted("button", null, {
 			id: "second",
-			"q-e:click": (_, _1, item) => {
-				cart.push(item);
-			}
+			"q-e:click": /* @__PURE__ */ qrl(i_vbEaih0SxYg, "App_component_button_q_e_click_vbEaih0SxYg", [cart])
 		}, item, 3, "u6_5")),
 		loopArrowFn(results.value),
 		loopForI(results.value),

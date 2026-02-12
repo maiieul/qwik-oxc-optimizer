@@ -24,9 +24,7 @@ export const FieldInput_component_O84bGdeej0g = () => {
 	return /* @__PURE__ */ _jsxSorted("input", null, {
 		id: "input",
 		"q-e:input": enabled.value ? /* @__PURE__ */ qrl(i_axfrT8CMT4s, "s_1_axfrT8CMT4s", [input]) : undefined,
-		"q-e:focus": () => {
-			enabled.value = true;
-		}
+		"q-e:focus": /* @__PURE__ */ qrl(i_gyY7eQpsQgo, "FieldInput_component_input_q_e_focus_gyY7eQpsQgo", [enabled])
 	}, null, 3, "u6_0");
 };
 

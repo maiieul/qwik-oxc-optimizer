@@ -26,11 +26,9 @@ export const Parent_component_fxETLug1yE4 = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, [
 		/* @__PURE__ */ _jsxSorted("button", null, {
 			id: "first",
-			"q-e:click": () => results.value = ["item1", "item2"]
+			"q-e:click": /* @__PURE__ */ qrl(i_I5Xm0lRBfsc, "Parent_component_button_q_e_click_I5Xm0lRBfsc", [results])
 		}, null, 3, "u6_3"),
-		results.value.map((item, key) => /* @__PURE__ */ _jsxSorted("button", { id: "second-" + key }, { "q-e:click": () => {
-			cart.push(item);
-		} }, item, 3, "u6_0")),
+		results.value.map((item, key) => /* @__PURE__ */ _jsxSorted("button", { id: "second-" + key }, { "q-e:click": /* @__PURE__ */ qrl(i_I5Xm0lRBfsc, "Parent_component_button_q_e_click_I5Xm0lRBfsc", [cart]) }, item, 3, "u6_0")),
 		/* @__PURE__ */ _jsxSorted("ul", null, null, cart.map((item) => /* @__PURE__ */ _jsxSorted("li", null, null, /* @__PURE__ */ _jsxSorted("span", null, null, item, 3, "u6_1"), 3, "u6_2")), 3, "u6_4")
 	], 1, "u6_5");
 };

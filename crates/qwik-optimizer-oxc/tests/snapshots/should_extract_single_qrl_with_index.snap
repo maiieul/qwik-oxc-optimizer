@@ -32,18 +32,8 @@ export const App_component_XumqEURaLxI = () => {
 	const clickedIndex = useSignal < number | null > null;
 	return /* @__PURE__ */ _jsxSorted("div", null, null, data.value.map((row, idx) => /* @__PURE__ */ _jsxSorted("tr", null, { class: _fnSignal(_hf0, [row], _hf0_str) }, [
 		/* @__PURE__ */ _jsxSorted("td", null, { class: "col-md-1" }, row.value.id, 3, "u6_0"),
-		/* @__PURE__ */ _jsxSorted("td", null, { class: "col-md-4" }, /* @__PURE__ */ _jsxSorted("a", null, { "q-e:click": () => {
-			if (selectedItem.value) {
-				selectedItem.value.selected.value = false;
-			}
-			selectedItem.value = row.value;
-			row.value.selected.value = true;
-			clickedIndex.value = idx;
-		} }, row.value.label.value, 3, "u6_1"), 3, "u6_2"),
-		/* @__PURE__ */ _jsxSorted("td", null, { class: "col-md-1" }, /* @__PURE__ */ _jsxSorted("a", null, { "q-e:click": () => {
-			const dataValue = untrack(() => data.value);
-			data.value = dataValue.toSpliced(dataValue.findIndex((d) => d.value.id === row.value.id), 1);
-		} }, /* @__PURE__ */ _jsxSorted("span", null, { "aria-hidden": "true" }, "x", 3, "u6_3"), 3, "u6_4"), 3, "u6_5"),
+		/* @__PURE__ */ _jsxSorted("td", null, { class: "col-md-4" }, /* @__PURE__ */ _jsxSorted("a", null, { "q-e:click": /* @__PURE__ */ qrl(i_7dJ1fH050Bg, "App_component_a_q_e_click_7dJ1fH050Bg", [selectedItem, clickedIndex]) }, row.value.label.value, 3, "u6_1"), 3, "u6_2"),
+		/* @__PURE__ */ _jsxSorted("td", null, { class: "col-md-1" }, /* @__PURE__ */ _jsxSorted("a", null, { "q-e:click": /* @__PURE__ */ qrl(i_7dJ1fH050Bg, "App_component_a_q_e_click_7dJ1fH050Bg", [data]) }, /* @__PURE__ */ _jsxSorted("span", null, { "aria-hidden": "true" }, "x", 3, "u6_3"), 3, "u6_4"), 3, "u6_5"),
 		/* @__PURE__ */ _jsxSorted("td", null, { class: "col-md-6" }, null, 3, "u6_6")
 	], 1, untrack(() => row.value.id))), 3, "u6_7");
 };

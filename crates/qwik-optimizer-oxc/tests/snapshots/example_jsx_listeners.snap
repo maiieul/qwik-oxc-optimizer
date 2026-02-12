@@ -45,19 +45,19 @@ import { _jsxSorted } from "@qwik.dev/core";
 export const Foo_T0dY5k6mBgU = () => {
 	const handler = /* @__PURE__ */ qrl(i_u4Tb48t5JC8, "handler_u4Tb48t5JC8");
 	return /* @__PURE__ */ _jsxSorted("div", null, {
-		"q-e:click": () => console.log("onClick$"),
-		"q-e:documentscroll": () => console.log("onDocumentScroll"),
-		"q-e:documentscroll": () => console.log("onWindowScroll"),
-		"q-e:-click": () => console.log("on-cLick$"),
-		"q-e:document-scroll": () => console.log("onDocument-sCroll"),
-		"q-e:document-scroll": () => console.log("onDocument-scroLL"),
-		"host:onClick$": () => console.log("host:onClick$"),
-		"host:onDocumentScroll$": () => console.log("host:onDocument:scroll"),
-		"host:onDocumentScroll$": () => console.log("host:onWindow:scroll"),
+		"q-e:click": /* @__PURE__ */ qrl(i_KKzu5KN5Myk, "Foo_div_q_e_click_KKzu5KN5Myk"),
+		"q-e:documentscroll": /* @__PURE__ */ qrl(i_o1AVWCNjT0c, "Foo_div_q_e_documentscroll_o1AVWCNjT0c"),
+		"q-e:documentscroll": /* @__PURE__ */ qrl(i_o1AVWCNjT0c, "Foo_div_q_e_documentscroll_o1AVWCNjT0c"),
+		"q-e:-click": /* @__PURE__ */ qrl(i_7EsQAjtgDrQ, "Foo_div_q_e_-click_7EsQAjtgDrQ"),
+		"q-e:document-scroll": /* @__PURE__ */ qrl(i_SgoZQWmAm94, "Foo_div_q_e_document-scroll_SgoZQWmAm94"),
+		"q-e:document-scroll": /* @__PURE__ */ qrl(i_SgoZQWmAm94, "Foo_div_q_e_document-scroll_SgoZQWmAm94"),
+		"host:onClick$": /* @__PURE__ */ qrl(i_KKzu5KN5Myk, "Foo_div_q_e_click_KKzu5KN5Myk"),
+		"host:onDocumentScroll$": /* @__PURE__ */ qrl(i_o1AVWCNjT0c, "Foo_div_q_e_documentscroll_o1AVWCNjT0c"),
+		"host:onDocumentScroll$": /* @__PURE__ */ qrl(i_o1AVWCNjT0c, "Foo_div_q_e_documentscroll_o1AVWCNjT0c"),
 		"q-e:keyup": handler,
 		"q-e:document:keyup": handler,
 		"q-e:window:keyup": handler,
-		"custom$": () => console.log("custom")
+		"custom$": /* @__PURE__ */ qrl(i_Co0pSPo5J9E, "Foo_div_custom_Co0pSPo5J9E")
 	}, null, 3, "u6_0");
 };
 

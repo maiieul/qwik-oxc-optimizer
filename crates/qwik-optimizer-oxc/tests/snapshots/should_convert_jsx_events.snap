@@ -28,14 +28,14 @@ const i_KoKtNDq0WI4 = () => import("./test.tsx_ManyEventsComponent_component_but
 import { _jsxSorted } from "@qwik.dev/core";
 export const ManyEventsComponent_component_d0rUoq0Y7Qo = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, [/* @__PURE__ */ _jsxSorted("button", null, {
-		"q-e:click": () => {},
-		"q-e:dblclick": () => {}
+		"q-e:click": /* @__PURE__ */ qrl(i_ygm370W5KJY, "ManyEventsComponent_component_button_q_e_click_ygm370W5KJY"),
+		"q-e:dblclick": /* @__PURE__ */ qrl(i_ragb1RcWs04, "ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04")
 	}, "click", 3, "u6_0"), /* @__PURE__ */ _jsxSorted("button", null, {
-		"q-e:click": () => {},
-		"q-e:blur": () => {},
-		"q-e:-anothercustom": () => {},
-		"q-d:focus": () => {},
-		"q-w:click": () => {}
+		"q-e:click": /* @__PURE__ */ qrl(i_ygm370W5KJY, "ManyEventsComponent_component_button_q_e_click_ygm370W5KJY"),
+		"q-e:blur": /* @__PURE__ */ qrl(i_fzYpgq8WW04, "ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04"),
+		"q-e:-anothercustom": /* @__PURE__ */ qrl(i_HCrpsbAaSvc, "ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc"),
+		"q-d:focus": /* @__PURE__ */ qrl(i_p9PdBU5LvjE, "ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE"),
+		"q-w:click": /* @__PURE__ */ qrl(i_KoKtNDq0WI4, "ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4")
 	}, "click", 3, "u6_1")], 1, "u6_2");
 };
 

@@ -6,6 +6,6 @@ expression: output
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
-	return <div onClick$={() => console.log(mongodb)}>
+	return <div onClick$={/* @__PURE__ */ inlinedQrl(() => console.log(mongodb), "default_component_div_q_e_click_MfKHh3bA4so")}>
 		</div>;
 }, "default_component_NUmxKsP6YN0"));

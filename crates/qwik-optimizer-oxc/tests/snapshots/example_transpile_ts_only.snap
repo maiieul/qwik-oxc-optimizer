@@ -8,6 +8,6 @@ import { inlinedQrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((props: Stuff) => {
 	return <Cmp>
-			<p class="stuff" onClick$={() => console.log("warn")}>Hello Qwik</p>
+			<p class="stuff" onClick$={/* @__PURE__ */ inlinedQrl(() => console.log("warn"), "App_component_p_q_e_click_0VoFXPYUR5E")}>Hello Qwik</p>
 		</Cmp>;
 }, "App_component_XumqEURaLxI"));

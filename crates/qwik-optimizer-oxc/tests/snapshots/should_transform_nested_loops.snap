@@ -23,7 +23,7 @@ import { Signal } from "@qwik.dev/core";
 export const Foo_component_gZqPatVoDqw = (function() {
 	const data = useSignal < Signal < any > [] > [];
 	const data2 = useSignal < Signal < any > [] > [];
-	return /* @__PURE__ */ _jsxSorted("div", null, null, data.value.map((row) => /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log(row.value.id) }, data2.value.map((item) => /* @__PURE__ */ _jsxSorted("p", null, { "q-e:click": () => console.log(row.value.id, item.value.id) }, [
+	return /* @__PURE__ */ _jsxSorted("div", null, null, data.value.map((row) => /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA") }, data2.value.map((item) => /* @__PURE__ */ _jsxSorted("p", null, { "q-e:click": /* @__PURE__ */ qrl(i_MWp7oW4SJcQ, "Foo_component_p_q_e_click_MWp7oW4SJcQ") }, [
 		row.value.id,
 		"-",
 		item.value.id

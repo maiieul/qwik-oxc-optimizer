@@ -69,7 +69,7 @@ export const s__Ma8uJBKLX2o = () => {
 	const v1 = _captures[17];
 	const v2 = _captures[18];
 	const v3 = _captures[19];
-	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => state.count += count + total }, [
+	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_BvZjBcCes4s, "s__div_q_e_click_BvZjBcCes4s", [state, count]) }, [
 		I2,
 		I3,
 		I4,

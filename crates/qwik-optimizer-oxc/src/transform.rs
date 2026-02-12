@@ -143,6 +143,25 @@ pub(crate) struct QwikTransform {
 
     /// Original source code, used for extracting JSX lambda body code by span.
     source_code: String,
+
+    /// JSX event handler replacement info, keyed by lambda expression span start.
+    /// When the JSX transform encounters an event handler attribute whose value
+    /// expression has a span start in this map, it replaces the value with
+    /// a `qrl()` or `inlinedQrl()` call instead of keeping the raw lambda.
+    jsx_event_replacements: std::collections::HashMap<u32, JsxEventReplacement>,
+}
+
+/// Info needed to build a qrl()/inlinedQrl() call for a JSX event handler.
+#[derive(Debug, Clone)]
+pub(crate) struct JsxEventReplacement {
+    /// The segment name (e.g., "test_div_q_e_click_abc123")
+    pub segment_name: String,
+    /// The segment hash (e.g., "abc123")
+    pub hash: String,
+    /// Captured variable names
+    pub capture_names: Vec<String>,
+    /// Whether to use inlinedQrl (true) or qrl (false)
+    pub is_inline: bool,
 }
 
 impl QwikTransform {
@@ -172,6 +191,7 @@ impl QwikTransform {
             pending_segment_qrl_imports: Vec::new(),
             has_custom_jsx_import_source: false,
             source_code: source_code.to_string(),
+            jsx_event_replacements: std::collections::HashMap::new(),
         }
     }
 
@@ -703,6 +723,23 @@ impl QwikTransform {
                                             .push((seg_span_0, body_code));
                                     }
                                 }
+
+                                // Record replacement info so the JSX transform can
+                                // replace the raw lambda with qrl()/inlinedQrl().
+                                let seg_info = self.segments.iter()
+                                    .find(|s| s.span.0 == seg_span_0)
+                                    .cloned();
+                                if let Some(seg_info) = seg_info {
+                                    self.jsx_event_replacements.insert(
+                                        span.0,
+                                        JsxEventReplacement {
+                                            segment_name: seg_info.name.clone(),
+                                            hash: seg_info.hash.clone(),
+                                            capture_names: seg_info.capture_names.clone(),
+                                            is_inline,
+                                        },
+                                    );
+                                }
                             }
                         }
                     }
@@ -747,6 +784,145 @@ impl QwikTransform {
                 .strip_prefix(&format!("{}_", self.filename))
                 .unwrap_or(parent_ctx);
             format!("{}_{}_{}", parent, element_name, event_suffix)
+        }
+    }
+
+    /// Replace JSX event handler lambda expressions with qrl()/inlinedQrl() calls.
+    ///
+    /// Walks a JSXElement (recursively including children) and replaces any
+    /// `$`-suffixed attribute values whose lambda span matches a registered
+    /// segment replacement with the appropriate `qrl(i_hash, "name", [caps])`
+    /// or `inlinedQrl(fn, "name", [caps])` call.
+    fn replace_jsx_event_handler_values<'a>(
+        &mut self,
+        expr: &mut Expression<'a>,
+        ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        match expr {
+            Expression::JSXElement(el) => {
+                self.replace_jsx_element_handlers(el, ctx);
+            }
+            Expression::JSXFragment(frag) => {
+                self.replace_jsx_children_handlers(&mut frag.children, ctx);
+            }
+            _ => {}
+        }
+    }
+
+    /// Replace event handler lambdas in a JSXElement and recurse into children.
+    fn replace_jsx_element_handlers<'a>(
+        &mut self,
+        el: &mut JSXElement<'a>,
+        ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // Process this element's attributes
+        for attr_item in &mut el.opening_element.attributes {
+            if let JSXAttributeItem::Attribute(attr) = attr_item {
+                let attr_name = match &attr.name {
+                    JSXAttributeName::Identifier(ident) => ident.name.as_str().to_string(),
+                    JSXAttributeName::NamespacedName(ns) => {
+                        format!("{}:{}", ns.namespace.name, ns.name.name)
+                    }
+                };
+
+                if !attr_name.ends_with('$') {
+                    continue;
+                }
+
+                // Check if the value expression has a registered replacement
+                let lambda_span_start = attr.value.as_ref().and_then(|val| {
+                    if let JSXAttributeValue::ExpressionContainer(container) = val {
+                        match &container.expression {
+                            JSXExpression::ArrowFunctionExpression(arrow) => {
+                                Some(arrow.span.start)
+                            }
+                            JSXExpression::FunctionExpression(func) => Some(func.span.start),
+                            _ => None,
+                        }
+                    } else {
+                        None
+                    }
+                });
+
+                if let Some(span_start) = lambda_span_start {
+                    if let Some(info) = self.jsx_event_replacements.get(&span_start).cloned() {
+                        let replacement = if info.is_inline {
+                            // inlinedQrl(handler_expr, "name", [captures])
+                            let handler_expr =
+                                if let Some(val) = std::mem::take(&mut attr.value) {
+                                    match val {
+                                        JSXAttributeValue::ExpressionContainer(container) => {
+                                            let unboxed = container.unbox();
+                                            match unboxed.expression {
+                                                JSXExpression::ArrowFunctionExpression(arrow) => {
+                                                    Expression::ArrowFunctionExpression(arrow)
+                                                }
+                                                JSXExpression::FunctionExpression(func) => {
+                                                    Expression::FunctionExpression(func)
+                                                }
+                                                _ => ctx
+                                                    .ast
+                                                    .expression_identifier(SPAN, "undefined"),
+                                            }
+                                        }
+                                        _ => ctx.ast.expression_identifier(SPAN, "undefined"),
+                                    }
+                                } else {
+                                    ctx.ast.expression_identifier(SPAN, "undefined")
+                                };
+                            import_rewrite::build_inlined_qrl_call(
+                                handler_expr,
+                                &info.segment_name,
+                                &info.capture_names,
+                                ctx,
+                            )
+                        } else {
+                            // qrl(i_hash, "name", [captures]) -- segment strategy
+                            let import_ident = format!("i_{}", info.hash);
+                            // Drop the original lambda value
+                            let _ = std::mem::take(&mut attr.value);
+                            import_rewrite::build_qrl_call(
+                                &import_ident,
+                                &info.segment_name,
+                                &info.capture_names,
+                                ctx,
+                            )
+                        };
+
+                        // Wrap the replacement in a JSXExpressionContainer
+                        let container = ctx.ast.jsx_expression_container(
+                            SPAN,
+                            JSXExpression::from(replacement),
+                        );
+                        attr.value = Some(JSXAttributeValue::ExpressionContainer(
+                            ctx.ast.alloc(container),
+                        ));
+                    }
+                }
+            }
+        }
+
+        // Recurse into children (JSXChild elements are part of the parent AST node,
+        // not separate expressions, so they don't get their own exit_expression)
+        self.replace_jsx_children_handlers(&mut el.children, ctx);
+    }
+
+    /// Recurse into JSX children to replace event handler lambdas.
+    fn replace_jsx_children_handlers<'a>(
+        &mut self,
+        children: &mut oxc::allocator::Vec<'a, JSXChild<'a>>,
+        ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        for child in children.iter_mut() {
+            match child {
+                JSXChild::Element(child_el) => {
+                    self.replace_jsx_element_handlers(child_el, ctx);
+                }
+                JSXChild::Fragment(frag) => {
+                    self.replace_jsx_children_handlers(&mut frag.children, ctx);
+                }
+                _ => {}
+            }
         }
     }
 }
@@ -857,6 +1033,12 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 }
             }
             _ => {}
+        }
+
+        // Replace JSX event handler lambda expressions with qrl()/inlinedQrl() calls
+        // BEFORE the JSX transform runs, so the _jsxSorted output has the correct values.
+        if !self.jsx_event_replacements.is_empty() {
+            self.replace_jsx_event_handler_values(expr, ctx);
         }
 
         if self.options.transpile_jsx {

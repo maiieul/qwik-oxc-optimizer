@@ -17,7 +17,7 @@ const i_DIVjyCI2VsA = () => import("./src/routes/_repl/[id]/[[...slug]].tsx_defa
 import { _jsxSorted } from "@qwik.dev/core";
 import { sibling } from "./sibling";
 export const default_component_rMtkV4ZNQIA = () => {
-	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log(mongodb, sibling) }, null, 3, "u6_0");
+	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_DIVjyCI2VsA, "default_component_div_q_e_click_DIVjyCI2VsA") }, null, 3, "u6_0");
 };
 
 === src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA.js === (ENTRY)

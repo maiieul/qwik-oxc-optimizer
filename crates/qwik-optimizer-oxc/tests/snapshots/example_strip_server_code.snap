@@ -36,7 +36,7 @@ export const Parent_component_fxETLug1yE4 = () => {
 	serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw"));
 	serverLoaderQrl(/* @__PURE__ */ _noopQrl("serverLoader_kkNmag62Eb0"));
 	useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc"));
-	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log("parent") }, state.text, 3, "u6_0");
+	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_N8VjxooYvus, "Parent_component_div_q_e_click_N8VjxooYvus") }, state.text, 3, "u6_0");
 };
 
 === test.tsx_useTask_ZxfKmWQYEwc.js === (ENTRY)

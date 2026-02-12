@@ -32,7 +32,7 @@ export const Cmp_component_qsBJpzBk9qc = () => {
 			id: "third",
 			dangerouslySetInnerHTML: _wrapProp(htmlSignal),
 			class: "after"
-		}, null, 3, "u6_4"), /* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": () => htmlSignal.value = "<h2><span>I'm a updated signal value!</span></h2>" }, null, 3, "u6_5")], 1, "u6_6")
+		}, null, 3, "u6_4"), /* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": /* @__PURE__ */ qrl(i_hiQTyBUK0Yk, "Cmp_component_button_q_e_click_hiQTyBUK0Yk", [htmlSignal]) }, null, 3, "u6_5")], 1, "u6_6")
 	], 1, "u6_7");
 };
 

@@ -13,7 +13,7 @@ export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_PS0fTRVnPOE, "
 import { qrl } from "@qwik.dev/core";
 const i_41GceC3v3n8 = () => import("./src/components/mongo/404.tsx_default_component_div_q_e_click_41GceC3v3n8");
 export const default_component_PS0fTRVnPOE = () => {
-	return <div onClick$={() => console.log(mongodb)}>
+	return <div onClick$={/* @__PURE__ */ qrl(i_41GceC3v3n8, "default_component_div_q_e_click_41GceC3v3n8")}>
 		</div>;
 }
 

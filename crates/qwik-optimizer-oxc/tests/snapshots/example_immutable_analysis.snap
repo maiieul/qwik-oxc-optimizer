@@ -53,13 +53,11 @@ export const App_component_XumqEURaLxI = (props) => {
 			]
 		}, {
 			"q-e:click": props.onClick$,
-			"q-e:event": () => console.log("stuff"),
-			"transparent$": () => {
-				console.log("stuff");
-			},
+			"q-e:event": /* @__PURE__ */ qrl(i_j3XFTutAFbA, "App_component___q_e_event_j3XFTutAFbA"),
+			"transparent$": /* @__PURE__ */ qrl(i_R37Ah6P7YK8, "App_component___transparent_R37Ah6P7YK8"),
 			immutable1: "stuff",
 			immutable3: 2,
-			"immutable4$": (ev) => console.log(state.count)
+			"immutable4$": /* @__PURE__ */ qrl(i_fo6pletGN1s, "App_component___immutable4_fo6pletGN1s", [state])
 		}, /* @__PURE__ */ _jsxSorted("p", null, null, "Hello Qwik", 3, "u6_2"), 3, "u6_3"),
 		[].map(() => /* @__PURE__ */ _jsxSorted(Model, {
 			class: state,

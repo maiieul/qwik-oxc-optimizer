@@ -10,6 +10,6 @@ import { useStore } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((props) => {
 	return /* @__PURE__ */ _jsxSorted(Cmp, null, null, /* @__PURE__ */ _jsxSorted("p", null, {
 		class: "stuff",
-		"q-e:click": () => console.log("warn")
+		"q-e:click": /* @__PURE__ */ inlinedQrl(() => console.log("warn"), "App_component_p_q_e_click_0VoFXPYUR5E")
 	}, "Hello Qwik", 3, "u6_0"), 3, "u6_1");
 }, "App_component_XumqEURaLxI"));
