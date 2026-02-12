@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 23 of 26 (Output Audit)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-02-11 -- v6.0 roadmap created
+Plan: 1 of 2 in current phase
+Status: Executing
+Last activity: 2026-02-12 -- Plan 01 complete (output audit)
 
 Progress: [####################..........] 22/26 phases (v1.0-v5.0 shipped, v6.0 started)
 
@@ -43,12 +43,20 @@ Progress: [####################..........] 22/26 phases (v1.0-v5.0 shipped, v6.0
 - Average duration: 7min
 - Total execution time: ~21min
 
+**Velocity (v6.0):**
+
+| Phase | Plan | Duration | Tasks | Files |
+|-------|------|----------|-------|-------|
+| 23    | 01   | 2min     | 1     | 2     |
+
 ## Accumulated Context
 
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
 Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking deviations" (pending).
+- 23-01: Hash stripping uses last-underscore heuristic for module path matching
+- 23-01: Three-tier module matching: exact path, structural (hash-stripped), metadata fallback
 
 ### Pending Todos
 
@@ -56,12 +64,12 @@ None.
 
 ### Blockers/Concerns
 
-- Test harness only validates module count and 3 metadata fields -- actual JS output never compared to spec expected output
+- Output audit found 499 deviations across 161/162 specs (5 module count, 359 code, 135 unmatched)
 - 16 capture analysis deviations may include runtime-breaking missing captures
 - 3 diagnostic deviations (class capture warnings, invalid segment errors, missing inlined function errors)
 
 ## Session Continuity
 
-Last session: 2026-02-11
-Stopped at: v6.0 roadmap created, ready to plan Phase 23
+Last session: 2026-02-12
+Stopped at: Completed 23-01-PLAN.md (output audit)
 Resume file: None
