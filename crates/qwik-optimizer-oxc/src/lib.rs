@@ -243,6 +243,7 @@ pub fn transform_modules(
                 } else {
                     // Diagnostic: non-stripped segment has no body code
                     all_diagnostics.push(Diagnostic {
+                        scope: "optimizer".to_string(),
                         message: format!(
                             "Segment '{}' (ctx: {}) has no body code - segment module will be empty",
                             seg.display_name, seg.ctx_name

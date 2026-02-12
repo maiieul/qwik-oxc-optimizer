@@ -348,6 +348,9 @@ pub enum CtxKind {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Diagnostic {
+    /// Scope identifier matching SWC wire format (always "optimizer").
+    pub scope: String,
+
     /// The diagnostic category.
     pub category: DiagnosticCategory,
 
