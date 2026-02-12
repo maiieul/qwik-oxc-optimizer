@@ -65,7 +65,7 @@ Full details: `milestones/v4.0-ROADMAP.md`
 
 **Milestone Goal:** Fix all output compatibility issues so the OXC optimizer can replace the SWC optimizer at runtime.
 
-- [ ] **Phase 20: Path Resolution** - Fix canonical filenames, explicit extensions, and output file extensions
+- [x] **Phase 20: Path Resolution** - Fix canonical filenames, explicit extensions, and output file extensions (completed 2026-02-12)
 - [ ] **Phase 21: Import Correctness** - Strip consumed $-imports and scope Qrl-suffixed imports to correct modules
 - [ ] **Phase 22: Display Names and Annotations** - Fix nested segment display names and PURE annotation placement
 
@@ -83,7 +83,7 @@ Full details: `milestones/v4.0-ROADMAP.md`
 **Plans**: 1 plan
 
 Plans:
-- [ ] 20-01-PLAN.md -- Fix path resolution logic and add tests (PATH-01 through PATH-04)
+- [x] 20-01-PLAN.md -- Fix path resolution logic and add tests (PATH-01 through PATH-04)
 
 ### Phase 21: Import Correctness
 **Goal**: Main module and segment modules contain only the imports they actually need
@@ -137,7 +137,7 @@ Phases execute in numeric order: 20 -> 21 -> 22
 | 17. Extract JSX Transform | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 18. const_replace VisitMut Rewrite | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 19. Spec Compliance Verification | v4.0 | 1/1 | Complete | 2026-02-11 |
-| 20. Path Resolution | v5.0 | 0/1 | Not started | - |
+| 20. Path Resolution | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 21. Import Correctness | v5.0 | 0/? | Not started | - |
 | 22. Display Names and Annotations | v5.0 | 0/? | Not started | - |
 
