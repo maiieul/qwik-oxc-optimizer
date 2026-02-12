@@ -398,7 +398,7 @@
     },
     {
       "actual_code_normalized": "export const Header_QrzcmFeRo0o = (decl1, { decl2 }, [decl3]) => { const { decl4, key: decl5 } = this; let [decl6, ...decl7] = stuff; const decl8 = 1, decl9; function decl10(decl11, { decl12 }, [decl13]) {} class decl14 { method(decl15, { decl16 }, [decl17]) {} } try {} catch (decl18) {} try {} catch ({ decl19 }) {} }",
-      "diff_summary": "const/let/var diff: expected {\"let\": 1, \"const\": 2}, actual {\"let\": 1, \"const\": 3}",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"let\": 1}, actual {\"let\": 1, \"const\": 3}",
       "expected_code_normalized": "export const Header_WjUaUQN7Oxg = (decl1, { decl2 }, [decl3])=>{ const { decl4, key: decl5 } = this; let [decl6, ...decl7] = stuff; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Header_QrzcmFeRo0o.tsx",
@@ -1883,7 +1883,7 @@
     },
     {
       "actual_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { inlinedQrl } from \"@qwik.dev/core\"; export const AtomStatus = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => { let status = _rawProps.atom.status; if (!_rawProps.atom.real) { status = \"WILL-VANISH\"; } else if (JSON.stringify(undefined) == JSON.stringify(undefined)) { status = \"WTFED\"; } return <span title={atom.ID} onClick$={/* @__PURE__ */ inlinedQrl((ev) => atomStatusClick(ctx, ev, [atom]), \"AtomStatus_component_span_q_e_click_umHjCmk9egM\", [ctx, atom])} class={[ \"atom\", status, ctx.store[atom.ID] ? \"selected\" : null ]}> </span>; }, \"AtomStatus_component_BHJ0BemzHIo\"));",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"let\": 1}, actual {\"const\": 1, \"let\": 1}; missing imports: 1",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"let\": 1}, actual {\"let\": 1, \"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { inlinedQrl } from \"@qwik.dev/core\"; export const AtomStatus = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((_rawProps)=>{ let status = _rawProps.atom.status; if (!_rawProps.atom.real) status = \"WILL-VANISH\"; else if (JSON.stringify(_rawProps.atom.atom) == JSON.stringify(_rawProps.atom.real)) status = \"WTFED\"; return <span title={_rawProps.atom.ID} q-e:click={/*#__PURE__*/ inlinedQrl((ev)=>{ const _rawProps = _captures[0]; return atomStatusClick(_rawProps.ctx, ev, [ _rawProps.atom ]); }, \"AtomStatus_component_span_q_e_click_0yqKAycyBF0\", [ _rawProps ])} class={[ \"atom\", status, _rawProps.ctx.store[_rawProps.atom.ID] ? \"selected\" : null ]}> </span>; }, \"AtomStatus_component_hdwpoUtydSA\"));",
       "match_type": "exact_path",
       "module_path_actual": "test.jsx",
@@ -2513,7 +2513,7 @@
     },
     {
       "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const i_XumqEURaLxI = () => import(\"./test.tsx_App_component_XumqEURaLxI\"); export enum Thing { A, B } export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, \"App_component_XumqEURaLxI\"));",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"var\": 1}, actual {\"const\": 2}; extra imports: 3",
+      "diff_summary": "const/let/var diff: expected {\"var\": 1, \"const\": 2}, actual {\"const\": 2}; extra imports: 3",
       "expected_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_ckEPmXZlub0 = ()=>import(\"./test.tsx_App_component_ckEPmXZlub0\"); export var Thing = /*#__PURE__*/ function(Thing) { Thing[Thing[\"A\"] = 0] = \"A\"; Thing[Thing[\"B\"] = 1] = \"B\"; return Thing; }({}); export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, \"App_component_ckEPmXZlub0\"));",
       "match_type": "exact_path",
       "module_path_actual": "test.js",
@@ -4322,7 +4322,7 @@
     },
     {
       "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; const _hf0 = (p0) => p0.myobj.id + \"test\"; const _hf0_str = \"p0.myobj.id+\\\"test\\\"\"; export const default_component_jN9ZUuuADmk = (props) => { const item = props.something.count; return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(\"div\", { data-no-wrap: item ? item * 2 : null }, { \"data-wrap\": _fnSignal(_hf0, [props], _hf0_str) }, null, 3, \"u6_0\"), 3, \"u6_1\"); }",
-      "diff_summary": "const/let/var diff: expected {\"var\": 1, \"const\": 4}, actual {\"const\": 4}",
+      "diff_summary": "const/let/var diff: expected {\"const\": 4, \"var\": 1}, actual {\"const\": 4}",
       "expected_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; const _hf0 = (p0)=>p0.myobj.id + \"test\"; const _hf0_str = 'p0.myobj.id+\"test\"'; export const test_component_LUXeXe0DQrg = (props)=>{ // not destructure it so it is a var prop const item = props.something.count; return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, /*#__PURE__*/ _jsxSorted(\"div\", { \"data-no-wrap\": item ? item * 2 : null, \"data-wrap\": _fnSignal(_hf0, [props], _hf0_str) }, null, null, 3, null), 1, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_jN9ZUuuADmk.js",

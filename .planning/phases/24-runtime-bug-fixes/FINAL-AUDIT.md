@@ -2,34 +2,26 @@
 
 ## Executive Summary
 
-| Metric | Phase 23 (Before) | Plan 04 (Mid) | Plan 06 (Round 1) | Plan 09 (Final) | Total Change |
-|--------|-------------------|---------------|-------------------|-----------------|--------------|
-| Total specs audited | 162 | 162 | 162 | 162 | -- |
-| Specs errored (optimizer failure) | 0 | 0 | 0 | 0 | -- |
-| Total deviation records | 499 | 502 | 502 | 502 | +3* |
-| **Runtime-breaking deviations** | **293** | **56** | **10** | **5** | **-288 (-98%)** |
-| Cosmetic deviations | 206 | 446 | 492 | 497 | +291** |
+| Metric | Phase 23 (Before) | Plan 04 (Mid) | Plan 06 (Round 1) | Plan 09 (Round 2) | Plan 11 (Round 3) | Total Change |
+|--------|-------------------|---------------|-------------------|-------------------|-------------------|--------------|
+| Total specs audited | 162 | 162 | 162 | 162 | 162 | -- |
+| Specs errored (optimizer failure) | 0 | 0 | 0 | 0 | 0 | -- |
+| Total deviation records | 499 | 502 | 502 | 502 | 501 | +2* |
+| **Runtime-breaking deviations** | **293** | **56** | **10** | **5** | **4** | **-289 (-99%)** |
+| Cosmetic deviations | 206 | 446 | 492 | 497 | 497 | +291** |
 
 \* Total deviation count increased because the audit now detects import differences more granularly after the fixes.
 
 \** Many deviations reclassified from runtime-breaking to cosmetic after fixing the underlying issues. Plan 05's capture analysis fix resolved 46 of 52 missing-import-used deviations. Plans 07-08 resolved 5 more (pattern defaults, TS enums, default exports, JSX import source).
 
-## Runtime-Breaking Deviations: 293 --> 5
+## Runtime-Breaking Deviations: 293 --> 4
 
-### Remaining Runtime-Breaking Issues (5)
+### Remaining Runtime-Breaking Issues (4)
 
 | Category | Count | Description | Root Cause |
 |----------|-------|-------------|------------|
-| missing-import-used | 1 | Segment body references `api` but does not import it | `export const api = server$(...)` not tracked as module-level declaration (QRL wrapper call pattern) |
+| missing-import-used | 0 | -- | All resolved (Plan 10 fixed the last one) |
 | truly-missing-module | 4 | Expected module not generated (2 in example_qwik_react, 2 in relative_paths) | Pre-compiled QRL code with embedded segments that the optimizer cannot reverse-engineer |
-
-### Missing Import Details (1 deviation in 1 spec)
-
-| Spec | Module | Missing Symbol | Root Cause |
-|------|--------|---------------|------------|
-| example_drop_side_effects | test.tsx_default_component_button_q_e_click | `api` | `export const api = server$(...)` -- the variable is assigned from a QRL wrapper function call, which is not recognized as a module-level declaration. SWC expected output: `import { api } from "./test"` |
-
-**Why this remains:** The `api` variable is exported and assigned via `server$(() => {...})`, a QRL wrapper call. The module-level declaration collector recognizes `const/let/var` declarations, function declarations, class declarations, and TS enum declarations -- but not variable declarations whose initializer is a function call result. Fixing this would require recognizing `server$`/`serverQrl` return values as module-level declarations, which risks over-capturing non-deterministic function call results. This is an accepted limitation.
 
 ### Truly Missing Modules (4 deviations in 2 specs)
 
@@ -113,7 +105,7 @@ Plan 05 fixed 46 of 52 missing-import-used deviations by reclassifying module-le
 **After Plan 05:** 10 runtime-breaking (6 missing-import-used + 4 truly-missing-module)
 **Improvement:** -46 runtime-breaking deviations (-82% of Plan 04 count)
 
-## Gap Closure Round 2: Plans 07-08 Impact Analysis
+## Gap Closure Round 2: Plans 07-08 Impact Analysis (5 fixed)
 
 Plans 07 and 08 targeted the 6 remaining missing-import-used deviations identified in Plan 06's audit:
 
@@ -128,32 +120,50 @@ Plans 07 and 08 targeted the 6 remaining missing-import-used deviations identifi
 **After Plans 07-08:** 5 runtime-breaking (1 missing-import-used + 4 truly-missing-module)
 **Improvement:** -5 runtime-breaking deviations (5 of 6 missing-import-used resolved)
 
-**Remaining edge case:** `example_drop_side_effects` -- the `api` symbol defined via `export const api = server$(...)` is a module-level export assigned from a QRL wrapper function call. The collector does not track function-call-result variable assignments as module-level declarations because doing so would risk capturing non-deterministic call results (e.g., `const x = Math.random()`). This is an accepted limitation.
+**Remaining edge case (at the time):** `example_drop_side_effects` -- the `api` symbol defined via `export const api = server$(...)` was a module-level export assigned from a QRL wrapper function call. This was fixed in Plan 10 (see Round 3 below).
+
+## Gap Closure Round 3: Plan 10 Impact Analysis (1 fixed)
+
+Plan 10 targeted two issues: display name collisions and the last missing-import-used deviation.
+
+| Fix | Plan | Specs Fixed | Symbols | Approach |
+|-----|------|-------------|---------|----------|
+| Display name collisions | 10 | example_1 (and others) | renderHeader, renderHeader_component, etc. | wrapper_callee_name context for non-dollar wrapper function display names |
+| api missing-import | 10 | example_drop_side_effects | api | Tolerant parse error handling in analyze_lambda_captures (await in non-async is semantic, not structural) |
+
+**Before Plan 10:** 5 runtime-breaking (1 missing-import-used + 4 truly-missing-module)
+**After Plan 10:** 4 runtime-breaking (0 missing-import-used + 4 truly-missing-module)
+**Improvement:** -1 runtime-breaking deviation (last missing-import-used resolved)
+
+**Root cause of api fix:** The `analyze_lambda_captures` function bailed out on *any* parse error, including semantic errors like `await` in a non-async function. The lambda body `() => await api()` produced a semantic parse error, causing capture analysis to return empty results. The fix changed the bailout condition from "any parse errors" to "empty program body" -- semantic errors produce a valid AST and identifier references can still be extracted.
+
+**Display name collision fix:** Added `wrapper_callee_name` to `CollectContext` so that when `$()` is an argument to a non-dollar function like `component(...)`, the wrapper function name is included in the display name. This eliminated duplicate segment names (e.g., three segments all named `renderHeader` in example_1 now have unique names: `renderHeader`, `renderHeader_component`, `renderHeader_div_q_e_click`).
 
 ## Test Results
 
 ```
 cargo test --package qwik-optimizer-oxc
-  - unit tests: 177 passed
+  - unit tests: 178 passed
   - snapshot_tests: 1 passed (162 snapshot specs)
   - spec_tests: 8 passed
-  - output_audit: 1 passed (162 specs audited, regression gate: 5 <= 5)
+  - output_audit: 1 passed (162 specs audited, regression gate: 4 <= 4)
   - All tests: PASS
 ```
 
 ## Conclusion
 
-Phase 24 reduced runtime-breaking deviations from 293 to 5, a 98% reduction across 9 plans.
+Phase 24 reduced runtime-breaking deviations from 293 to 4, a 99% reduction across 11 plans.
 
 | Stage | Runtime-Breaking | Change |
 |-------|-----------------|--------|
 | Phase 23 baseline | 293 | -- |
 | After Plans 01-04 | 56 | -237 (-81%) |
 | After Plans 05-06 (round 1) | 10 | -283 (-97%) from baseline |
-| After Plans 07-09 (final) | 5 | -288 (-98%) from baseline |
+| After Plans 07-09 (round 2) | 5 | -288 (-98%) from baseline |
+| After Plans 10-11 (round 3) | 4 | -289 (-99%) from baseline |
 
-The remaining 5 are:
-- 1 missing-import edge case in example_drop_side_effects (`api` from `server$()` call not tracked as module-level declaration)
-- 4 truly missing modules from pre-compiled QRL code (architectural limitation, deferred)
+The remaining 4 are all truly-missing-module deviations (architectural limitations):
+- 2 in example_qwik_react (pre-compiled QRL code from @qwik.dev/react)
+- 2 in relative_paths (multi-file cross-module QRL references)
 
-The OXC optimizer now produces output without runtime errors for all 162 specs except the 5 accepted edge cases. A regression threshold assertion (`RUNTIME_BREAKING_THRESHOLD = 5`) in output_audit.rs ensures that future changes cannot reintroduce fixed deviations without failing the test suite.
+All missing-import-used deviations have been fully resolved (0 remaining). The OXC optimizer now produces output without runtime errors for all 162 specs except the 4 accepted architectural edge cases. A regression threshold assertion (`RUNTIME_BREAKING_THRESHOLD = 4`) in output_audit.rs ensures that future changes cannot reintroduce fixed deviations without failing the test suite.
