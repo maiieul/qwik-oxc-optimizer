@@ -217,7 +217,12 @@ impl QwikTransform {
                 }
                 seg.parent.as_ref().map(|parent_name| {
                     let canonical = format!("{}_{}", seg.display_name, seg.hash);
-                    let import_path = format!("./{}", canonical);
+                    let import_path = if self.options.explicit_extensions {
+                        let ext = self.compute_output_extension();
+                        format!("./{}.{}", canonical, ext)
+                    } else {
+                        format!("./{}", canonical)
+                    };
                     (parent_name.clone(), seg.hash.clone(), import_path)
                 })
             })
@@ -282,17 +287,36 @@ impl QwikTransform {
 
     /// Build the canonical filename for a segment.
     fn build_canonical_filename(&self, display_name: &str, hash: &str) -> String {
-        let base = self
-            .filename
-            .rfind('.')
-            .map(|i| &self.filename[..i])
-            .unwrap_or(&self.filename);
-        format!("{base}_{display_name}_{hash}")
+        format!("{}_{display_name}_{hash}", self.filename)
+    }
+
+    /// Compute the output file extension based on transpile options.
+    ///
+    /// Logic: strip what you transpile.
+    /// - transpile_ts removes TypeScript: tsx->jsx, ts->js
+    /// - transpile_jsx removes JSX: tsx->ts, jsx->js
+    /// - both: tsx->js, ts->js
+    fn compute_output_extension(&self) -> &str {
+        let ext = self.filename.rsplit('.').next().unwrap_or("js");
+        match (self.options.transpile_ts, self.options.transpile_jsx, ext) {
+            (true, true, "tsx") => "js",
+            (true, true, "ts") => "js",
+            (true, false, "tsx") => "jsx",
+            (true, false, "ts") => "js",
+            (false, true, "tsx") => "ts",
+            (false, true, "jsx") => "js",
+            _ => ext,
+        }
     }
 
     /// Build the segment import path for segment strategy.
     fn build_segment_import_path(&self, canonical_filename: &str) -> String {
-        format!("./{canonical_filename}")
+        if self.options.explicit_extensions {
+            let ext = self.compute_output_extension();
+            format!("./{canonical_filename}.{ext}")
+        } else {
+            format!("./{canonical_filename}")
+        }
     }
 
     /// Detect file extension from filename.

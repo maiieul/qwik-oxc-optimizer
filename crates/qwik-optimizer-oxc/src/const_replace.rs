@@ -34,7 +34,10 @@ pub(crate) fn replace_build_constants<'a>(
     let ast = AstBuilder::new(allocator);
 
     // Pass 1: Replace identifiers with boolean literals
-    let mut replacer = ConstReplacer { replacements: &replacements, ast: &ast };
+    let mut replacer = ConstReplacer {
+        replacements: &replacements,
+        ast: &ast,
+    };
     replacer.visit_program(program);
 
     // Pass 2: Simplify logical expressions and eliminate dead branches
@@ -52,14 +55,20 @@ fn build_replacement_map(
 ) -> HashMap<String, bool> {
     let mut map = HashMap::new();
     for stmt in &program.body {
-        let Statement::ImportDeclaration(import) = stmt else { continue };
+        let Statement::ImportDeclaration(import) = stmt else {
+            continue;
+        };
         let source = import.source.value.as_str();
         if !BUILD_CONSTANT_SOURCES.iter().any(|s| *s == source) {
             continue;
         }
-        let Some(specifiers) = &import.specifiers else { continue };
+        let Some(specifiers) = &import.specifiers else {
+            continue;
+        };
         for spec in specifiers {
-            let ImportDeclarationSpecifier::ImportSpecifier(s) = spec else { continue };
+            let ImportDeclarationSpecifier::ImportSpecifier(s) = spec else {
+                continue;
+            };
             let imported_name = match &s.imported {
                 ModuleExportName::IdentifierName(id) => id.name.as_str(),
                 ModuleExportName::IdentifierReference(id) => id.name.as_str(),
@@ -128,7 +137,10 @@ fn eval_boolean_value(expr: &Expression<'_>) -> Option<bool> {
     match expr {
         Expression::BooleanLiteral(lit) => Some(lit.value),
         Expression::UnaryExpression(unary)
-            if matches!(unary.operator, oxc::syntax::operator::UnaryOperator::LogicalNot) =>
+            if matches!(
+                unary.operator,
+                oxc::syntax::operator::UnaryOperator::LogicalNot
+            ) =>
         {
             eval_boolean_value(&unary.argument).map(|v| !v)
         }
@@ -170,7 +182,10 @@ fn simplify_logical_expression<'a>(expr: &mut Expression<'a>, ast: &AstBuilder<'
     }
 
     if let Expression::UnaryExpression(unary) = expr {
-        if matches!(unary.operator, oxc::syntax::operator::UnaryOperator::LogicalNot) {
+        if matches!(
+            unary.operator,
+            oxc::syntax::operator::UnaryOperator::LogicalNot
+        ) {
             if let Some(val) = eval_boolean_value(&unary.argument) {
                 *expr = ast.expression_boolean_literal(SPAN, !val);
             }
@@ -193,8 +208,12 @@ fn eliminate_dead_if_statements<'a>(
     let mut actions: Vec<(usize, StmtAction<'a>)> = Vec::new();
 
     for (i, stmt) in stmts.iter_mut().enumerate() {
-        let Statement::IfStatement(if_stmt) = stmt else { continue };
-        let Some(test_val) = eval_boolean_value(&if_stmt.test) else { continue };
+        let Statement::IfStatement(if_stmt) = stmt else {
+            continue;
+        };
+        let Some(test_val) = eval_boolean_value(&if_stmt.test) else {
+            continue;
+        };
         if test_val {
             let placeholder = Statement::EmptyStatement(ast.alloc_empty_statement(SPAN));
             let consequent = std::mem::replace(&mut if_stmt.consequent, placeholder);

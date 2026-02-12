@@ -159,8 +159,12 @@ pub fn transform_modules(
             emit_result.code.clone()
         };
 
-        let output_ext = output_extension(&input.path, transform_options.transpile_ts);
-        let main_path = if transform_options.transpile_ts {
+        let output_ext = output_extension(
+            &input.path,
+            transform_options.transpile_ts,
+            transform_options.transpile_jsx,
+        );
+        let main_path = if transform_options.transpile_ts || transform_options.transpile_jsx {
             input
                 .path
                 .rsplit_once('.')
@@ -197,8 +201,17 @@ pub fn transform_modules(
                 continue;
             }
 
-            let segment_analysis = segment_data_to_analysis(seg, &input.path);
-            let seg_ext = output_extension(&input.path, transform_options.transpile_ts);
+            let segment_analysis = segment_data_to_analysis(
+                seg,
+                &input.path,
+                transform_options.transpile_ts,
+                transform_options.transpile_jsx,
+            );
+            let seg_ext = output_extension(
+                &input.path,
+                transform_options.transpile_ts,
+                transform_options.transpile_jsx,
+            );
 
             {
                 let body_code = body_codes
@@ -243,28 +256,35 @@ pub fn transform_modules(
     })
 }
 
-/// Compute the output file extension, accounting for transpile_ts.
+/// Compute the output file extension, accounting for transpile_ts and transpile_jsx.
 ///
-/// When transpile_ts is true, TypeScript extensions are mapped to JavaScript:
-/// - `.tsx` -> `.jsx`
-/// - `.ts` -> `.js`
+/// Logic: strip what you transpile.
+/// - transpile_ts removes TypeScript type annotations: tsx->jsx, ts->js
+/// - transpile_jsx removes JSX syntax: tsx->ts, jsx->js
+/// - both: tsx->js, ts->js
 /// Otherwise the original extension is preserved.
-fn output_extension(input_path: &str, transpile_ts: bool) -> String {
+fn output_extension(input_path: &str, transpile_ts: bool, transpile_jsx: bool) -> String {
     let ext = input_path.rsplit('.').next().unwrap_or("js");
-    if transpile_ts {
-        match ext {
-            "tsx" => "jsx".to_string(),
-            "ts" => "js".to_string(),
-            other => other.to_string(),
-        }
-    } else {
-        ext.to_string()
+    match (transpile_ts, transpile_jsx, ext) {
+        (true, true, "tsx") => "js".to_string(),
+        (true, true, "ts") => "js".to_string(),
+        (true, false, "tsx") => "jsx".to_string(),
+        (true, false, "ts") => "js".to_string(),
+        (false, true, "tsx") => "ts".to_string(),
+        (false, true, "jsx") => "js".to_string(),
+        _ => ext.to_string(),
     }
 }
 
 /// Convert internal SegmentData to public SegmentAnalysis.
-fn segment_data_to_analysis(seg: &SegmentData, origin_path: &str) -> SegmentAnalysis {
+fn segment_data_to_analysis(
+    seg: &SegmentData,
+    origin_path: &str,
+    transpile_ts: bool,
+    transpile_jsx: bool,
+) -> SegmentAnalysis {
     let canonical_filename = format!("{}_{}", seg.display_name, seg.hash);
+    let ext = output_extension(origin_path, transpile_ts, transpile_jsx);
 
     SegmentAnalysis {
         origin: origin_path.to_string(),
@@ -274,7 +294,7 @@ fn segment_data_to_analysis(seg: &SegmentData, origin_path: &str) -> SegmentAnal
         hash: seg.hash.clone(),
         canonical_filename,
         path: String::new(), // Same directory
-        extension: seg.extension.clone(),
+        extension: ext,
         parent: seg.parent.clone(),
         ctx_kind: seg.ctx_kind.clone(),
         ctx_name: seg.ctx_name.clone(),
