@@ -1725,7 +1725,11 @@ fn analyze_lambda_captures(source_code: &str, span: (u32, u32)) -> (Vec<String>,
     let parser = oxc::parser::Parser::new(&alloc, source_ref, oxc::span::SourceType::tsx());
     let parse_result = parser.parse();
 
-    if !parse_result.errors.is_empty() || parse_result.program.body.is_empty() {
+    // Only bail on empty program body -- not on parse errors.
+    // Some errors are semantic (e.g., `await` in non-async function) but the AST
+    // is still well-formed and we can still extract identifier references for
+    // capture analysis. Bailing on errors causes missing imports in segments.
+    if parse_result.program.body.is_empty() {
         return (Vec::new(), HashSet::new());
     }
 

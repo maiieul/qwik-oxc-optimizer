@@ -3665,4 +3665,58 @@ export const App = component$((props) => {
             result.modules.iter().map(|m| &m.path).collect::<Vec<_>>()
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Module-Level Declaration Self-Import Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_api_self_import_in_onclick_segment() {
+        // Reproduces the example_drop_side_effects bug where the onClick$
+        // segment references `api` but doesn't get `import { api } from "./test"`.
+        // The lambda contains `await` in a non-async function which causes a
+        // parse error in analyze_lambda_captures, previously causing empty results.
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+import { server$ } from '@qwik.dev/router';
+
+export const api = server$(() => {
+    console.log('server');
+});
+
+export default component$(() => {
+    return (
+        <button onClick$={() => await api()}></button>
+    )
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            strip_ctx_name: Some(vec!["server".to_string()]),
+            transpile_ts: true,
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find the onClick$ segment module (identified by ctx_name = "onClick$")
+        let onclick_seg = result
+            .modules
+            .iter()
+            .find(|m| {
+                m.segment
+                    .as_ref()
+                    .map(|s| s.ctx_name == "onClick$")
+                    .unwrap_or(false)
+            })
+            .expect("Expected onClick$ segment module");
+
+        // The onClick$ segment should have `import { api } from "./test"`
+        assert!(
+            onclick_seg.code.contains("import { api }"),
+            "Expected 'import {{ api }}' in onClick$ segment. Got:\n{}",
+            onclick_seg.code
+        );
+    }
 }
