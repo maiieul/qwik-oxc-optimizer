@@ -6,7 +6,7 @@
 - v2.0 OXC API Research & Architecture -- Phases 4-6 (shipped 2026-02-11)
 - v3.0 OXC Optimizer Port -- Phases 7-13 (shipped 2026-02-11)
 - v4.0 Code Quality Refactor -- Phases 14-19 (shipped 2026-02-11)
-- v5.0 Drop-in Replacement Compliance -- Phases 20-22 (in progress)
+- v5.0 Drop-in Replacement Compliance -- Phases 20-22 (shipped 2026-02-12)
 
 ## Phases
 
@@ -61,13 +61,13 @@ Full details: `milestones/v4.0-ROADMAP.md`
 
 </details>
 
-### v5.0 Drop-in Replacement Compliance (In Progress)
+### v5.0 Drop-in Replacement Compliance (Shipped 2026-02-12)
 
 **Milestone Goal:** Fix all output compatibility issues so the OXC optimizer can replace the SWC optimizer at runtime.
 
 - [x] **Phase 20: Path Resolution** - Fix canonical filenames, explicit extensions, and output file extensions (completed 2026-02-12)
 - [x] **Phase 21: Import Correctness** - Strip consumed $-imports and scope Qrl-suffixed imports to correct modules (completed 2026-02-12)
-- [ ] **Phase 22: Display Names and Annotations** - Fix nested segment display names and PURE annotation placement
+- [x] **Phase 22: Display Names and Annotations** - Fix nested segment display names and PURE annotation placement (completed 2026-02-12)
 
 ## Phase Details
 
@@ -109,7 +109,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 22-01-PLAN.md -- Fix display names and PURE annotations (NAME-01 + PURE-01)
+- [x] 22-01-PLAN.md -- Fix display names and PURE annotations (NAME-01 + PURE-01)
 
 ## Progress
 
@@ -139,8 +139,8 @@ Phases execute in numeric order: 20 -> 21 -> 22
 | 19. Spec Compliance Verification | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 20. Path Resolution | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 21. Import Correctness | v5.0 | 1/1 | Complete | 2026-02-12 |
-| 22. Display Names and Annotations | v5.0 | 0/1 | Not started | - |
+| 22. Display Names and Annotations | v5.0 | 1/1 | Complete | 2026-02-12 |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-12 (v5.0 Phase 22 planned)*
+*Last updated: 2026-02-12 (v5.0 complete)*
