@@ -108,11 +108,13 @@ Plans:
   2. Every QRL wrapping and import deviation classified as runtime-breaking is fixed (wrong wrapper function, broken import paths, missing re-exports)
   3. Re-running the audit script after fixes shows zero runtime-breaking deviations
   4. Test harness includes assertions for each fixed deviation that prevent regression
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 24-01: TBD
-- [ ] 24-02: TBD
+- [ ] 24-01-PLAN.md -- Fix optimizer failures and QRL/segment extraction (Wave 1)
+- [ ] 24-02-PLAN.md -- Fix segment import resolution (Wave 2)
+- [ ] 24-03-PLAN.md -- Fix capture analysis and codegen differences (Wave 3)
+- [ ] 24-04-PLAN.md -- Final audit validation and user verification (Wave 4)
 
 ### Phase 25: NAPI Crate
 **Goal**: A `qwik-napi-oxc` crate exists that exposes `transform_modules` to Node.js with the same calling convention as the SWC NAPI binding
@@ -170,10 +172,10 @@ Plans:
 | 21. Import Correctness | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 22. Display Names and Annotations | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 23. Output Audit | v6.0 | 2/2 | Complete | 2026-02-11 |
-| 24. Runtime Bug Fixes | v6.0 | 0/TBD | Not started | - |
+| 24. Runtime Bug Fixes | v6.0 | 0/4 | Not started | - |
 | 25. NAPI Crate | v6.0 | 0/TBD | Not started | - |
 | 26. Integration Validation | v6.0 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-11 (Phase 23 complete)*
+*Last updated: 2026-02-11 (Phase 24 planned)*
