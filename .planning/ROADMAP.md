@@ -7,6 +7,7 @@
 - v3.0 OXC Optimizer Port -- Phases 7-13 (shipped 2026-02-11)
 - v4.0 Code Quality Refactor -- Phases 14-19 (shipped 2026-02-11)
 - v5.0 Drop-in Replacement Compliance -- Phases 20-22 (shipped 2026-02-12)
+- v6.0 NAPI Integration -- Phases 23-26 (in progress)
 
 ## Phases
 
@@ -72,6 +73,76 @@ Full details: `milestones/v5.0-ROADMAP.md`
 
 </details>
 
+### v6.0 NAPI Integration (In Progress)
+
+**Milestone Goal:** Verify semantic output correctness, fix runtime-breaking deviations, and build the NAPI crate so the OXC optimizer can replace SWC in the Qwik build pipeline.
+
+- [ ] **Phase 23: Output Audit** - Semantic comparison of OXC output against all 162 spec expected outputs
+- [ ] **Phase 24: Runtime Bug Fixes** - Fix all runtime-breaking deviations found by the audit
+- [ ] **Phase 25: NAPI Crate** - Build `qwik-napi-oxc` with napi-rs exposing `transform_modules`
+- [ ] **Phase 26: Integration Validation** - Verify the NAPI binding produces correct results end-to-end
+
+## Phase Details
+
+### Phase 23: Output Audit
+**Goal**: Every spec's generated JS output has been semantically compared to its expected output, with deviations classified and documented
+**Depends on**: Phase 22 (v5.0 complete)
+**Requirements**: AUDIT-01, AUDIT-02, AUDIT-03
+**Success Criteria** (what must be TRUE):
+  1. A script runs all 162 specs through the OXC optimizer and compares generated JS to spec expected output (not just module count or metadata)
+  2. Each deviation is classified as runtime-breaking or cosmetic with documented rationale
+  3. A deviation report exists listing every difference with its severity, category (capture, import, QRL, codegen), and affected spec
+  4. The 5 known module count deviations and 16 known capture deviations are re-evaluated with actual output comparison
+**Plans**: TBD
+
+Plans:
+- [ ] 23-01: TBD
+- [ ] 23-02: TBD
+
+### Phase 24: Runtime Bug Fixes
+**Goal**: All runtime-breaking deviations are fixed so the OXC optimizer produces semantically correct output for every spec
+**Depends on**: Phase 23 (audit results needed to know what to fix)
+**Requirements**: FIX-01, FIX-02, FIX-03
+**Success Criteria** (what must be TRUE):
+  1. Every capture analysis deviation classified as runtime-breaking in the audit is fixed (missing captures that would crash at runtime)
+  2. Every QRL wrapping and import deviation classified as runtime-breaking is fixed (wrong wrapper function, broken import paths, missing re-exports)
+  3. Re-running the audit script after fixes shows zero runtime-breaking deviations
+  4. Test harness includes assertions for each fixed deviation that prevent regression
+**Plans**: TBD
+
+Plans:
+- [ ] 24-01: TBD
+- [ ] 24-02: TBD
+
+### Phase 25: NAPI Crate
+**Goal**: A `qwik-napi-oxc` crate exists that exposes `transform_modules` to Node.js with the same calling convention as the SWC NAPI binding
+**Depends on**: Phase 24 (fixes should land before building integration layer)
+**Requirements**: NAPI-01, NAPI-02, NAPI-03
+**Success Criteria** (what must be TRUE):
+  1. `qwik-napi-oxc` crate builds as a cdylib with napi-rs v2 and produces a loadable `.node` native module
+  2. `transform_modules` is callable from Node.js with the same function name and argument shape as SWC's `qwik_napi` binding
+  3. All input types (`TransformModulesOptions`) and output types (`TransformOutput`, `SegmentAnalysis`) serialize with camelCase naming matching the SWC wire format
+  4. `platform.ts` (Qwik's binding loader) can load the OXC `.node` file without code changes to the TypeScript layer
+**Plans**: TBD
+
+Plans:
+- [ ] 25-01: TBD
+- [ ] 25-02: TBD
+
+### Phase 26: Integration Validation
+**Goal**: The NAPI binding is verified to produce identical results to the direct Rust API across all 162 specs
+**Depends on**: Phase 24 (fixes complete), Phase 25 (NAPI crate complete)
+**Requirements**: INTG-01, INTG-02
+**Success Criteria** (what must be TRUE):
+  1. A Node.js test script calls `transform_modules` through the NAPI binding for all 162 spec inputs and collects results
+  2. NAPI round-trip output (JS -> NAPI -> Rust -> NAPI -> JS) matches direct Rust API output for every spec (zero serialization drift)
+  3. The test script can be run as a single command and reports pass/fail for each spec
+**Plans**: TBD
+
+Plans:
+- [ ] 26-01: TBD
+- [ ] 26-02: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -98,7 +169,11 @@ Full details: `milestones/v5.0-ROADMAP.md`
 | 20. Path Resolution | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 21. Import Correctness | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 22. Display Names and Annotations | v5.0 | 1/1 | Complete | 2026-02-12 |
+| 23. Output Audit | v6.0 | 0/TBD | Not started | - |
+| 24. Runtime Bug Fixes | v6.0 | 0/TBD | Not started | - |
+| 25. NAPI Crate | v6.0 | 0/TBD | Not started | - |
+| 26. Integration Validation | v6.0 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-12 (v5.0 shipped)*
+*Last updated: 2026-02-11 (v6.0 roadmap created)*

@@ -1,4 +1,4 @@
-# Requirements: Qwik Optimizer — SWC-to-OXC Port
+# Requirements: Qwik Optimizer -- SWC-to-OXC Port
 
 **Defined:** 2026-02-11
 **Core Value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
@@ -22,7 +22,7 @@ Requirements for NAPI integration milestone. Each maps to roadmap phases.
 ### NAPI Integration
 
 - [ ] **NAPI-01**: `qwik-napi-oxc` crate with napi-rs v2, cdylib output, serde-json feature
-- [ ] **NAPI-02**: `transform_modules` function exported with identical name and contract as SWC's `qwik_napi` — same JS-side calling convention
+- [ ] **NAPI-02**: `transform_modules` function exported with identical name and contract as SWC's `qwik_napi` -- same JS-side calling convention
 - [ ] **NAPI-03**: All input/output types serialize/deserialize with camelCase naming, matching SWC NAPI wire format (so `platform.ts` can load OXC binding without code changes)
 
 ### Integration Validation
@@ -56,27 +56,25 @@ Requirements for NAPI integration milestone. Each maps to roadmap phases.
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUDIT-01 | — | Pending |
-| AUDIT-02 | — | Pending |
-| AUDIT-03 | — | Pending |
-| FIX-01 | — | Pending |
-| FIX-02 | — | Pending |
-| FIX-03 | — | Pending |
-| NAPI-01 | — | Pending |
-| NAPI-02 | — | Pending |
-| NAPI-03 | — | Pending |
-| INTG-01 | — | Pending |
-| INTG-02 | — | Pending |
+| AUDIT-01 | Phase 23 | Pending |
+| AUDIT-02 | Phase 23 | Pending |
+| AUDIT-03 | Phase 23 | Pending |
+| FIX-01 | Phase 24 | Pending |
+| FIX-02 | Phase 24 | Pending |
+| FIX-03 | Phase 24 | Pending |
+| NAPI-01 | Phase 25 | Pending |
+| NAPI-02 | Phase 25 | Pending |
+| NAPI-03 | Phase 25 | Pending |
+| INTG-01 | Phase 26 | Pending |
+| INTG-02 | Phase 26 | Pending |
 
 **Coverage:**
 - v6.0 requirements: 11 total
-- Mapped to phases: 0
-- Unmapped: 11
+- Mapped to phases: 11
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-11*
-*Last updated: 2026-02-11 after initial definition*
+*Last updated: 2026-02-11 after roadmap creation*
