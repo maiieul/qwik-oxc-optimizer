@@ -108,15 +108,18 @@ Plans:
   2. Every QRL wrapping and import deviation classified as runtime-breaking is fixed (wrong wrapper function, broken import paths, missing re-exports)
   3. Re-running the audit script after fixes shows zero runtime-breaking deviations
   4. Test harness includes assertions for each fixed deviation that prevent regression
-**Plans**: 6 plans
+**Plans**: 9 plans
 
 Plans:
 - [x] 24-01-PLAN.md -- Fix optimizer failures and QRL/segment extraction (Wave 1)
 - [x] 24-02-PLAN.md -- Fix segment import resolution (Wave 2)
 - [x] 24-03-PLAN.md -- Fix capture analysis and codegen differences (Wave 3)
 - [x] 24-04-PLAN.md -- Final audit validation and user verification (Wave 4)
-- [ ] 24-05-PLAN.md -- Gap closure: fix module-level declaration captures in nested segments (Wave 5)
-- [ ] 24-06-PLAN.md -- Gap closure: re-run audit and user verification (Wave 6)
+- [x] 24-05-PLAN.md -- Gap closure: fix module-level declaration captures in nested segments (Wave 5)
+- [x] 24-06-PLAN.md -- Gap closure: re-run audit and user verification (Wave 6)
+- [ ] 24-07-PLAN.md -- Gap closure: fix pattern defaults, TS enums, default exports (Wave 7)
+- [ ] 24-08-PLAN.md -- Gap closure: fix JSX import source propagation (Wave 7)
+- [ ] 24-09-PLAN.md -- Gap closure: final audit, lower threshold, user verification (Wave 8)
 
 ### Phase 25: NAPI Crate
 **Goal**: A `qwik-napi-oxc` crate exists that exposes `transform_modules` to Node.js with the same calling convention as the SWC NAPI binding
@@ -174,10 +177,10 @@ Plans:
 | 21. Import Correctness | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 22. Display Names and Annotations | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 23. Output Audit | v6.0 | 2/2 | Complete | 2026-02-11 |
-| 24. Runtime Bug Fixes | v6.0 | 4/6 | In Progress | - |
+| 24. Runtime Bug Fixes | v6.0 | 6/9 | In Progress | - |
 | 25. NAPI Crate | v6.0 | 0/TBD | Not started | - |
 | 26. Integration Validation | v6.0 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-12 (Phase 24 gap closure plans added)*
+*Last updated: 2026-02-12 (Phase 24 complete — 293→10 runtime-breaking deviations, 97% reduction)*
