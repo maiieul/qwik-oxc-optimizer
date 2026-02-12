@@ -106,10 +106,10 @@ Plans:
   1. Nested segment display names include the full parent context hierarchy (e.g., `App_component_div_onClick` for a click handler inside JSX inside a `component$`)
   2. `/* @__PURE__ */` annotations appear on tree-shakeable calls (`qrl()`, `componentQrl()`, `_jsxSorted()`)
   3. `/* @__PURE__ */` annotations do NOT appear on side-effectful calls (`useStylesQrl()`, `useTaskQrl()`, and similar runtime-invoked hooks)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 22-01: TBD
+- [ ] 22-01-PLAN.md -- Fix display names and PURE annotations (NAME-01 + PURE-01)
 
 ## Progress
 
@@ -139,8 +139,8 @@ Phases execute in numeric order: 20 -> 21 -> 22
 | 19. Spec Compliance Verification | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 20. Path Resolution | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 21. Import Correctness | v5.0 | 1/1 | Complete | 2026-02-12 |
-| 22. Display Names and Annotations | v5.0 | 0/? | Not started | - |
+| 22. Display Names and Annotations | v5.0 | 0/1 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-12 (v5.0 Phase 21 complete)*
+*Last updated: 2026-02-12 (v5.0 Phase 22 planned)*
