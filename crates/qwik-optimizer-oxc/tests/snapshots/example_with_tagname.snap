@@ -7,7 +7,6 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
 const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
-import { $, component$ } from "@qwik.dev/core";
 export const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
 
 === test.tsx_Foo_component_gZqPatVoDqw.tsx === (ENTRY)

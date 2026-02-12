@@ -11,8 +11,8 @@ import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 const i_gzVhCyFtjZI = () => import("./test.tsx_RouterHead_component_gzVhCyFtjZI");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { component$ } from "@qwik.dev/core";
-import { useDocumentHead, useLocation } from "@qwik.dev/router";
+import { useDocumentHead } from "@qwik.dev/router";
+import { useLocation } from "@qwik.dev/router";
 /**
 * The RouterHead component is placed inside of the document `<head>` element.
 */

@@ -5,7 +5,6 @@ expression: output
 === test.tsx ===
 import { qrl } from "@qwik.dev/core";
 const i_YcWWmS5BN0c = () => import("./test.tsx_sym1_YcWWmS5BN0c");
-import { $, component$ } from "@qwik.dev/core";
 export const sym1 = /* @__PURE__ */ qrl(i_YcWWmS5BN0c, "sym1_YcWWmS5BN0c");
 
 === test.tsx_sym1_YcWWmS5BN0c.tsx === (ENTRY)

@@ -9,7 +9,6 @@ import { _jsxSorted } from "@qwik.dev/core";
 const i_l5Al0251s9w = () => import("./test.tsx_Greeter_component_l5Al0251s9w");
 const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
 const i_j0uXtsz0eLE = () => import("./test.tsx_d_j0uXtsz0eLE");
-import { component$, $ } from "@qwik.dev/core";
 import { hola } from "sdfds";
 export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"));
 const d = /* @__PURE__ */ qrl(i_j0uXtsz0eLE, "d_j0uXtsz0eLE");

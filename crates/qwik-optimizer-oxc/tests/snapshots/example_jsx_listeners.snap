@@ -19,7 +19,6 @@ const i_KKzu5KN5Myk = () => import("./test.tsx_Foo_div_q_e_click_KKzu5KN5Myk");
 const i_o1AVWCNjT0c = () => import("./test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
 const i_o1AVWCNjT0c = () => import("./test.tsx_Foo_div_q_e_documentscroll_o1AVWCNjT0c");
 const i_Co0pSPo5J9E = () => import("./test.tsx_Foo_div_custom_Co0pSPo5J9E");
-import { $, component$ } from "@qwik.dev/core";
 export const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
 
 === test.tsx_Foo_component_gZqPatVoDqw.js === (ENTRY)

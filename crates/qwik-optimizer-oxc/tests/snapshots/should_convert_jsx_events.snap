@@ -14,7 +14,6 @@ const i_fzYpgq8WW04 = () => import("./test.tsx_ManyEventsComponent_component_but
 const i_HCrpsbAaSvc = () => import("./test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc");
 const i_p9PdBU5LvjE = () => import("./test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE");
 const i_KoKtNDq0WI4 = () => import("./test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4");
-import { component$ } from "@qwik.dev/core";
 const ManyEventsComponent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_d0rUoq0Y7Qo, "ManyEventsComponent_component_d0rUoq0Y7Qo"));
 
 === test.tsx_ManyEventsComponent_component_d0rUoq0Y7Qo.js === (ENTRY)

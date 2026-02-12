@@ -12,7 +12,8 @@ import { _jsxSplit } from "@qwik.dev/core";
 const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
 const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { $, component$, h, Fragment } from "@qwik.dev/core";
+import { h } from "@qwik.dev/core";
+import { Fragment } from "@qwik.dev/core";
 export const Lightweight = (props) => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [/* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null), /* @__PURE__ */ _jsxSplit("button", { ..._getVarProps(props) }, _getConstProps(props), null, 0, null)], 1, "u6_0"), 3, "u6_1");
 };

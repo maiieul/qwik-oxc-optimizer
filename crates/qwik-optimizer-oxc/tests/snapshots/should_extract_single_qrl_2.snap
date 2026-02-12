@@ -9,7 +9,8 @@ import { _jsxSorted } from "@qwik.dev/core";
 const i_fxETLug1yE4 = () => import("./test.tsx_Parent_component_fxETLug1yE4");
 const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
 const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
-import { component$, useStore, useSignal } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
 const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_fxETLug1yE4, "Parent_component_fxETLug1yE4"));
 
 === test.tsx_Parent_component_fxETLug1yE4.js === (ENTRY)

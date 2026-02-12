@@ -10,8 +10,6 @@ import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrl } from "@qwik.dev/core";
 const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
 const i_zo9wkw0NBzs = () => import("./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs");
-import { component$ } from "@qwik.dev/core";
-import { server$ } from "@qwik.dev/router";
 import { clientSupabase } from "supabase";
 import { Client } from "openai";
 import { secret } from "./secret";

@@ -9,7 +9,6 @@ const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
 const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
 const i_GnvJdXy0KPg = () => import("./test.tsx_Bar_component_GnvJdXy0KPg");
 const i_MSAJNhrvHtQ = () => import("./test.tsx_Bar_MSAJNhrvHtQ");
-import { $, component$ } from "@qwik.dev/core";
 export const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
 export const Bar = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_GnvJdXy0KPg, "Bar_component_GnvJdXy0KPg"));
 

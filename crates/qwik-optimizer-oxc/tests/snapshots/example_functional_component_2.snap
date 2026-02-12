@@ -9,7 +9,7 @@ import { _jsxSorted } from "@qwik.dev/core";
 const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
 const i_vbEaih0SxYg = () => import("./test.tsx_App_component_button_q_e_click_vbEaih0SxYg");
 const i_wANYt0I0EHI = () => import("./test.tsx_App_component_div_q_e_click_wANYt0I0EHI");
-import { $, component$, useStore } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const useCounter = () => {
 	return useStore({ count: 0 });
 };

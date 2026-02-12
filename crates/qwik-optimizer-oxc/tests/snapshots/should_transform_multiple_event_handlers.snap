@@ -10,7 +10,8 @@ const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
 const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA");
 const i_vfd9BKEsGeE = () => import("./test.tsx_Foo_component_div_q_e_mouseover_vfd9BKEsGeE");
 const i_MWp7oW4SJcQ = () => import("./test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ");
-import { component$, useSignal, Signal } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+import { Signal } from "@qwik.dev/core";
 const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
 
 === test.tsx_Foo_component_gZqPatVoDqw.js === (ENTRY)

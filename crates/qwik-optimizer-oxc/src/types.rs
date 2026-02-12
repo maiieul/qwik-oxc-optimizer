@@ -469,7 +469,13 @@ pub(crate) struct ImportInfo {
     pub source: String,
 
     /// Named import specifiers (e.g., ["$", "component$", "useStore"]).
+    /// These are LOCAL names (after any aliasing).
     pub specifiers: Vec<String>,
+
+    /// Mapping from local_name -> imported_name for aliased specifiers.
+    /// Only contains entries where local != imported (e.g., "myServer" -> "isServer").
+    /// Non-aliased specifiers are NOT in this map.
+    pub specifier_aliases: HashMap<String, String>,
 
     /// Whether this imports from the Qwik core module.
     pub is_qwik_core: bool,
@@ -532,6 +538,10 @@ pub(crate) struct SegmentData {
 
     /// Imports needed by the segment body (e.g., useStore from @qwik.dev/core).
     pub needed_imports: Vec<ImportInfo>,
+
+    /// Qrl-suffixed import names needed by this segment (e.g., "useStylesQrl").
+    /// Populated during finalize_segments when nested $-calls are scoped to parent segments.
+    pub segment_qrl_names: Vec<String>,
 
     /// The extracted function body expression span.
     /// In practice, this will be an index or key into the AST arena.

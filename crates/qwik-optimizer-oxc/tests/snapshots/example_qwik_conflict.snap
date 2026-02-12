@@ -11,7 +11,7 @@ const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboC
 const i_YvjM3SoLvrM = () => import("./test.tsx_Root_component_YvjM3SoLvrM");
 const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
 const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
-import { $, component$, useStyles } from "@qwik.dev/core";
+import { useStyles } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core/what";
 export const hW = 12;
 export const handleWatch = 42;

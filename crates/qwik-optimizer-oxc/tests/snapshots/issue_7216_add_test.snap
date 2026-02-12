@@ -11,7 +11,6 @@ import { _jsxSplit } from "@qwik.dev/core";
 const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
 const i_2p9z0XXdr7M = () => import("./test.tsx_default_component_p_q_e_hi_2p9z0XXdr7M");
 const i_W7e7jpgFEgw = () => import("./test.tsx_default_component_p_q_e_const_W7e7jpgFEgw");
-import { component$ } from "@builder.io/qwik";
 export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
 
 === test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)

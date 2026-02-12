@@ -4,7 +4,6 @@ expression: output
 ---
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
-import { useTaskQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 import { _captures } from "@qwik.dev/core";
 import { _restProps } from "@qwik.dev/core";
@@ -13,7 +12,6 @@ import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
-import { $, component$, useTask$ } from "@qwik.dev/core";
 import { CONST } from "const";
 export const Works = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
 	const rest = _restProps(_rawProps, ["count", "stuff"]);

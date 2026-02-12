@@ -132,6 +132,10 @@ pub(crate) struct QwikTransform {
     /// Set of span starts for sync$() calls.
     pending_sync_calls: HashSet<u32>,
 
+    /// Pending Qrl-suffixed imports for parent segments (nested $-calls).
+    /// Each entry: (parent_display_name, qrl_name).
+    pending_segment_qrl_imports: Vec<(String, String)>,
+
     /// Whether this module has a custom JSX import source (e.g., `@jsxImportSource react`).
     /// When true, JSX event handler `$`-attributes are NOT extracted as segments
     /// because the JSX is not Qwik JSX.
@@ -157,6 +161,7 @@ impl QwikTransform {
             hoisted_function_stmts: Vec::new(),
             stripped_segments: HashSet::new(),
             pending_sync_calls: HashSet::new(),
+            pending_segment_qrl_imports: Vec::new(),
             has_custom_jsx_import_source: false,
         }
     }
@@ -228,6 +233,9 @@ impl QwikTransform {
             })
             .collect();
 
+        // Transfer pending Qrl-suffixed imports to parent segments
+        let pending_qrl_imports = std::mem::take(&mut self.pending_segment_qrl_imports);
+
         for seg in self.segments.iter_mut() {
             let children: Vec<_> = child_info
                 .iter()
@@ -238,6 +246,13 @@ impl QwikTransform {
                 seg.needs_qrl_import = true;
                 for (_, hash, path) in children {
                     seg.child_lazy_imports.push((hash.clone(), path.clone()));
+                }
+            }
+
+            // Assign Qrl-suffixed imports from nested $-calls to their parent segment
+            for (parent_name, qrl_name) in &pending_qrl_imports {
+                if parent_name == &seg.display_name && !seg.segment_qrl_names.contains(qrl_name) {
+                    seg.segment_qrl_names.push(qrl_name.clone());
                 }
             }
         }
@@ -391,6 +406,7 @@ impl QwikTransform {
             captures: false,        // Computed in exit_expression
             capture_names: vec![],  // Computed in exit_expression
             needed_imports: vec![], // Populated by finalize_segments
+            segment_qrl_names: vec![],
             body_span: (call.span.start, call.span.end),
             param_names: vec![],        // Set by props destructuring if needed
             body_code: String::new(),   // Populated in exit_expression for segment strategy
@@ -422,8 +438,16 @@ impl QwikTransform {
 
         if let DollarCallKind::Named(name) = kind {
             let qrl_name = words::dollar_to_qrl_name(name);
-            if !self.import_tracker.qrl_imports.contains(&qrl_name) {
-                self.import_tracker.qrl_imports.push(qrl_name);
+            if self.dollar_call_stack.is_empty() {
+                // Top-level $-call: Qrl import goes to main module
+                if !self.import_tracker.qrl_imports.contains(&qrl_name) {
+                    self.import_tracker.qrl_imports.push(qrl_name);
+                }
+            } else {
+                // Nested $-call: Qrl import goes to parent segment, not main module
+                let parent_display_name = self.dollar_call_stack.last().unwrap().clone();
+                self.pending_segment_qrl_imports
+                    .push((parent_display_name, qrl_name));
             }
         }
 
@@ -471,6 +495,7 @@ impl QwikTransform {
             captures: false,
             capture_names: vec![],
             needed_imports: vec![],
+            segment_qrl_names: vec![],
             body_span: span,
             param_names: vec![],
             body_code: String::new(),
@@ -629,8 +654,16 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         if call.arguments.is_empty() {
             if let DollarCallKind::Named(ref name) = kind {
                 let qrl_name = crate::words::dollar_to_qrl_name(name);
-                if !self.import_tracker.qrl_imports.contains(&qrl_name) {
-                    self.import_tracker.qrl_imports.push(qrl_name);
+                if self.dollar_call_stack.is_empty() {
+                    // Top-level: Qrl import goes to main module
+                    if !self.import_tracker.qrl_imports.contains(&qrl_name) {
+                        self.import_tracker.qrl_imports.push(qrl_name);
+                    }
+                } else {
+                    // Nested: Qrl import goes to parent segment
+                    let parent_display_name = self.dollar_call_stack.last().unwrap().clone();
+                    self.pending_segment_qrl_imports
+                        .push((parent_display_name, qrl_name));
                 }
             }
             return;
@@ -1145,22 +1178,75 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
-        if !new_stmts.is_empty() {
-            let existing_len = program.body.len();
-            let mut new_body = ctx.ast.vec_with_capacity(new_stmts.len() + existing_len);
+        // Collect non-dollar specifiers from Qwik core imports that need to be preserved.
+        // These are specifiers like `useStore` that were imported alongside $-suffixed ones.
+        // Build constants (isServer, isBrowser, isDev) are NOT re-emitted because they are
+        // handled by const_replace which strips them from the AST.
+        // Aliased specifiers (e.g., `isServer as myServer`) are re-emitted with the alias.
+        const BUILD_CONSTANTS: &[&str] = &["isServer", "isBrowser", "isDev"];
+        for import_info in &self.collected.module_imports {
+            if import_info.is_qwik_core {
+                for spec_name in &import_info.specifiers {
+                    if self.collected.dollar_imports.contains(spec_name) {
+                        continue; // Dollar import: stripped
+                    }
+                    // Check if this specifier is a build constant (by imported name)
+                    let imported_name = import_info
+                        .specifier_aliases
+                        .get(spec_name)
+                        .map(|s| s.as_str())
+                        .unwrap_or(spec_name.as_str());
+                    if BUILD_CONSTANTS.contains(&imported_name) {
+                        continue; // Build constant: handled by const_replace
+                    }
 
-            for stmt in new_stmts {
-                new_body.push(stmt);
+                    if import_info.specifier_aliases.contains_key(spec_name) {
+                        // Aliased import: emit `import { imported as local } from "..."`
+                        let stmt = import_rewrite::build_aliased_import(
+                            imported_name,
+                            spec_name,
+                            &import_info.source,
+                            ctx,
+                        );
+                        new_stmts.push(stmt);
+                    } else {
+                        // Non-aliased import: emit `import { name } from "..."`
+                        let stmt =
+                            import_rewrite::build_named_import(spec_name, &import_info.source, ctx);
+                        new_stmts.push(stmt);
+                    }
+                }
             }
-
-            let mut old_body = ctx.ast.vec();
-            std::mem::swap(&mut program.body, &mut old_body);
-            for stmt in old_body {
-                new_body.push(stmt);
-            }
-
-            program.body = new_body;
         }
+
+        // Always rebuild body: new imports first, then filtered old statements
+        let existing_len = program.body.len();
+        let mut new_body = ctx.ast.vec_with_capacity(new_stmts.len() + existing_len);
+
+        for stmt in new_stmts {
+            new_body.push(stmt);
+        }
+
+        let mut old_body = ctx.ast.vec();
+        std::mem::swap(&mut program.body, &mut old_body);
+        for stmt in old_body {
+            // Skip original Qwik core import declarations (they've been replaced
+            // by the new imports above: Qrl-suffixed + non-dollar specifiers)
+            if let Statement::ImportDeclaration(ref import_decl) = stmt {
+                let source = import_decl.source.value.as_str();
+                let is_qwik_core = self
+                    .collected
+                    .module_imports
+                    .iter()
+                    .any(|i| i.source == source && i.is_qwik_core);
+                if is_qwik_core {
+                    continue; // Skip -- already re-emitted above
+                }
+            }
+            new_body.push(stmt);
+        }
+
+        program.body = new_body;
     }
 }
 

@@ -9,7 +9,7 @@ import { _jsxSorted } from "@qwik.dev/core";
 const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
 const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
 const i_BvZjBcCes4s = () => import("./test.tsx_s__div_q_e_click_BvZjBcCes4s");
-import { $, component$, useStore } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
 
 === test.tsx_App_component_XumqEURaLxI.js === (ENTRY)

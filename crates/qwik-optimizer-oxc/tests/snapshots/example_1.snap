@@ -7,7 +7,8 @@ import { qrl } from "@qwik.dev/core";
 const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
 const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
 const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
-import { $, component, onRender } from "@qwik.dev/core";
+import { component } from "@qwik.dev/core";
+import { onRender } from "@qwik.dev/core";
 export const renderHeader = /* @__PURE__ */ qrl(i_AcV95hWr76k, "renderHeader_AcV95hWr76k");
 const renderHeader = component(/* @__PURE__ */ qrl(i_AcV95hWr76k, "renderHeader_AcV95hWr76k"));
 

@@ -4,17 +4,17 @@ expression: output
 ---
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
-import { useBrowserVisibleTaskQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 const i_80js9RUUsfM = () => import("./test.tsx_Child_component_80js9RUUsfM");
 const i_0qCMfawldvU = () => import("./test.tsx_useBrowserVisibleTask_0qCMfawldvU");
-import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const Child = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_80js9RUUsfM, "Child_component_80js9RUUsfM"));
 
 === test.tsx_Child_component_80js9RUUsfM.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_0qCMfawldvU = () => import("./test.tsx_useBrowserVisibleTask_0qCMfawldvU");
+import { useBrowserVisibleTaskQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 export const Child_component_80js9RUUsfM = () => {
 	const state = useStore({ count: 0 });

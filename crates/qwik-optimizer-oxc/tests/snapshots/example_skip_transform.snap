@@ -4,7 +4,6 @@ expression: output
 ---
 === test.js ===
 import { _jsxSorted } from "@qwik.dev/core";
-import { component$ as Component, $ as onRender } from "@qwik.dev/core";
 export const handler = $(() => console.log("hola"));
 export const App = component$((props) => {
 	useStyles$("hola");

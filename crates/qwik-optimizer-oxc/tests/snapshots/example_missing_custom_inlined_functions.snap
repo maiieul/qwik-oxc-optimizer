@@ -4,7 +4,9 @@ expression: output
 ---
 === test.js ===
 import { _jsxSorted } from "@qwik.dev/core";
-import { component$ as Component, $ as onRender, useStore, wrap, useEffect } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
+import { wrap } from "@qwik.dev/core";
+import { useEffect } from "@qwik.dev/core";
 export const useMemo$ = (qrt) => {
 	useEffect(qrt);
 };

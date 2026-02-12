@@ -9,12 +9,14 @@ import { _jsxSorted } from "@qwik.dev/core";
 const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
 const i_7dSOr7rhY8c = () => import("./test.tsx_Inner_component_7dSOr7rhY8c");
 const i_Kwn9b5UeNMU = () => import("./test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU");
-import { $, component$, useSignal, Signal } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+import { Signal } from "@qwik.dev/core";
 const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
 
 === test.tsx_Foo_component_gZqPatVoDqw.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_7dSOr7rhY8c = () => import("./test.tsx_Inner_component_7dSOr7rhY8c");
+import { componentQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 export const Foo_component_gZqPatVoDqw = (function() {
 	const data = useSignal < Signal < any > [] > [];

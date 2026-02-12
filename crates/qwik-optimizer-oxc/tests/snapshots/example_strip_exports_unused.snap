@@ -6,7 +6,6 @@ expression: output
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
-import { component$ } from "@qwik.dev/core";
 import mongodb from "mongodb";
 export const onGet = () => {
 	throw "Symbol removed by Qwik Optimizer, it can not be called from current platform";

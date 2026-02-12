@@ -6,7 +6,6 @@ expression: output
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_X7T1frKO0nI = () => import("./project/folder/test.tsx_Header_component_X7T1frKO0nI");
-import { $, component$ } from "@qwik.dev/core";
 import thing from "../state";
 export function foo() {
 	return import("../foo/state2");

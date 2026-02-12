@@ -10,7 +10,6 @@ import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
-import { component$ } from "@qwik.dev/core";
 function Hola(props: any) {
 	return /* @__PURE__ */ _jsxSplit("div", { ..._getVarProps(props) }, _getConstProps(props), null, 0, null);
 }

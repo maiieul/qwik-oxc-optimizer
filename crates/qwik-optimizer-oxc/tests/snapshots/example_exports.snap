@@ -7,7 +7,6 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_sHTSaq0AU4w = () => import("./project/test.tsx_Header_component_sHTSaq0AU4w");
 const i_0hncTFTaevI = () => import("./project/test.tsx_Header_0hncTFTaevI");
-import { $, component$ } from "@qwik.dev/core";
 export const [a, { b, v1: [c], d = v2, ...e }, f = v3, ...g] = obj;
 const exp1 = 1;
 const internal = 2;

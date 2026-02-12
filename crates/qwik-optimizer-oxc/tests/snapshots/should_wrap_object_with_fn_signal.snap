@@ -9,7 +9,6 @@ import { _jsxSorted } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
 const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { component$ } from "@qwik.dev/core";
 const _hf0 = (p0) => p0.myobj.id + "test";
 const _hf0_str = "p0.myobj.id+\"test\"";
 export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));

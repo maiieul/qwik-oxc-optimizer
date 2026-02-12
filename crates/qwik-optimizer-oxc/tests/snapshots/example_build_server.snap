@@ -6,7 +6,7 @@ expression: output
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
-import { component$, useStore } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 import { mongodb } from "mondodb";
 import { threejs } from "threejs";
 import L from "leaflet";

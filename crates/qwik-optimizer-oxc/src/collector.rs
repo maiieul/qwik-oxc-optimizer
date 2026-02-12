@@ -409,6 +409,7 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
     let is_qwik_core = ctx.is_qwik_core_import(source);
 
     let mut specifiers_vec = Vec::new();
+    let mut specifier_aliases = HashMap::new();
 
     if let Some(specifiers) = &import.specifiers {
         for spec in specifiers {
@@ -421,6 +422,11 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
                     };
                     let local_name = s.local.name.as_str();
                     specifiers_vec.push(local_name.to_string());
+
+                    // Track alias mapping for all aliased specifiers (not just $-suffixed)
+                    if local_name != imported_name {
+                        specifier_aliases.insert(local_name.to_string(), imported_name.to_string());
+                    }
 
                     if imported_name == "$" || imported_name.ends_with('$') {
                         ctx.dollar_imports.insert(local_name.to_string());
@@ -444,6 +450,7 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
     ctx.module_imports.push(ImportInfo {
         source: source.to_string(),
         specifiers: specifiers_vec,
+        specifier_aliases,
         is_qwik_core,
         span: (import.span.start, import.span.end),
     });

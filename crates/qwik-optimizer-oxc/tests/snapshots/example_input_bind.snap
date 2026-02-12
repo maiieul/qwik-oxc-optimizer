@@ -10,7 +10,6 @@ import { _wrapProp } from "@qwik.dev/core";
 import { _val } from "@qwik.dev/core";
 import { _chk } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { component$, $ } from "@qwik.dev/core";
 export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
 	const value = useSignal(0);
 	const checked = useSignal(false);

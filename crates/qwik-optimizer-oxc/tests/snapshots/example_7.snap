@@ -8,7 +8,6 @@ import { qrl } from "@qwik.dev/core";
 const i_Qw9nV3mG0KQ = () => import("./test.tsx_Header_component_Qw9nV3mG0KQ");
 const i_QrzcmFeRo0o = () => import("./test.tsx_Header_QrzcmFeRo0o");
 const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
-import { $, component$ } from "@qwik.dev/core";
 export const Header = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_Qw9nV3mG0KQ, "Header_component_Qw9nV3mG0KQ"));
 const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
 

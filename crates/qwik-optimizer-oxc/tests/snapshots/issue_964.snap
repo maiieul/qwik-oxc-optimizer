@@ -7,7 +7,6 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
-import { component$ } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
 
 === test.tsx_App_component_XumqEURaLxI.js === (ENTRY)

@@ -8,7 +8,7 @@ import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { component$, useStore } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export enum Thing {
 	A,
 	B

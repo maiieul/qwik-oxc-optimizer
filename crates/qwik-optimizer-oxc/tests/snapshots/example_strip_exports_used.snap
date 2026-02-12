@@ -4,11 +4,9 @@ expression: output
 ---
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
-import { useResourceQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
 const i_Qfn0duyjgAo = () => import("./test.tsx_default_useResource_Qfn0duyjgAo");
-import { component$, useResource$ } from "@qwik.dev/core";
 import mongodb from "mongodb";
 export const onGet = () => {
 	throw "Symbol removed by Qwik Optimizer, it can not be called from current platform";
@@ -18,6 +16,7 @@ export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "
 === test.tsx_default_component_jN9ZUuuADmk.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_Qfn0duyjgAo = () => import("./test.tsx_default_useResource_Qfn0duyjgAo");
+import { useResourceQrl } from "@qwik.dev/core";
 export const default_component_jN9ZUuuADmk = () => {
 	/* @__PURE__ */ useResourceQrl(/* @__PURE__ */ qrl(i_Qfn0duyjgAo, "default_useResource_Qfn0duyjgAo"));
 	return <div>cmp</div>;

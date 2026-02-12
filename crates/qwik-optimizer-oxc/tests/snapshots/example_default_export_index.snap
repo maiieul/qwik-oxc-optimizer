@@ -5,7 +5,6 @@ expression: output
 === src/components/mongo/index.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
-import { component$ } from "@qwik.dev/core";
 export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
 	return <div onClick$={() => console.log(mongodb)}>
 		</div>;

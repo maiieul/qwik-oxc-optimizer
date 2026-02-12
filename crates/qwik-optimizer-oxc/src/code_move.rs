@@ -48,6 +48,14 @@ pub(crate) fn build_segment_code_with_hoisted(
         ));
     }
 
+    // Emit Qrl-suffixed imports needed by this segment (from nested $-calls)
+    for qrl_name in &segment.segment_qrl_names {
+        parts.push(format!(
+            "import {{ {} }} from \"{}\";",
+            qrl_name, options.core_module
+        ));
+    }
+
     if body_code.contains("_jsxSorted") {
         parts.push(format!(
             "import {{ _jsxSorted }} from \"{}\";",
@@ -292,6 +300,7 @@ mod tests {
             captures: false,
             capture_names: vec![],
             needed_imports: vec![],
+            segment_qrl_names: vec![],
             body_span: (10, 90),
             param_names: vec![],
             body_code: String::new(),

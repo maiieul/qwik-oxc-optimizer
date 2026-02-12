@@ -6,7 +6,7 @@ expression: output
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-import { component$, useStore } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
 	return /* @__PURE__ */ _jsxSorted(Cmp, null, null, /* @__PURE__ */ _jsxSorted("p", null, {
 		class: "stuff",
