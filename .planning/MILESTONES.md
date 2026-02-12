@@ -78,3 +78,23 @@
 
 ---
 
+
+## v5.0 Drop-in Replacement Compliance (Shipped: 2026-02-12)
+
+**Delivered:** Fixed all output compatibility issues so the OXC optimizer can replace the SWC optimizer at runtime — correct segment paths, import scoping, display names, and PURE annotations.
+
+**Phases completed:** 3 phases, 3 plans, 6 tasks | 396 files changed | 2 days
+**Git range:** `fix(20-01)` → `docs(v5.0)` (4b6db05..728e1b3)
+
+**Key accomplishments:**
+1. Fixed canonical filenames to preserve file extension in origin prefix, with correct explicit_extensions and transpile extension logic (PATH-01/02/03/04)
+2. Stripped consumed $-suffixed imports from main module output and scoped Qrl-suffixed imports to correct segment modules (IMPORT-01/02)
+3. Nested segment display names now include full parent context hierarchy with scope_prefix tracking (NAME-01)
+4. PURE annotations restricted to tree-shakeable calls only — componentQrl gets PURE, side-effectful wrappers do not (PURE-01)
+5. All 8 requirements satisfied, 168 tests passing, zero regressions, zero tech debt
+6. Milestone audit passed: 8/8 requirements, 5/5 integration connections, 3/3 E2E flows
+
+**Archives:** `milestones/v5.0-ROADMAP.md`, `milestones/v5.0-REQUIREMENTS.md`, `milestones/v5.0-MILESTONE-AUDIT.md`
+
+---
+

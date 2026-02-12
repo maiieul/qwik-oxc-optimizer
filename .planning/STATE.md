@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-11)
+See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** v5.0 Drop-in Replacement Compliance -- Phase 22: Display Names and Annotations
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 22 of 22 (Display Names and Annotations)
-Plan: 1 of 1 in current phase
-Status: Phase 22 complete
-Last activity: 2026-02-12 -- Phase 22 complete (1/1 plans)
+Phase: 22 of 22 (all milestones complete through v5.0)
+Plan: N/A
+Status: v5.0 milestone shipped
+Last activity: 2026-02-12 -- v5.0 Drop-in Replacement Compliance shipped
 
-Progress: [##############################] 22/22 phases (v5.0: 3/3)
+Progress: [##############################] 22/22 phases (v1.0-v5.0 complete)
 
 ## Performance Metrics
 
@@ -49,13 +49,6 @@ Progress: [##############################] 22/22 phases (v5.0: 3/3)
 
 Full decision log in PROJECT.md Key Decisions table.
 
-- Phase 20-01: Extension mapping uses (transpile_ts, transpile_jsx, ext) match triple
-- Phase 20-01: main_path rewrite triggers on transpile_jsx too, not just transpile_ts
-- Phase 21-01: Strip ALL Qwik core imports and re-emit only needed specifiers (simpler than AST mutation)
-- Phase 21-01: Exclude build constants from import re-emission since const_replace handles them
-- Phase 22-01: scope_prefix composes with existing prefix for nested function declarations
-- Phase 22-01: Only component$ is tree-shakeable; all other Qrl wrappers are side-effectful
-
 ### Pending Todos
 
 None.
@@ -67,5 +60,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Phase 22 complete (1/1 plans) -- v5.0 milestone complete
+Stopped at: v5.0 milestone shipped
 Resume file: None

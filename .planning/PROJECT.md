@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A project to port the Qwik framework's code optimizer from SWC to OXC. The v1.0 milestone produced a complete behavioral specification of all 162 SWC optimizer snapshot tests. The v2.0 milestone mapped every transformation pattern to concrete OXC APIs with Rust code examples, built working proof-of-concept programs, and produced an architectural blueprint. The v3.0 milestone built the complete `qwik-optimizer-oxc` Rust crate implementing all 14 CONV transformation types, validated at 157/162 spec match (96.9%). The v4.0 milestone refactored the crate for maintainability -- extracting modules, eliminating boilerplate, fixing bugs, and cleaning code style -- with zero regressions.
+A complete port of the Qwik framework's code optimizer from SWC to OXC. Five milestones shipped: v1.0 produced 162 behavioral spec files, v2.0 mapped all transformation patterns to OXC APIs with working proofs-of-concept, v3.0 built the full `qwik-optimizer-oxc` Rust crate implementing all 14 CONV types (157/162 spec match), v4.0 refactored for maintainability (-930 net lines, zero regressions), and v5.0 fixed all output compatibility issues for drop-in replacement (correct paths, imports, display names, PURE annotations).
 
 ## Core Value
 
@@ -40,20 +40,18 @@ A working OXC-based Qwik optimizer crate that passes all 162 spec tests — buil
 - ✓ const_replace VisitMut rewrite — v4.0 (860→275 lines, -68%)
 - ✓ Spec compliance maintained — v4.0 (157/162, zero regressions)
 
+- ✓ Canonical filename preserves file extension in origin prefix — v5.0 (PATH-01)
+- ✓ Lazy import paths match actual segment file paths — v5.0 (PATH-02)
+- ✓ Lazy import paths include extension when explicit_extensions: true — v5.0 (PATH-03)
+- ✓ Output file extension .js when both transpile_ts and transpile_jsx true — v5.0 (PATH-04)
+- ✓ Consumed $-suffixed imports stripped from main module output — v5.0 (IMPORT-01)
+- ✓ Qrl-suffixed imports scoped to correct modules — v5.0 (IMPORT-02)
+- ✓ Nested segment display names include full parent context hierarchy — v5.0 (NAME-01)
+- ✓ PURE annotation only on tree-shakeable calls — v5.0 (PURE-01)
+
 ### Active
 
-## Current Milestone: v5.0 Drop-in Replacement Compliance
-
-**Goal:** Fix all output compatibility issues so the OXC optimizer can replace the SWC optimizer at runtime.
-
-**Target features:**
-- Fix canonical filename to preserve file extension in origin prefix
-- Fix explicit extensions support in lazy import paths
-- Fix output file extension when both transpile_ts and transpile_jsx are true
-- Strip consumed $-suffixed imports from main module output
-- Fix nested segment display names to include parent context hierarchy
-- Fix PURE annotation placement (only on tree-shakeable calls)
-- Fix import scoping (only add imports where they're actually referenced)
+(None — planning next milestone)
 
 ### Out of Scope
 
@@ -65,17 +63,18 @@ A working OXC-based Qwik optimizer crate that passes all 162 spec tests — buil
 
 ## Context
 
-Shipped v1.0 (162 spec files, 166K lines), v2.0 (7 API mapping docs, 4 working POCs, architecture blueprint, ~16K lines), v3.0 (complete optimizer crate, 11,758 LOC Rust, 16 source files), v4.0 (code quality refactoring, -930 net lines, 10,627 LOC Rust), and starting v5.0 (drop-in replacement compliance).
+Shipped v1.0 (162 spec files, 166K lines), v2.0 (7 API mapping docs, 4 working POCs, architecture blueprint, ~16K lines), v3.0 (complete optimizer crate, 11,758 LOC Rust, 16 source files), v4.0 (code quality refactoring, -930 net lines, 10,627 LOC Rust), and v5.0 (drop-in replacement compliance, 8/8 requirements, 168 tests passing).
 Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap, ast_visit), Python (spec generation/audit scripts), Markdown.
 
 - The `qwik-optimizer-oxc` crate at `crates/qwik-optimizer-oxc/` implements all 14 CONV transformation types
-- 162 tests pass (154 unit + 8 spec), 157/162 module count match with 250/250 metadata assertions
+- 168 tests pass (164 unit + 4 integration), 157/162 module count match with 250/250 metadata assertions
 - 5 known deviations: 3 parser limitations (OXC stricter on invalid source), 2 pre-compiled QRL extraction (out of scope)
 - Tech debt: 16 capture analysis deviations (JSX event handler scope tracking), 3 diagnostic deviations
-- JSX transform extracted to jsx_transform.rs (29 functions), const_replace.rs uses OXC VisitMut pattern
+- 11,431 LOC Rust across 10 source modules
 - Zero compiler warnings, consistent formatting via cargo fmt
 - The existing SWC optimizer lives in `swc-optimizer/core/` as a read-only reference
 - The public API (`TransformModulesOptions`, `TransformOutput`, `SegmentAnalysis`) matches the SWC optimizer's wire format
+- Drop-in replacement ready: correct paths, imports, display names, and PURE annotations
 
 ## Constraints
 
@@ -114,6 +113,10 @@ Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap, 
 | LazyLock<HashSet> for KNOWN_GLOBALS | O(1) lookup, stays in std, no extra dependency (vs phf::Set) | ✓ Good — simple, efficient |
 | JSX extraction with import block | jsx_transform.rs imports via crate::transform::ImportTracker | ✓ Good — clear module boundary, transform.rs -54% |
 | Two VisitMut impls for const_replace | ConstReplacer + DeadBranchEliminator as separate passes | ✓ Good — clean separation, bottom-up traversal for correctness |
+| Extension mapping triple | (transpile_ts, transpile_jsx, ext) match for output extension | ✓ Good — exhaustive, handles all 4 combinations |
+| Strip-and-reemit imports | Remove all Qwik core imports, re-emit only non-dollar specifiers | ✓ Good — simpler than AST mutation on arena types |
+| scope_prefix for display names | Compose function declaration names into nested segment display names | ✓ Good — handles arbitrary nesting depth |
+| componentQrl-only PURE | Only component$ is tree-shakeable; all other Qrl wrappers are side-effectful | ✓ Good — prevents incorrect tree-shaking of hooks |
 
 ---
-*Last updated: 2026-02-11 after v5.0 milestone start*
+*Last updated: 2026-02-12 after v5.0 milestone*
