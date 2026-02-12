@@ -252,6 +252,10 @@ struct CollectContext {
     /// Scope prefix from enclosing function declarations.
     /// E.g., when inside `function App() { ... }`, scope_prefix is "App".
     scope_prefix: Option<String>,
+    /// Name of wrapping non-dollar call when `$()` appears as an argument.
+    /// E.g., for `component($(() => ...))`, this is "component".
+    /// Used by `derive_display_name` to produce `renderHeader_component`.
+    wrapper_callee_name: Option<String>,
     /// The core module import path(s) to recognize as Qwik imports.
     /// Always includes "@qwik.dev/core"; may also include a custom core_module.
     core_modules: Vec<String>,
@@ -279,6 +283,7 @@ impl CollectContext {
             parent_display_name: None,
             current_var_name: None,
             scope_prefix: None,
+            wrapper_callee_name: None,
             core_modules,
         }
     }
@@ -730,10 +735,18 @@ fn walk_expression_for_calls(ctx: &mut CollectContext, expr: &Expression<'_>) {
                 }
             }
 
+            // Non-dollar call: set wrapper_callee_name so nested $() calls
+            // can include the wrapper function name in their display name.
+            // E.g., component($(() => ...)) -> "renderHeader_component"
+            let prev_wrapper = ctx.wrapper_callee_name.take();
+            if let Expression::Identifier(ident) = &call.callee {
+                ctx.wrapper_callee_name = Some(ident.name.as_str().to_string());
+            }
             walk_expression_for_calls(ctx, &call.callee);
             for arg in &call.arguments {
                 walk_argument_for_calls(ctx, arg);
             }
+            ctx.wrapper_callee_name = prev_wrapper;
         }
         Expression::ArrowFunctionExpression(arrow) => {
             for stmt in &arrow.body.statements {
@@ -953,7 +966,60 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
 
             if let Some(value) = &attr.value {
                 if let JSXAttributeValue::ExpressionContainer(container) = value {
-                    walk_jsx_expression_for_calls(ctx, &container.expression);
+                    // Check if the expression is a direct $() call inside a JSX attribute.
+                    // For patterns like onClick={$((ctx) => console.log(ctx))},
+                    // derive the display name using the JSX event naming pattern.
+                    let is_direct_dollar_call = matches!(
+                        &container.expression,
+                        JSXExpression::CallExpression(call)
+                            if matches!(&call.callee, Expression::Identifier(ident)
+                                if ctx.dollar_imports.contains(ident.name.as_str()))
+                    );
+
+                    if is_direct_dollar_call {
+                        // Convert attribute name to event suffix for display name
+                        // (e.g., "onClick" -> "onClick" used directly since it's not $-suffixed)
+                        let event_suffix = if attr_name.starts_with("on") && attr_name.len() > 2 {
+                            let event_part = &attr_name[2..];
+                            format!("q_e_{}", event_part.to_lowercase())
+                        } else {
+                            attr_name.to_string()
+                        };
+                        let display_name = derive_jsx_event_display_name(
+                            ctx,
+                            element_name.as_deref(),
+                            &event_suffix,
+                        );
+                        if let JSXExpression::CallExpression(call) = &container.expression {
+                            let callee_name = if let Expression::Identifier(ident) = &call.callee {
+                                let name = ident.name.as_str();
+                                ctx.alias_map.get(name).map(|s| s.as_str()).unwrap_or(name)
+                            } else {
+                                "$"
+                            };
+                            let is_nested = ctx.nesting_depth > 0;
+                            let parent_name = ctx.parent_display_name.clone();
+
+                            ctx.dollar_calls.push(DollarCallSite {
+                                callee_name: callee_name.to_string(),
+                                span: (call.span.start, call.span.end),
+                                display_name: display_name.clone(),
+                                is_nested,
+                                parent_name,
+                            });
+
+                            let prev_parent = ctx.parent_display_name.take();
+                            ctx.parent_display_name = Some(display_name);
+                            ctx.nesting_depth += 1;
+                            for arg in &call.arguments {
+                                walk_argument_for_calls(ctx, arg);
+                            }
+                            ctx.nesting_depth -= 1;
+                            ctx.parent_display_name = prev_parent;
+                        }
+                    } else {
+                        walk_jsx_expression_for_calls(ctx, &container.expression);
+                    }
                 }
             }
         }
@@ -1067,7 +1133,15 @@ fn derive_display_name(ctx: &CollectContext, callee_name: &str) -> String {
             callee_suffix.to_string()
         }
     } else if callee_suffix.is_empty() {
-        var_name.to_string()
+        // When a bare $() is an argument to a non-dollar wrapper function like
+        // component($(...)), include the wrapper name to avoid collisions with
+        // a direct $() assignment to the same variable.
+        // E.g., component($(() => ...)) on var "renderHeader" -> "renderHeader_component"
+        if let Some(ref wrapper) = ctx.wrapper_callee_name {
+            format!("{var_name}_{wrapper}")
+        } else {
+            var_name.to_string()
+        }
     } else {
         format!("{var_name}_{callee_suffix}")
     };
@@ -1260,6 +1334,7 @@ export const App = component$(() => {
     #[test]
     fn test_collect_example_1_pattern() {
         // From spec example_1.md: has $() and component() wrapping $()
+        // Both assignments use the same variable name "renderHeader"
         let result = parse_and_collect(
             r#"import { $, component, onRender } from '@qwik.dev/core';
 
@@ -1268,7 +1343,7 @@ export const renderHeader = $(() => {
 		<div onClick={$((ctx) => console.log(ctx))}/>
 	);
 });
-const renderHeader2 = component($(() => {
+const renderHeader = component($(() => {
 	console.log("mount");
 	return render;
 }));"#,
@@ -1287,7 +1362,7 @@ const renderHeader2 = component($(() => {
             result
                 .dollar_calls
                 .iter()
-                .map(|c| &c.callee_name)
+                .map(|c| &c.display_name)
                 .collect::<Vec<_>>()
         );
 
@@ -1295,6 +1370,36 @@ const renderHeader2 = component($(() => {
         for call in &result.dollar_calls {
             assert_eq!(call.callee_name, "$");
         }
+
+        // Each display name should be UNIQUE (no collisions)
+        let display_names: Vec<&str> = result
+            .dollar_calls
+            .iter()
+            .map(|c| c.display_name.as_str())
+            .collect();
+        let unique_names: std::collections::HashSet<&str> =
+            display_names.iter().copied().collect();
+        assert_eq!(
+            display_names.len(),
+            unique_names.len(),
+            "Display names must be unique. Got: {:?}",
+            display_names
+        );
+
+        // Verify expected display names from SWC spec:
+        // 1. Direct $() on renderHeader -> "renderHeader"
+        // 2. $() inside component() on renderHeader -> "renderHeader_component"
+        // 3. $() for onClick inside JSX -> "renderHeader_div_onClick" (via JSX event path)
+        assert!(
+            display_names.contains(&"renderHeader"),
+            "Expected 'renderHeader' display name. Got: {:?}",
+            display_names
+        );
+        assert!(
+            display_names.contains(&"renderHeader_component"),
+            "Expected 'renderHeader_component' display name. Got: {:?}",
+            display_names
+        );
     }
 
     #[test]
