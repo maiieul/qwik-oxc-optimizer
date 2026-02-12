@@ -104,6 +104,36 @@ pub(crate) fn build_segment_code_with_hoisted(
             options.core_module
         ));
     }
+    if body_code.contains("_getVarProps") {
+        parts.push(format!(
+            "import {{ _getVarProps }} from \"{}\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("_getConstProps") {
+        parts.push(format!(
+            "import {{ _getConstProps }} from \"{}\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("_restProps") {
+        parts.push(format!(
+            "import {{ _restProps }} from \"{}\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("_chk") {
+        parts.push(format!(
+            "import {{ _chk }} from \"{}\";",
+            options.core_module
+        ));
+    }
+    if body_code.contains("_val") {
+        parts.push(format!(
+            "import {{ _val }} from \"{}\";",
+            options.core_module
+        ));
+    }
 
     // Emit user-code imports needed by this segment body.
     // These are imports from the original module that the segment references

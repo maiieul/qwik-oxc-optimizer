@@ -1431,6 +1431,31 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
+        // For inline strategy, segments are inlined in the entry module, so any
+        // Qrl-suffixed imports from nested $-calls (stored in segment_qrl_names)
+        // also need to be emitted at the entry module level.
+        let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
+            || matches!(
+                self.options.entry_strategy,
+                crate::types::EntryStrategy::Hoist
+            );
+        if is_inline {
+            // For inline strategy, segments are inlined in the entry module, so any
+            // Qrl-suffixed imports from nested $-calls (stored in pending_segment_qrl_imports)
+            // also need to be emitted at the entry module level.
+            // Note: finalize_segments() hasn't run yet, so segment_qrl_names are still empty.
+            // We read directly from pending_segment_qrl_imports instead.
+            let mut emitted_qrl_names: std::collections::HashSet<String> =
+                self.import_tracker.qrl_imports.iter().cloned().collect();
+            for (_parent_name, qrl_name) in &self.pending_segment_qrl_imports {
+                if emitted_qrl_names.insert(qrl_name.clone()) {
+                    let stmt =
+                        import_rewrite::build_named_import(qrl_name, core_module, ctx);
+                    new_stmts.push(stmt);
+                }
+            }
+        }
+
         if self.import_tracker.needs_qrl {
             let stmt = import_rewrite::build_named_import("qrl", core_module, ctx);
             new_stmts.push(stmt);

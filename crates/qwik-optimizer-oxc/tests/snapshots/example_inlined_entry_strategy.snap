@@ -4,6 +4,8 @@ expression: output
 ---
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
+import { useStylesQrl } from "@qwik.dev/core";
+import { useBrowserVisibleTaskQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 import { _captures } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";

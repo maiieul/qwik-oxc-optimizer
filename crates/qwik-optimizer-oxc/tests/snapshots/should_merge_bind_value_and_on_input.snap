@@ -18,6 +18,7 @@ import { qrl } from "@qwik.dev/core";
 const i_0pI6Lozv5Ow = () => import("./test.tsx_FieldInput_component_input_q_e_input_0pI6Lozv5Ow");
 import { _jsxSorted } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
+import { _val } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 export const FieldInput_component_O84bGdeej0g = () => {
 	const localValue = useSignal("");

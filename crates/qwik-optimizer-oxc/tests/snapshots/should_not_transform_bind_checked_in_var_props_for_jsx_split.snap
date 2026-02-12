@@ -20,6 +20,8 @@ export const FieldInput = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_O84
 import { _jsxSorted } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { _getVarProps } from "@qwik.dev/core";
+import { _getConstProps } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 export const FieldInput_component_O84bGdeej0g = (props) => {
 	const input = useSignal(true);
