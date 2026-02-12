@@ -66,7 +66,7 @@ Full details: `milestones/v4.0-ROADMAP.md`
 **Milestone Goal:** Fix all output compatibility issues so the OXC optimizer can replace the SWC optimizer at runtime.
 
 - [x] **Phase 20: Path Resolution** - Fix canonical filenames, explicit extensions, and output file extensions (completed 2026-02-12)
-- [ ] **Phase 21: Import Correctness** - Strip consumed $-imports and scope Qrl-suffixed imports to correct modules
+- [x] **Phase 21: Import Correctness** - Strip consumed $-imports and scope Qrl-suffixed imports to correct modules (completed 2026-02-12)
 - [ ] **Phase 22: Display Names and Annotations** - Fix nested segment display names and PURE annotation placement
 
 ## Phase Details
@@ -96,7 +96,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 21-01-PLAN.md -- Fix import stripping and scoping (IMPORT-01 + IMPORT-02)
+- [x] 21-01-PLAN.md -- Fix import stripping and scoping (IMPORT-01 + IMPORT-02)
 
 ### Phase 22: Display Names and Annotations
 **Goal**: Segment metadata and tree-shaking annotations match SWC optimizer behavior
@@ -138,9 +138,9 @@ Phases execute in numeric order: 20 -> 21 -> 22
 | 18. const_replace VisitMut Rewrite | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 19. Spec Compliance Verification | v4.0 | 1/1 | Complete | 2026-02-11 |
 | 20. Path Resolution | v5.0 | 1/1 | Complete | 2026-02-12 |
-| 21. Import Correctness | v5.0 | 0/1 | Not started | - |
+| 21. Import Correctness | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 22. Display Names and Annotations | v5.0 | 0/? | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-12 (v5.0 Phase 21 planned)*
+*Last updated: 2026-02-12 (v5.0 Phase 21 complete)*
