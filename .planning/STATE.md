@@ -108,6 +108,7 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 25-01: Synchronous transform_modules export (platform.ts wraps as Promise at TS layer)
 - 25-01: manualChunks accepted but ignored (OXC EntryStrategy has no manual variant)
 - 25-01: Diagnostic scope field always "optimizer" matching SWC wire format
+- 25-01: #[napi(js_name = "transform_modules")] to preserve snake_case export name for platform.ts compatibility
 
 ### Pending Todos
 

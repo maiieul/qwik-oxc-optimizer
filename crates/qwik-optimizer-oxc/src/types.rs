@@ -254,7 +254,6 @@ pub struct SegmentAnalysis {
 ///
 /// SWC equivalent: EntryStrategy in types.ts
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "type")]
 #[serde(rename_all = "camelCase")]
 pub enum EntryStrategy {
     /// Each segment becomes a separate file with a lazy import.
@@ -705,17 +704,17 @@ mod tests {
     }
 
     #[test]
-    fn test_entry_strategy_tagged_serialization() {
+    fn test_entry_strategy_string_serialization() {
         let strategy = EntryStrategy::Segment;
         let json = serde_json::to_string(&strategy).unwrap();
-        assert_eq!(json, r#"{"type":"segment"}"#);
+        assert_eq!(json, r#""segment""#);
 
         let strategy = EntryStrategy::Inline;
         let json = serde_json::to_string(&strategy).unwrap();
-        assert_eq!(json, r#"{"type":"inline"}"#);
+        assert_eq!(json, r#""inline""#);
 
-        // Round-trip
-        let deserialized: EntryStrategy = serde_json::from_str(r#"{"type":"segment"}"#).unwrap();
+        // Round-trip (plain string, matching SWC wire format)
+        let deserialized: EntryStrategy = serde_json::from_str(r#""segment""#).unwrap();
         assert!(matches!(deserialized, EntryStrategy::Segment));
     }
 

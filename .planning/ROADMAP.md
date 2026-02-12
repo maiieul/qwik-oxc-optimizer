@@ -78,8 +78,8 @@ Full details: `milestones/v5.0-ROADMAP.md`
 **Milestone Goal:** Verify semantic output correctness, fix runtime-breaking deviations, and build the NAPI crate so the OXC optimizer can replace SWC in the Qwik build pipeline.
 
 - [x] **Phase 23: Output Audit** - Semantic comparison of OXC output against all 162 spec expected outputs -- completed 2026-02-11
-- [ ] **Phase 24: Runtime Bug Fixes** - Fix all runtime-breaking deviations found by the audit
-- [ ] **Phase 25: NAPI Crate** - Build `qwik-napi-oxc` with napi-rs exposing `transform_modules`
+- [x] **Phase 24: Runtime Bug Fixes** - Fix all runtime-breaking deviations found by the audit -- completed 2026-02-12
+- [x] **Phase 25: NAPI Crate** - Build `qwik-napi-oxc` with napi-rs exposing `transform_modules` -- completed 2026-02-12
 - [ ] **Phase 26: Integration Validation** - Verify the NAPI binding produces correct results end-to-end
 
 ## Phase Details
@@ -120,8 +120,8 @@ Plans:
 - [x] 24-07-PLAN.md -- Gap closure: fix pattern defaults, TS enums, default exports (Wave 7)
 - [x] 24-08-PLAN.md -- Gap closure: fix JSX import source propagation (Wave 7)
 - [x] 24-09-PLAN.md -- Gap closure: final audit, lower threshold, user verification (Wave 8)
-- [ ] 24-10-PLAN.md -- Gap closure: fix display name collisions + api missing import (Wave 9)
-- [ ] 24-11-PLAN.md -- Gap closure: re-run audit, lower threshold, user verification (Wave 10)
+- [x] 24-10-PLAN.md -- Gap closure: fix display name collisions + api missing import (Wave 9)
+- [x] 24-11-PLAN.md -- Gap closure: re-run audit, lower threshold, user verification (Wave 10)
 
 ### Phase 25: NAPI Crate
 **Goal**: A `qwik-napi-oxc` crate exists that exposes `transform_modules` to Node.js with the same calling convention as the SWC NAPI binding
