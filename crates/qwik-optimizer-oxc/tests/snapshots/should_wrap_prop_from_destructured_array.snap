@@ -115,6 +115,7 @@ export const default_component_jN9ZUuuADmk = () => {
 };
 
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
 const _hf0 = (p0) => p0.errors.test;
 const _hf0_str = "p0.errors.test";
@@ -127,5 +128,6 @@ const _hf3_str = "p0.errors.test";
 const _hf4 = (p0) => p0.errors.test;
 const _hf4_str = "p0.errors.test";
 export const default_component_button_q_e_click_zo9wkw0NBzs = () => {
+	const store = _captures[0];
 	store.errors.test = store.errors.test ? undefined : "ERROR TEST";
 };

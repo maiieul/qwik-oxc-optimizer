@@ -38,6 +38,8 @@ export const s_1_axfrT8CMT4s = (ev, el) => {
 };
 
 === test.tsx_FieldInput_component_input_q_e_focus_gyY7eQpsQgo.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 export const FieldInput_component_input_q_e_focus_gyY7eQpsQgo = () => {
+	const enabled = _captures[0];
 	enabled.value = true;
 };

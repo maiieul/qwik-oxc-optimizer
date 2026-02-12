@@ -97,4 +97,8 @@ export const App_component___transparent_R37Ah6P7YK8 = () => {
 };
 
 === test.tsx_App_component___immutable4_fo6pletGN1s.js === (ENTRY)
-export const App_component___immutable4_fo6pletGN1s = (ev) => console.log(state.count);
+import { _captures } from "@qwik.dev/core";
+export const App_component___immutable4_fo6pletGN1s = (ev) => {
+	const state = _captures[0];
+	return console.log(state.count);
+};

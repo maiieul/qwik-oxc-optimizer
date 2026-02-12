@@ -90,31 +90,46 @@ export const App_component_XumqEURaLxI = () => {
 }
 
 === test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, item) => {
+	const cart = _captures[0];
 	cart.push(item);
 };
 
 === test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, i) => {
+	const cart = _captures[0];
+	const results = _captures[1];
 	cart.push(results[i]);
 };
 
 === test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, item) => {
+	const cart = _captures[0];
 	cart.push(item);
 };
 
 === test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, key) => {
+	const cart = _captures[0];
+	const results = _captures[1];
 	cart.push(results[key]);
 };
 
 === test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, i) => {
+	const cart = _captures[0];
+	const results = _captures[1];
 	cart.push(results[i]);
 };
 
 === test.tsx_App_component_button_q_e_click_vbEaih0SxYg.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 export const App_component_button_q_e_click_vbEaih0SxYg = (_, _1, item) => {
+	const cart = _captures[0];
 	cart.push(item);
 };

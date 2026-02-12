@@ -91,4 +91,9 @@ export const s__Ma8uJBKLX2o = () => {
 };
 
 === test.tsx_s__div_q_e_click_BvZjBcCes4s.js === (ENTRY)
-export const s__div_q_e_click_BvZjBcCes4s = () => state.count += count + total;
+import { _captures } from "@qwik.dev/core";
+export const s__div_q_e_click_BvZjBcCes4s = () => {
+	const state = _captures[0];
+	const count = _captures[1];
+	return state.count += count + total;
+};

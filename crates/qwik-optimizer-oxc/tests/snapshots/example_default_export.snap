@@ -21,4 +21,5 @@ export const default_component_rMtkV4ZNQIA = () => {
 };
 
 === src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA.js === (ENTRY)
+import { sibling } from "./sibling";
 export const default_component_div_q_e_click_DIVjyCI2VsA = () => console.log(mongodb, sibling);

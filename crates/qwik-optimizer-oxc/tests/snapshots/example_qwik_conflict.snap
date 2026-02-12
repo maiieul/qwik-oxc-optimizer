@@ -33,6 +33,7 @@ export const Foo_component_gZqPatVoDqw = () => {
 };
 
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js === (ENTRY)
+import { qrl } from "@qwik.dev/core/what";
 export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(qrl);
 
 === test.tsx_Root_component_YvjM3SoLvrM.js === (ENTRY)

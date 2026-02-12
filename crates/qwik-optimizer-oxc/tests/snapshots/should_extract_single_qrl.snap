@@ -47,10 +47,12 @@ export const App_component_XumqEURaLxI = () => {
 };
 
 === test.tsx_App_component_a_q_e_click_7dJ1fH050Bg.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
 const _hf0 = (p0) => p0.value.selected.value ? "danger" : "";
 const _hf0_str = "p0.value.selected.value?\"danger\":\"\"";
 export const App_component_a_q_e_click_7dJ1fH050Bg = () => {
+	const selectedItem = _captures[0];
 	if (selectedItem.value) {
 		selectedItem.value.selected.value = false;
 	}
@@ -59,10 +61,12 @@ export const App_component_a_q_e_click_7dJ1fH050Bg = () => {
 };
 
 === test.tsx_App_component_a_q_e_click_7dJ1fH050Bg.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
 const _hf0 = (p0) => p0.value.selected.value ? "danger" : "";
 const _hf0_str = "p0.value.selected.value?\"danger\":\"\"";
 export const App_component_a_q_e_click_7dJ1fH050Bg = () => {
+	const data = _captures[0];
 	const dataValue = untrack(() => data.value);
 	data.value = dataValue.toSpliced(dataValue.findIndex((d) => d.value.id === row.value.id), 1);
 };

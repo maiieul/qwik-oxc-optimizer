@@ -36,9 +36,15 @@ export const Parent_component_fxETLug1yE4 = () => {
 };
 
 === test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
 export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
+	const cart = _captures[0];
 	cart.push(item);
 };
 
 === test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
-export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => results.value = ["item1", "item2"];
+import { _captures } from "@qwik.dev/core";
+export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
+	const results = _captures[0];
+	return results.value = ["item1", "item2"];
+};

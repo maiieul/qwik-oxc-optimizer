@@ -603,6 +603,86 @@ impl QwikTransform {
                                 };
                                 let seg =
                                     self.record_jsx_event_segment(&display_name, span, &ctx_name);
+                                let seg_span_0 = seg.span.0;
+
+                                // Run capture analysis on the JSX event handler lambda.
+                                // This determines which variables from the enclosing scope
+                                // need to be serialized and restored in the segment module.
+                                let (body_ident_refs, body_local_decls) =
+                                    analyze_lambda_captures(&self.source_code, span);
+                                let capture_result = collector::compute_captures(
+                                    &body_ident_refs,
+                                    &body_local_decls,
+                                    &self.collected,
+                                );
+
+                                // Filter captures to only include variables that actually
+                                // exist in an enclosing scope. When inside $()-bodies,
+                                // filter against ALL capture_stack frames' local declarations
+                                // (not just the innermost). For nested $() like:
+                                //   component$(() => { const state = ...; return $(() => {
+                                //     return <div onClick$={() => state.count++} />
+                                //   }) })
+                                // `state` is in the outer frame, not the inner one.
+                                // When NOT inside any $()-body (bare function like
+                                // `export default ({data}) => <div onClick$={...}/>`),
+                                // keep all captures since compute_captures() already
+                                // filtered against module-level declarations/imports.
+                                let capture_result = if !self.capture_stack.is_empty() {
+                                    // Merge all local declarations from all capture stack frames
+                                    let all_parent_decls: HashSet<String> = self
+                                        .capture_stack
+                                        .iter()
+                                        .flat_map(|(_, decls)| decls.iter().cloned())
+                                        .collect();
+                                    let filtered_names: Vec<String> = capture_result
+                                        .capture_names
+                                        .into_iter()
+                                        .filter(|name| all_parent_decls.contains(name))
+                                        .collect();
+                                    collector::CaptureAnalysisResult {
+                                        capture_names: filtered_names,
+                                        reemitted_imports: capture_result.reemitted_imports,
+                                        diagnostics: capture_result.diagnostics,
+                                    }
+                                } else {
+                                    // No parent $()-body scope -- keep all captures
+                                    capture_result
+                                };
+
+                                // Convert reemitted imports to ImportInfo for needed_imports
+                                let needed_imports: Vec<crate::types::ImportInfo> = capture_result
+                                    .reemitted_imports
+                                    .iter()
+                                    .map(|ri| {
+                                        let mut aliases = std::collections::HashMap::new();
+                                        if let Some(ref imported) = ri.imported_name {
+                                            aliases
+                                                .insert(ri.local_name.clone(), imported.clone());
+                                        }
+                                        crate::types::ImportInfo {
+                                            source: ri.source.clone(),
+                                            specifiers: vec![ri.local_name.clone()],
+                                            specifier_kinds: vec![ri.kind.clone()],
+                                            specifier_aliases: aliases,
+                                            is_qwik_core: false,
+                                            span: (0, 0),
+                                        }
+                                    })
+                                    .collect();
+
+                                // Update the segment with capture info
+                                if let Some(seg_mut) = self
+                                    .segments
+                                    .iter_mut()
+                                    .find(|s| s.span.0 == seg_span_0)
+                                {
+                                    seg_mut.captures =
+                                        !capture_result.capture_names.is_empty();
+                                    seg_mut.capture_names =
+                                        capture_result.capture_names.clone();
+                                    seg_mut.needed_imports = needed_imports;
+                                }
 
                                 // Serialize the lambda body code for the segment module.
                                 // This is the JSX event handler equivalent of what
@@ -620,7 +700,7 @@ impl QwikTransform {
                                     );
                                     if !body_code.is_empty() {
                                         self.segment_body_codes
-                                            .push((seg.span.0, body_code));
+                                            .push((seg_span_0, body_code));
                                     }
                                 }
                             }
@@ -1314,6 +1394,352 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         program.body = new_body;
+    }
+}
+
+/// Analyze a JSX lambda's source code to extract identifier references and local declarations.
+///
+/// Parses the lambda source, walks the resulting AST to collect:
+/// - All IdentifierReference names (potential captures)
+/// - All locally-declared names (parameters, let/const/var declarations)
+///
+/// Returns (body_ident_refs, body_local_decls) suitable for passing to `compute_captures()`.
+fn analyze_lambda_captures(source_code: &str, span: (u32, u32)) -> (Vec<String>, HashSet<String>) {
+    let start = span.0 as usize;
+    let end = span.1 as usize;
+    if start >= source_code.len() || end > source_code.len() || start >= end {
+        return (Vec::new(), HashSet::new());
+    }
+    let lambda_source = &source_code[start..end];
+
+    // Wrap as variable declaration so OXC can parse it
+    let parse_source = format!("var x = {}", lambda_source);
+    let alloc = oxc::allocator::Allocator::default();
+    let source_ref = alloc.alloc_str(&parse_source);
+
+    let parser = oxc::parser::Parser::new(&alloc, source_ref, oxc::span::SourceType::tsx());
+    let parse_result = parser.parse();
+
+    if !parse_result.errors.is_empty() || parse_result.program.body.is_empty() {
+        return (Vec::new(), HashSet::new());
+    }
+
+    // Extract the arrow/function expression from `var x = <expr>`
+    if let Some(Statement::VariableDeclaration(decl)) = parse_result.program.body.first() {
+        if let Some(declarator) = decl.declarations.first() {
+            if let Some(ref init) = declarator.init {
+                let mut ident_refs = Vec::new();
+                let mut local_decls = HashSet::new();
+
+                // Collect parameter names as local declarations
+                match init {
+                    Expression::ArrowFunctionExpression(arrow) => {
+                        for param in &arrow.params.items {
+                            collect_binding_names_from_pattern(&param.pattern, &mut local_decls);
+                        }
+                        if let Some(rest) = &arrow.params.rest {
+                            collect_binding_names_from_pattern(
+                                &rest.rest.argument,
+                                &mut local_decls,
+                            );
+                        }
+                        // Walk the body for identifier references and local declarations
+                        for stmt in &arrow.body.statements {
+                            walk_statement_for_captures(stmt, &mut ident_refs, &mut local_decls);
+                        }
+                        // For expression bodies (single statement with implicit return),
+                        // the AST wraps it as a return statement in the body, so we've
+                        // already handled it above.
+                    }
+                    Expression::FunctionExpression(func) => {
+                        for param in &func.params.items {
+                            collect_binding_names_from_pattern(&param.pattern, &mut local_decls);
+                        }
+                        if let Some(body) = &func.body {
+                            for stmt in &body.statements {
+                                walk_statement_for_captures(
+                                    stmt,
+                                    &mut ident_refs,
+                                    &mut local_decls,
+                                );
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+
+                return (ident_refs, local_decls);
+            }
+        }
+    }
+
+    (Vec::new(), HashSet::new())
+}
+
+/// Collect binding names from a BindingPattern into a set.
+fn collect_binding_names_from_pattern(pattern: &BindingPattern<'_>, names: &mut HashSet<String>) {
+    match pattern {
+        BindingPattern::BindingIdentifier(ident) => {
+            names.insert(ident.name.as_str().to_string());
+        }
+        BindingPattern::ObjectPattern(obj) => {
+            for prop in &obj.properties {
+                collect_binding_names_from_pattern(&prop.value, names);
+            }
+            if let Some(rest) = &obj.rest {
+                collect_binding_names_from_pattern(&rest.argument, names);
+            }
+        }
+        BindingPattern::ArrayPattern(arr) => {
+            for elem in arr.elements.iter().flatten() {
+                collect_binding_names_from_pattern(elem, names);
+            }
+            if let Some(rest) = &arr.rest {
+                collect_binding_names_from_pattern(&rest.argument, names);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Walk a statement to collect identifier references and local declarations for capture analysis.
+fn walk_statement_for_captures(
+    stmt: &Statement<'_>,
+    ident_refs: &mut Vec<String>,
+    local_decls: &mut HashSet<String>,
+) {
+    match stmt {
+        Statement::VariableDeclaration(var_decl) => {
+            for declarator in &var_decl.declarations {
+                collect_binding_names_from_pattern(&declarator.id, local_decls);
+                if let Some(init) = &declarator.init {
+                    walk_expression_for_captures(init, ident_refs);
+                }
+            }
+        }
+        Statement::ExpressionStatement(expr_stmt) => {
+            walk_expression_for_captures(&expr_stmt.expression, ident_refs);
+        }
+        Statement::ReturnStatement(ret) => {
+            if let Some(arg) = &ret.argument {
+                walk_expression_for_captures(arg, ident_refs);
+            }
+        }
+        Statement::BlockStatement(block) => {
+            for s in &block.body {
+                walk_statement_for_captures(s, ident_refs, local_decls);
+            }
+        }
+        Statement::IfStatement(if_stmt) => {
+            walk_expression_for_captures(&if_stmt.test, ident_refs);
+            walk_statement_for_captures(&if_stmt.consequent, ident_refs, local_decls);
+            if let Some(alt) = &if_stmt.alternate {
+                walk_statement_for_captures(alt, ident_refs, local_decls);
+            }
+        }
+        Statement::ForStatement(for_stmt) => {
+            if let Some(init) = &for_stmt.init {
+                match init {
+                    ForStatementInit::VariableDeclaration(var_decl) => {
+                        for declarator in &var_decl.declarations {
+                            collect_binding_names_from_pattern(&declarator.id, local_decls);
+                            if let Some(init_expr) = &declarator.init {
+                                walk_expression_for_captures(init_expr, ident_refs);
+                            }
+                        }
+                    }
+                    _ => {
+                        if let Some(expr) = init.as_expression() {
+                            walk_expression_for_captures(expr, ident_refs);
+                        }
+                    }
+                }
+            }
+            if let Some(test) = &for_stmt.test {
+                walk_expression_for_captures(test, ident_refs);
+            }
+            if let Some(update) = &for_stmt.update {
+                walk_expression_for_captures(update, ident_refs);
+            }
+            walk_statement_for_captures(&for_stmt.body, ident_refs, local_decls);
+        }
+        Statement::FunctionDeclaration(func) => {
+            if let Some(id) = &func.id {
+                local_decls.insert(id.name.as_str().to_string());
+            }
+            // Don't walk inside function body -- inner functions create their own scope
+        }
+        _ => {}
+    }
+}
+
+/// Walk an expression to collect identifier references for capture analysis.
+fn walk_expression_for_captures(expr: &Expression<'_>, ident_refs: &mut Vec<String>) {
+    match expr {
+        Expression::Identifier(ident) => {
+            ident_refs.push(ident.name.as_str().to_string());
+        }
+        Expression::CallExpression(call) => {
+            walk_expression_for_captures(&call.callee, ident_refs);
+            for arg in &call.arguments {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        walk_expression_for_captures(&spread.argument, ident_refs);
+                    }
+                    _ => {
+                        if let Some(expr) = arg.as_expression() {
+                            walk_expression_for_captures(expr, ident_refs);
+                        }
+                    }
+                }
+            }
+        }
+        Expression::StaticMemberExpression(member) => {
+            walk_expression_for_captures(&member.object, ident_refs);
+            // Don't add the property name as an identifier reference
+        }
+        Expression::ComputedMemberExpression(member) => {
+            walk_expression_for_captures(&member.object, ident_refs);
+            walk_expression_for_captures(&member.expression, ident_refs);
+        }
+        Expression::PrivateFieldExpression(member) => {
+            walk_expression_for_captures(&member.object, ident_refs);
+        }
+        Expression::BinaryExpression(binary) => {
+            walk_expression_for_captures(&binary.left, ident_refs);
+            walk_expression_for_captures(&binary.right, ident_refs);
+        }
+        Expression::LogicalExpression(logical) => {
+            walk_expression_for_captures(&logical.left, ident_refs);
+            walk_expression_for_captures(&logical.right, ident_refs);
+        }
+        Expression::AssignmentExpression(assign) => {
+            // For assignment targets, walk to collect identifiers
+            walk_assignment_target_for_captures(&assign.left, ident_refs);
+            walk_expression_for_captures(&assign.right, ident_refs);
+        }
+        Expression::UnaryExpression(unary) => {
+            walk_expression_for_captures(&unary.argument, ident_refs);
+        }
+        Expression::UpdateExpression(update) => {
+            match &update.argument {
+                SimpleAssignmentTarget::AssignmentTargetIdentifier(ident) => {
+                    ident_refs.push(ident.name.as_str().to_string());
+                }
+                SimpleAssignmentTarget::StaticMemberExpression(member) => {
+                    walk_expression_for_captures(&member.object, ident_refs);
+                }
+                SimpleAssignmentTarget::ComputedMemberExpression(member) => {
+                    walk_expression_for_captures(&member.object, ident_refs);
+                    walk_expression_for_captures(&member.expression, ident_refs);
+                }
+                SimpleAssignmentTarget::PrivateFieldExpression(member) => {
+                    walk_expression_for_captures(&member.object, ident_refs);
+                }
+                _ => {}
+            }
+        }
+        Expression::ConditionalExpression(cond) => {
+            walk_expression_for_captures(&cond.test, ident_refs);
+            walk_expression_for_captures(&cond.consequent, ident_refs);
+            walk_expression_for_captures(&cond.alternate, ident_refs);
+        }
+        Expression::TemplateLiteral(tmpl) => {
+            for expr in &tmpl.expressions {
+                walk_expression_for_captures(expr, ident_refs);
+            }
+        }
+        Expression::ArrayExpression(arr) => {
+            for elem in &arr.elements {
+                match elem {
+                    ArrayExpressionElement::SpreadElement(spread) => {
+                        walk_expression_for_captures(&spread.argument, ident_refs);
+                    }
+                    ArrayExpressionElement::Elision(_) => {}
+                    _ => {
+                        if let Some(expr) = elem.as_expression() {
+                            walk_expression_for_captures(expr, ident_refs);
+                        }
+                    }
+                }
+            }
+        }
+        Expression::ObjectExpression(obj) => {
+            for prop in &obj.properties {
+                match prop {
+                    ObjectPropertyKind::ObjectProperty(p) => {
+                        walk_expression_for_captures(&p.value, ident_refs);
+                    }
+                    ObjectPropertyKind::SpreadProperty(spread) => {
+                        walk_expression_for_captures(&spread.argument, ident_refs);
+                    }
+                }
+            }
+        }
+        Expression::ArrowFunctionExpression(_) | Expression::FunctionExpression(_) => {
+            // Don't descend into nested functions -- they create their own scope
+        }
+        Expression::ParenthesizedExpression(paren) => {
+            walk_expression_for_captures(&paren.expression, ident_refs);
+        }
+        Expression::SequenceExpression(seq) => {
+            for expr in &seq.expressions {
+                walk_expression_for_captures(expr, ident_refs);
+            }
+        }
+        Expression::AwaitExpression(await_expr) => {
+            walk_expression_for_captures(&await_expr.argument, ident_refs);
+        }
+        Expression::TaggedTemplateExpression(tagged) => {
+            walk_expression_for_captures(&tagged.tag, ident_refs);
+            for expr in &tagged.quasi.expressions {
+                walk_expression_for_captures(expr, ident_refs);
+            }
+        }
+        Expression::NewExpression(new_expr) => {
+            walk_expression_for_captures(&new_expr.callee, ident_refs);
+            for arg in &new_expr.arguments {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        walk_expression_for_captures(&spread.argument, ident_refs);
+                    }
+                    _ => {
+                        if let Some(expr) = arg.as_expression() {
+                            walk_expression_for_captures(expr, ident_refs);
+                        }
+                    }
+                }
+            }
+        }
+        Expression::YieldExpression(yield_expr) => {
+            if let Some(arg) = &yield_expr.argument {
+                walk_expression_for_captures(arg, ident_refs);
+            }
+        }
+        Expression::ImportExpression(import_expr) => {
+            walk_expression_for_captures(&import_expr.source, ident_refs);
+        }
+        _ => {}
+    }
+}
+
+/// Walk an assignment target to collect identifier references.
+fn walk_assignment_target_for_captures(
+    target: &AssignmentTarget<'_>,
+    ident_refs: &mut Vec<String>,
+) {
+    match target {
+        AssignmentTarget::AssignmentTargetIdentifier(ident) => {
+            ident_refs.push(ident.name.as_str().to_string());
+        }
+        AssignmentTarget::StaticMemberExpression(member) => {
+            walk_expression_for_captures(&member.object, ident_refs);
+        }
+        AssignmentTarget::ComputedMemberExpression(member) => {
+            walk_expression_for_captures(&member.object, ident_refs);
+            walk_expression_for_captures(&member.expression, ident_refs);
+        }
+        _ => {}
     }
 }
 

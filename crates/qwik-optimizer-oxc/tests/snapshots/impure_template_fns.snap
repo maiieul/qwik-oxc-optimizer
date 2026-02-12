@@ -36,4 +36,8 @@ export const default_component_jN9ZUuuADmk = () => {
 };
 
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.ts === (ENTRY)
-export const default_component_button_q_e_click_zo9wkw0NBzs = () => count.value++;
+import { _captures } from "@qwik.dev/core";
+export const default_component_button_q_e_click_zo9wkw0NBzs = () => {
+	const count = _captures[0];
+	return count.value++;
+};
