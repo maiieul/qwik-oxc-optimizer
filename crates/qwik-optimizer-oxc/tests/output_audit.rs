@@ -201,6 +201,117 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Runtime-breaking classification helpers
+    // -----------------------------------------------------------------------
+
+    /// Extract import symbol names from a normalized code string.
+    /// Returns the set of imported identifiers (e.g., {"foo", "bar"} from
+    /// "import { foo, bar } from './module';").
+    fn extract_import_symbols(normalized: &str) -> std::collections::HashSet<String> {
+        let mut symbols = std::collections::HashSet::new();
+        let tokens: Vec<&str> = normalized.split_whitespace().collect();
+        let mut i = 0;
+        while i < tokens.len() {
+            if tokens[i] == "import" {
+                // Scan tokens until semicolon, collecting identifiers
+                let mut j = i + 1;
+                let mut past_from = false;
+                while j < tokens.len() {
+                    let t = tokens[j];
+                    if t == "from" {
+                        past_from = true;
+                    } else if !past_from {
+                        // Clean up braces and commas
+                        let cleaned = t.replace(['{', '}', ','], "");
+                        let cleaned = cleaned.trim();
+                        if !cleaned.is_empty()
+                            && cleaned != "as"
+                            && cleaned != "*"
+                            && cleaned != "type"
+                            && !cleaned.starts_with('"')
+                            && !cleaned.starts_with('\'')
+                        {
+                            // Handle "X as Y" -- take Y (the local binding)
+                            // But since we check if the symbol is *used in body*,
+                            // we want both the imported and local names
+                            symbols.insert(cleaned.to_string());
+                        }
+                    }
+                    if t.ends_with(';') {
+                        break;
+                    }
+                    j += 1;
+                }
+                i = j + 1;
+            } else {
+                i += 1;
+            }
+        }
+        symbols
+    }
+
+    /// Extract the body (non-import) portion of normalized code.
+    fn extract_body_code(normalized: &str) -> String {
+        let tokens: Vec<&str> = normalized.split_whitespace().collect();
+        let mut body_parts = Vec::new();
+        let mut i = 0;
+        let mut in_import = false;
+        while i < tokens.len() {
+            if tokens[i] == "import" && !in_import {
+                in_import = true;
+            }
+            if in_import {
+                if tokens[i].ends_with(';') {
+                    in_import = false;
+                }
+                i += 1;
+                continue;
+            }
+            body_parts.push(tokens[i]);
+            i += 1;
+        }
+        body_parts.join(" ")
+    }
+
+    /// Classify a deviation as runtime-breaking.
+    ///
+    /// A deviation is runtime-breaking if:
+    /// 1. match_type == "unmatched_expected" AND the spec has no corresponding
+    ///    unmatched_actual module to pair with (truly missing module), OR
+    /// 2. The diff_summary mentions "missing imports" AND the missing import
+    ///    symbols are actually used in the actual body code.
+    fn is_runtime_breaking_code_deviation(deviation: &serde_json::Value) -> bool {
+        let summary = deviation
+            .get("diff_summary")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+        if !summary.contains("missing imports") {
+            return false;
+        }
+        let expected_code = deviation
+            .get("expected_code_normalized")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+        let actual_code = deviation
+            .get("actual_code_normalized")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+
+        let expected_imports = extract_import_symbols(expected_code);
+        let actual_imports = extract_import_symbols(actual_code);
+        let body = extract_body_code(actual_code);
+
+        // Find symbols in expected imports but not in actual imports
+        let missing: Vec<&String> = expected_imports
+            .iter()
+            .filter(|s| !actual_imports.contains(*s))
+            .collect();
+
+        // Check if any missing symbol is referenced in the body
+        missing.iter().any(|sym| body.contains(sym.as_str()))
+    }
+
+    // -----------------------------------------------------------------------
     // Module matching
     // -----------------------------------------------------------------------
 
@@ -489,6 +600,65 @@ mod tests {
             }
         }
 
+        // ---------------------------------------------------------------
+        // Classify deviations as runtime-breaking vs cosmetic (FIX-03)
+        // ---------------------------------------------------------------
+        //
+        // Runtime-breaking deviations are those that would cause a runtime
+        // error if the optimized code were loaded:
+        //   1. truly-missing-module: match_type == "unmatched_expected" with
+        //      no naming-convention pair in the same spec's unmatched_actual
+        //   2. missing-import-used: code deviation where diff_summary has
+        //      "missing imports" and the missing symbol is used in the body
+        //
+        // Everything else is cosmetic (codegen-style, naming-convention,
+        // missing-import-cosmetic, module-count-mismatch).
+
+        // Group unmatched modules by spec to identify naming-convention pairs
+        let mut ue_by_spec: HashMap<String, Vec<&serde_json::Value>> = HashMap::new();
+        let mut ua_by_spec: HashMap<String, usize> = HashMap::new();
+
+        for d in &all_deviations {
+            let mt = d.get("match_type").and_then(|v| v.as_str()).unwrap_or("");
+            let spec = d
+                .get("spec_name")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+            match mt {
+                "unmatched_expected" => {
+                    ue_by_spec.entry(spec).or_default().push(d);
+                }
+                "unmatched_actual" => {
+                    *ua_by_spec.entry(spec).or_insert(0) += 1;
+                }
+                _ => {}
+            }
+        }
+
+        // Count truly-missing-module (unmatched_expected with no pairing actual)
+        let mut truly_missing_count: usize = 0;
+        for (spec, ue_list) in &ue_by_spec {
+            let ua_count = ua_by_spec.get(spec).copied().unwrap_or(0);
+            if ue_list.len() > ua_count {
+                truly_missing_count += ue_list.len() - ua_count;
+            }
+            // If ua_count >= ue_list.len(), all are naming-convention pairs
+        }
+
+        // Count missing-import-used (code deviations where missing symbol is in body)
+        let mut missing_import_used_count: usize = 0;
+        for d in &all_deviations {
+            let mt = d.get("match_type").and_then(|v| v.as_str()).unwrap_or("");
+            if mt == "exact_path" || mt == "structural" {
+                if is_runtime_breaking_code_deviation(d) {
+                    missing_import_used_count += 1;
+                }
+            }
+        }
+
+        let runtime_breaking_count = truly_missing_count + missing_import_used_count;
+
         // Build final JSON output
         let audit_result = json!({
             "total_specs": specs.len(),
@@ -539,14 +709,45 @@ mod tests {
         eprintln!("Unmatched modules: {}", total_unmatched_modules);
         eprintln!("Total deviation records: {}", all_deviations.len());
         eprintln!("---");
+        eprintln!(
+            "Runtime-breaking deviations: {} (threshold: {})",
+            runtime_breaking_count, RUNTIME_BREAKING_THRESHOLD
+        );
+        eprintln!(
+            "  truly-missing-module: {}",
+            truly_missing_count
+        );
+        eprintln!(
+            "  missing-import-used: {}",
+            missing_import_used_count
+        );
+        eprintln!("---");
         eprintln!("Output written to: {}", output_path.display());
         eprintln!("============================\n");
 
-        // DO NOT assert on deviations -- this is an audit, not a pass/fail test.
-        // Just ensure the audit completed and wrote output.
         assert!(
             output_path.exists(),
             "audit-raw.json should have been written"
+        );
+
+        // Regression gate (FIX-03): runtime-breaking deviations must not exceed threshold.
+        // After Plan 24-05 fixed module-level declaration captures and Plan 24-06 validated,
+        // 10 runtime-breaking deviations remain:
+        //   - 6 missing-import-used (edge cases: aliased exports, JSX import source, enum)
+        //   - 4 truly-missing-module (example_qwik_react: 2, relative_paths: 2)
+        // These are accepted limitations. If this assertion fails, a code change has
+        // reintroduced runtime-breaking deviations that were previously fixed.
+        const RUNTIME_BREAKING_THRESHOLD: usize = 10;
+        assert!(
+            runtime_breaking_count <= RUNTIME_BREAKING_THRESHOLD,
+            "Regression detected: {} runtime-breaking deviations exceeds threshold of {}. \
+             Previously fixed deviations may have been reintroduced. \
+             Check audit-raw.json for details. \
+             (truly-missing-module: {}, missing-import-used: {})",
+            runtime_breaking_count,
+            RUNTIME_BREAKING_THRESHOLD,
+            truly_missing_count,
+            missing_import_used_count
         );
     }
 }
