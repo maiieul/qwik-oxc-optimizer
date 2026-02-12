@@ -6,7 +6,7 @@ expression: output
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_Qw9nV3mG0KQ = () => import("./test.tsx_Header_component_Qw9nV3mG0KQ");
-const i_QrzcmFeRo0o = () => import("./test.tsx_Header_QrzcmFeRo0o");
+const i_F0ShKNzNoIM = () => import("./test.tsx_Header_component_div_q_e_click_F0ShKNzNoIM");
 export const App = () => {
 	const Header = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_Qw9nV3mG0KQ, "Header_component_Qw9nV3mG0KQ"));
 	return Header;
@@ -14,11 +14,11 @@ export const App = () => {
 
 === test.tsx_Header_component_Qw9nV3mG0KQ.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_QrzcmFeRo0o = () => import("./test.tsx_Header_QrzcmFeRo0o");
+const i_F0ShKNzNoIM = () => import("./test.tsx_Header_component_div_q_e_click_F0ShKNzNoIM");
 export const Header_component_Qw9nV3mG0KQ = () => {
 	console.log("mount");
-	return <div onClick={/* @__PURE__ */ qrl(i_QrzcmFeRo0o, "Header_QrzcmFeRo0o")} />;
+	return <div onClick={/* @__PURE__ */ qrl(i_F0ShKNzNoIM, "Header_component_div_q_e_click_F0ShKNzNoIM")} />;
 }
 
-=== test.tsx_Header_QrzcmFeRo0o.tsx === (ENTRY)
-export const Header_QrzcmFeRo0o = (ctx) => console.log(ctx);
+=== test.tsx_Header_component_div_q_e_click_F0ShKNzNoIM.tsx === (ENTRY)
+export const Header_component_div_q_e_click_F0ShKNzNoIM = (ctx) => console.log(ctx);

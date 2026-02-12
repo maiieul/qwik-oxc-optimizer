@@ -5,29 +5,25 @@ expression: output
 === test.tsx ===
 import { qrl } from "@qwik.dev/core";
 const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
-const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
-const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
+const i_cwR88TdIVK4 = () => import("./test.tsx_renderHeader_div_q_e_click_cwR88TdIVK4");
+const i_dZG2Ib1X4QU = () => import("./test.tsx_renderHeader_component_dZG2Ib1X4QU");
 import { component } from "@qwik.dev/core";
 import { onRender } from "@qwik.dev/core";
 export const renderHeader = /* @__PURE__ */ qrl(i_AcV95hWr76k, "renderHeader_AcV95hWr76k");
-const renderHeader = component(/* @__PURE__ */ qrl(i_AcV95hWr76k, "renderHeader_AcV95hWr76k"));
+const renderHeader = component(/* @__PURE__ */ qrl(i_dZG2Ib1X4QU, "renderHeader_component_dZG2Ib1X4QU"));
 
 === test.tsx_renderHeader_AcV95hWr76k.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
+const i_cwR88TdIVK4 = () => import("./test.tsx_renderHeader_div_q_e_click_cwR88TdIVK4");
 export const renderHeader_AcV95hWr76k = () => {
-	return <div onClick={/* @__PURE__ */ qrl(i_AcV95hWr76k, "renderHeader_AcV95hWr76k")} />;
+	return <div onClick={/* @__PURE__ */ qrl(i_cwR88TdIVK4, "renderHeader_div_q_e_click_cwR88TdIVK4")} />;
 }
 
-=== test.tsx_renderHeader_AcV95hWr76k.tsx === (ENTRY)
-import { qrl } from "@qwik.dev/core";
-const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
-export const renderHeader_AcV95hWr76k = (ctx) => console.log(ctx);
+=== test.tsx_renderHeader_div_q_e_click_cwR88TdIVK4.tsx === (ENTRY)
+export const renderHeader_div_q_e_click_cwR88TdIVK4 = (ctx) => console.log(ctx);
 
-=== test.tsx_renderHeader_AcV95hWr76k.tsx === (ENTRY)
-import { qrl } from "@qwik.dev/core";
-const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
-export const renderHeader_AcV95hWr76k = () => {
+=== test.tsx_renderHeader_component_dZG2Ib1X4QU.tsx === (ENTRY)
+export const renderHeader_component_dZG2Ib1X4QU = () => {
 	console.log("mount");
 	return render;
 };

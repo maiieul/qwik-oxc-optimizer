@@ -9,7 +9,7 @@ import { _jsxSorted } from "@qwik.dev/core";
 const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
 const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA");
 const i_YvjM3SoLvrM = () => import("./test.tsx_Root_component_YvjM3SoLvrM");
-const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
+const i_b1oI4QMvfDY = () => import("./test.tsx_Root_useStyles_b1oI4QMvfDY");
 const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
 import { useStyles } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core/what";
@@ -40,16 +40,16 @@ export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(qrl);
 
 === test.tsx_Root_component_YvjM3SoLvrM.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
+const i_b1oI4QMvfDY = () => import("./test.tsx_Root_useStyles_b1oI4QMvfDY");
 const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
 import { useStyles } from "@qwik.dev/core";
 export const Root_component_YvjM3SoLvrM = () => {
-	useStyles(/* @__PURE__ */ qrl(i_JSvK9zVuQxw, "Root_JSvK9zVuQxw"));
+	useStyles(/* @__PURE__ */ qrl(i_b1oI4QMvfDY, "Root_useStyles_b1oI4QMvfDY"));
 	return /* @__PURE__ */ qrl(i_JSvK9zVuQxw, "Root_JSvK9zVuQxw");
 };
 
-=== test.tsx_Root_JSvK9zVuQxw.js === (ENTRY)
-export const Root_JSvK9zVuQxw = "thing";
+=== test.tsx_Root_useStyles_b1oI4QMvfDY.js === (ENTRY)
+export const Root_useStyles_b1oI4QMvfDY = "thing";
 
 === test.tsx_Root_JSvK9zVuQxw.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";

@@ -731,13 +731,12 @@ mod tests {
         );
 
         // Regression gate (FIX-03): runtime-breaking deviations must not exceed threshold.
-        // After Phase 24 Plans 01-09 (gap closure rounds 1 + 2), 5 runtime-breaking
-        // deviations remain:
-        //   - 1 missing-import-used (example_drop_side_effects: `api` from server$() call)
+        // After Phase 24 Plans 01-10, 4 runtime-breaking deviations remain:
+        //   - 0 missing-import-used (Plan 10 fixed example_drop_side_effects api import)
         //   - 4 truly-missing-module (example_qwik_react: 2, relative_paths: 2)
-        // These are accepted limitations. If this assertion fails, a code change has
-        // reintroduced runtime-breaking deviations that were previously fixed.
-        const RUNTIME_BREAKING_THRESHOLD: usize = 5;
+        // These are accepted architectural limitations. If this assertion fails,
+        // a code change has reintroduced runtime-breaking deviations.
+        const RUNTIME_BREAKING_THRESHOLD: usize = 4;
         assert!(
             runtime_breaking_count <= RUNTIME_BREAKING_THRESHOLD,
             "Regression detected: {} runtime-breaking deviations exceeds threshold of {}. \
