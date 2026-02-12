@@ -1,0 +1,6 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== project/test.tsx ===
+export const cache = patternCache[cacheKey] || (patternCache[cacheKey] = {});

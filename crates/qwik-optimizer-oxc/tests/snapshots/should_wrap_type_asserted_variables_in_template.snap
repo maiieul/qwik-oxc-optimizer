@@ -1,0 +1,19 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.js ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
+import { useSignal } from "@qwik.dev/core";
+export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
+
+=== test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)
+import { _jsxSorted } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+export const default_component_jN9ZUuuADmk = () => {
+	const count = useSignal(0);
+	return /* @__PURE__ */ _jsxSorted("div", null, null, (count as any).value, 3, "u6_0");
+}

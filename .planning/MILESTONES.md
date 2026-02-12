@@ -37,3 +37,64 @@
 
 ---
 
+
+## v3.0 OXC Optimizer Port (Shipped: 2026-02-11)
+
+**Delivered:** Complete OXC-based Qwik optimizer crate implementing all 14 CONV transformation types, validated at 157/162 spec match (96.9%) with 250/250 metadata assertions passing.
+
+**Phases completed:** 7 phases, 16 plans | 16 Rust source files, 11,758 LOC | 2 days
+**Git range:** `feat(07-01)` → `docs(phase-13)` (~70 commits)
+
+**Key accomplishments:**
+1. Built `qwik-optimizer-oxc` crate with 16 modules, serde-annotated public types, and spec test harness parsing all 162 behavioral specs
+2. Full detection-to-codegen pipeline: OXC parser, recursive AST collector, dollar-call detection, QwikTransform with `qrl()`/`inlinedQrl()` output
+3. Capture analysis with stack-based cross-boundary variable tracking and props destructuring (`_rawProps`/`_restProps`)
+4. End-to-end segment extraction: body extraction, string-based module construction, all 7 entry strategies, lazy import declarations
+5. JSX transforms: `_jsxSorted`/`_jsxSplit` with prop classification, `_wrapProp`/`_fnSignal` signal optimization, `bind:value`/`bind:checked` expansion
+6. Annotations + stripping: `/*#__PURE__*/` tree-shaking, `isServer`/`isBrowser`/`isDev` replacement, dead branch elimination, `_noopQrl`, `_qrlSync`
+7. Source maps for all modules, 157/162 spec match with comprehensive validation (5 known deviations: 3 parser limitations, 2 out-of-scope)
+
+**Archives:** `milestones/v3.0-ROADMAP.md`, `milestones/v3.0-REQUIREMENTS.md`, `milestones/v3.0-MILESTONE-AUDIT.md`
+
+---
+
+
+## v4.0 Code Quality Refactor (Shipped: 2026-02-11)
+
+**Delivered:** Comprehensive refactoring of the qwik-optimizer-oxc crate for maintainability -- module extraction, boilerplate elimination, bug fixes, dead code removal, and style cleanup -- with zero regressions against 157/162 spec compliance.
+
+**Phases completed:** 6 phases, 8 plans | 20 files changed, -930 net lines | ~2 hours
+**Git range:** `feat(14-01)` → `docs(phase-19)` (fd112e9..b93fe3b)
+
+**Key accomplishments:**
+1. Stripped 280+ redundant comments and flattened deeply nested functions with early returns across all source files
+2. Deleted 350 lines of dead code, eliminated all #![allow(unused)] directives, achieved zero compiler warnings
+3. Fixed minify_expression_string space-dropping bug and converted KNOWN_GLOBALS to O(1) LazyLock<HashSet>
+4. Extracted 29 JSX transformation functions into jsx_transform.rs -- transform.rs reduced 54% (2,745 → 1,268 lines)
+5. Rewrote const_replace.rs with OXC VisitMut trait -- eliminated 585 lines of manual AST walking (68% reduction)
+6. Zero regressions confirmed: 157/162 spec match, 250/250 metadata assertions, 162 tests passing
+
+**Archives:** `milestones/v4.0-ROADMAP.md`, `milestones/v4.0-REQUIREMENTS.md`
+
+---
+
+
+## v5.0 Drop-in Replacement Compliance (Shipped: 2026-02-12)
+
+**Delivered:** Fixed all output compatibility issues so the OXC optimizer can replace the SWC optimizer at runtime — correct segment paths, import scoping, display names, and PURE annotations.
+
+**Phases completed:** 3 phases, 3 plans, 6 tasks | 396 files changed | 2 days
+**Git range:** `fix(20-01)` → `docs(v5.0)` (4b6db05..728e1b3)
+
+**Key accomplishments:**
+1. Fixed canonical filenames to preserve file extension in origin prefix, with correct explicit_extensions and transpile extension logic (PATH-01/02/03/04)
+2. Stripped consumed $-suffixed imports from main module output and scoped Qrl-suffixed imports to correct segment modules (IMPORT-01/02)
+3. Nested segment display names now include full parent context hierarchy with scope_prefix tracking (NAME-01)
+4. PURE annotations restricted to tree-shakeable calls only — componentQrl gets PURE, side-effectful wrappers do not (PURE-01)
+5. All 8 requirements satisfied, 168 tests passing, zero regressions, zero tech debt
+6. Milestone audit passed: 8/8 requirements, 5/5 integration connections, 3/3 E2E flows
+
+**Archives:** `milestones/v5.0-ROADMAP.md`, `milestones/v5.0-REQUIREMENTS.md`, `milestones/v5.0-MILESTONE-AUDIT.md`
+
+---
+

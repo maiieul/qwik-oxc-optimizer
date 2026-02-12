@@ -1,0 +1,123 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.js ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_vbEaih0SxYg = () => import("./test.tsx_App_component_button_q_e_click_vbEaih0SxYg");
+import { useStore } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
+
+=== test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_Sk6T7tAJM2g = () => import("./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g");
+const i_vbEaih0SxYg = () => import("./test.tsx_App_component_button_q_e_click_vbEaih0SxYg");
+import { _jsxSorted } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+export const App_component_XumqEURaLxI = () => {
+	const cart = useStore<string[]>([]);
+	const results = useSignal(["foo"]);
+	function loopArrowFn(results: string[]) {
+		return results.map((item) => /* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart]) }, item, 3, "u6_0"));
+	}
+	function loopForI(results: string[]) {
+		const output = [];
+		for (let i = 0; i < results.length; i++) {
+			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart, results]) }, results[i], 3, "u6_1"));
+		}
+		return output;
+	}
+	function loopForOf(results: string[]) {
+		const output = [];
+		for (const item of results) {
+			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart]) }, item, 3, "u6_2"));
+		}
+		return output;
+	}
+	function loopForIn(results: string[]) {
+		const output = [];
+		for (const key in results) {
+			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart, results]) }, results[key], 3, "u6_3"));
+		}
+		return output;
+	}
+	function loopWhile(results: string[]) {
+		const output = [];
+		let i = 0;
+		while (i < results.length) {
+			output.push(/* @__PURE__ */ _jsxSorted("span", null, { "q-e:click": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, "App_component_span_q_e_click_Sk6T7tAJM2g", [cart, results]) }, results[i], 3, "u6_4"));
+			i++;
+		}
+		return output;
+	}
+	return /* @__PURE__ */ _jsxSorted("div", null, null, [
+		results.value.map((item) => /* @__PURE__ */ _jsxSorted("button", null, {
+			id: "second",
+			"q-e:click": /* @__PURE__ */ qrl(i_vbEaih0SxYg, "App_component_button_q_e_click_vbEaih0SxYg", [cart])
+		}, item, 3, "u6_5")),
+		loopArrowFn(results.value),
+		loopForI(results.value),
+		loopForOf(results.value),
+		loopForIn(results.value),
+		loopWhile(results.value)
+	], 1, "u6_6");
+}
+
+=== test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, item) => {
+	const cart = _captures[0];
+	cart.push(item);
+};
+
+=== test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, i) => {
+	const cart = _captures[0];
+	const results = _captures[1];
+	cart.push(results[i]);
+};
+
+=== test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, item) => {
+	const cart = _captures[0];
+	cart.push(item);
+};
+
+=== test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, key) => {
+	const cart = _captures[0];
+	const results = _captures[1];
+	cart.push(results[key]);
+};
+
+=== test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const App_component_span_q_e_click_Sk6T7tAJM2g = (_, _1, i) => {
+	const cart = _captures[0];
+	const results = _captures[1];
+	cart.push(results[i]);
+};
+
+=== test.tsx_App_component_button_q_e_click_vbEaih0SxYg.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const App_component_button_q_e_click_vbEaih0SxYg = (_, _1, item) => {
+	const cart = _captures[0];
+	cart.push(item);
+};

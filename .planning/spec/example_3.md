@@ -20,15 +20,13 @@ export const App = () => {
 		);
 	});
 	return Header;
-});
+};
 ```
 
 <details>
 <summary>Input AST (OXC)</summary>
 
-```json
-AST generation failed (parser panic)
-```
+*Standard TSX input. Arrow function App containing component$ with nested $() onClick handler.*
 
 </details>
 

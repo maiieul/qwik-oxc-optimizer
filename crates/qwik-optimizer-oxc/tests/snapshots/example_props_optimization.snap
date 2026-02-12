@@ -1,0 +1,51 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.js ===
+import { componentQrl } from "@qwik.dev/core";
+import { useTaskQrl } from "@qwik.dev/core";
+import { inlinedQrl } from "@qwik.dev/core";
+import { _captures } from "@qwik.dev/core";
+import { _restProps } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+import { _getVarProps } from "@qwik.dev/core";
+import { _getConstProps } from "@qwik.dev/core";
+import { _jsxSplit } from "@qwik.dev/core";
+import { _wrapProp } from "@qwik.dev/core";
+import { CONST } from "const";
+export const Works = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
+	const rest = _restProps(_rawProps, ["count", "stuff"]);
+	console.log(_rawProps.stuff, some);
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(({ track }) => {
+		track(() => _rawProps.count);
+		console.log(_rawProps.count, rest, _rawProps.stuff, some, hey2);
+	}, "Works_useTask_D1e4kX2NEEI", [
+		count,
+		rest,
+		hey,
+		some,
+		hey2
+	]));
+	return /* @__PURE__ */ _jsxSplit("div", {
+		..._getVarProps(rest),
+		some,
+		params: { some }
+	}, _getConstProps(rest), _rawProps.count, 0, "u6_0");
+}, "Works_component_xJyUXaLUiKw"));
+export const NoWorks2 = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
+	console.log(hey);
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(({ track }) => {
+		track(() => _rawProps.count);
+		console.log(_rawProps.count);
+	}, "NoWorks2_useTask_opHchYaRhnE", [count]));
+	return /* @__PURE__ */ _jsxSorted("div", null, { class: _wrapProp(_rawProps, "count") }, _rawProps.count, 3, "u6_1");
+}, "NoWorks2_component_Jhs0YVs504k"));
+export const NoWorks3 = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
+	console.log(stuff);
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(({ track }) => {
+		track(() => _rawProps.count);
+		console.log(_rawProps.count);
+	}, "NoWorks3_useTask_mjdi0dWJNHk", [count]));
+	return /* @__PURE__ */ _jsxSorted("div", null, { class: _wrapProp(_rawProps, "count") }, _rawProps.count, 3, "u6_2");
+}, "NoWorks3_component_NzET9vTvU1E"));

@@ -1,0 +1,10 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.tsx ===
+import { jsx } from "@qwik.dev/core";
+export const App = () => {
+	const props = {};
+	return jsx("div", props, "Hello Qwik");
+};

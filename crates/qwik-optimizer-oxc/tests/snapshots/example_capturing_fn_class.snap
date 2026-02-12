@@ -1,0 +1,34 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.js ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
+const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4");
+export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
+
+=== test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4");
+export const App_component_XumqEURaLxI = () => {
+	function hola() {
+		console.log("hola");
+	}
+	class Thing {}
+	class Other {}
+	return /* @__PURE__ */ qrl(i_w3unmdi0sm4, "App_w3unmdi0sm4", [hola, Thing]);
+};
+
+=== test.tsx_App_w3unmdi0sm4.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+export const App_w3unmdi0sm4 = () => {
+	const hola = _captures[0];
+	const Thing = _captures[1];
+	hola();
+	new Thing();
+	return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
+};

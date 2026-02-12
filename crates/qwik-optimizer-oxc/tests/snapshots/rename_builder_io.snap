@@ -1,0 +1,39 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.ts ===
+import { qwikifyQrl } from "@qwik.dev/core";
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_WtIyP0H0lSk = () => import("./test.tsx_Foo_qwikify_WtIyP0H0lSk");
+const i_MSAJNhrvHtQ = () => import("./test.tsx_Bar_MSAJNhrvHtQ");
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
+import { stuff } from "@builder.io/qwik-city";
+import { moreStuff } from "@builder.io/qwik-city/more/here";
+import { isDev } from "@builder.io/qwik/build";
+import sdk from "@builder.io/sdk";
+export const Foo = qwikifyQrl(/* @__PURE__ */ qrl(i_WtIyP0H0lSk, "Foo_qwikify_WtIyP0H0lSk"));
+export const Bar = /* @__PURE__ */ qrl(i_MSAJNhrvHtQ, "Bar_MSAJNhrvHtQ");
+export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
+
+=== test.tsx_Foo_qwikify_WtIyP0H0lSk.ts === (ENTRY)
+export const Foo_qwikify_WtIyP0H0lSk = MyReactComponent;
+
+=== test.tsx_Bar_MSAJNhrvHtQ.ts === (ENTRY)
+export const Bar_MSAJNhrvHtQ = "a thing";
+
+=== test.tsx_App_component_XumqEURaLxI.ts === (ENTRY)
+import sdk from "@builder.io/sdk";
+import { isDev } from "@builder.io/qwik/build";
+import { stuff } from "@builder.io/qwik-city";
+import { moreStuff } from "@builder.io/qwik-city/more/here";
+export const App_component_XumqEURaLxI = () => {
+	sdk.hello();
+	if (isDev) {
+		stuff();
+	} else {
+		moreStuff();
+	}
+	return "hi";
+};

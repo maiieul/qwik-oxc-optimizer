@@ -1,0 +1,36 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== components/component.js ===
+import { componentQrl } from "@qwik.dev/core";
+import { useClientMountQrl } from "@qwik.dev/core";
+import { useTaskQrl } from "@qwik.dev/core";
+import { inlinedQrl } from "@qwik.dev/core";
+import { _captures } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
+import mongo from "mongodb";
+import redis from "redis";
+import threejs from "threejs";
+import { a } from "./keep";
+import { b } from "../keep2";
+import { c } from "../../remove";
+export const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
+	const state = useStore({ text: "" });
+	// Double count watch
+	useClientMountQrl(/* @__PURE__ */ inlinedQrl(async () => {
+		state.text = await mongo.users();
+		redis.set(state.text, a, b, c);
+	}, "useClientMount_HL0udnF1YjQ", [state]));
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
+		// Code
+	}, "useTask_Vmh2TI9KAKU"));
+	return /* @__PURE__ */ _jsxSorted("div", null, {
+		"shouldRemove$": () => state.text,
+		"q-e:click": () => console.log("parent", state, threejs)
+	}, [/* @__PURE__ */ _jsxSorted(Div, null, {
+		"q-e:click": () => console.log("keep"),
+		"render$": () => state.text
+	}, null, 3, "u6_0"), state.text], 1, "u6_1");
+}, "Parent_component_Pr9NkHIe6q8"));

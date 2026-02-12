@@ -1,0 +1,7 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.js ===
+import { inlinedQrl } from "@qwik.dev/core";
+const foo = inlinedQrl(null, "some_hash");
