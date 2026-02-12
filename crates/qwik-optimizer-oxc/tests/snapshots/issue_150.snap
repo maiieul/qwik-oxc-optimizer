@@ -2,19 +2,19 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_l5Al0251s9w = () => import("./test_Greeter_component_l5Al0251s9w");
-const i_Ma8uJBKLX2o = () => import("./test_s__Ma8uJBKLX2o");
-const i_j0uXtsz0eLE = () => import("./test_d_j0uXtsz0eLE");
+const i_l5Al0251s9w = () => import("./test.tsx_Greeter_component_l5Al0251s9w");
+const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
+const i_j0uXtsz0eLE = () => import("./test.tsx_d_j0uXtsz0eLE");
 import { component$, $ } from "@qwik.dev/core";
 import { hola } from "sdfds";
 export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"));
 const d = /* @__PURE__ */ qrl(i_j0uXtsz0eLE, "d_j0uXtsz0eLE");
 
-=== test.tsx_Greeter_component_l5Al0251s9w.jsx === (ENTRY)
+=== test.tsx_Greeter_component_l5Al0251s9w.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
 export const Greeter_component_l5Al0251s9w = () => {
@@ -22,7 +22,7 @@ export const Greeter_component_l5Al0251s9w = () => {
 	return /* @__PURE__ */ qrl(i_Ma8uJBKLX2o, "s__Ma8uJBKLX2o", [stuff]);
 };
 
-=== test.tsx_s__Ma8uJBKLX2o.jsx === (ENTRY)
+=== test.tsx_s__Ma8uJBKLX2o.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 export const s__Ma8uJBKLX2o = () => {
@@ -34,5 +34,5 @@ export const s__Ma8uJBKLX2o = () => {
 	} }, null, null, 3, "u6_0");
 };
 
-=== test.tsx_d_j0uXtsz0eLE.jsx === (ENTRY)
+=== test.tsx_d_j0uXtsz0eLE.js === (ENTRY)
 export const d_j0uXtsz0eLE = () => console.log("thing");

@@ -2,13 +2,13 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_XumqEURaLxI = () => import("./test_App_component_XumqEURaLxI");
-const i_vbEaih0SxYg = () => import("./test_App_component_button_q_e_click_vbEaih0SxYg");
-const i_wANYt0I0EHI = () => import("./test_App_component_div_q_e_click_wANYt0I0EHI");
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
+const i_vbEaih0SxYg = () => import("./test.tsx_App_component_button_q_e_click_vbEaih0SxYg");
+const i_wANYt0I0EHI = () => import("./test.tsx_App_component_div_q_e_click_wANYt0I0EHI");
 import { $, component$, useStore } from "@qwik.dev/core";
 export const useCounter = () => {
 	return useStore({ count: 0 });
@@ -16,7 +16,7 @@ export const useCounter = () => {
 export const STEP = 1;
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
 
-=== test.tsx_App_component_XumqEURaLxI.jsx === (ENTRY)
+=== test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_vbEaih0SxYg = () => import("./test.tsx_App_component_button_q_e_click_vbEaih0SxYg");
 const i_wANYt0I0EHI = () => import("./test.tsx_App_component_div_q_e_click_wANYt0I0EHI");
@@ -29,7 +29,7 @@ export const App_component_XumqEURaLxI = (props) => {
 	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => state.count += count2 }, [/* @__PURE__ */ _jsxSorted("span", null, null, state.count, 3, "u6_1"), buttons.map((btn) => /* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": () => state.count += btn.offset + thing + STEP + STEP_2 + props.step }, btn.name, 3, "u6_0"))], 1, "u6_2");
 };
 
-=== test.tsx_App_component_button_q_e_click_vbEaih0SxYg.jsx === (ENTRY)
+=== test.tsx_App_component_button_q_e_click_vbEaih0SxYg.js === (ENTRY)
 
 
-=== test.tsx_App_component_div_q_e_click_wANYt0I0EHI.jsx === (ENTRY)
+=== test.tsx_App_component_div_q_e_click_wANYt0I0EHI.js === (ENTRY)

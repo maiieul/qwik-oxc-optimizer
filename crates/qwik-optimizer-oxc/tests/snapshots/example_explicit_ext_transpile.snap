@@ -2,29 +2,29 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_XumqEURaLxI = () => import("./test_App_component_XumqEURaLxI");
-const i_IUcvUpNH0v8 = () => import("./test_App_useStyles_IUcvUpNH0v8");
-const i_w3unmdi0sm4 = () => import("./test_App_w3unmdi0sm4");
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI.js");
+const i_IUcvUpNH0v8 = () => import("./test.tsx_App_useStyles_IUcvUpNH0v8.js");
+const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4.js");
 import { component$, $, useStyles$ } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
 
-=== test.tsx_App_component_XumqEURaLxI.jsx === (ENTRY)
+=== test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_IUcvUpNH0v8 = () => import("./test.tsx_App_useStyles_IUcvUpNH0v8");
-const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4");
+const i_IUcvUpNH0v8 = () => import("./test.tsx_App_useStyles_IUcvUpNH0v8.js");
+const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4.js");
 export const App_component_XumqEURaLxI = (props) => {
 	/* @__PURE__ */ useStylesQrl(/* @__PURE__ */ qrl(i_IUcvUpNH0v8, "App_useStyles_IUcvUpNH0v8"));
 	return /* @__PURE__ */ qrl(i_w3unmdi0sm4, "App_w3unmdi0sm4");
 };
 
-=== test.tsx_App_useStyles_IUcvUpNH0v8.jsx === (ENTRY)
+=== test.tsx_App_useStyles_IUcvUpNH0v8.js === (ENTRY)
 export const App_useStyles_IUcvUpNH0v8 = "hola";
 
-=== test.tsx_App_w3unmdi0sm4.jsx === (ENTRY)
+=== test.tsx_App_w3unmdi0sm4.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const App_w3unmdi0sm4 = () => /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);

@@ -20,16 +20,16 @@ export const App = /* @__PURE__ */ componentQrl(inlinedQrl(() => {
 	}) })] });
 }, "App_component_AkbU84a8zes"));
 
-=== components/main.jsx ===
+=== components/main.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_OCSspQ0ICD8 = () => import("./components/main_Local_component_OCSspQ0ICD8");
+const i_OCSspQ0ICD8 = () => import("./components/main.tsx_Local_component_OCSspQ0ICD8.js");
 import { component$, $ } from "@qwik.dev/core";
 import { state } from "./sibling";
 export const Local = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_OCSspQ0ICD8, "Local_component_OCSspQ0ICD8"));
 
-=== components/main.tsx_Local_component_OCSspQ0ICD8.jsx === (ENTRY)
+=== components/main.tsx_Local_component_OCSspQ0ICD8.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const Local_component_OCSspQ0ICD8 = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, state, 3, "u6_0");

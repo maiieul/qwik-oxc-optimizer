@@ -2,17 +2,17 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_fxETLug1yE4 = () => import("./test_Parent_component_fxETLug1yE4");
-const i_I5Xm0lRBfsc = () => import("./test_Parent_component_button_q_e_click_I5Xm0lRBfsc");
-const i_I5Xm0lRBfsc = () => import("./test_Parent_component_button_q_e_click_I5Xm0lRBfsc");
+const i_fxETLug1yE4 = () => import("./test.tsx_Parent_component_fxETLug1yE4");
+const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
+const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
 import { component$, useStore, useSignal } from "@qwik.dev/core";
 const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_fxETLug1yE4, "Parent_component_fxETLug1yE4"));
 
-=== test.tsx_Parent_component_fxETLug1yE4.jsx === (ENTRY)
+=== test.tsx_Parent_component_fxETLug1yE4.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
 const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
@@ -32,7 +32,7 @@ export const Parent_component_fxETLug1yE4 = () => {
 	], 1, "u6_5");
 };
 
-=== test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.jsx === (ENTRY)
+=== test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
 
 
-=== test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.jsx === (ENTRY)
+=== test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)

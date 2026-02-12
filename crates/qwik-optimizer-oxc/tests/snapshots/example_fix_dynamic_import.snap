@@ -5,7 +5,7 @@ expression: output
 === project/folder/test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_X7T1frKO0nI = () => import("./project/folder/test_Header_component_X7T1frKO0nI");
+const i_X7T1frKO0nI = () => import("./project/folder/test.tsx_Header_component_X7T1frKO0nI");
 import { $, component$ } from "@qwik.dev/core";
 import thing from "../state";
 export function foo() {

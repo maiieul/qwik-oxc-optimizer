@@ -2,15 +2,15 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
-const i_gZqPatVoDqw = () => import("./test_Foo_component_gZqPatVoDqw");
-const i_T0dY5k6mBgU = () => import("./test_Foo_T0dY5k6mBgU");
+const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
+const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { $, component$, h, Fragment } from "@qwik.dev/core";
 export const Lightweight = (props) => {
@@ -18,14 +18,14 @@ export const Lightweight = (props) => {
 };
 export const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
 
-=== test.tsx_Foo_component_gZqPatVoDqw.jsx === (ENTRY)
+=== test.tsx_Foo_component_gZqPatVoDqw.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
 export const Foo_component_gZqPatVoDqw = (props) => {
 	return /* @__PURE__ */ qrl(i_T0dY5k6mBgU, "Foo_T0dY5k6mBgU", [props, children]);
 };
 
-=== test.tsx_Foo_T0dY5k6mBgU.jsx === (ENTRY)
+=== test.tsx_Foo_T0dY5k6mBgU.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";

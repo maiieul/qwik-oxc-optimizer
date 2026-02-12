@@ -2,18 +2,18 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { useComputedQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_jN9ZUuuADmk = () => import("./test_default_component_jN9ZUuuADmk");
-const i_hufCehIw5mI = () => import("./test_productTitle_useComputed_hufCehIw5mI");
+const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
+const i_hufCehIw5mI = () => import("./test.tsx_productTitle_useComputed_hufCehIw5mI");
 import { component$, useComputed$ } from "@qwik.dev/core";
 import { inlineTranslate } from "translate-lib";
 export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
 
-=== test.tsx_default_component_jN9ZUuuADmk.jsx === (ENTRY)
+=== test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_hufCehIw5mI = () => import("./test.tsx_productTitle_useComputed_hufCehIw5mI");
 import { _jsxSorted } from "@qwik.dev/core";
@@ -26,7 +26,7 @@ export const default_component_jN9ZUuuADmk = () => {
 	}, null, null, 3, "u6_0");
 };
 
-=== test.tsx_productTitle_useComputed_hufCehIw5mI.jsx === (ENTRY)
+=== test.tsx_productTitle_useComputed_hufCehIw5mI.js === (ENTRY)
 export const productTitle_useComputed_hufCehIw5mI = () => {
 	return "Test title";
 };

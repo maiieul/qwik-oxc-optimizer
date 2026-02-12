@@ -2,15 +2,15 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_XumqEURaLxI = () => import("./test_App_component_XumqEURaLxI");
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
 import { component$ } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
 
-=== test.tsx_App_component_XumqEURaLxI.jsx === (ENTRY)
+=== test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const App_component_XumqEURaLxI = () => {
 	console.log(function* (lo: any, t: any) {

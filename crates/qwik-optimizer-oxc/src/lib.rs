@@ -1493,12 +1493,247 @@ export const handler = $(() => 1);"#
 
     #[test]
     fn test_output_extension_helper() {
-        assert_eq!(output_extension("test.tsx", true), "jsx");
-        assert_eq!(output_extension("test.ts", true), "js");
-        assert_eq!(output_extension("test.jsx", true), "jsx");
-        assert_eq!(output_extension("test.js", true), "js");
-        assert_eq!(output_extension("test.tsx", false), "tsx");
-        assert_eq!(output_extension("test.ts", false), "ts");
+        // transpile_ts=true, transpile_jsx=false: removes TS, preserves JSX
+        assert_eq!(output_extension("test.tsx", true, false), "jsx");
+        assert_eq!(output_extension("test.ts", true, false), "js");
+        assert_eq!(output_extension("test.jsx", true, false), "jsx");
+        assert_eq!(output_extension("test.js", true, false), "js");
+
+        // transpile_ts=false, transpile_jsx=false: preserves original
+        assert_eq!(output_extension("test.tsx", false, false), "tsx");
+        assert_eq!(output_extension("test.ts", false, false), "ts");
+
+        // PATH-04: transpile_ts=true, transpile_jsx=true: removes both -> .js
+        assert_eq!(output_extension("test.tsx", true, true), "js");
+        assert_eq!(output_extension("test.ts", true, true), "js");
+        assert_eq!(output_extension("test.jsx", true, true), "jsx"); // no TS to strip from jsx
+        assert_eq!(output_extension("test.js", true, true), "js");
+
+        // transpile_jsx=true only: removes JSX, preserves TS
+        assert_eq!(output_extension("test.tsx", false, true), "ts");
+        assert_eq!(output_extension("test.jsx", false, true), "js");
+        assert_eq!(output_extension("test.ts", false, true), "ts"); // no JSX to strip from ts
+        assert_eq!(output_extension("test.js", false, true), "js");
+    }
+
+    // -----------------------------------------------------------------------
+    // Path Resolution Integration Tests (Phase 20-01)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_path_01_canonical_filename_has_extension() {
+        // PATH-01: canonical_filename must contain file extension in origin prefix
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 1);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find segment module
+        let seg_module = result
+            .modules
+            .iter()
+            .find(|m| m.segment.is_some())
+            .expect("Expected a segment module");
+        let seg = seg_module.segment.as_ref().unwrap();
+
+        // canonical_filename should contain "test.tsx_" prefix (not "test_")
+        assert!(
+            seg.canonical_filename.contains("test.tsx_"),
+            "Expected canonical_filename to contain 'test.tsx_', got: {}",
+            seg.canonical_filename
+        );
+
+        // Segment module path should also contain "test.tsx_"
+        assert!(
+            seg_module.path.contains("test.tsx_"),
+            "Expected segment module path to contain 'test.tsx_', got: {}",
+            seg_module.path
+        );
+    }
+
+    #[test]
+    fn test_path_02_import_paths_match_segment_filenames() {
+        // PATH-02: lazy import() paths in main module must match segment module paths
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 1);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+        let seg_module = result
+            .modules
+            .iter()
+            .find(|m| m.segment.is_some())
+            .expect("Expected a segment module");
+
+        // The segment module path minus extension = the import path used in main module
+        // Main module uses: import i_HASH from "./canonical_filename"
+        // Segment module path is: canonical_filename.ext
+        let seg_path_stem = seg_module
+            .path
+            .rsplit_once('.')
+            .map(|(base, _)| base)
+            .unwrap_or(&seg_module.path);
+
+        // Main module code should contain an import referencing the segment
+        assert!(
+            main_code.contains(seg_path_stem),
+            "Expected main module to import '{}', main code:\n{}",
+            seg_path_stem,
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_path_03_explicit_extensions_appends_ext() {
+        // PATH-03: When explicit_extensions=true, lazy import paths include file extension
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 1);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            explicit_extensions: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+
+        // With explicit_extensions and no transpile, .tsx input -> .tsx extension in import
+        assert!(
+            main_code.contains(".tsx\"") || main_code.contains(".tsx')"),
+            "Expected import path to end with .tsx extension, main code:\n{}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_path_03_explicit_extensions_with_transpile() {
+        // PATH-03 + PATH-04: explicit_extensions + both transpile -> .js extension in imports
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 1);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            explicit_extensions: true,
+            transpile_ts: true,
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let main_code = &result.modules[0].code;
+
+        // With both transpile options, .tsx -> .js
+        assert!(
+            main_code.contains(".js\"") || main_code.contains(".js')"),
+            "Expected import path to end with .js extension, main code:\n{}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_path_04_both_transpile_js_extension() {
+        // PATH-04: transpile_ts=true + transpile_jsx=true -> .js output, not .jsx
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 1);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_ts: true,
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Main module should have .js extension path (not .jsx)
+        assert!(
+            result.modules[0].path.ends_with(".js"),
+            "Expected .js main path, got: {}",
+            result.modules[0].path
+        );
+
+        // Segment module should also have .js extension
+        let seg_module = result
+            .modules
+            .iter()
+            .find(|m| m.segment.is_some())
+            .expect("Expected a segment module");
+        assert!(
+            seg_module.path.ends_with(".js"),
+            "Expected .js segment path, got: {}",
+            seg_module.path
+        );
+
+        // SegmentAnalysis.extension should be "js"
+        let seg = seg_module.segment.as_ref().unwrap();
+        assert_eq!(
+            seg.extension, "js",
+            "Expected extension 'js', got: {}",
+            seg.extension
+        );
+    }
+
+    #[test]
+    fn test_path_04_transpile_jsx_only_ts_extension() {
+        // PATH-04: transpile_ts=false + transpile_jsx=true -> .ts extension for .tsx input
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $ } from '@qwik.dev/core';
+export const handler = $(() => 1);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_ts: false,
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Main module should have .ts extension path
+        assert!(
+            result.modules[0].path.ends_with(".ts"),
+            "Expected .ts main path, got: {}",
+            result.modules[0].path
+        );
+
+        // Segment module should have .ts extension
+        let seg_module = result
+            .modules
+            .iter()
+            .find(|m| m.segment.is_some())
+            .expect("Expected a segment module");
+        assert!(
+            seg_module.path.ends_with(".ts"),
+            "Expected .ts segment path, got: {}",
+            seg_module.path
+        );
+
+        // SegmentAnalysis.extension should be "ts"
+        let seg = seg_module.segment.as_ref().unwrap();
+        assert_eq!(
+            seg.extension, "ts",
+            "Expected extension 'ts', got: {}",
+            seg.extension
+        );
     }
 
     // -----------------------------------------------------------------------

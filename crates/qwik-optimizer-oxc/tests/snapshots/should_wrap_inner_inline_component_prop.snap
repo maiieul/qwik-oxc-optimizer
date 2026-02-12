@@ -2,16 +2,16 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_jN9ZUuuADmk = () => import("./test_default_component_jN9ZUuuADmk");
+const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { $, component$, useStore, useSignal } from "@qwik.dev/core";
 export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
 
-=== test.tsx_default_component_jN9ZUuuADmk.jsx === (ENTRY)
+=== test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 export const default_component_jN9ZUuuADmk = (props: {

@@ -2,7 +2,7 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
@@ -11,12 +11,12 @@ import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 import { _chk } from "@qwik.dev/core";
-const i_O84bGdeej0g = () => import("./test_FieldInput_component_O84bGdeej0g");
+const i_O84bGdeej0g = () => import("./test.tsx_FieldInput_component_O84bGdeej0g");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { $, component$, useSignal } from "@qwik.dev/core";
 export const FieldInput = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_O84bGdeej0g, "FieldInput_component_O84bGdeej0g"));
 
-=== test.tsx_FieldInput_component_O84bGdeej0g.jsx === (ENTRY)
+=== test.tsx_FieldInput_component_O84bGdeej0g.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";

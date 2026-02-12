@@ -6,8 +6,8 @@ expression: output
 import { componentQrl } from "@qwik.dev/core";
 import { useResourceQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_jN9ZUuuADmk = () => import("./test_default_component_jN9ZUuuADmk");
-const i_Qfn0duyjgAo = () => import("./test_default_useResource_Qfn0duyjgAo");
+const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
+const i_Qfn0duyjgAo = () => import("./test.tsx_default_useResource_Qfn0duyjgAo");
 import { component$, useResource$ } from "@qwik.dev/core";
 import mongodb from "mongodb";
 export const onGet = () => {

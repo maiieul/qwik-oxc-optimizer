@@ -2,7 +2,7 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { _jsxSorted } from "@qwik.dev/core";
 import { component$ as Component, $ as onRender } from "@qwik.dev/core";
 export const handler = $(() => console.log("hola"));

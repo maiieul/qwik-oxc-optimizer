@@ -2,18 +2,18 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
-const i_jN9ZUuuADmk = () => import("./test_default_component_jN9ZUuuADmk");
-const i_zo9wkw0NBzs = () => import("./test_default_component_button_q_e_click_zo9wkw0NBzs");
+const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
+const i_zo9wkw0NBzs = () => import("./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs");
 import { component$ } from "@qwik.dev/core";
 export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
 
-=== test.tsx_default_component_jN9ZUuuADmk.jsx === (ENTRY)
+=== test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_zo9wkw0NBzs = () => import("./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs");
 import { _jsxSplit } from "@qwik.dev/core";
@@ -21,4 +21,4 @@ export const default_component_jN9ZUuuADmk = (props: any) => {
 	return /* @__PURE__ */ _jsxSplit("button", { ..._getVarProps(props) }, _getConstProps(props), null, 0, "u6_0");
 }
 
-=== test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.jsx === (ENTRY)
+=== test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)

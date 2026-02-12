@@ -2,22 +2,22 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_d0rUoq0Y7Qo = () => import("./test_ManyEventsComponent_component_d0rUoq0Y7Qo");
-const i_ygm370W5KJY = () => import("./test_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY");
-const i_ragb1RcWs04 = () => import("./test_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04");
-const i_ygm370W5KJY = () => import("./test_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY");
-const i_fzYpgq8WW04 = () => import("./test_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04");
-const i_HCrpsbAaSvc = () => import("./test_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc");
-const i_p9PdBU5LvjE = () => import("./test_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE");
-const i_KoKtNDq0WI4 = () => import("./test_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4");
+const i_d0rUoq0Y7Qo = () => import("./test.tsx_ManyEventsComponent_component_d0rUoq0Y7Qo");
+const i_ygm370W5KJY = () => import("./test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY");
+const i_ragb1RcWs04 = () => import("./test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04");
+const i_ygm370W5KJY = () => import("./test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY");
+const i_fzYpgq8WW04 = () => import("./test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04");
+const i_HCrpsbAaSvc = () => import("./test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc");
+const i_p9PdBU5LvjE = () => import("./test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE");
+const i_KoKtNDq0WI4 = () => import("./test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4");
 import { component$ } from "@qwik.dev/core";
 const ManyEventsComponent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_d0rUoq0Y7Qo, "ManyEventsComponent_component_d0rUoq0Y7Qo"));
 
-=== test.tsx_ManyEventsComponent_component_d0rUoq0Y7Qo.jsx === (ENTRY)
+=== test.tsx_ManyEventsComponent_component_d0rUoq0Y7Qo.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_ygm370W5KJY = () => import("./test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY");
 const i_ragb1RcWs04 = () => import("./test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04");
@@ -40,22 +40,22 @@ export const ManyEventsComponent_component_d0rUoq0Y7Qo = () => {
 	}, "click", 3, "u6_1")], 1, "u6_2");
 };
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.jsx === (ENTRY)
+=== test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.js === (ENTRY)
 
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04.jsx === (ENTRY)
+=== test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04.js === (ENTRY)
 
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.jsx === (ENTRY)
+=== test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.js === (ENTRY)
 
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04.jsx === (ENTRY)
+=== test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04.js === (ENTRY)
 
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc.jsx === (ENTRY)
+=== test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc.js === (ENTRY)
 
 
-=== test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE.jsx === (ENTRY)
+=== test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE.js === (ENTRY)
 
 
-=== test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4.jsx === (ENTRY)
+=== test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4.js === (ENTRY)

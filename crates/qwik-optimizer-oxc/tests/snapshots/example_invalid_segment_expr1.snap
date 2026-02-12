@@ -2,20 +2,20 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_XumqEURaLxI = () => import("./test_App_component_XumqEURaLxI");
-const i_zs0gpM06Gq4 = () => import("./test_useStyles_zs0gpM06Gq4");
-const i_Ma8uJBKLX2o = () => import("./test_s__Ma8uJBKLX2o");
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
+const i_zs0gpM06Gq4 = () => import("./test.tsx_useStyles_zs0gpM06Gq4");
+const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
 import { $, component$, useStyles$ } from "@qwik.dev/core";
 import css1 from "./global.css";
 import css2 from "./style.css";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
 
-=== test.tsx_App_component_XumqEURaLxI.jsx === (ENTRY)
+=== test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_zs0gpM06Gq4 = () => import("./test.tsx_useStyles_zs0gpM06Gq4");
 const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
@@ -29,10 +29,10 @@ export const App_component_XumqEURaLxI = () => {
 	return /* @__PURE__ */ qrl(i_Ma8uJBKLX2o, "s__Ma8uJBKLX2o", [render]);
 };
 
-=== test.tsx_useStyles_zs0gpM06Gq4.jsx === (ENTRY)
+=== test.tsx_useStyles_zs0gpM06Gq4.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const useStyles_zs0gpM06Gq4 = style;
 
-=== test.tsx_s__Ma8uJBKLX2o.jsx === (ENTRY)
+=== test.tsx_s__Ma8uJBKLX2o.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const s__Ma8uJBKLX2o = render;

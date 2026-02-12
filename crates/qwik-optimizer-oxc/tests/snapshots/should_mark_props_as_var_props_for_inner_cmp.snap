@@ -2,14 +2,14 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { useResourceQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_JrQIeK5mMMM = () => import("./test_Image_component_JrQIeK5mMMM");
-const i_N1fNAC4qw7Q = () => import("./test_ModelImg_component_N1fNAC4qw7Q");
-const i_bT0HZe0FfwQ = () => import("./test_imgLoc_useResource_bT0HZe0FfwQ");
+const i_JrQIeK5mMMM = () => import("./test.tsx_Image_component_JrQIeK5mMMM");
+const i_N1fNAC4qw7Q = () => import("./test.tsx_ModelImg_component_N1fNAC4qw7Q");
+const i_bT0HZe0FfwQ = () => import("./test.tsx_imgLoc_useResource_bT0HZe0FfwQ");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { component$, useResource$, Resource } from "@qwik.dev/core";
 import { type ModelProps } from "./modelMenu";
@@ -17,14 +17,14 @@ import { serverImg } from "~/routes/(authenticated)/layout";
 export const Image = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_JrQIeK5mMMM, "Image_component_JrQIeK5mMMM"));
 export const ModelImg = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_N1fNAC4qw7Q, "ModelImg_component_N1fNAC4qw7Q"));
 
-=== test.tsx_Image_component_JrQIeK5mMMM.jsx === (ENTRY)
+=== test.tsx_Image_component_JrQIeK5mMMM.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 export const Image_component_JrQIeK5mMMM = (props) => {
 	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted("img", { src: `${props.src}` }, null, null, 3, "u6_0"), 3, "u6_1");
 };
 
-=== test.tsx_ModelImg_component_N1fNAC4qw7Q.jsx === (ENTRY)
+=== test.tsx_ModelImg_component_N1fNAC4qw7Q.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_bT0HZe0FfwQ = () => import("./test.tsx_imgLoc_useResource_bT0HZe0FfwQ");
 import { _jsxSorted } from "@qwik.dev/core";
@@ -38,7 +38,7 @@ export const ModelImg_component_N1fNAC4qw7Q = (props) => {
 	}, null, null, 3, "u6_5"), 3, "u6_6");
 };
 
-=== test.tsx_imgLoc_useResource_bT0HZe0FfwQ.jsx === (ENTRY)
+=== test.tsx_imgLoc_useResource_bT0HZe0FfwQ.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const imgLoc_useResource_bT0HZe0FfwQ = async ({ track }) => {
 	const props = _captures[0];

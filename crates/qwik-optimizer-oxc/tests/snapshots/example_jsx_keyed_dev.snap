@@ -2,16 +2,16 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== project/index.jsx ===
+=== project/index.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_M1CbC3Yh9lM = () => import("./project/index_App_component_M1CbC3Yh9lM");
+const i_M1CbC3Yh9lM = () => import("./project/index.tsx_App_component_M1CbC3Yh9lM.js");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { component$, useStore } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_M1CbC3Yh9lM, "App_component_M1CbC3Yh9lM"));
 
-=== project/index.tsx_App_component_M1CbC3Yh9lM.jsx === (ENTRY)
+=== project/index.tsx_App_component_M1CbC3Yh9lM.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 export const App_component_M1CbC3Yh9lM = (props: Stuff) => {

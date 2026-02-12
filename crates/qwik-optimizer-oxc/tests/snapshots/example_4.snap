@@ -5,8 +5,8 @@ expression: output
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_7qRdElk79Fw = () => import("./test_s_0_7qRdElk79Fw");
-const i_axfrT8CMT4s = () => import("./test_s_1_axfrT8CMT4s");
+const i_7qRdElk79Fw = () => import("./test.tsx_s_0_7qRdElk79Fw");
+const i_axfrT8CMT4s = () => import("./test.tsx_s_1_axfrT8CMT4s");
 import { $, component$ } from "@qwik.dev/core";
 export function App() {
 	const Header = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_7qRdElk79Fw, "s_0_7qRdElk79Fw"));

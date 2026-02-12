@@ -4,7 +4,7 @@ expression: output
 ---
 === project/test.tsx ===
 import { qrl } from "@qwik.dev/core";
-const i_0hncTFTaevI = () => import("./project/test_Header_0hncTFTaevI");
+const i_0hncTFTaevI = () => import("./project/test.tsx_Header_0hncTFTaevI");
 import { $, component$ } from "@qwik.dev/core";
 const Header = /* @__PURE__ */ qrl(i_0hncTFTaevI, "Header_0hncTFTaevI");
 

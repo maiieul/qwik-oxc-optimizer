@@ -5,7 +5,7 @@ expression: output
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_XumqEURaLxI = () => import("./test_App_component_XumqEURaLxI");
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
 import { component$, useStore } from "@qwik.dev/core";
 import { mongodb } from "mondodb";
 import { threejs } from "threejs";

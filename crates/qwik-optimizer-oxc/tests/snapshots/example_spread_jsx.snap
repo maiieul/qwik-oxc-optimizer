@@ -2,14 +2,14 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
-const i_gzVhCyFtjZI = () => import("./test_RouterHead_component_gzVhCyFtjZI");
+const i_gzVhCyFtjZI = () => import("./test.tsx_RouterHead_component_gzVhCyFtjZI");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { component$ } from "@qwik.dev/core";
 import { useDocumentHead, useLocation } from "@qwik.dev/router";
@@ -18,7 +18,7 @@ import { useDocumentHead, useLocation } from "@qwik.dev/router";
 */
 export const RouterHead = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gzVhCyFtjZI, "RouterHead_component_gzVhCyFtjZI"));
 
-=== test.tsx_RouterHead_component_gzVhCyFtjZI.jsx === (ENTRY)
+=== test.tsx_RouterHead_component_gzVhCyFtjZI.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";

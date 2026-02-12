@@ -6,16 +6,16 @@ expression: output
 import { componentQrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_XumqEURaLxI = () => import("./test_App_component_XumqEURaLxI");
-const i_IUcvUpNH0v8 = () => import("./test_App_useStyles_IUcvUpNH0v8");
-const i_w3unmdi0sm4 = () => import("./test_App_w3unmdi0sm4");
+const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI.tsx");
+const i_IUcvUpNH0v8 = () => import("./test.tsx_App_useStyles_IUcvUpNH0v8.tsx");
+const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4.tsx");
 import { component$, $, useStyles$ } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
 
 === test.tsx_App_component_XumqEURaLxI.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_IUcvUpNH0v8 = () => import("./test.tsx_App_useStyles_IUcvUpNH0v8");
-const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4");
+const i_IUcvUpNH0v8 = () => import("./test.tsx_App_useStyles_IUcvUpNH0v8.tsx");
+const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4.tsx");
 export const App_component_XumqEURaLxI = (props) => {
 	/* @__PURE__ */ useStylesQrl(/* @__PURE__ */ qrl(i_IUcvUpNH0v8, "App_useStyles_IUcvUpNH0v8"));
 	return /* @__PURE__ */ qrl(i_w3unmdi0sm4, "App_w3unmdi0sm4");

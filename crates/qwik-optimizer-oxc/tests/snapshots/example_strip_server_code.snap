@@ -2,7 +2,7 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { useTaskQrl } from "@qwik.dev/core";
 import { serverStuffQrl } from "@qwik.dev/core";
@@ -11,19 +11,19 @@ import { serverLoaderQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrl } from "@qwik.dev/core";
-const i_fxETLug1yE4 = () => import("./test_Parent_component_fxETLug1yE4");
-const i_ZxfKmWQYEwc = () => import("./test_useTask_ZxfKmWQYEwc");
-const i_JsST9uKvaf4 = () => import("./test_a_JsST9uKvaf4");
-const i_0DD514zgBzU = () => import("./test_b_client_0DD514zgBzU");
-const i_ZxfKmWQYEwc = () => import("./test_useTask_ZxfKmWQYEwc");
-const i_N8VjxooYvus = () => import("./test_Parent_component_div_q_e_click_N8VjxooYvus");
+const i_fxETLug1yE4 = () => import("./test.tsx_Parent_component_fxETLug1yE4");
+const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
+const i_JsST9uKvaf4 = () => import("./test.tsx_a_JsST9uKvaf4");
+const i_0DD514zgBzU = () => import("./test.tsx_b_client_0DD514zgBzU");
+const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
+const i_N8VjxooYvus = () => import("./test.tsx_Parent_component_div_q_e_click_N8VjxooYvus");
 import { component$, serverLoader$, serverStuff$, $, client$, useStore, useTask$ } from "@qwik.dev/core";
 import mongo from "mongodb";
 import redis from "redis";
 import { handler } from "serverless";
 export const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_fxETLug1yE4, "Parent_component_fxETLug1yE4"));
 
-=== test.tsx_Parent_component_fxETLug1yE4.jsx === (ENTRY)
+=== test.tsx_Parent_component_fxETLug1yE4.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
 const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
@@ -39,7 +39,7 @@ export const Parent_component_fxETLug1yE4 = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log("parent") }, state.text, 3, "u6_0");
 };
 
-=== test.tsx_useTask_ZxfKmWQYEwc.jsx === (ENTRY)
+=== test.tsx_useTask_ZxfKmWQYEwc.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const useTask_ZxfKmWQYEwc = async () => {
 	const state = _captures[0];
@@ -48,13 +48,13 @@ export const useTask_ZxfKmWQYEwc = async () => {
 	redis.set(state.text);
 };
 
-=== test.tsx_a_JsST9uKvaf4.jsx === (ENTRY)
+=== test.tsx_a_JsST9uKvaf4.js === (ENTRY)
 export const a_JsST9uKvaf4 = () => {};
 
-=== test.tsx_b_client_0DD514zgBzU.jsx === (ENTRY)
+=== test.tsx_b_client_0DD514zgBzU.js === (ENTRY)
 export const b_client_0DD514zgBzU = () => {};
 
-=== test.tsx_useTask_ZxfKmWQYEwc.jsx === (ENTRY)
+=== test.tsx_useTask_ZxfKmWQYEwc.js === (ENTRY)
 export const useTask_ZxfKmWQYEwc = () => {};
 
-=== test.tsx_Parent_component_div_q_e_click_N8VjxooYvus.jsx === (ENTRY)
+=== test.tsx_Parent_component_div_q_e_click_N8VjxooYvus.js === (ENTRY)

@@ -5,10 +5,10 @@ expression: output
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_l5Al0251s9w = () => import("./test_Greeter_component_l5Al0251s9w");
-const i_Rxdt6XL5GRU = () => import("./test_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
-const i_Rxdt6XL5GRU = () => import("./test_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
-const i_Rxdt6XL5GRU = () => import("./test_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+const i_l5Al0251s9w = () => import("./test.tsx_Greeter_component_l5Al0251s9w");
+const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
 import { component$, $ } from "@qwik.dev/core";
 import mongo from "mongodb";
 export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"));

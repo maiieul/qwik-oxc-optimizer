@@ -2,17 +2,17 @@
 source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
 expression: output
 ---
-=== test.jsx ===
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
-const i_SxkiFEcj0nk = () => import("./test_App2_component_SxkiFEcj0nk");
+const i_SxkiFEcj0nk = () => import("./test.tsx_App2_component_SxkiFEcj0nk.js");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { component$ } from "@qwik.dev/core";
 export const App2 = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_SxkiFEcj0nk, "App2_component_SxkiFEcj0nk"));
 
-=== test.tsx_App2_component_SxkiFEcj0nk.jsx === (ENTRY)
+=== test.tsx_App2_component_SxkiFEcj0nk.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";

@@ -5,9 +5,9 @@ expression: output
 === project/test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_sHTSaq0AU4w = () => import("./project/test_Header_component_sHTSaq0AU4w");
-const i_0hncTFTaevI = () => import("./project/test_Header_0hncTFTaevI");
-const i_36z8l5vFtdk = () => import("./project/test_App_component_36z8l5vFtdk");
+const i_sHTSaq0AU4w = () => import("./project/test.tsx_Header_component_sHTSaq0AU4w");
+const i_0hncTFTaevI = () => import("./project/test.tsx_Header_0hncTFTaevI");
+const i_36z8l5vFtdk = () => import("./project/test.tsx_App_component_36z8l5vFtdk");
 import { $, component$ } from "@qwik.dev/core";
 import { foo, bar as bbar } from "../state";
 import * as dep2 from "dep2";
