@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 24 of 26 (Runtime Bug Fixes)
-Plan: 5 of 6 in current phase (complete)
-Status: In Progress
-Last activity: 2026-02-12 -- Plan 05 complete (module-level decl self-imports)
+Plan: 6 of 6 in current phase (awaiting user verification)
+Status: Checkpoint
+Last activity: 2026-02-12 -- Plan 06 tasks 1-2 complete (gap closure validation + regression gate)
 
 Progress: [######################........] 23/26 phases (v1.0-v5.0 shipped, v6.0 in progress)
 
@@ -54,6 +54,7 @@ Progress: [######################........] 23/26 phases (v1.0-v5.0 shipped, v6.0
 | 24    | 03   | 20min    | 2     | 52    |
 | 24    | 04   | 8min     | 2     | 2     |
 | 24    | 05   | 6min     | 2     | 22    |
+| 24    | 06   | 4min     | 2     | 2     |
 
 ## Accumulated Context
 
@@ -81,6 +82,8 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 24-04: Symbol-in-body verification distinguishes runtime-breaking from cosmetic import deviations
 - 24-05: Module-level declarations reclassified as needed_imports (self-imports) rather than captures, matching SWC behavior
 - 24-05: SWC generates import { X } from './module' for module-level decl references, not _captures[] serialization
+- 24-06: Runtime-breaking threshold set to 10 (6 missing-import-used edge cases + 4 truly-missing-module)
+- 24-06: Regression gate in output_audit.rs asserts runtime_breaking_count <= RUNTIME_BREAKING_THRESHOLD
 
 ### Pending Todos
 
@@ -88,12 +91,12 @@ None.
 
 ### Blockers/Concerns
 
-- ~30 framework/library import deviations remain (Plan 06 scope: content-based import detection)
+- 6 missing-import-used edge cases remain (aliased exports, JSX import source, enum tracking)
 - 4 truly-missing-module deviations remain (pre-compiled QRL, multi-file)
 - Module count mismatches at 2 (example_qwik_react, relative_paths require pre-compiled QRL reverse-engineering)
 
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 24-05-PLAN.md (module-level decl self-imports)
+Stopped at: 24-06-PLAN.md Task 3 checkpoint (awaiting user verification of gap closure)
 Resume file: None
