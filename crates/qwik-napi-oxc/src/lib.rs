@@ -195,7 +195,7 @@ fn from_napi_options(napi_opts: NapiTransformModulesOptions) -> TransformModules
 ///
 /// This is synchronous in Rust -- platform.ts wraps the return value as a
 /// resolved Promise at the TS layer.
-#[napi]
+#[napi(js_name = "transform_modules")]
 pub fn transform_modules(opts: serde_json::Value) -> napi::Result<serde_json::Value> {
     // Deserialize from JS wire format
     let napi_opts: NapiTransformModulesOptions = serde_json::from_value(opts)
