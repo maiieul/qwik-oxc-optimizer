@@ -731,13 +731,13 @@ mod tests {
         );
 
         // Regression gate (FIX-03): runtime-breaking deviations must not exceed threshold.
-        // After Plan 24-05 fixed module-level declaration captures and Plan 24-06 validated,
-        // 10 runtime-breaking deviations remain:
-        //   - 6 missing-import-used (edge cases: aliased exports, JSX import source, enum)
+        // After Plan 24-08 fixed JSX import source propagation (custom _jsx from react/jsx-runtime),
+        // 5 runtime-breaking deviations remain:
+        //   - 1 missing-import-used (edge cases: aliased exports or enum tracking)
         //   - 4 truly-missing-module (example_qwik_react: 2, relative_paths: 2)
         // These are accepted limitations. If this assertion fails, a code change has
         // reintroduced runtime-breaking deviations that were previously fixed.
-        const RUNTIME_BREAKING_THRESHOLD: usize = 10;
+        const RUNTIME_BREAKING_THRESHOLD: usize = 5;
         assert!(
             runtime_breaking_count <= RUNTIME_BREAKING_THRESHOLD,
             "Regression detected: {} runtime-breaking deviations exceeds threshold of {}. \

@@ -197,6 +197,7 @@ pub fn transform_modules(
         let body_codes = qwik_transform.take_segment_body_codes();
         let segments = qwik_transform.extracted_segments();
         let stripped_spans = qwik_transform.stripped_segments();
+        let custom_jsx_src = qwik_transform.custom_jsx_import_source().map(|s| s.to_string());
 
         let is_inline_like = entry_strategy::should_inline(&transform_options.entry_strategy)
             || matches!(transform_options.entry_strategy, EntryStrategy::Hoist);
@@ -236,6 +237,7 @@ pub fn transform_modules(
                         seg,
                         &transform_options,
                         &hoisted_stmts,
+                        custom_jsx_src.as_deref(),
                     );
                     code_move::emit_segment_with_map(&raw_code, &seg_path, emit_options.source_maps)
                 } else {

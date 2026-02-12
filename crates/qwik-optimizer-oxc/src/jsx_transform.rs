@@ -867,6 +867,8 @@ fn jsx_attr_value_to_expression<'a>(
 }
 
 /// Recursively transform a JSXElement into a _jsxSorted/_jsxSplit call expression.
+/// When `tracker.custom_jsx_source` is Some, uses the simpler React-style `_jsx("tag", {props})`
+/// form instead of Qwik's `_jsxSorted`.
 pub(crate) fn transform_jsx_element_inner<'a>(
     mut element: JSXElement<'a>,
     tracker: &mut ImportTracker,
@@ -875,6 +877,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     module_imports: &[crate::types::ImportInfo],
     hoisted_stmts: &mut Vec<(String, String)>,
 ) -> Expression<'a> {
+    // When a custom JSX import source is set (e.g., React), use the standard
+    // JSX runtime transform: _jsx("tag", {props}) instead of Qwik's _jsxSorted.
+    if tracker.custom_jsx_source.is_some() {
+        return transform_jsx_element_custom_source(
+            element, tracker, ctx, hoisted_stmts, module_imports, destructured_props,
+        );
+    }
+
     let tag = build_tag_expression(&element.opening_element.name, ctx);
 
     // Classify attributes: detect spreads, separate key, classify var/const props
@@ -1492,5 +1502,153 @@ pub(crate) fn transform_jsx_children<'a>(
             }
             (Some(ctx.ast.expression_array(SPAN, elements)), count)
         }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Custom JSX import source transform (React-style _jsx)
+// ---------------------------------------------------------------------------
+
+/// Transform a JSXElement using the standard React JSX runtime form: `_jsx("tag", {props})`.
+///
+/// Unlike Qwik's `_jsxSorted`, this:
+/// - Merges all props into a single object (no var/const split)
+/// - Does NOT rename event handlers (onClick$ stays as onClick$)
+/// - Uses 2-arg form: `_jsx(tag, props)`
+/// - Children go into the props object as `children` key
+fn transform_jsx_element_custom_source<'a>(
+    mut element: JSXElement<'a>,
+    tracker: &mut ImportTracker,
+    ctx: &mut TraverseCtx<'a, ()>,
+    hoisted_stmts: &mut Vec<(String, String)>,
+    module_imports: &[crate::types::ImportInfo],
+    destructured_props: Option<&[(String, String)]>,
+) -> Expression<'a> {
+    // Signal that we need the _jsx import (reuses needs_jsx_sorted flag --
+    // the import emission in transform.rs will emit _jsx instead of _jsxSorted
+    // when custom_jsx_source is set).
+    tracker.needs_jsx_sorted = true;
+
+    let tag = build_tag_expression(&element.opening_element.name, ctx);
+
+    // Collect all props into a single object
+    let mut props: Vec<ObjectPropertyKind<'a>> = Vec::new();
+
+    // Take attributes out of the opening element
+    let mut attrs = ctx.ast.vec();
+    std::mem::swap(&mut element.opening_element.attributes, &mut attrs);
+
+    for attr_item in attrs {
+        match attr_item {
+            JSXAttributeItem::SpreadAttribute(spread) => {
+                props.push(
+                    ctx.ast
+                        .object_property_kind_spread_property(SPAN, spread.unbox().argument),
+                );
+            }
+            JSXAttributeItem::Attribute(attr) => {
+                let attr = attr.unbox();
+                let attr_name = match &attr.name {
+                    JSXAttributeName::Identifier(ident) => ident.name.as_str().to_string(),
+                    JSXAttributeName::NamespacedName(ns) => {
+                        format!("{}:{}", ns.namespace.name, ns.name.name)
+                    }
+                };
+
+                let value = if let Some(val) = attr.value {
+                    jsx_attr_value_to_expression(
+                        val,
+                        tracker,
+                        ctx,
+                        destructured_props,
+                        module_imports,
+                        hoisted_stmts,
+                    )
+                } else {
+                    // Boolean attribute: <input disabled /> -> disabled: true
+                    ctx.ast.expression_boolean_literal(SPAN, true)
+                };
+
+                // Use string literal key for names with special chars
+                let key = if attr_name.contains(':') || attr_name.contains('-') || attr_name.contains('$') {
+                    let atom = ctx.ast.atom(&attr_name);
+                    PropertyKey::from(ctx.ast.expression_string_literal(SPAN, atom, None))
+                } else {
+                    ctx.ast
+                        .property_key_static_identifier(SPAN, ctx.ast.atom(&attr_name))
+                };
+
+                props.push(ctx.ast.object_property_kind_object_property(
+                    SPAN,
+                    PropertyKind::Init,
+                    key,
+                    value,
+                    false,
+                    false,
+                    false,
+                ));
+            }
+        }
+    }
+
+    // Process children: add as `children` prop if present
+    let (children_expr, _children_count) = transform_jsx_children(
+        &mut element.children,
+        tracker,
+        ctx,
+        destructured_props,
+        module_imports,
+        hoisted_stmts,
+    );
+
+    if let Some(children) = children_expr {
+        let key = ctx
+            .ast
+            .property_key_static_identifier(SPAN, ctx.ast.atom("children"));
+        props.push(ctx.ast.object_property_kind_object_property(
+            SPAN,
+            PropertyKind::Init,
+            key,
+            children,
+            false,
+            false,
+            false,
+        ));
+    }
+
+    // Build: _jsx(tag, {props}) or _jsx(tag) if no props
+    let callee = ctx.ast.expression_identifier(SPAN, "_jsx");
+
+    if props.is_empty() {
+        // _jsx(tag) -- no props
+        let mut arguments = ctx.ast.vec_with_capacity(1);
+        arguments.push(Argument::from(tag));
+        ctx.ast.expression_call_with_pure(
+            SPAN,
+            callee,
+            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+            arguments,
+            false,
+            true,
+        )
+    } else {
+        // _jsx(tag, {props})
+        let mut props_vec = ctx.ast.vec_with_capacity(props.len());
+        for prop in props {
+            props_vec.push(prop);
+        }
+        let props_obj = ctx.ast.expression_object(SPAN, props_vec);
+
+        let mut arguments = ctx.ast.vec_with_capacity(2);
+        arguments.push(Argument::from(tag));
+        arguments.push(Argument::from(props_obj));
+        ctx.ast.expression_call_with_pure(
+            SPAN,
+            callee,
+            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+            arguments,
+            false,
+            true,
+        )
     }
 }

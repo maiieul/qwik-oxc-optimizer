@@ -87,6 +87,10 @@ pub(crate) struct ImportTracker {
     /// Whether the module needs `import { _qrlSync }` from core (sync$ calls).
     pub needs_qrl_sync: bool,
 
+    /// Custom JSX import source for `import { jsx as _jsx }` from `{source}/jsx-runtime`.
+    /// When Some, `_jsx` is used instead of `_jsxSorted` for JSX transform output.
+    pub custom_jsx_source: Option<String>,
+
     /// Monotonic counter for generating unique JSX key suffixes like "u6_0", "u6_1".
     pub jsx_key_counter: u32,
 
@@ -224,8 +228,10 @@ impl QwikTransform {
     }
 
     /// Set the custom JSX import source module path (e.g., "react" from `@jsxImportSource react`).
-    /// When Some, JSX event handler `$`-attributes are NOT extracted as segments.
+    /// When Some, JSX event handler `$`-attributes are NOT extracted as segments,
+    /// and JSX is transformed to `_jsx()` from `{source}/jsx-runtime` instead of `_jsxSorted`.
     pub fn set_custom_jsx_import_source(&mut self, source: Option<String>) {
+        self.import_tracker.custom_jsx_source = source.clone();
         self.custom_jsx_import_source = source;
     }
 
@@ -1554,9 +1560,22 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_stmts.push(stmt);
         }
 
+        // When custom JSX source is set, emit `import { jsx as _jsx } from "{source}/jsx-runtime"`
+        // instead of `import { _jsxSorted } from "@qwik.dev/core"`.
         if self.import_tracker.needs_jsx_sorted {
-            let stmt = import_rewrite::build_named_import("_jsxSorted", core_module, ctx);
-            new_stmts.push(stmt);
+            if let Some(ref source) = self.import_tracker.custom_jsx_source {
+                let jsx_runtime_source = format!("{}/jsx-runtime", source);
+                let stmt = import_rewrite::build_aliased_import(
+                    "jsx",
+                    "_jsx",
+                    &jsx_runtime_source,
+                    ctx,
+                );
+                new_stmts.push(stmt);
+            } else {
+                let stmt = import_rewrite::build_named_import("_jsxSorted", core_module, ctx);
+                new_stmts.push(stmt);
+            }
         }
         if self.import_tracker.needs_get_var_props {
             let stmt = import_rewrite::build_named_import("_getVarProps", core_module, ctx);

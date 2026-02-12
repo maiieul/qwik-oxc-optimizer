@@ -24,6 +24,7 @@ pub(crate) fn build_segment_code_with_hoisted(
     segment: &SegmentData,
     options: &TransformOptions,
     hoisted_stmts: &[(String, String)],
+    custom_jsx_source: Option<&str>,
 ) -> String {
     let mut parts: Vec<String> = Vec::new();
 
@@ -56,7 +57,16 @@ pub(crate) fn build_segment_code_with_hoisted(
         ));
     }
 
-    if body_code.contains("_jsxSorted") {
+    // When custom JSX source is set and body contains _jsx, emit from custom source.
+    // Otherwise fall through to _jsxSorted from core module.
+    if let Some(jsx_source) = custom_jsx_source {
+        if body_code.contains("_jsx") {
+            parts.push(format!(
+                "import {{ jsx as _jsx }} from \"{}/jsx-runtime\";",
+                jsx_source
+            ));
+        }
+    } else if body_code.contains("_jsxSorted") {
         parts.push(format!(
             "import {{ _jsxSorted }} from \"{}\";",
             options.core_module
@@ -381,7 +391,7 @@ mod tests {
         let segment = make_segment("handler");
         let body_code = "() => console.log(\"hello\")";
 
-        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[]);
+        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[], None);
 
         assert!(
             result.contains("export const handler_abc123 = () => console.log(\"hello\")"),
@@ -404,7 +414,7 @@ mod tests {
 
         let body_code = "() => state.count";
 
-        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[]);
+        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[], None);
 
         assert!(
             result.contains("import { _captures } from \"@qwik.dev/core\""),
@@ -437,7 +447,7 @@ mod tests {
 
         let body_code = "() => {\n  return state.count;\n}";
 
-        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[]);
+        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[], None);
 
         assert!(
             result.contains("const state = _captures[0]"),
@@ -463,7 +473,7 @@ mod tests {
 
         let body_code = "() => {\n  return qrl(i_xyz789, \"App_component_1_xyz789\");\n}";
 
-        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[]);
+        let result = build_segment_code_with_hoisted(body_code, &segment, &options, &[], None);
 
         assert!(
             result.contains("import { qrl } from \"@qwik.dev/core\""),
