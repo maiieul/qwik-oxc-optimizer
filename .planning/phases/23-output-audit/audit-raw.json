@@ -64,8 +64,8 @@
       "spec_name": "destructure_args_inline_cmp_block_stmt"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const div_q_e_click_Lo4b850Oi8I = () => { data.selectedOutputDetail = \"options\"; };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const test_div_q_e_click_pFqTss400MA = ()=>{ const _rawProps = _captures[0]; _rawProps.data.selectedOutputDetail = 'options'; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_div_q_e_click_Lo4b850Oi8I.js",
@@ -82,8 +82,8 @@
       "spec_name": "destructure_args_inline_cmp_block_stmt2"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const div_q_e_click_Lo4b850Oi8I = () => { data.selectedOutputDetail = \"options\"; };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const test_div_q_e_click_pFqTss400MA = ()=>{ const props = _captures[0]; props.data.selectedOutputDetail = 'options'; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_div_q_e_click_Lo4b850Oi8I.js",
@@ -100,8 +100,8 @@
       "spec_name": "destructure_args_inline_cmp_expr_stmt"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const div_q_e_click_Lo4b850Oi8I = () => { data.selectedOutputDetail = \"options\"; };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const test_div_q_e_click_pFqTss400MA = ()=>{ const _rawProps = _captures[0]; _rawProps.data.selectedOutputDetail = 'options'; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_div_q_e_click_Lo4b850Oi8I.js",
@@ -244,38 +244,29 @@
       "spec_name": "example_2"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "Module count: expected 3, got 0. Expected paths: [\"test.tsx_App_Header_component_B9F3YeqcO1w.tsx\", \"test.tsx_App_Header_component_div_onClick_aO7uI7Iw6oQ.tsx\", \"test.tsx\"]. Actual paths: []",
-      "expected_code_normalized": "",
-      "match_type": "module_count_mismatch",
-      "module_path_actual": "(optimizer produced 0 modules)",
-      "module_path_expected": "(spec expects 3 modules)",
-      "spec_name": "example_3"
-    },
-    {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.tsx_App_Header_component_B9F3YeqcO1w.tsx' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
+      "actual_code_normalized": "import { qrl } from \"@qwik.dev/core\"; const i_QrzcmFeRo0o = () => import(\"./test.tsx_Header_QrzcmFeRo0o\"); export const Header_component_Qw9nV3mG0KQ = () => { console.log(\"mount\"); return <div onClick={/* @__PURE__ */ qrl(i_QrzcmFeRo0o, \"Header_QrzcmFeRo0o\")} />; }",
+      "diff_summary": "token diff at position 7: expected 'i_aO7uI7Iw6oQ', actual 'i_QrzcmFeRo0o'",
+      "expected_code_normalized": "import { qrl } from \"@qwik.dev/core\"; const i_aO7uI7Iw6oQ = ()=>import(\"./test.tsx_App_Header_component_div_onClick_aO7uI7Iw6oQ\"); export const App_Header_component_B9F3YeqcO1w = ()=>{ console.log(\"mount\"); return <div onClick={/*#__PURE__*/ qrl(i_aO7uI7Iw6oQ, \"App_Header_component_div_onClick_aO7uI7Iw6oQ\")}/>; };",
+      "match_type": "structural",
+      "module_path_actual": "test.tsx_Header_component_Qw9nV3mG0KQ.tsx",
       "module_path_expected": "test.tsx_App_Header_component_B9F3YeqcO1w.tsx",
       "spec_name": "example_3"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.tsx_App_Header_component_div_onClick_aO7uI7Iw6oQ.tsx' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
+      "actual_code_normalized": "export const Header_QrzcmFeRo0o = (ctx) => console.log(ctx);",
+      "diff_summary": "token diff at position 2: expected 'App_Header_component_div_onClick_aO7uI7Iw6oQ', actual 'Header_QrzcmFeRo0o'",
+      "expected_code_normalized": "export const App_Header_component_div_onClick_aO7uI7Iw6oQ = (ctx)=>console.log(ctx);",
+      "match_type": "structural",
+      "module_path_actual": "test.tsx_Header_QrzcmFeRo0o.tsx",
       "module_path_expected": "test.tsx_App_Header_component_div_onClick_aO7uI7Iw6oQ.tsx",
       "spec_name": "example_3"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.tsx' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
+      "actual_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_Qw9nV3mG0KQ = () => import(\"./test.tsx_Header_component_Qw9nV3mG0KQ\"); const i_QrzcmFeRo0o = () => import(\"./test.tsx_Header_QrzcmFeRo0o\"); export const App = () => { const Header = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_Qw9nV3mG0KQ, \"Header_component_Qw9nV3mG0KQ\")); return Header; };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 3}, actual {\"const\": 4}",
+      "expected_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_B9F3YeqcO1w = ()=>import(\"./test.tsx_App_Header_component_B9F3YeqcO1w\"); export const App = ()=>{ const Header = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_B9F3YeqcO1w, \"App_Header_component_B9F3YeqcO1w\")); return Header; };",
+      "match_type": "exact_path",
+      "module_path_actual": "test.tsx",
       "module_path_expected": "test.tsx",
       "spec_name": "example_3"
     },
@@ -551,33 +542,6 @@
     },
     {
       "actual_code_normalized": "",
-      "diff_summary": "Module count: expected 8, got 0. Expected paths: [\"test.js\", \"test.tsx_App_component_ckEPmXZlub0.js\", \"test.tsx_App_component_loopArrowFn_span_q_e_click_Wau7C836nf0.js\", \"test.tsx_App_component_loopForI_span_q_e_click_PbCYbPM6etI.js\", \"test.tsx_App_component_loopForOf_span_q_e_click_zlNGHYu926I.js\", \"test.tsx_App_component_loopForIn_span_q_e_click_adzBGickx1U.js\", \"test.tsx_App_component_loopWhile_span_q_e_click_05kCMrZVn5E.js\", \"test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8.js\"]. Actual paths: []",
-      "expected_code_normalized": "",
-      "match_type": "module_count_mismatch",
-      "module_path_actual": "(optimizer produced 0 modules)",
-      "module_path_expected": "(spec expects 8 modules)",
-      "spec_name": "example_component_with_event_listeners_inside_loop"
-    },
-    {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.js' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
-      "module_path_expected": "test.js",
-      "spec_name": "example_component_with_event_listeners_inside_loop"
-    },
-    {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.tsx_App_component_ckEPmXZlub0.js' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
-      "module_path_expected": "test.tsx_App_component_ckEPmXZlub0.js",
-      "spec_name": "example_component_with_event_listeners_inside_loop"
-    },
-    {
-      "actual_code_normalized": "",
       "diff_summary": "Expected module 'test.tsx_App_component_loopArrowFn_span_q_e_click_Wau7C836nf0.js' has no matching actual module",
       "expected_code_normalized": "",
       "match_type": "unmatched_expected",
@@ -628,6 +592,78 @@
       "match_type": "unmatched_expected",
       "module_path_actual": "",
       "module_path_expected": "test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8.js",
+      "spec_name": "example_component_with_event_listeners_inside_loop"
+    },
+    {
+      "actual_code_normalized": "",
+      "diff_summary": "Actual module 'test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js' has no matching expected module",
+      "expected_code_normalized": "",
+      "match_type": "unmatched_actual",
+      "module_path_actual": "test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js",
+      "module_path_expected": "",
+      "spec_name": "example_component_with_event_listeners_inside_loop"
+    },
+    {
+      "actual_code_normalized": "",
+      "diff_summary": "Actual module 'test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js' has no matching expected module",
+      "expected_code_normalized": "",
+      "match_type": "unmatched_actual",
+      "module_path_actual": "test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js",
+      "module_path_expected": "",
+      "spec_name": "example_component_with_event_listeners_inside_loop"
+    },
+    {
+      "actual_code_normalized": "",
+      "diff_summary": "Actual module 'test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js' has no matching expected module",
+      "expected_code_normalized": "",
+      "match_type": "unmatched_actual",
+      "module_path_actual": "test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js",
+      "module_path_expected": "",
+      "spec_name": "example_component_with_event_listeners_inside_loop"
+    },
+    {
+      "actual_code_normalized": "",
+      "diff_summary": "Actual module 'test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js' has no matching expected module",
+      "expected_code_normalized": "",
+      "match_type": "unmatched_actual",
+      "module_path_actual": "test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js",
+      "module_path_expected": "",
+      "spec_name": "example_component_with_event_listeners_inside_loop"
+    },
+    {
+      "actual_code_normalized": "",
+      "diff_summary": "Actual module 'test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js' has no matching expected module",
+      "expected_code_normalized": "",
+      "match_type": "unmatched_actual",
+      "module_path_actual": "test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g.js",
+      "module_path_expected": "",
+      "spec_name": "example_component_with_event_listeners_inside_loop"
+    },
+    {
+      "actual_code_normalized": "",
+      "diff_summary": "Actual module 'test.tsx_App_component_button_q_e_click_vbEaih0SxYg.js' has no matching expected module",
+      "expected_code_normalized": "",
+      "match_type": "unmatched_actual",
+      "module_path_actual": "test.tsx_App_component_button_q_e_click_vbEaih0SxYg.js",
+      "module_path_expected": "",
+      "spec_name": "example_component_with_event_listeners_inside_loop"
+    },
+    {
+      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useSignal } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const i_XumqEURaLxI = () => import(\"./test.tsx_App_component_XumqEURaLxI\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_vbEaih0SxYg = () => import(\"./test.tsx_App_component_button_q_e_click_vbEaih0SxYg\"); export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, \"App_component_XumqEURaLxI\"));",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 8}; extra imports: 3",
+      "expected_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_ckEPmXZlub0 = ()=>import(\"./test.tsx_App_component_ckEPmXZlub0\"); export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, \"App_component_ckEPmXZlub0\"));",
+      "match_type": "exact_path",
+      "module_path_actual": "test.js",
+      "module_path_expected": "test.js",
+      "spec_name": "example_component_with_event_listeners_inside_loop"
+    },
+    {
+      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_vbEaih0SxYg = () => import(\"./test.tsx_App_component_button_q_e_click_vbEaih0SxYg\"); export const App_component_XumqEURaLxI = () => { const cart = useStore<string[]>([]); const results = useSignal([\"foo\"]); function loopArrowFn(results: string[]) { return results.map((item) => /* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": (_, _1, item) => { cart.push(item); } }, item, 3, \"u6_0\")); } function loopForI(results: string[]) { const output = []; for (let i = 0; i < results.length; i++) { output.push(/* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": (_, _1, i) => { cart.push(results[i]); } }, results[i], 3, \"u6_1\")); } return output; } function loopForOf(results: string[]) { const output = []; for (const item of results) { output.push(/* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": (_, _1, item) => { cart.push(item); } }, item, 3, \"u6_2\")); } return output; } function loopForIn(results: string[]) { const output = []; for (const key in results) { output.push(/* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": (_, _1, key) => { cart.push(results[key]); } }, results[key], 3, \"u6_3\")); } return output; } function loopWhile(results: string[]) { const output = []; let i = 0; while (i < results.length) { output.push(/* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": (_, _1, i) => { cart.push(results[i]); } }, results[i], 3, \"u6_4\")); i++; } return output; } return /* @__PURE__ */ _jsxSorted(\"div\", null, null, [ results.value.map((item) => /* @__PURE__ */ _jsxSorted(\"button\", null, { id: \"second\", \"q-e:click\": (_, _1, item) => { cart.push(item); } }, item, 3, \"u6_5\")), loopArrowFn(results.value), loopForI(results.value), loopForOf(results.value), loopForIn(results.value), loopWhile(results.value) ], 1, \"u6_6\"); }",
+      "diff_summary": "const/let/var diff: expected {\"const\": 5}, actual {\"let\": 1, \"const\": 13}; missing imports: 3",
+      "expected_code_normalized": "import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useSignal } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const _hf0 = (p0, p1)=>p1[p0]; const _hf0_str = \"p1[p0]\"; // ... lazy imports for 6 event handlers ... export const App_component_ckEPmXZlub0 = ()=>{ const cart = useStore([]); const results = useSignal(['foo']); // Each loop function creates a qrl with captures and uses _jsxSorted with \"q:p\" // for-i/for-in/while use _fnSignal(_hf0, [index, array], _hf0_str) for reactive access // map/for-of pass item directly return /*#__PURE__*/ _jsxSorted(\"div\", null, null, [...], 1, \"u6_6\"); };",
+      "match_type": "structural",
+      "module_path_actual": "test.tsx_App_component_XumqEURaLxI.js",
+      "module_path_expected": "test.tsx_App_component_ckEPmXZlub0.js",
       "spec_name": "example_component_with_event_listeners_inside_loop"
     },
     {
@@ -712,8 +748,8 @@
       "spec_name": "example_default_export"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const default_component_div_q_e_click_DIVjyCI2VsA = () => console.log(mongodb, sibling);",
+      "diff_summary": "missing imports: 1",
       "expected_code_normalized": "import { sibling } from \"./sibling\"; export const slug_component_div_q_e_click_bCwVPYSTQ0w = ()=>console.log(mongodb, sibling);",
       "match_type": "structural",
       "module_path_actual": "src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA.js",
@@ -739,8 +775,8 @@
       "spec_name": "example_default_export_index"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const default_component_div_q_e_click_41GceC3v3n8 = () => console.log(mongodb);",
+      "diff_summary": "token diff at position 2: expected '_404_component_div_q_e_click_aMLnLWtkRhc', actual 'default_component_div_q_e_click_41GceC3v3n8'",
       "expected_code_normalized": "export const _404_component_div_q_e_click_aMLnLWtkRhc = ()=>console.log(mongodb);",
       "match_type": "structural",
       "module_path_actual": "src/components/mongo/404.tsx_default_component_div_q_e_click_41GceC3v3n8.tsx",
@@ -829,8 +865,8 @@
       "spec_name": "example_dev_mode"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const App_component_p_q_e_click_0VoFXPYUR5E = () => console.log(\"warn\");",
+      "diff_summary": "token diff at position 2: expected 'App_component_Cmp_p_q_e_click_Yl4ybrJWrt4', actual 'App_component_p_q_e_click_0VoFXPYUR5E'",
       "expected_code_normalized": "export const App_component_Cmp_p_q_e_click_Yl4ybrJWrt4 = ()=>console.log('warn');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_p_q_e_click_0VoFXPYUR5E.js",
@@ -856,8 +892,8 @@
       "spec_name": "example_drop_side_effects"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const default_component_button_q_e_click_zo9wkw0NBzs = () => await api()",
+      "diff_summary": "missing imports: 1",
       "expected_code_normalized": "import { api } from \"./test\"; export const test_component_button_q_e_click_qwSL5gM03T4 = ()=>await api();",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js",
@@ -1072,8 +1108,8 @@
       "spec_name": "example_functional_component_2"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const App_component_div_q_e_click_wANYt0I0EHI = () => state.count += count2;",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const App_component_div_q_e_click_mi4E1piTWe8 = ()=>{ const count2 = _captures[0], state = _captures[1]; return state.count += count2; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_div_q_e_click_wANYt0I0EHI.js",
@@ -1099,8 +1135,8 @@
       "spec_name": "example_functional_component_capture_props"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const s__div_q_e_click_BvZjBcCes4s = () => state.count += count + total;",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const App_component_div_q_e_click_mi4E1piTWe8 = ()=>{ const count = _captures[0], state = _captures[1]; return state.count += count + total; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_s__div_q_e_click_BvZjBcCes4s.js",
@@ -1144,65 +1180,56 @@
       "spec_name": "example_getter_generation"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "Module count: expected 6, got 0. Expected paths: [\"test.tsx_App_component_Fragment_Div_onEvent_zrFduYbT3xM.js\", \"test.js\", \"test.tsx_App_component_Fragment_Div_immutable4_2zF7jA3Yti0.js\", \"test.tsx_App_component_Fragment_Div_transparent_eeDEK6EM1oo.js\", \"test.tsx_App_component_ckEPmXZlub0.js\", \"test.tsx_App_component_remove_pU6yOC5P6sY.js\"]. Actual paths: []",
-      "expected_code_normalized": "",
-      "match_type": "module_count_mismatch",
-      "module_path_actual": "(optimizer produced 0 modules)",
-      "module_path_expected": "(spec expects 6 modules)",
-      "spec_name": "example_immutable_analysis"
-    },
-    {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.tsx_App_component_Fragment_Div_onEvent_zrFduYbT3xM.js' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
+      "actual_code_normalized": "export const App_component___q_e_event_j3XFTutAFbA = () => console.log(\"stuff\");",
+      "diff_summary": "token diff at position 2: expected 'App_component_Fragment_Div_onEvent_zrFduYbT3xM', actual 'App_component___q_e_event_j3XFTutAFbA'",
+      "expected_code_normalized": "export const App_component_Fragment_Div_onEvent_zrFduYbT3xM = ()=>console.log('stuff');",
+      "match_type": "structural",
+      "module_path_actual": "test.tsx_App_component___q_e_event_j3XFTutAFbA.js",
       "module_path_expected": "test.tsx_App_component_Fragment_Div_onEvent_zrFduYbT3xM.js",
       "spec_name": "example_immutable_analysis"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.js' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
+      "actual_code_normalized": "import importedValue from \"v\"; import styles from \"./styles.module.css\"; import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const i_XumqEURaLxI = () => import(\"./test.tsx_App_component_XumqEURaLxI\"); const i_qkje5irpghU = () => import(\"./test.tsx_remove_qkje5irpghU\"); const i_j3XFTutAFbA = () => import(\"./test.tsx_App_component___q_e_event_j3XFTutAFbA\"); const i_R37Ah6P7YK8 = () => import(\"./test.tsx_App_component___transparent_R37Ah6P7YK8\"); const i_fo6pletGN1s = () => import(\"./test.tsx_App_component___immutable4_fo6pletGN1s\"); export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, \"App_component_XumqEURaLxI\"));",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 6}; extra imports: 5",
+      "expected_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_ckEPmXZlub0 = ()=>import(\"./test.tsx_App_component_ckEPmXZlub0\"); export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, \"App_component_ckEPmXZlub0\"));",
+      "match_type": "exact_path",
+      "module_path_actual": "test.js",
       "module_path_expected": "test.js",
       "spec_name": "example_immutable_analysis"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.tsx_App_component_Fragment_Div_immutable4_2zF7jA3Yti0.js' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
+      "actual_code_normalized": "export const App_component___immutable4_fo6pletGN1s = (ev) => console.log(state.count);",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
+      "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const App_component_Fragment_Div_immutable4_2zF7jA3Yti0 = (ev)=>{ const state = _captures[0]; return console.log(state.count); };",
+      "match_type": "structural",
+      "module_path_actual": "test.tsx_App_component___immutable4_fo6pletGN1s.js",
       "module_path_expected": "test.tsx_App_component_Fragment_Div_immutable4_2zF7jA3Yti0.js",
       "spec_name": "example_immutable_analysis"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.tsx_App_component_Fragment_Div_transparent_eeDEK6EM1oo.js' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
+      "actual_code_normalized": "export const App_component___transparent_R37Ah6P7YK8 = () => { console.log(\"stuff\"); };",
+      "diff_summary": "token diff at position 2: expected 'App_component_Fragment_Div_transparent_eeDEK6EM1oo', actual 'App_component___transparent_R37Ah6P7YK8'",
+      "expected_code_normalized": "export const App_component_Fragment_Div_transparent_eeDEK6EM1oo = ()=>{ console.log('stuff'); };",
+      "match_type": "structural",
+      "module_path_actual": "test.tsx_App_component___transparent_R37Ah6P7YK8.js",
       "module_path_expected": "test.tsx_App_component_Fragment_Div_transparent_eeDEK6EM1oo.js",
       "spec_name": "example_immutable_analysis"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.tsx_App_component_ckEPmXZlub0.js' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
+      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_qkje5irpghU = () => import(\"./test.tsx_remove_qkje5irpghU\"); const i_j3XFTutAFbA = () => import(\"./test.tsx_App_component___q_e_event_j3XFTutAFbA\"); const i_R37Ah6P7YK8 = () => import(\"./test.tsx_App_component___transparent_R37Ah6P7YK8\"); const i_fo6pletGN1s = () => import(\"./test.tsx_App_component___immutable4_fo6pletGN1s\"); export const App_component_XumqEURaLxI = (props) => { const { Model } = props; const state = useStore({ count: 0 }); const remove = /* @__PURE__ */ qrl(i_qkje5irpghU, \"remove_qkje5irpghU\", [state]); return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [ /* @__PURE__ */ _jsxSorted(\"p\", null, { class: \"stuff\", \"q-e:click\": props.onClick$ }, \"Hello Qwik\", 3, \"u6_1\"), /* @__PURE__ */ _jsxSorted(Div, { class: styles.foo, document: window.document, immutable2: { foo: \"bar\", baz: importedValue ? true : false }, immutable5: [ 1, 2, importedValue, null, {} ] }, { \"q-e:click\": props.onClick$, \"q-e:event\": () => console.log(\"stuff\"), \"transparent$\": () => { console.log(\"stuff\"); }, immutable1: \"stuff\", immutable3: 2, \"immutable4$\": (ev) => console.log(state.count) }, /* @__PURE__ */ _jsxSorted(\"p\", null, null, \"Hello Qwik\", 3, \"u6_2\"), 3, \"u6_3\"), [].map(() => /* @__PURE__ */ _jsxSorted(Model, { class: state, mutable1: { foo: \"bar\", baz: state.count ? true : false }, mutable2: (() => console.log(state.count))(), mutable3: [ 1, 2, state, null, {} ] }, { \"remove$\": remove }, null, 3, \"u6_0\")) ], 1, \"u6_4\"); };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 9}, actual {\"const\": 8}; missing imports: 4; qrl count: expected 4, actual 1",
+      "expected_code_normalized": "import importedValue from \"v\"; import styles from \"./styles.module.css\"; import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const _hf0 = (p0)=>({ foo: 'bar', baz: p0.count ? true : false }); const _hf0_str = '{foo:\"bar\",baz:p0.count?true:false}'; const i_2zF7jA3Yti0 = ()=>import(\"./test.tsx_App_component_Fragment_Div_immutable4_2zF7jA3Yti0\"); const i_eeDEK6EM1oo = ()=>import(\"./test.tsx_App_component_Fragment_Div_transparent_eeDEK6EM1oo\"); const i_pU6yOC5P6sY = ()=>import(\"./test.tsx_App_component_remove_pU6yOC5P6sY\"); const i_zrFduYbT3xM = ()=>import(\"./test.tsx_App_component_Fragment_Div_onEvent_zrFduYbT3xM\"); export const App_component_ckEPmXZlub0 = (props)=>{ const state = useStore({ count: 0 }); const remove = /*#__PURE__*/ qrl(i_pU6yOC5P6sY, \"App_component_remove_pU6yOC5P6sY\", [state]); return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, [ /*#__PURE__*/ _jsxSorted(\"p\", { \"q-e:click\": props.onClick$ }, { class: \"stuff\" }, \"Hello Qwik\", 2, null), /*#__PURE__*/ _jsxSorted(Div, { document: window.document, onClick$: props.onClick$ }, { class: styles.foo, onEvent$: /*#__PURE__*/ qrl(i_zrFduYbT3xM, \"App_component_Fragment_Div_onEvent_zrFduYbT3xM\"), transparent$: /*#__PURE__*/ qrl(i_eeDEK6EM1oo, \"App_component_Fragment_Div_transparent_eeDEK6EM1oo\"), immutable1: \"stuff\", immutable2: { foo: 'bar', baz: importedValue ? true : false }, immutable3: 2, immutable4$: /*#__PURE__*/ qrl(i_2zF7jA3Yti0, \"App_component_Fragment_Div_immutable4_2zF7jA3Yti0\", [state]), immutable5: [1, 2, importedValue, null, {}] }, /*#__PURE__*/ _jsxSorted(\"p\", null, null, \"Hello Qwik\", 3, null), 2, \"u6_0\"), \"[].map(() => (\", /*#__PURE__*/ _jsxSorted(props.Model, { mutable2: (()=>console.log(state.count))() }, { class: state, remove$: remove, mutable1: _fnSignal(_hf0, [state], _hf0_str), mutable3: [1, 2, state, null, {}] }, null, 3, \"u6_1\"), \"));\" ], 1, \"u6_2\"); };",
+      "match_type": "structural",
+      "module_path_actual": "test.tsx_App_component_XumqEURaLxI.js",
       "module_path_expected": "test.tsx_App_component_ckEPmXZlub0.js",
       "spec_name": "example_immutable_analysis"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "Expected module 'test.tsx_App_component_remove_pU6yOC5P6sY.js' has no matching actual module",
-      "expected_code_normalized": "",
-      "match_type": "unmatched_expected",
-      "module_path_actual": "",
+      "actual_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const remove_qkje5irpghU = (id: number) => { const state = _captures[0]; const d = state.data; d.splice(d.findIndex((d) => d.id === id), 1); }",
+      "diff_summary": "token diff at position 8: expected 'App_component_remove_pU6yOC5P6sY', actual 'remove_qkje5irpghU'",
+      "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const App_component_remove_pU6yOC5P6sY = (id)=>{ const state = _captures[0]; const d = state.data; d.splice(d.findIndex((d)=>d.id === id), 1); };",
+      "match_type": "structural",
+      "module_path_actual": "test.tsx_remove_qkje5irpghU.js",
       "module_path_expected": "test.tsx_App_component_remove_pU6yOC5P6sY.js",
       "spec_name": "example_immutable_analysis"
     },
@@ -1576,8 +1603,8 @@
       "spec_name": "example_jsx_listeners"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Foo_div_custom_Co0pSPo5J9E = () => console.log(\"custom\");",
+      "diff_summary": "token diff at position 2: expected 'Foo_component_div_custom_pyHnxab17ms', actual 'Foo_div_custom_Co0pSPo5J9E'",
       "expected_code_normalized": "export const Foo_component_div_custom_pyHnxab17ms = ()=>console.log('custom');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_div_custom_Co0pSPo5J9E.js",
@@ -1585,8 +1612,8 @@
       "spec_name": "example_jsx_listeners"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Foo_div_q_e_document-scroll_SgoZQWmAm94 = () => console.log(\"onDocument-sCroll\")",
+      "diff_summary": "token diff at position 2: expected 'Foo_component_div_q_e_document_scroll_6qyBttefepU', actual 'Foo_div_q_e_document-scroll_SgoZQWmAm94'",
       "expected_code_normalized": "export const Foo_component_div_q_e_document_scroll_6qyBttefepU = ()=>console.log('onDocument-sCroll');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_div_q_e_document-scroll_SgoZQWmAm94.js",
@@ -1594,8 +1621,8 @@
       "spec_name": "example_jsx_listeners"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Foo_div_q_e_-click_7EsQAjtgDrQ = () => console.log(\"on-cLick$\")",
+      "diff_summary": "token diff at position 2: expected 'Foo_component_div_q_e_c_lick_kX5SiYdz650', actual 'Foo_div_q_e_-click_7EsQAjtgDrQ'",
       "expected_code_normalized": "export const Foo_component_div_q_e_c_lick_kX5SiYdz650 = ()=>console.log('on-cLick$');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_div_q_e_-click_7EsQAjtgDrQ.js",
@@ -1603,8 +1630,8 @@
       "spec_name": "example_jsx_listeners"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Foo_div_q_e_click_KKzu5KN5Myk = () => console.log(\"onClick$\");",
+      "diff_summary": "token diff at position 2: expected 'Foo_component_div_q_e_click_YEa2A5ADUOg', actual 'Foo_div_q_e_click_KKzu5KN5Myk'",
       "expected_code_normalized": "export const Foo_component_div_q_e_click_YEa2A5ADUOg = ()=>console.log('onClick$');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_div_q_e_click_KKzu5KN5Myk.js",
@@ -1720,8 +1747,8 @@
       "spec_name": "example_manual_chunks"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Child_component_div_q_e_click_atbV2f006AU = () => console.log(\"child\");",
+      "diff_summary": "token diff at position 2: expected 'Child_component_div_q_e_click_cROa4sult1s', actual 'Child_component_div_q_e_click_atbV2f006AU'",
       "expected_code_normalized": "export const Child_component_div_q_e_click_cROa4sult1s = ()=>console.log('child');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Child_component_div_q_e_click_atbV2f006AU.js",
@@ -1738,8 +1765,8 @@
       "spec_name": "example_manual_chunks"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Parent_component_div_q_e_click_N8VjxooYvus = () => console.log(\"parent\");",
+      "diff_summary": "token diff at position 2: expected 'Parent_component_div_q_e_click_zM9okM0TYrA', actual 'Parent_component_div_q_e_click_N8VjxooYvus'",
       "expected_code_normalized": "export const Parent_component_div_q_e_click_zM9okM0TYrA = ()=>console.log('parent');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Parent_component_div_q_e_click_N8VjxooYvus.js",
@@ -1865,7 +1892,7 @@
     },
     {
       "actual_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { inlinedQrl } from \"@qwik.dev/core\"; export const AtomStatus = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => { let status = _rawProps.atom.status; if (!_rawProps.atom.real) { status = \"WILL-VANISH\"; } else if (JSON.stringify(undefined) == JSON.stringify(undefined)) { status = \"WTFED\"; } return <span title={atom.ID} onClick$={(ev) => atomStatusClick(ctx, ev, [atom])} class={[ \"atom\", status, ctx.store[atom.ID] ? \"selected\" : null ]}> </span>; }, \"AtomStatus_component_BHJ0BemzHIo\"));",
-      "diff_summary": "const/let/var diff: expected {\"let\": 1, \"const\": 2}, actual {\"let\": 1, \"const\": 1}; missing imports: 1; inlinedQrl count: expected 2, actual 1",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"let\": 1}, actual {\"let\": 1, \"const\": 1}; missing imports: 1; inlinedQrl count: expected 2, actual 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { inlinedQrl } from \"@qwik.dev/core\"; export const AtomStatus = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((_rawProps)=>{ let status = _rawProps.atom.status; if (!_rawProps.atom.real) status = \"WILL-VANISH\"; else if (JSON.stringify(_rawProps.atom.atom) == JSON.stringify(_rawProps.atom.real)) status = \"WTFED\"; return <span title={_rawProps.atom.ID} q-e:click={/*#__PURE__*/ inlinedQrl((ev)=>{ const _rawProps = _captures[0]; return atomStatusClick(_rawProps.ctx, ev, [ _rawProps.atom ]); }, \"AtomStatus_component_span_q_e_click_0yqKAycyBF0\", [ _rawProps ])} class={[ \"atom\", status, _rawProps.ctx.store[_rawProps.atom.ID] ? \"selected\" : null ]}> </span>; }, \"AtomStatus_component_hdwpoUtydSA\"));",
       "match_type": "exact_path",
       "module_path_actual": "test.jsx",
@@ -1954,8 +1981,8 @@
       "spec_name": "example_preserve_filenames_segments"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const App_component_p_q_e_click_0VoFXPYUR5E = () => console.log(\"warn\");",
+      "diff_summary": "token diff at position 2: expected 'App_component_Cmp_p_q_e_click_Yl4ybrJWrt4', actual 'App_component_p_q_e_click_0VoFXPYUR5E'",
       "expected_code_normalized": "export const App_component_Cmp_p_q_e_click_Yl4ybrJWrt4 = ()=>console.log('warn');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_p_q_e_click_0VoFXPYUR5E.js",
@@ -2152,8 +2179,8 @@
       "spec_name": "example_qwik_conflict"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(qrl);",
+      "diff_summary": "token diff at position 2: expected 'Foo_component_div_q_e_click_YEa2A5ADUOg', actual 'Foo_component_div_q_e_click_OJboCLusyIA'",
       "expected_code_normalized": "export const Foo_component_div_q_e_click_YEa2A5ADUOg = ()=>console.log(23);",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js",
@@ -2449,8 +2476,8 @@
       "spec_name": "example_strip_server_code"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Parent_component_div_q_e_click_N8VjxooYvus = () => console.log(\"parent\");",
+      "diff_summary": "token diff at position 2: expected 's_zM9okM0TYrA', actual 'Parent_component_div_q_e_click_N8VjxooYvus'",
       "expected_code_normalized": "export const s_zM9okM0TYrA = ()=>console.log('parent');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Parent_component_div_q_e_click_N8VjxooYvus.js",
@@ -2467,8 +2494,8 @@
       "spec_name": "example_transpile_jsx_only"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const App_component_p_q_e_click_0VoFXPYUR5E = () => console.log(\"warn\");",
+      "diff_summary": "token diff at position 2: expected 'App_component_Cmp_p_q_e_click_Yl4ybrJWrt4', actual 'App_component_p_q_e_click_0VoFXPYUR5E'",
       "expected_code_normalized": "export const App_component_Cmp_p_q_e_click_Yl4ybrJWrt4 = ()=>console.log('warn');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_p_q_e_click_0VoFXPYUR5E.ts",
@@ -2495,7 +2522,7 @@
     },
     {
       "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const i_XumqEURaLxI = () => import(\"./test.tsx_App_component_XumqEURaLxI\"); export enum Thing { A, B } export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, \"App_component_XumqEURaLxI\"));",
-      "diff_summary": "const/let/var diff: expected {\"var\": 1, \"const\": 2}, actual {\"const\": 2}; extra imports: 3",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"var\": 1}, actual {\"const\": 2}; extra imports: 3",
       "expected_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_ckEPmXZlub0 = ()=>import(\"./test.tsx_App_component_ckEPmXZlub0\"); export var Thing = /*#__PURE__*/ function(Thing) { Thing[Thing[\"A\"] = 0] = \"A\"; Thing[Thing[\"B\"] = 1] = \"B\"; return Thing; }({}); export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, \"App_component_ckEPmXZlub0\"));",
       "match_type": "exact_path",
       "module_path_actual": "test.js",
@@ -2638,8 +2665,8 @@
       "spec_name": "example_use_server_mount"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Child_component_div_q_e_click_atbV2f006AU = () => console.log(\"child\");",
+      "diff_summary": "token diff at position 2: expected 'Child_component_div_q_e_click_cROa4sult1s', actual 'Child_component_div_q_e_click_atbV2f006AU'",
       "expected_code_normalized": "export const Child_component_div_q_e_click_cROa4sult1s = ()=>console.log('child');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Child_component_div_q_e_click_atbV2f006AU.js",
@@ -2656,8 +2683,8 @@
       "spec_name": "example_use_server_mount"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Parent_component_div_q_e_click_N8VjxooYvus = () => console.log(\"parent\");",
+      "diff_summary": "token diff at position 2: expected 'Parent_component_div_q_e_click_zM9okM0TYrA', actual 'Parent_component_div_q_e_click_N8VjxooYvus'",
       "expected_code_normalized": "export const Parent_component_div_q_e_click_zM9okM0TYrA = ()=>console.log('parent');",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Parent_component_div_q_e_click_N8VjxooYvus.js",
@@ -2737,8 +2764,8 @@
       "spec_name": "hoisted_fn_signal_in_loop"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const default_component_button_q_e_click_zo9wkw0NBzs = () => count.value++;",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const test_component_Fragment_button_q_e_click_7MTd2pAiliw = ()=>{ const count = _captures[0]; return count.value++; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.ts",
@@ -2827,8 +2854,8 @@
       "spec_name": "issue_5008"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const default_component_button_q_e_click_zo9wkw0NBzs = () => store[0].value++;",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const test_component_Fragment_button_q_e_click_7MTd2pAiliw = ()=>{ const store = _captures[0]; return store[0].value++; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js",
@@ -2854,8 +2881,8 @@
       "spec_name": "issue_7216_add_test"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const default_component_p_q_e_hi_2p9z0XXdr7M = () => \"hi\";",
+      "diff_summary": "token diff at position 2: expected 'test_component_p_q_e_hi_ttOKZbY46GA', actual 'default_component_p_q_e_hi_2p9z0XXdr7M'",
       "expected_code_normalized": "export const test_component_p_q_e_hi_ttOKZbY46GA = ()=>'hi';",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_p_q_e_hi_2p9z0XXdr7M.js",
@@ -2863,8 +2890,8 @@
       "spec_name": "issue_7216_add_test"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const default_component_p_q_e_const_W7e7jpgFEgw = () => \"const\";",
+      "diff_summary": "token diff at position 2: expected 'test_component_p_q_e_const_e6TYnIxnPLY', actual 'default_component_p_q_e_const_W7e7jpgFEgw'",
       "expected_code_normalized": "export const test_component_p_q_e_const_e6TYnIxnPLY = ()=>'const';",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_p_q_e_const_W7e7jpgFEgw.js",
@@ -2899,8 +2926,8 @@
       "spec_name": "issue_964"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const Counter_component_button_q_e_click_RfKynUVX1qo = () => count.value++;",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const Counter_component_div_p_button_q_e_click_Pq1pmfmJWUI = ()=>{ const count = _captures[0]; return count.value++; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Counter_component_button_q_e_click_RfKynUVX1qo.ts",
@@ -3061,8 +3088,8 @@
       "spec_name": "should_convert_jsx_events"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE = () => {};",
+      "diff_summary": "token diff at position 2: expected 'ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs', actual 'ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE'",
       "expected_code_normalized": "export const ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs = ()=>{};",
       "match_type": "structural",
       "module_path_actual": "test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE.js",
@@ -3070,8 +3097,8 @@
       "spec_name": "should_convert_jsx_events"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04 = () => {};",
+      "diff_summary": "token diff at position 2: expected 'ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY', actual 'ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04'",
       "expected_code_normalized": "export const ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY = ()=>{};",
       "match_type": "structural",
       "module_path_actual": "test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04.js",
@@ -3088,8 +3115,8 @@
       "spec_name": "should_convert_jsx_events"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc = () => {}",
+      "diff_summary": "token diff at position 2: expected 'ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0', actual 'ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc'",
       "expected_code_normalized": "export const ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0 = ()=>{};",
       "match_type": "structural",
       "module_path_actual": "test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc.js",
@@ -3097,8 +3124,8 @@
       "spec_name": "should_convert_jsx_events"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4 = () => {};",
+      "diff_summary": "token diff at position 2: expected 'ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs', actual 'ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4'",
       "expected_code_normalized": "export const ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs = ()=>{};",
       "match_type": "structural",
       "module_path_actual": "test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4.js",
@@ -3106,8 +3133,8 @@
       "spec_name": "should_convert_jsx_events"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04 = () => {};",
+      "diff_summary": "token diff at position 2: expected 'ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles', actual 'ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04'",
       "expected_code_normalized": "export const ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles = ()=>{};",
       "match_type": "structural",
       "module_path_actual": "test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04.js",
@@ -3358,8 +3385,8 @@
       "spec_name": "should_extract_single_qrl_with_nested_components"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Inner_component_p_q_e_click_Kwn9b5UeNMU = () => console.log(item.value.id);",
+      "diff_summary": "token diff at position 2: expected 'Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY', actual 'Inner_component_p_q_e_click_Kwn9b5UeNMU'",
       "expected_code_normalized": "export const Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY = (_, _1, item)=>console.log(item.value.id);",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU.js",
@@ -3376,8 +3403,8 @@
       "spec_name": "should_handle_dangerously_set_inner_html"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const Cmp_component_button_q_e_click_hiQTyBUK0Yk = () => htmlSignal.value = \"<h2><span>I'm a updated signal value!</span></h2>\";",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8 = ()=>{ const htmlSignal = _captures[0]; return htmlSignal.value = \"<h2><span>I'm a updated signal value!</span></h2>\"; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Cmp_component_button_q_e_click_hiQTyBUK0Yk.js",
@@ -3493,8 +3520,8 @@
       "spec_name": "should_merge_bind_checked_and_on_input"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const FieldInput_component_input_q_e_input_0pI6Lozv5Ow = () => { console.log(\"test\"); };",
+      "diff_summary": "token diff at position 2: expected 'FieldInput_component_input_q_e_input_wqR1xEjZjf4', actual 'FieldInput_component_input_q_e_input_0pI6Lozv5Ow'",
       "expected_code_normalized": "export const FieldInput_component_input_q_e_input_wqR1xEjZjf4 = ()=>{ console.log(\"test\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_FieldInput_component_input_q_e_input_0pI6Lozv5Ow.js",
@@ -3520,8 +3547,8 @@
       "spec_name": "should_merge_bind_value_and_on_input"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const FieldInput_component_input_q_e_input_0pI6Lozv5Ow = () => { console.log(\"test\"); };",
+      "diff_summary": "token diff at position 2: expected 'FieldInput_component_input_q_e_input_wqR1xEjZjf4', actual 'FieldInput_component_input_q_e_input_0pI6Lozv5Ow'",
       "expected_code_normalized": "export const FieldInput_component_input_q_e_input_wqR1xEjZjf4 = ()=>{ console.log(\"test\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_FieldInput_component_input_q_e_input_0pI6Lozv5Ow.js",
@@ -3547,8 +3574,8 @@
       "spec_name": "should_merge_on_input_and_bind_checked"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const FieldInput_component_input_q_e_input_0pI6Lozv5Ow = () => { console.log(\"test\"); };",
+      "diff_summary": "token diff at position 2: expected 'FieldInput_component_input_q_e_input_wqR1xEjZjf4', actual 'FieldInput_component_input_q_e_input_0pI6Lozv5Ow'",
       "expected_code_normalized": "export const FieldInput_component_input_q_e_input_wqR1xEjZjf4 = ()=>{ console.log(\"test\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_FieldInput_component_input_q_e_input_0pI6Lozv5Ow.js",
@@ -3574,8 +3601,8 @@
       "spec_name": "should_merge_on_input_and_bind_value"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const FieldInput_component_input_q_e_input_0pI6Lozv5Ow = () => { console.log(\"test\"); };",
+      "diff_summary": "token diff at position 2: expected 'FieldInput_component_input_q_e_input_wqR1xEjZjf4', actual 'FieldInput_component_input_q_e_input_0pI6Lozv5Ow'",
       "expected_code_normalized": "export const FieldInput_component_input_q_e_input_wqR1xEjZjf4 = ()=>{ console.log(\"test\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_FieldInput_component_input_q_e_input_0pI6Lozv5Ow.js",
@@ -3601,8 +3628,8 @@
       "spec_name": "should_move_bind_value_to_var_props"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const FieldInput_component_input_q_e_click_jlpYRk03eHk = () => { console.log(\"clicked\"); };",
+      "diff_summary": "token diff at position 2: expected 'FieldInput_component_input_q_e_click_fZgZHYZXt60', actual 'FieldInput_component_input_q_e_click_jlpYRk03eHk'",
       "expected_code_normalized": "export const FieldInput_component_input_q_e_click_fZgZHYZXt60 = ()=>{ console.log('clicked'); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk.js",
@@ -3754,8 +3781,8 @@
       "spec_name": "should_not_wrap_fn"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const Cmp_component_button_q_e_click_hiQTyBUK0Yk = () => currentType.value = \"NEXT\";",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const Cmp_component_Fragment_button_q_e_click_veAZ2ow0cnM = ()=>{ const currentType = _captures[0]; return currentType.value = 'NEXT'; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Cmp_component_button_q_e_click_hiQTyBUK0Yk.js",
@@ -3889,8 +3916,8 @@
       "spec_name": "should_split_spread_props_with_additional_prop4"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const default_component_button_q_e_click_zo9wkw0NBzs = () => props.onClick$();",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const test_component_button_q_e_click_qwSL5gM03T4 = ()=>{ const props = _captures[0]; return props.onClick$(); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js",
@@ -3961,8 +3988,8 @@
       "spec_name": "should_transform_component_with_normal_function"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Inner_component_p_q_e_click_Kwn9b5UeNMU = () => console.log(item.value.id);",
+      "diff_summary": "token diff at position 2: expected 'Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY', actual 'Inner_component_p_q_e_click_Kwn9b5UeNMU'",
       "expected_code_normalized": "export const Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY = (_, _1, item)=>console.log(item.value.id);",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU.js",
@@ -4096,8 +4123,8 @@
       "spec_name": "should_transform_multiple_event_handlers"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Foo_component_div_q_e_mouseover_vfd9BKEsGeE = () => console.log(\"over\" + row.value.id);",
+      "diff_summary": "token diff at position 2: expected 'Foo_component_div_div_q_e_mouseover_P9F6Osn3X6Y', actual 'Foo_component_div_q_e_mouseover_vfd9BKEsGeE'",
       "expected_code_normalized": "export const Foo_component_div_div_q_e_mouseover_P9F6Osn3X6Y = (_, _1, row)=>console.log('over' + row.value.id);",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_component_div_q_e_mouseover_vfd9BKEsGeE.js",
@@ -4159,8 +4186,8 @@
       "spec_name": "should_transform_multiple_event_handlers_case2"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {}",
+      "actual_code_normalized": "export const Foo_component_div_q_e_mouseover_vfd9BKEsGeE = () => console.log(\"over\" + row.value.id);",
+      "diff_summary": "token diff at position 2: expected 'Foo_component_div_div_q_e_mouseover_P9F6Osn3X6Y', actual 'Foo_component_div_q_e_mouseover_vfd9BKEsGeE'",
       "expected_code_normalized": "export const Foo_component_div_div_q_e_mouseover_P9F6Osn3X6Y = (_, _1, row)=>console.log('over' + row.value.id);",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_component_div_q_e_mouseover_vfd9BKEsGeE.js",
@@ -4222,8 +4249,8 @@
       "spec_name": "should_transform_nested_loops"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "export const FieldInput_component_input_q_e_focus_gyY7eQpsQgo = () => { enabled.value = true; };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const FieldInput_component_input_q_e_focus_Sgf3MDWzexI = ()=>{ const enabled = _captures[0]; enabled.value = true; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_FieldInput_component_input_q_e_focus_gyY7eQpsQgo.js",
@@ -4304,7 +4331,7 @@
     },
     {
       "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; const _hf0 = (p0) => p0.myobj.id + \"test\"; const _hf0_str = \"p0.myobj.id+\\\"test\\\"\"; export const default_component_jN9ZUuuADmk = (props) => { const item = props.something.count; return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(\"div\", { data-no-wrap: item ? item * 2 : null }, { \"data-wrap\": _fnSignal(_hf0, [props], _hf0_str) }, null, 3, \"u6_0\"), 3, \"u6_1\"); }",
-      "diff_summary": "const/let/var diff: expected {\"const\": 4, \"var\": 1}, actual {\"const\": 4}",
+      "diff_summary": "const/let/var diff: expected {\"var\": 1, \"const\": 4}, actual {\"const\": 4}",
       "expected_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; const _hf0 = (p0)=>p0.myobj.id + \"test\"; const _hf0_str = 'p0.myobj.id+\"test\"'; export const test_component_LUXeXe0DQrg = (props)=>{ // not destructure it so it is a var prop const item = props.something.count; return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, /*#__PURE__*/ _jsxSorted(\"div\", { \"data-no-wrap\": item ? item * 2 : null, \"data-wrap\": _fnSignal(_hf0, [props], _hf0_str) }, null, null, 3, null), 1, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_jN9ZUuuADmk.js",
@@ -4339,8 +4366,8 @@
       "spec_name": "should_wrap_prop_from_destructured_array"
     },
     {
-      "actual_code_normalized": "",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {}; missing imports: 1",
+      "actual_code_normalized": "import { _fnSignal } from \"@qwik.dev/core\"; const _hf0 = (p0) => p0.errors.test; const _hf0_str = \"p0.errors.test\"; const _hf1 = (p0) => p0.errors.test; const _hf1_str = \"p0.errors.test\"; const _hf2 = (p0) => p0.errors.test; const _hf2_str = \"p0.errors.test\"; const _hf3 = (p0) => p0.errors.test; const _hf3_str = \"p0.errors.test\"; const _hf4 = (p0) => p0.errors.test; const _hf4_str = \"p0.errors.test\"; export const default_component_button_q_e_click_zo9wkw0NBzs = () => { store.errors.test = store.errors.test ? undefined : \"ERROR TEST\"; };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 11}; missing imports: 1; extra imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const test_component_div_button_q_e_click_2TvarUvNGmU = ()=>{ const store = _captures[0]; store.errors.test = store.errors.test ? undefined : 'ERROR TEST'; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js",
@@ -4498,10 +4525,10 @@
   "specs_run": 162,
   "specs_with_deviations": 161,
   "summary": {
-    "code_deviations": 359,
-    "module_count_mismatches": 5,
-    "unmatched_modules": 135
+    "code_deviations": 370,
+    "module_count_mismatches": 2,
+    "unmatched_modules": 130
   },
-  "total_deviations": 499,
+  "total_deviations": 502,
   "total_specs": 162
 }
