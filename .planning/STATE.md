@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 24 of 26 (Runtime Bug Fixes)
-Plan: 4 of 4 in current phase (complete)
+Plan: 5 of 6 in current phase (complete)
 Status: In Progress
-Last activity: 2026-02-12 -- Plan 04 complete (final audit validation, user approved)
+Last activity: 2026-02-12 -- Plan 05 complete (module-level decl self-imports)
 
 Progress: [######################........] 23/26 phases (v1.0-v5.0 shipped, v6.0 in progress)
 
@@ -53,6 +53,7 @@ Progress: [######################........] 23/26 phases (v1.0-v5.0 shipped, v6.0
 | 24    | 02   | 7min     | 2     | 82    |
 | 24    | 03   | 20min    | 2     | 52    |
 | 24    | 04   | 8min     | 2     | 2     |
+| 24    | 05   | 6min     | 2     | 22    |
 
 ## Accumulated Context
 
@@ -78,6 +79,8 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 24-04: 56 runtime-breaking deviations remain (52 missing-import-used + 4 truly-missing-module) after Phase 24
 - 24-04: 63 naming-convention module path pairs are cosmetic (not truly-missing modules)
 - 24-04: Symbol-in-body verification distinguishes runtime-breaking from cosmetic import deviations
+- 24-05: Module-level declarations reclassified as needed_imports (self-imports) rather than captures, matching SWC behavior
+- 24-05: SWC generates import { X } from './module' for module-level decl references, not _captures[] serialization
 
 ### Pending Todos
 
@@ -85,12 +88,12 @@ None.
 
 ### Blockers/Concerns
 
-- 56 runtime-breaking deviations remain: 52 missing-import-used (segments lack needed imports) + 4 truly-missing-module (pre-compiled QRL, multi-file)
-- Plans 05 and 06 created to address the remaining 56 deviations
+- ~30 framework/library import deviations remain (Plan 06 scope: content-based import detection)
+- 4 truly-missing-module deviations remain (pre-compiled QRL, multi-file)
 - Module count mismatches at 2 (example_qwik_react, relative_paths require pre-compiled QRL reverse-engineering)
 
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 24-04-PLAN.md (final audit validation, user approved)
+Stopped at: Completed 24-05-PLAN.md (module-level decl self-imports)
 Resume file: None
