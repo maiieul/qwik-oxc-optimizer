@@ -14,6 +14,7 @@ export const Cmp = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_qsBJpzBk9q
 import { qrl } from "@qwik.dev/core";
 const i_Zh6Ty0n2aaA = () => import("./test.tsx_Cmp_Zh6Ty0n2aaA");
 import { _jsxSorted } from "@qwik.dev/core";
+import { Cmp } from "./test";
 export const Cmp_component_qsBJpzBk9qc = () => /* @__PURE__ */ _jsxSorted(Cmp, { foo: /* @__PURE__ */ qrl(i_Zh6Ty0n2aaA, "Cmp_Zh6Ty0n2aaA") }, null, "Hello Qwik", 3, "u6_0");
 
 === test.tsx_Cmp_Zh6Ty0n2aaA.ts === (ENTRY)

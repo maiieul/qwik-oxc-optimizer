@@ -17,6 +17,7 @@ export const Header_component_Qw9nV3mG0KQ = () => {
 };
 
 === test.tsx_Header_QrzcmFeRo0o.tsx === (ENTRY)
+import { Header } from "./test";
 export const Header_QrzcmFeRo0o = (hola) => {
 	const hola = this;
 	const { something, styff } = hola;

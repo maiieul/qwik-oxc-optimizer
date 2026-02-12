@@ -24,6 +24,8 @@ export const Root = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_YvjM3SoLv
 import { qrl } from "@qwik.dev/core";
 const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA");
 import { _jsxSorted } from "@qwik.dev/core";
+import { hW } from "./test";
+import { handleWatch } from "./test";
 export const Foo_component_gZqPatVoDqw = () => {
 	useStyles$("thing");
 	const qwik = hW + handleWatch;

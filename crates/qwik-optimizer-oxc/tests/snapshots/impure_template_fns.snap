@@ -25,6 +25,7 @@ const i_zo9wkw0NBzs = () => import("./test.tsx_default_component_button_q_e_clic
 import { _jsxSorted } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { useSignal } from "@qwik.dev/core";
+import { useFoo } from "./test";
 export const default_component_jN9ZUuuADmk = () => {
 	const count = useSignal(0);
 	const foo = useFoo(count);

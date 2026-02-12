@@ -368,6 +368,59 @@ impl QwikTransform {
         self.filename.rsplit('.').next().unwrap_or("js").to_string()
     }
 
+    /// Compute the self-import source path for module-level declaration re-imports.
+    ///
+    /// When a nested segment references a module-level declaration (const, function,
+    /// class), the SWC optimizer re-imports it from the parent module rather than
+    /// capturing it. This method returns the import source path (e.g., "./test"
+    /// for a file named "test.tsx").
+    fn self_import_source(&self) -> String {
+        let stem = self
+            .filename
+            .rsplit('/')
+            .next()
+            .unwrap_or(&self.filename)
+            .rsplit('.')
+            .last()
+            .unwrap_or(&self.filename);
+        format!("./{}", stem)
+    }
+
+    /// Post-process a capture analysis result to convert module-level declarations
+    /// from captures into needed_imports (self-imports from the parent module).
+    ///
+    /// The SWC optimizer handles module-level declarations (const, function, class)
+    /// by re-importing them in the segment module rather than serializing/restoring
+    /// them via `_captures[]`. This post-processing step implements that behavior.
+    fn reclassify_module_level_decl_captures(
+        &self,
+        mut capture_result: collector::CaptureAnalysisResult,
+    ) -> (collector::CaptureAnalysisResult, Vec<crate::types::ImportInfo>) {
+        let self_import_source = self.self_import_source();
+        let mut extra_imports: Vec<crate::types::ImportInfo> = Vec::new();
+
+        // Partition capture_names: keep non-module-level-decl names as true captures,
+        // convert module-level-decl names to needed_imports (self-imports).
+        let mut true_captures = Vec::new();
+        for name in capture_result.capture_names.drain(..) {
+            if self.collected.module_level_decls.contains(&name) {
+                extra_imports.push(crate::types::ImportInfo {
+                    source: self_import_source.clone(),
+                    specifiers: vec![name],
+                    specifier_kinds: vec![crate::types::ImportKind::Named],
+                    specifier_aliases: std::collections::HashMap::new(),
+                    is_qwik_core: false,
+                    span: (0, 0),
+                });
+            } else {
+                true_captures.push(name);
+            }
+        }
+
+        capture_result.capture_names = true_captures;
+        (capture_result, extra_imports)
+    }
+
     /// Collect all binding names from a BindingPattern into the current
     /// capture stack frame's body_local_decls.
     /// Handles BindingIdentifier, ObjectPattern, and ArrayPattern recursively.
@@ -658,7 +711,10 @@ impl QwikTransform {
                                     let filtered_names: Vec<String> = capture_result
                                         .capture_names
                                         .into_iter()
-                                        .filter(|name| all_parent_decls.contains(name))
+                                        .filter(|name| {
+                                            all_parent_decls.contains(name)
+                                                || self.collected.module_level_decls.contains(name)
+                                        })
                                         .collect();
                                     collector::CaptureAnalysisResult {
                                         capture_names: filtered_names,
@@ -670,26 +726,35 @@ impl QwikTransform {
                                     capture_result
                                 };
 
+                                // Reclassify module-level declarations from captures
+                                // to needed_imports (self-imports from the parent module).
+                                let (capture_result, module_decl_imports) =
+                                    self.reclassify_module_level_decl_captures(capture_result);
+
                                 // Convert reemitted imports to ImportInfo for needed_imports
-                                let needed_imports: Vec<crate::types::ImportInfo> = capture_result
-                                    .reemitted_imports
-                                    .iter()
-                                    .map(|ri| {
-                                        let mut aliases = std::collections::HashMap::new();
-                                        if let Some(ref imported) = ri.imported_name {
-                                            aliases
-                                                .insert(ri.local_name.clone(), imported.clone());
-                                        }
-                                        crate::types::ImportInfo {
-                                            source: ri.source.clone(),
-                                            specifiers: vec![ri.local_name.clone()],
-                                            specifier_kinds: vec![ri.kind.clone()],
-                                            specifier_aliases: aliases,
-                                            is_qwik_core: false,
-                                            span: (0, 0),
-                                        }
-                                    })
-                                    .collect();
+                                let mut needed_imports: Vec<crate::types::ImportInfo> =
+                                    capture_result
+                                        .reemitted_imports
+                                        .iter()
+                                        .map(|ri| {
+                                            let mut aliases = std::collections::HashMap::new();
+                                            if let Some(ref imported) = ri.imported_name {
+                                                aliases.insert(
+                                                    ri.local_name.clone(),
+                                                    imported.clone(),
+                                                );
+                                            }
+                                            crate::types::ImportInfo {
+                                                source: ri.source.clone(),
+                                                specifiers: vec![ri.local_name.clone()],
+                                                specifier_kinds: vec![ri.kind.clone()],
+                                                specifier_aliases: aliases,
+                                                is_qwik_core: false,
+                                                span: (0, 0),
+                                            }
+                                        })
+                                        .collect();
+                                needed_imports.extend(module_decl_imports);
 
                                 // Update the segment with capture info
                                 if let Some(seg_mut) = self
@@ -1264,9 +1329,15 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             let capture_result =
                 collector::compute_captures(&body_ident_refs, &body_local_decls, &self.collected);
 
+            // Reclassify module-level declarations from captures to needed_imports
+            // (self-imports from the parent module). This matches SWC behavior where
+            // module-level declarations are re-imported rather than captured.
+            let (capture_result, module_decl_imports) =
+                self.reclassify_module_level_decl_captures(capture_result);
+
             // Convert reemitted_imports into ImportInfo entries for the segment's needed_imports.
             // These imports will be emitted in the segment module by code_move.rs.
-            let needed_imports: Vec<crate::types::ImportInfo> = capture_result
+            let mut needed_imports: Vec<crate::types::ImportInfo> = capture_result
                 .reemitted_imports
                 .iter()
                 .map(|ri| {
@@ -1284,6 +1355,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     }
                 })
                 .collect();
+            needed_imports.extend(module_decl_imports);
 
             if let Some(seg) = self
                 .segments

@@ -20,6 +20,7 @@ export const Cmp = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_qsBJpzBk9q
 import { _jsxSorted } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
+import { Cmp } from "./test";
 const _hf0 = (p0) => p0.nested.count;
 const _hf0_str = "p0.nested.count";
 export const App_component_XumqEURaLxI = () => {

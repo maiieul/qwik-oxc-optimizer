@@ -17,6 +17,7 @@ export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "
 
 === test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
+import { Hola } from "./test";
 export const default_component_jN9ZUuuADmk = () => {
 	return /* @__PURE__ */ _jsxSorted(Hola, null, null, [/* @__PURE__ */ _jsxSorted("div", null, null, "1", 3, "u6_0"), /* @__PURE__ */ _jsxSorted("div", null, null, "2", 3, "u6_1")], 1, "u6_2");
 };

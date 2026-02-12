@@ -23,6 +23,7 @@ export const default_component_jN9ZUuuADmk = () => {
 }
 
 === test.tsx_default_useResource_Qfn0duyjgAo.tsx === (ENTRY)
+import { onGet } from "./test";
 export const default_useResource_Qfn0duyjgAo = () => {
 	return onGet();
 };

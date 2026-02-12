@@ -34,6 +34,15 @@ export const Header_component_sHTSaq0AU4w = () => {
 
 === project/test.tsx_Header_0hncTFTaevI.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
+import { Footer } from "./test";
+import { a } from "./test";
+import { b } from "./test";
+import { c } from "./test";
+import { e } from "./test";
+import { exp1 } from "./test";
+import { internal } from "./test";
+import { foo } from "./test";
+import { bar } from "./test";
 export const Header_0hncTFTaevI = () => {
 const d = _captures[0];
 const f = _captures[1];

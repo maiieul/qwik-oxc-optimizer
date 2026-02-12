@@ -77,6 +77,7 @@ import { _fnSignal } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 import { useForm } from "./some-file.ts";
 import { useForm2 } from "./some-file.ts";
+import { Input } from "./test";
 const _hf0 = (p0) => p0.errors.test;
 const _hf0_str = "p0.errors.test";
 const _hf1 = (p0) => p0.errors.test;

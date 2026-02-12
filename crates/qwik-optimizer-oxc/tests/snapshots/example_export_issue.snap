@@ -22,6 +22,7 @@ export const App_component_XumqEURaLxI = () => {
 
 === test.tsx_Root_component_YvjM3SoLvrM.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
+import { App } from "./test";
 export const Root_component_YvjM3SoLvrM = (props: Stuff) => {
 	return /* @__PURE__ */ _jsxSorted(App, null, null, null, 3, null);
 }

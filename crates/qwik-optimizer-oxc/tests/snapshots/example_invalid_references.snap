@@ -17,6 +17,13 @@ export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLx
 === test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4");
+import { I1 } from "./test";
+import { I2 } from "./test";
+import { I3 } from "./test";
+import { I4 } from "./test";
+import { I6 } from "./test";
+import { I8 } from "./test";
+import { I9 } from "./test";
 export const App_component_XumqEURaLxI = (_rawProps) => {
 	console.log(I1, I2, I3, I4, I5, I6, I7, I8, I9);
 	console.log(itsok, v1, v2, v3, obj);
@@ -25,6 +32,7 @@ export const App_component_XumqEURaLxI = (_rawProps) => {
 
 === test.tsx_App_w3unmdi0sm4.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
+import { I10 } from "./test";
 export const App_w3unmdi0sm4 = () => {
 	return /* @__PURE__ */ _jsxSorted(I10, null, null, null, 3, null);
 };

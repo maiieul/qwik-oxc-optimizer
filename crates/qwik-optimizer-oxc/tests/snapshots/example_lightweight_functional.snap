@@ -17,6 +17,8 @@ export const ButtonArrow = ({ text, color }) => {
 };
 
 === test.tsx_Foo_component_gZqPatVoDqw.tsx === (ENTRY)
+import { Button } from "./test";
+import { ButtonArrow } from "./test";
 export const Foo_component_gZqPatVoDqw = (props) => {
 	return <div>
 			<Button {...props} />
