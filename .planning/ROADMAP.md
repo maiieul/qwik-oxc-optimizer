@@ -93,11 +93,11 @@ Full details: `milestones/v5.0-ROADMAP.md`
   2. Each deviation is classified as runtime-breaking or cosmetic with documented rationale
   3. A deviation report exists listing every difference with its severity, category (capture, import, QRL, codegen), and affected spec
   4. The 5 known module count deviations and 16 known capture deviations are re-evaluated with actual output comparison
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 23-01: TBD
-- [ ] 23-02: TBD
+- [ ] 23-01-PLAN.md -- Build and run output audit comparison tool (Rust integration test comparing all 162 specs)
+- [ ] 23-02-PLAN.md -- Classify deviations and write AUDIT-REPORT.md (user review gate)
 
 ### Phase 24: Runtime Bug Fixes
 **Goal**: All runtime-breaking deviations are fixed so the OXC optimizer produces semantically correct output for every spec
@@ -169,7 +169,7 @@ Plans:
 | 20. Path Resolution | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 21. Import Correctness | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 22. Display Names and Annotations | v5.0 | 1/1 | Complete | 2026-02-12 |
-| 23. Output Audit | v6.0 | 0/TBD | Not started | - |
+| 23. Output Audit | v6.0 | 0/2 | Planning | - |
 | 24. Runtime Bug Fixes | v6.0 | 0/TBD | Not started | - |
 | 25. NAPI Crate | v6.0 | 0/TBD | Not started | - |
 | 26. Integration Validation | v6.0 | 0/TBD | Not started | - |
