@@ -140,11 +140,19 @@ pub(crate) struct QwikTransform {
     /// When true, JSX event handler `$`-attributes are NOT extracted as segments
     /// because the JSX is not Qwik JSX.
     has_custom_jsx_import_source: bool,
+
+    /// Original source code, used for extracting JSX lambda body code by span.
+    source_code: String,
 }
 
 impl QwikTransform {
     /// Create a new QwikTransform instance.
-    pub fn new(options: &TransformOptions, collected: CollectResult, filename: &str) -> Self {
+    pub fn new(
+        options: &TransformOptions,
+        collected: CollectResult,
+        filename: &str,
+        source_code: &str,
+    ) -> Self {
         Self {
             options: options.clone(),
             collected,
@@ -163,6 +171,7 @@ impl QwikTransform {
             pending_sync_calls: HashSet::new(),
             pending_segment_qrl_imports: Vec::new(),
             has_custom_jsx_import_source: false,
+            source_code: source_code.to_string(),
         }
     }
 
@@ -592,7 +601,28 @@ impl QwikTransform {
                                 } else {
                                     attr_name_str.clone()
                                 };
-                                self.record_jsx_event_segment(&display_name, span, &ctx_name);
+                                let seg =
+                                    self.record_jsx_event_segment(&display_name, span, &ctx_name);
+
+                                // Serialize the lambda body code for the segment module.
+                                // This is the JSX event handler equivalent of what
+                                // exit_expression does for regular $() calls.
+                                let is_inline = entry_strategy::should_inline(
+                                    &self.options.entry_strategy,
+                                ) || matches!(
+                                    self.options.entry_strategy,
+                                    crate::types::EntryStrategy::Hoist
+                                );
+                                if !is_inline {
+                                    let body_code = serialize_jsx_lambda_from_source(
+                                        &self.source_code,
+                                        span,
+                                    );
+                                    if !body_code.is_empty() {
+                                        self.segment_body_codes
+                                            .push((seg.span.0, body_code));
+                                    }
+                                }
                             }
                         }
                     }
@@ -1261,6 +1291,49 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
         program.body = new_body;
     }
+}
+
+/// Serialize a JSX lambda expression to a code string for segment body generation.
+///
+/// Uses a parse-and-codegen roundtrip: extracts the lambda source code from the
+/// original source text using the span, wraps it as `var x = <lambda>`, parses it,
+/// and then runs codegen on the expression to produce clean output.
+///
+/// This avoids unsafe pointer casts between JSXExpression and Expression types
+/// (which use different enum layouts despite sharing variant types via inherit_variants!).
+fn serialize_jsx_lambda_from_source(source_code: &str, span: (u32, u32)) -> String {
+    let start = span.0 as usize;
+    let end = span.1 as usize;
+    if start >= source_code.len() || end > source_code.len() || start >= end {
+        return String::new();
+    }
+    let lambda_source = &source_code[start..end];
+
+    // Wrap in a variable declaration so OXC can parse it as a complete expression
+    let parse_source = format!("var x = {}", lambda_source);
+    let alloc = oxc::allocator::Allocator::default();
+    let source_ref = alloc.alloc_str(&parse_source);
+
+    let parser = oxc::parser::Parser::new(&alloc, source_ref, oxc::span::SourceType::tsx());
+    let parse_result = parser.parse();
+
+    if !parse_result.errors.is_empty() || parse_result.program.body.is_empty() {
+        // Fallback: return the raw source text
+        return lambda_source.to_string();
+    }
+
+    // Extract the expression from `var x = <expr>`
+    if let Some(Statement::VariableDeclaration(decl)) = parse_result.program.body.first() {
+        if let Some(declarator) = decl.declarations.first() {
+            if let Some(ref init) = declarator.init {
+                let mut codegen = oxc::codegen::Codegen::new();
+                codegen.print_expression(init);
+                return codegen.into_source_text();
+            }
+        }
+    }
+
+    lambda_source.to_string()
 }
 
 /// Check if a dollar-suffixed call name produces a tree-shakeable wrapper.

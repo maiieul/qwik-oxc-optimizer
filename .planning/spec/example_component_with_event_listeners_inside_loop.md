@@ -19,22 +19,71 @@ import { $, component$, useStore, useSignal } from '@qwik.dev/core';
 export const App = component$(() => {
       const cart = useStore<string[]>([]);
       const results = useSignal(['foo']);
-      function loopArrowFn(results: string[]) { /* map with onClick$ */ }
-      function loopForI(results: string[]) { /* for-i with onClick$ */ }
-      function loopForOf(results: string[]) { /* for-of with onClick$ */ }
-      function loopForIn(results: string[]) { /* for-in with onClick$ */ }
-      function loopWhile(results: string[]) { /* while with onClick$ */ }
+      function loopArrowFn(results: string[]) {
+        return results.map((item) => (
+          <span onClick$={(_, _1, item) => {
+            cart.push(item);
+          }}>{item}</span>
+        ));
+      }
+      function loopForI(results: string[]) {
+        const output = [];
+        for (let i = 0; i < results.length; i++) {
+          output.push(
+            <span onClick$={(_, _1, i) => {
+              cart.push(results[i]);
+            }}>{results[i]}</span>
+          );
+        }
+        return output;
+      }
+      function loopForOf(results: string[]) {
+        const output = [];
+        for (const item of results) {
+          output.push(
+            <span onClick$={(_, _1, item) => {
+              cart.push(item);
+            }}>{item}</span>
+          );
+        }
+        return output;
+      }
+      function loopForIn(results: string[]) {
+        const output = [];
+        for (const key in results) {
+          output.push(
+            <span onClick$={(_, _1, key) => {
+              cart.push(results[key]);
+            }}>{results[key]}</span>
+          );
+        }
+        return output;
+      }
+      function loopWhile(results: string[]) {
+        const output = [];
+        let i = 0;
+        while (i < results.length) {
+          output.push(
+            <span onClick$={(_, _1, i) => {
+              cart.push(results[i]);
+            }}>{results[i]}</span>
+          );
+          i++;
+        }
+        return output;
+      }
       return (
         <div>
-          {results.value.map((item) => (<button id="second" onClick$={...}>{item}</button>))}
+          {results.value.map((item) => (<button id="second" onClick$={(_, _1, item) => { cart.push(item); }}>{item}</button>))}
           {loopArrowFn(results.value)}
-          {/* ... other loop calls */}
+          {loopForI(results.value)}
+          {loopForOf(results.value)}
+          {loopForIn(results.value)}
+          {loopWhile(results.value)}
         </div>
       );
     });
 ```
-
-*Full input is ~100 lines with 5 loop patterns and a direct map in the return JSX.*
 
 <details>
 <summary>Input AST (OXC)</summary>

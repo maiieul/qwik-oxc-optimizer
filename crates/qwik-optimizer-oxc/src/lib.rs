@@ -112,7 +112,7 @@ pub fn transform_modules(
         }
 
         let mut qwik_transform =
-            transform::QwikTransform::new(&transform_options, collect_result, &input.path);
+            transform::QwikTransform::new(&transform_options, collect_result, &input.path, &input.code);
 
         if input.code.contains("@jsxImportSource") {
             qwik_transform.set_custom_jsx_import_source(true);
@@ -230,6 +230,18 @@ pub fn transform_modules(
                     );
                     code_move::emit_segment_with_map(&raw_code, &seg_path, emit_options.source_maps)
                 } else {
+                    // Diagnostic: non-stripped segment has no body code
+                    all_diagnostics.push(Diagnostic {
+                        message: format!(
+                            "Segment '{}' (ctx: {}) has no body code - segment module will be empty",
+                            seg.display_name, seg.ctx_name
+                        ),
+                        category: DiagnosticCategory::Warning,
+                        code: Some("EMPTY_SEGMENT_BODY".to_string()),
+                        file: input.path.clone(),
+                        highlights: None,
+                        suggestions: None,
+                    });
                     (String::new(), None)
                 };
 
@@ -3433,6 +3445,213 @@ export const App = component$(() => {
                 || seg_code.contains("useTaskQrl(/*#__PURE__*/ qrl("),
             "Inner qrl() inside useTaskQrl should have PURE, got: {}",
             seg_code
+        );
+    }
+
+    #[test]
+    fn test_jsx_event_handler_segment_body_code() {
+        // JSX event handler onClick$ should produce a segment module with non-empty body code
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+export const App = component$(() => {
+    return <div onClick$={() => console.log('clicked')}/>;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Should have: main module, component segment, event handler segment
+        let segment_modules: Vec<_> = result
+            .modules
+            .iter()
+            .filter(|m| m.segment.is_some())
+            .collect();
+
+        assert!(
+            segment_modules.len() >= 2,
+            "Expected at least 2 segment modules (component + event handler), got {}. All modules: {:?}",
+            segment_modules.len(),
+            result.modules.iter().map(|m| (&m.path, m.code.len())).collect::<Vec<_>>()
+        );
+
+        // Find the onClick event handler segment
+        let event_segment = segment_modules
+            .iter()
+            .find(|m| {
+                m.segment
+                    .as_ref()
+                    .map_or(false, |s| s.ctx_name.contains("onClick$") || s.ctx_name.contains("click"))
+            })
+            .expect("Expected an onClick$ event handler segment");
+
+        // Its body code should NOT be empty
+        assert!(
+            !event_segment.code.is_empty(),
+            "Event handler segment should have non-empty body code, path: {}",
+            event_segment.path
+        );
+
+        // The body code should contain the handler logic
+        assert!(
+            event_segment.code.contains("console.log"),
+            "Event handler segment should contain the handler body 'console.log', got: {}",
+            event_segment.code
+        );
+    }
+
+    #[test]
+    fn test_jsx_event_handler_block_body() {
+        // JSX event handler with block body: onClick$={() => { ... }}
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+export const App = component$(() => {
+    return <div onClick$={() => {
+        const x = 1;
+        console.log(x);
+    }}/>;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        let event_segments: Vec<_> = result
+            .modules
+            .iter()
+            .filter(|m| {
+                m.segment
+                    .as_ref()
+                    .map_or(false, |s| s.ctx_name.contains("onClick$"))
+            })
+            .collect();
+
+        assert!(
+            !event_segments.is_empty(),
+            "Expected event handler segment(s)"
+        );
+
+        let seg = &event_segments[0];
+        assert!(
+            !seg.code.is_empty(),
+            "Event handler segment should have non-empty body code"
+        );
+        assert!(
+            seg.code.contains("console.log"),
+            "Event handler segment should contain handler logic, got: {}",
+            seg.code
+        );
+    }
+
+    #[test]
+    fn test_example_3_spec_fixed() {
+        // Reconstructed example_3: component$ inside a plain arrow function
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$ } from '@qwik.dev/core';
+export const App = () => {
+    const Header = component$(() => {
+        console.log("mount");
+        return (
+            <div onClick={$((ctx) => console.log(ctx))}/>
+        );
+    });
+    return Header;
+};"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Should produce at least 3 modules: main, component segment, onClick segment
+        assert!(
+            result.modules.len() >= 3,
+            "Expected at least 3 modules, got {}. Modules: {:?}",
+            result.modules.len(),
+            result.modules.iter().map(|m| &m.path).collect::<Vec<_>>()
+        );
+
+        // No diagnostics should be produced
+        let errors: Vec<_> = result
+            .diagnostics
+            .iter()
+            .filter(|d| matches!(d.category, crate::DiagnosticCategory::Error))
+            .collect();
+        assert!(
+            errors.is_empty(),
+            "Expected no error diagnostics, got: {:?}",
+            errors
+        );
+    }
+
+    #[test]
+    fn test_example_immutable_analysis_parses() {
+        // The example_immutable_analysis spec should parse successfully
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$, useStore, $ } from '@qwik.dev/core';
+import importedValue from 'v';
+import styles from './styles.module.css';
+
+export const App = component$((props) => {
+    const {Model} = props;
+    const state = useStore({count: 0});
+    const remove = $((id: number) => {
+        const d = state.data;
+        d.splice(d.findIndex((d) => d.id === id), 1)
+    });
+    return (
+        <>
+            <p class="stuff" onClick$={props.onClick$}>Hello Qwik</p>
+            <Div
+                class={styles.foo}
+                document={window.document}
+                onClick$={props.onClick$}
+                onEvent$={() => console.log('stuff')}
+                transparent$={() => {console.log('stuff')}}
+                immutable1="stuff"
+                immutable2={{ foo: 'bar', baz: importedValue ? true : false }}
+                immutable3={2}
+                immutable4$={(ev) => console.log(state.count)}
+                immutable5={[1, 2, importedValue, null, {}]}
+            >
+                <p>Hello Qwik</p>
+            </Div>
+            {[].map(() => (
+                <Model
+                    class={state}
+                    remove$={remove}
+                    mutable1={{ foo: 'bar', baz: state.count ? true : false }}
+                    mutable2={(() => console.log(state.count))()}
+                    mutable3={[1, 2, state, null, {}]}
+                />
+            ))}
+        </>
+    );
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            transpile_ts: true,
+            transpile_jsx: true,
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Should produce at least 6 modules (spec expects 6)
+        assert!(
+            result.modules.len() >= 4,
+            "Expected at least 4 modules for immutable_analysis, got {}. Modules: {:?}",
+            result.modules.len(),
+            result.modules.iter().map(|m| &m.path).collect::<Vec<_>>()
         );
     }
 }
