@@ -1,0 +1,19 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.js ===
+import { componentQrl } from "@qwik.dev/core";
+import { useComputedQrl } from "@qwik.dev/core";
+import { useTaskQrl } from "@qwik.dev/core";
+import { inlinedQrl } from "@qwik.dev/core";
+import { _captures } from "@qwik.dev/core";
+import { _restProps } from "@qwik.dev/core";
+export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
+	const props = _restProps(_rawProps, ["color"]);
+	useComputedQrl(/* @__PURE__ */ inlinedQrl(() => _rawProps.color, "default_useComputed_V2bMj82VCAE", [color]));
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
+		props.checked;
+	}, "default_useTask_cu78f7005P4", [props]));
+	return "hi";
+}, "default_component_jN9ZUuuADmk"));

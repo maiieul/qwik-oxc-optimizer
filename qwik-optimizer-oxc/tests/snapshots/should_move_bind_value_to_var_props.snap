@@ -1,0 +1,35 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.js ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { inlinedQrl } from "@qwik.dev/core";
+import { _getVarProps } from "@qwik.dev/core";
+import { _getConstProps } from "@qwik.dev/core";
+import { _jsxSplit } from "@qwik.dev/core";
+import { _val } from "@qwik.dev/core";
+const i_O84bGdeej0g = () => import("./test.tsx_FieldInput_component_O84bGdeej0g");
+const i_jlpYRk03eHk = () => import("./test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk");
+import { useSignal } from "@qwik.dev/core";
+import { destructureBindings } from "./destructure-bindings";
+export const FieldInput = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_O84bGdeej0g, "FieldInput_component_O84bGdeej0g"));
+
+=== test.tsx_FieldInput_component_O84bGdeej0g.js === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_jlpYRk03eHk = () => import("./test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk");
+import { _jsxSplit } from "@qwik.dev/core";
+import { _getVarProps } from "@qwik.dev/core";
+import { _getConstProps } from "@qwik.dev/core";
+import { destructureBindings } from "./destructure-bindings";
+export const FieldInput_component_O84bGdeej0g = (props) => {
+	const initialValues = { value: undefined as string | undefined };
+	const rest = destructureBindings(props, initialValues);
+	return /* @__PURE__ */ _jsxSplit("input", { ..._getVarProps(rest) }, _getConstProps(rest), null, 0, "u6_0");
+}
+
+=== test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk.js === (ENTRY)
+export const FieldInput_component_input_q_e_click_jlpYRk03eHk = () => {
+	console.log("clicked");
+};

@@ -1,0 +1,48 @@
+---
+source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+expression: output
+---
+=== test.js ===
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+const i_fxETLug1yE4 = () => import("./test.tsx_Parent_component_fxETLug1yE4");
+const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
+const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
+import { useStore } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_fxETLug1yE4, "Parent_component_fxETLug1yE4"));
+
+=== test.tsx_Parent_component_fxETLug1yE4.js === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
+const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
+import { _jsxSorted } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+export const Parent_component_fxETLug1yE4 = () => {
+	const cart = useStore < Cart > [];
+	const results = useSignal(["foo", "bar"]);
+	return /* @__PURE__ */ _jsxSorted("div", null, null, [
+		/* @__PURE__ */ _jsxSorted("button", null, {
+			id: "first",
+			"q-e:click": /* @__PURE__ */ qrl(i_I5Xm0lRBfsc, "Parent_component_button_q_e_click_I5Xm0lRBfsc", [results])
+		}, null, 3, "u6_3"),
+		results.value.map((item, key) => /* @__PURE__ */ _jsxSorted("button", { id: "second-" + key }, { "q-e:click": /* @__PURE__ */ qrl(i_I5Xm0lRBfsc, "Parent_component_button_q_e_click_I5Xm0lRBfsc", [cart]) }, item, 3, "u6_0")),
+		/* @__PURE__ */ _jsxSorted("ul", null, null, cart.map((item) => /* @__PURE__ */ _jsxSorted("li", null, null, /* @__PURE__ */ _jsxSorted("span", null, null, item, 3, "u6_1"), 3, "u6_2")), 3, "u6_4")
+	], 1, "u6_5");
+};
+
+=== test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
+	const cart = _captures[0];
+	cart.push(item);
+};
+
+=== test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
+	const results = _captures[0];
+	return results.value = ["item1", "item2"];
+};
