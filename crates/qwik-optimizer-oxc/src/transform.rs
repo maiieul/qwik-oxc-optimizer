@@ -447,7 +447,9 @@ impl QwikTransform {
                     self.collect_binding_pattern_names(&rest.argument);
                 }
             }
-            _ => {}
+            BindingPattern::AssignmentPattern(assign) => {
+                self.collect_binding_pattern_names(&assign.left);
+            }
         }
     }
 
@@ -1777,7 +1779,9 @@ fn collect_binding_names_from_pattern(pattern: &BindingPattern<'_>, names: &mut 
                 collect_binding_names_from_pattern(&rest.argument, names);
             }
         }
-        _ => {}
+        BindingPattern::AssignmentPattern(assign) => {
+            collect_binding_names_from_pattern(&assign.left, names);
+        }
     }
 }
 

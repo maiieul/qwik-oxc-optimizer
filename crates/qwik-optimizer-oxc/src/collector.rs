@@ -328,6 +328,9 @@ fn collect_declaration_names(names: &mut HashSet<String>, decl: &oxc::ast::ast::
                 names.insert(ident.name.as_str().to_string());
             }
         }
+        Declaration::TSEnumDeclaration(enum_decl) => {
+            names.insert(enum_decl.id.name.as_str().to_string());
+        }
         _ => {}
     }
 }
@@ -358,7 +361,9 @@ fn collect_binding_pattern_names_into(
                 collect_binding_pattern_names_into(names, &rest.argument);
             }
         }
-        _ => {}
+        BindingPattern::AssignmentPattern(assign) => {
+            collect_binding_pattern_names_into(names, &assign.left);
+        }
     }
 }
 
@@ -578,8 +583,16 @@ fn collect_default_export(ctx: &mut CollectContext, export: &ExportDefaultDeclar
     });
 
     match &export.declaration {
-        ExportDefaultDeclarationKind::FunctionDeclaration(_)
-        | ExportDefaultDeclarationKind::ClassDeclaration(_) => {}
+        ExportDefaultDeclarationKind::FunctionDeclaration(fn_decl) => {
+            if let Some(ident) = &fn_decl.id {
+                ctx.module_level_decls.insert(ident.name.as_str().to_string());
+            }
+        }
+        ExportDefaultDeclarationKind::ClassDeclaration(class_decl) => {
+            if let Some(ident) = &class_decl.id {
+                ctx.module_level_decls.insert(ident.name.as_str().to_string());
+            }
+        }
         _ => {
             // For expressions, walk to find dollar calls
             if let Some(expr) = export.declaration.as_expression() {
@@ -1636,6 +1649,47 @@ import { component$ } from '@builder.io/qwik';"#,
 
         assert!(result.dollar_imports.contains("myThing$"));
         assert_eq!(result.dollar_imports.len(), 1);
+    }
+
+    // -----------------------------------------------------------------------
+    // Declaration Collection Edge Case Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_collect_binding_pattern_with_defaults() {
+        let result = parse_and_collect(
+            "const [a, {b, c=1, ...d}, e=2, ...f] = obj;",
+        );
+        assert!(result.module_level_decls.contains("a"));
+        assert!(result.module_level_decls.contains("b"));
+        assert!(result.module_level_decls.contains("c"), "Default value pattern c=1 should be collected");
+        assert!(result.module_level_decls.contains("d"));
+        assert!(result.module_level_decls.contains("e"), "Default value pattern e=2 should be collected");
+        assert!(result.module_level_decls.contains("f"));
+    }
+
+    #[test]
+    fn test_collect_ts_enum_declaration() {
+        let result = parse_and_collect(
+            "export enum Thing { A, B, C }",
+        );
+        assert!(result.module_level_decls.contains("Thing"), "TS enum should be in module_level_decls");
+    }
+
+    #[test]
+    fn test_collect_default_export_named_function() {
+        let result = parse_and_collect(
+            "export default function DefaultFn() { return 1; }",
+        );
+        assert!(result.module_level_decls.contains("DefaultFn"), "Named default export should be in module_level_decls");
+    }
+
+    #[test]
+    fn test_collect_default_export_named_class() {
+        let result = parse_and_collect(
+            "export default class DefaultClass { constructor() {} }",
+        );
+        assert!(result.module_level_decls.contains("DefaultClass"), "Named default export class should be in module_level_decls");
     }
 
     #[test]
