@@ -42,7 +42,18 @@ A working OXC-based Qwik optimizer crate that passes all 162 spec tests — buil
 
 ### Active
 
-(No active milestone — all 4 milestones shipped)
+## Current Milestone: v5.0 Drop-in Replacement Compliance
+
+**Goal:** Fix all output compatibility issues so the OXC optimizer can replace the SWC optimizer at runtime.
+
+**Target features:**
+- Fix canonical filename to preserve file extension in origin prefix
+- Fix explicit extensions support in lazy import paths
+- Fix output file extension when both transpile_ts and transpile_jsx are true
+- Strip consumed $-suffixed imports from main module output
+- Fix nested segment display names to include parent context hierarchy
+- Fix PURE annotation placement (only on tree-shakeable calls)
+- Fix import scoping (only add imports where they're actually referenced)
 
 ### Out of Scope
 
@@ -54,7 +65,7 @@ A working OXC-based Qwik optimizer crate that passes all 162 spec tests — buil
 
 ## Context
 
-Shipped v1.0 (162 spec files, 166K lines), v2.0 (7 API mapping docs, 4 working POCs, architecture blueprint, ~16K lines), v3.0 (complete optimizer crate, 11,758 LOC Rust, 16 source files), and v4.0 (code quality refactoring, -930 net lines, 10,627 LOC Rust).
+Shipped v1.0 (162 spec files, 166K lines), v2.0 (7 API mapping docs, 4 working POCs, architecture blueprint, ~16K lines), v3.0 (complete optimizer crate, 11,758 LOC Rust, 16 source files), v4.0 (code quality refactoring, -930 net lines, 10,627 LOC Rust), and starting v5.0 (drop-in replacement compliance).
 Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap, ast_visit), Python (spec generation/audit scripts), Markdown.
 
 - The `qwik-optimizer-oxc` crate at `crates/qwik-optimizer-oxc/` implements all 14 CONV transformation types
@@ -105,4 +116,4 @@ Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap, 
 | Two VisitMut impls for const_replace | ConstReplacer + DeadBranchEliminator as separate passes | ✓ Good — clean separation, bottom-up traversal for correctness |
 
 ---
-*Last updated: 2026-02-11 after v4.0 milestone*
+*Last updated: 2026-02-11 after v5.0 milestone start*

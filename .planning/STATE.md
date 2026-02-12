@@ -5,16 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Planning next milestone
+**Current focus:** v5.0 Drop-in Replacement Compliance
 
 ## Current Position
 
-Phase: All 19 phases complete (4 milestones shipped)
-Plan: N/A
-Status: Between milestones (v4.0 shipped, next milestone TBD)
-Last activity: 2026-02-11 -- Archived v4.0 Code Quality Refactor milestone
-
-Progress: [==================================] 100% (41/41 plans lifetime)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-11 — Milestone v5.0 started
 
 ## Performance Metrics
 
@@ -55,5 +53,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Archived v4.0 milestone -- all milestones complete
+Stopped at: Starting v5.0 milestone — defining requirements
 Resume file: None
