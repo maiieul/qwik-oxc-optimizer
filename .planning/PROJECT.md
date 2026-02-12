@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A complete port of the Qwik framework's code optimizer from SWC to OXC. Five milestones shipped: v1.0 produced 162 behavioral spec files, v2.0 mapped all transformation patterns to OXC APIs with working proofs-of-concept, v3.0 built the full `qwik-optimizer-oxc` Rust crate implementing all 14 CONV types (157/162 spec match), v4.0 refactored for maintainability (-930 net lines, zero regressions), and v5.0 fixed all output compatibility issues for drop-in replacement (correct paths, imports, display names, PURE annotations).
+A complete port of the Qwik framework's code optimizer from SWC to OXC. Five milestones shipped: v1.0–v5.0 built the `qwik-optimizer-oxc` Rust crate from behavioral specs through full implementation and drop-in readiness. v6.0 verifies semantic correctness of generated output against the 162 specs, fixes runtime-breaking deviations, and builds the NAPI integration crate so the OXC optimizer can replace SWC in the actual Qwik build pipeline.
 
 ## Core Value
 
@@ -51,13 +51,21 @@ A working OXC-based Qwik optimizer crate that passes all 162 spec tests — buil
 
 ### Active
 
-(None — planning next milestone)
+## Current Milestone: v6.0 NAPI Integration
+
+**Goal:** Verify semantic output correctness and build the NAPI crate so the OXC optimizer can replace SWC in the Qwik build pipeline.
+
+**Target features:**
+- Semantic output audit against 162 spec expected outputs (find real bugs, not cosmetic diffs)
+- Fix runtime-breaking deviations (missing captures, wrong QRL wrapping, broken imports)
+- Build `qwik-napi-oxc` crate exposing `transform_modules` + `transform_fs` matching SWC's NAPI interface
+- Integration validation — swap in OXC binding and verify against real Qwik test cases
 
 ### Out of Scope
 
 - Byte-for-byte SWC output matching — the OXC optimizer will produce semantically equivalent output, not identical bytes
 - Modifying any existing SWC code — read-only against SWC codebase
-- TypeScript plugin layer changes — the TS/Vite/Rollup plugins are untouched until integration milestone
+- TypeScript plugin layer changes — the TS/Vite/Rollup plugins are untouched; NAPI crate provides the binding surface
 - Modifying the 162 spec files — specs are locked as the source of truth
 - Pre-compiled QRL extraction — specs testing extraction of already-compiled `inlinedQrl()` calls are out of optimizer scope
 
@@ -118,5 +126,8 @@ Tech stack: Rust (oxc 0.113 — parser, traverse, semantic, codegen, sourcemap, 
 | scope_prefix for display names | Compose function declaration names into nested segment display names | ✓ Good — handles arbitrary nesting depth |
 | componentQrl-only PURE | Only component$ is tree-shakeable; all other Qrl wrappers are side-effectful | ✓ Good — prevents incorrect tree-shaking of hooks |
 
+| Semantic verification before NAPI | Fix bugs in isolation before adding integration layer; easier to debug one thing at a time | — Pending |
+| Fix only runtime-breaking deviations | Don't double code size for cosmetic spec matching; accept benign differences | — Pending |
+
 ---
-*Last updated: 2026-02-12 after v5.0 milestone*
+*Last updated: 2026-02-11 after v6.0 milestone start*

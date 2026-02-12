@@ -2,19 +2,17 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-12)
+See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Planning next milestone
+**Current focus:** v6.0 NAPI Integration
 
 ## Current Position
 
-Phase: 22 of 22 (all milestones complete through v5.0)
-Plan: N/A
-Status: v5.0 milestone shipped
-Last activity: 2026-02-12 -- v5.0 Drop-in Replacement Compliance shipped
-
-Progress: [##############################] 22/22 phases (v1.0-v5.0 complete)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-11 — Milestone v6.0 started
 
 ## Performance Metrics
 
@@ -55,10 +53,12 @@ None.
 
 ### Blockers/Concerns
 
-None.
+- Test harness only validates module count and 3 metadata fields — actual JS output never compared to spec expected output
+- 16 capture analysis deviations may include runtime-breaking missing captures
+- 3 diagnostic deviations (class capture warnings, invalid segment errors, missing inlined function errors)
 
 ## Session Continuity
 
-Last session: 2026-02-12
-Stopped at: v5.0 milestone shipped
+Last session: 2026-02-11
+Stopped at: v6.0 milestone requirements definition
 Resume file: None
