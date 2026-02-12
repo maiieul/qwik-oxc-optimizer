@@ -22,9 +22,6 @@ import { qrl } from "@qwik.dev/core";
 const i_0hncTFTaevI = () => import("./project/test.tsx_Header_0hncTFTaevI");
 export const Header_component_sHTSaq0AU4w = () => {
 	return /* @__PURE__ */ qrl(i_0hncTFTaevI, "Header_0hncTFTaevI", [
-		d,
-		f,
-		DefaultFn,
 		v1,
 		v2,
 		v3,
@@ -38,19 +35,19 @@ import { Footer } from "./test";
 import { a } from "./test";
 import { b } from "./test";
 import { c } from "./test";
+import { d } from "./test";
 import { e } from "./test";
+import { f } from "./test";
 import { exp1 } from "./test";
 import { internal } from "./test";
 import { foo } from "./test";
 import { bar } from "./test";
+import { DefaultFn } from "./test";
 export const Header_0hncTFTaevI = () => {
-const d = _captures[0];
-const f = _captures[1];
-const DefaultFn = _captures[2];
-const v1 = _captures[3];
-const v2 = _captures[4];
-const v3 = _captures[5];
-const obj = _captures[6];
+const v1 = _captures[0];
+const v2 = _captures[1];
+const v3 = _captures[2];
+const obj = _captures[3];
 return <Footer>
 			<div>{a}{b}{c}{d}{e}{f}{exp1}{internal}{foo}{bar}{DefaultFn}</div>
 			<div>{v1}{v2}{v3}{obj}</div>

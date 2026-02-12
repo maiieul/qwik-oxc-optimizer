@@ -18,6 +18,7 @@ export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLx
 === test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { Thing } from "./test";
 export const App_component_XumqEURaLxI = () => {
 	console.log(Thing.A);
 	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted("p", null, { class: "stuff" }, "Hello Qwik", 3, "u6_0"), 3, "u6_1");
