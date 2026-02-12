@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 24 of 26 (Runtime Bug Fixes)
-Plan: 6 of 6 in current phase (complete)
-Status: Phase Complete
-Last activity: 2026-02-12 -- Plan 06 complete (gap closure approved, Phase 24 done)
+Plan: 7 of 9 in current phase
+Status: Executing
+Last activity: 2026-02-12 -- Plan 07 complete (declaration collection edge cases fixed)
 
 Progress: [########################......] 24/26 phases (v1.0-v5.0 shipped, v6.0 Phase 24 complete)
 
@@ -55,6 +55,7 @@ Progress: [########################......] 24/26 phases (v1.0-v5.0 shipped, v6.0
 | 24    | 04   | 8min     | 2     | 2     |
 | 24    | 05   | 6min     | 2     | 22    |
 | 24    | 06   | 4min     | 2     | 2     |
+| 24    | 07   | 6min     | 2     | 7     |
 
 ## Accumulated Context
 
@@ -84,6 +85,9 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 24-05: SWC generates import { X } from './module' for module-level decl references, not _captures[] serialization
 - 24-06: Runtime-breaking threshold set to 10 (6 missing-import-used edge cases + 4 truly-missing-module)
 - 24-06: Regression gate in output_audit.rs asserts runtime_breaking_count <= RUNTIME_BREAKING_THRESHOLD
+- 24-07: Exhaustive BindingPattern matching (all 4 variants) across collector.rs and transform.rs
+- 24-07: TSEnumDeclaration tracked as module-level declaration for self-import generation
+- 24-07: Named default export functions/classes added to module_level_decls
 
 ### Pending Todos
 
@@ -91,12 +95,12 @@ None.
 
 ### Blockers/Concerns
 
-- 6 missing-import-used edge cases remain (aliased exports, JSX import source, enum tracking)
+- 2 missing-import-used edge cases remain (JSX import source for example_jsx_import_source)
 - 4 truly-missing-module deviations remain (pre-compiled QRL, multi-file)
 - Module count mismatches at 2 (example_qwik_react, relative_paths require pre-compiled QRL reverse-engineering)
 
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 24-06-PLAN.md (Phase 24 complete, gap closure approved)
+Stopped at: Completed 24-07-PLAN.md
 Resume file: None
