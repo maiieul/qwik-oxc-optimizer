@@ -132,11 +132,10 @@ Plans:
   2. `transform_modules` is callable from Node.js with the same function name and argument shape as SWC's `qwik_napi` binding
   3. All input types (`TransformModulesOptions`) and output types (`TransformOutput`, `SegmentAnalysis`) serialize with camelCase naming matching the SWC wire format
   4. `platform.ts` (Qwik's binding loader) can load the OXC `.node` file without code changes to the TypeScript layer
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 25-01: TBD
-- [ ] 25-02: TBD
+- [ ] 25-01-PLAN.md -- Create qwik-napi-oxc crate with napi-rs v2, wire format adapter, and transform_modules export
 
 ### Phase 26: Integration Validation
 **Goal**: The NAPI binding is verified to produce identical results to the direct Rust API across all 162 specs
