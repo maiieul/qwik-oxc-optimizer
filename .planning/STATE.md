@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 24 of 26 (Runtime Bug Fixes)
-Plan: 7 of 9 in current phase
+Plan: 8 of 9 in current phase
 Status: Executing
-Last activity: 2026-02-12 -- Plan 07 complete (declaration collection edge cases fixed)
+Last activity: 2026-02-12 -- Plan 08 complete (JSX import source propagation, runtime-breaking 7->5)
 
 Progress: [########################......] 24/26 phases (v1.0-v5.0 shipped, v6.0 Phase 24 complete)
 
@@ -56,6 +56,7 @@ Progress: [########################......] 24/26 phases (v1.0-v5.0 shipped, v6.0
 | 24    | 05   | 6min     | 2     | 22    |
 | 24    | 06   | 4min     | 2     | 2     |
 | 24    | 07   | 6min     | 2     | 7     |
+| 24    | 08   | 11min    | 2     | 5     |
 
 ## Accumulated Context
 
@@ -88,6 +89,9 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 24-07: Exhaustive BindingPattern matching (all 4 variants) across collector.rs and transform.rs
 - 24-07: TSEnumDeclaration tracked as module-level declaration for self-import generation
 - 24-07: Named default export functions/classes added to module_level_decls
+- 24-08: Custom JSX source stored as Option<String> on both QwikTransform and ImportTracker
+- 24-08: React-style _jsx(tag, {props}) codegen for modules with @jsxImportSource pragma
+- 24-08: Runtime-breaking threshold tightened from 10 to 5 (missing-import-used: 3->1)
 
 ### Pending Todos
 
@@ -95,12 +99,12 @@ None.
 
 ### Blockers/Concerns
 
-- 2 missing-import-used edge cases remain (JSX import source for example_jsx_import_source)
+- 1 missing-import-used edge case remains (aliased exports or enum tracking)
 - 4 truly-missing-module deviations remain (pre-compiled QRL, multi-file)
 - Module count mismatches at 2 (example_qwik_react, relative_paths require pre-compiled QRL reverse-engineering)
 
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 24-07-PLAN.md
+Stopped at: Completed 24-08-PLAN.md (JSX import source propagation, runtime-breaking 7->5)
 Resume file: None
