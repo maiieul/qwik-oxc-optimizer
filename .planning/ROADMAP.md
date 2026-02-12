@@ -78,7 +78,7 @@ Full details: `milestones/v5.0-ROADMAP.md`
 **Milestone Goal:** Verify semantic output correctness, fix runtime-breaking deviations, and build the NAPI crate so the OXC optimizer can replace SWC in the Qwik build pipeline.
 
 - [x] **Phase 23: Output Audit** - Semantic comparison of OXC output against all 162 spec expected outputs -- completed 2026-02-11
-- [x] **Phase 24: Runtime Bug Fixes** - Fix all runtime-breaking deviations found by the audit (293→5, 98% reduction)
+- [ ] **Phase 24: Runtime Bug Fixes** - Fix all runtime-breaking deviations found by the audit
 - [ ] **Phase 25: NAPI Crate** - Build `qwik-napi-oxc` with napi-rs exposing `transform_modules`
 - [ ] **Phase 26: Integration Validation** - Verify the NAPI binding produces correct results end-to-end
 
@@ -108,7 +108,7 @@ Plans:
   2. Every QRL wrapping and import deviation classified as runtime-breaking is fixed (wrong wrapper function, broken import paths, missing re-exports)
   3. Re-running the audit script after fixes shows zero runtime-breaking deviations
   4. Test harness includes assertions for each fixed deviation that prevent regression
-**Plans**: 9 plans
+**Plans**: 11 plans
 
 Plans:
 - [x] 24-01-PLAN.md -- Fix optimizer failures and QRL/segment extraction (Wave 1)
@@ -120,6 +120,8 @@ Plans:
 - [x] 24-07-PLAN.md -- Gap closure: fix pattern defaults, TS enums, default exports (Wave 7)
 - [x] 24-08-PLAN.md -- Gap closure: fix JSX import source propagation (Wave 7)
 - [x] 24-09-PLAN.md -- Gap closure: final audit, lower threshold, user verification (Wave 8)
+- [ ] 24-10-PLAN.md -- Gap closure: fix display name collisions + api missing import (Wave 9)
+- [ ] 24-11-PLAN.md -- Gap closure: re-run audit, lower threshold, user verification (Wave 10)
 
 ### Phase 25: NAPI Crate
 **Goal**: A `qwik-napi-oxc` crate exists that exposes `transform_modules` to Node.js with the same calling convention as the SWC NAPI binding
@@ -177,7 +179,7 @@ Plans:
 | 21. Import Correctness | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 22. Display Names and Annotations | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 23. Output Audit | v6.0 | 2/2 | Complete | 2026-02-11 |
-| 24. Runtime Bug Fixes | v6.0 | 9/9 | Complete | 2026-02-12 |
+| 24. Runtime Bug Fixes | v6.0 | 9/11 | In Progress | - |
 | 25. NAPI Crate | v6.0 | 0/TBD | Not started | - |
 | 26. Integration Validation | v6.0 | 0/TBD | Not started | - |
 
