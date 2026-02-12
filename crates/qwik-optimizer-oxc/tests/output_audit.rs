@@ -731,9 +731,9 @@ mod tests {
         );
 
         // Regression gate (FIX-03): runtime-breaking deviations must not exceed threshold.
-        // After Plan 24-08 fixed JSX import source propagation (custom _jsx from react/jsx-runtime),
-        // 5 runtime-breaking deviations remain:
-        //   - 1 missing-import-used (edge cases: aliased exports or enum tracking)
+        // After Phase 24 Plans 01-09 (gap closure rounds 1 + 2), 5 runtime-breaking
+        // deviations remain:
+        //   - 1 missing-import-used (example_drop_side_effects: `api` from server$() call)
         //   - 4 truly-missing-module (example_qwik_react: 2, relative_paths: 2)
         // These are accepted limitations. If this assertion fails, a code change has
         // reintroduced runtime-breaking deviations that were previously fixed.

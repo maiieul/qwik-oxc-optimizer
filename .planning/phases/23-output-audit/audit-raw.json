@@ -190,8 +190,8 @@
       "spec_name": "example_11"
     },
     {
-      "actual_code_normalized": "import * as dep2 from \"dep2\"; import { bar as bbar } from \"../state\"; import { qrl } from \"@qwik.dev/core\"; const i_0hncTFTaevI = () => import(\"./project/test.tsx_Header_0hncTFTaevI\"); export const Header_component_sHTSaq0AU4w = () => { return <Header onClick={/* @__PURE__ */ qrl(i_0hncTFTaevI, \"Header_0hncTFTaevI\")}> {dep2.stuff()}{bbar()} </Header>; }",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import * as dep2 from \"dep2\"; import { Header } from \"./test\"; import { bar as bbar } from \"../state\"; import { qrl } from \"@qwik.dev/core\"; const i_0hncTFTaevI = () => import(\"./project/test.tsx_Header_0hncTFTaevI\"); export const Header_component_sHTSaq0AU4w = () => { return <Header onClick={/* @__PURE__ */ qrl(i_0hncTFTaevI, \"Header_0hncTFTaevI\")}> {dep2.stuff()}{bbar()} </Header>; }",
+      "diff_summary": "token diff at position 27: expected 'i_KjD9TCNkNxY', actual 'i_0hncTFTaevI'",
       "expected_code_normalized": "import * as dep2 from \"dep2\"; import { Header } from \"./test\"; import { bar as bbar } from \"../state\"; import { qrl } from \"@qwik.dev/core\"; const i_KjD9TCNkNxY = ()=>import(\"./test.tsx_Header_component_Header_onClick_KjD9TCNkNxY\"); export const Header_component_UVBJuFYfvDo = ()=>{ return <Header onClick={/*#__PURE__*/ qrl(i_KjD9TCNkNxY, \"Header_component_Header_onClick_KjD9TCNkNxY\")}> {dep2.stuff()}{bbar()} </Header>; };",
       "match_type": "structural",
       "module_path_actual": "project/test.tsx_Header_component_sHTSaq0AU4w.tsx",
@@ -199,8 +199,8 @@
       "spec_name": "example_11"
     },
     {
-      "actual_code_normalized": "import { foo } from \"../state\"; export const App_component_36z8l5vFtdk = () => { return <Header>{foo()}</Header>; }",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { Header } from \"./test\"; import { foo } from \"../state\"; export const App_component_36z8l5vFtdk = () => { return <Header>{foo()}</Header>; }",
+      "diff_summary": "token diff at position 14: expected 'App_component_wGkRHWXaqjs', actual 'App_component_36z8l5vFtdk'",
       "expected_code_normalized": "import { Header } from \"./test\"; import { foo } from \"../state\"; export const App_component_wGkRHWXaqjs = ()=>{ return <Header>{foo()}</Header>; };",
       "match_type": "structural",
       "module_path_actual": "project/test.tsx_App_component_36z8l5vFtdk.tsx",
@@ -361,8 +361,8 @@
       "spec_name": "example_7"
     },
     {
-      "actual_code_normalized": "export const App_component_XumqEURaLxI = () => { return <Header />; }",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { Header } from \"./test\"; export const App_component_XumqEURaLxI = () => { return <Header />; }",
+      "diff_summary": "token diff at position 8: expected 'App_component_ckEPmXZlub0', actual 'App_component_XumqEURaLxI'",
       "expected_code_normalized": "import { Header } from \"./test\"; export const App_component_ckEPmXZlub0 = ()=>{ return <Header/>; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_XumqEURaLxI.tsx",
@@ -388,8 +388,8 @@
       "spec_name": "example_8"
     },
     {
-      "actual_code_normalized": "export const Header_QrzcmFeRo0o = (hola) => { const hola = this; const { something, styff } = hola; const hello = hola.nothere.stuff[global]; return <Header />; }",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 4}; missing imports: 1",
+      "actual_code_normalized": "import { Header } from \"./test\"; export const Header_QrzcmFeRo0o = (hola) => { const hola = this; const { something, styff } = hola; const hello = hola.nothere.stuff[global]; return <Header />; }",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 4}",
       "expected_code_normalized": "import { Header } from \"./test\"; export const Header_component_1_2B8d0oH9ZWc = (hola)=>{ const hola = this; hola.nothere.stuff[global]; return <Header/>; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Header_QrzcmFeRo0o.tsx",
@@ -407,7 +407,7 @@
     },
     {
       "actual_code_normalized": "export const Header_QrzcmFeRo0o = (decl1, { decl2 }, [decl3]) => { const { decl4, key: decl5 } = this; let [decl6, ...decl7] = stuff; const decl8 = 1, decl9; function decl10(decl11, { decl12 }, [decl13]) {} class decl14 { method(decl15, { decl16 }, [decl17]) {} } try {} catch (decl18) {} try {} catch ({ decl19 }) {} }",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"let\": 1}, actual {\"const\": 3, \"let\": 1}",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"let\": 1}, actual {\"let\": 1, \"const\": 3}",
       "expected_code_normalized": "export const Header_WjUaUQN7Oxg = (decl1, { decl2 }, [decl3])=>{ const { decl4, key: decl5 } = this; let [decl6, ...decl7] = stuff; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Header_QrzcmFeRo0o.tsx",
@@ -659,7 +659,7 @@
     },
     {
       "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useSignal } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_Sk6T7tAJM2g = () => import(\"./test.tsx_App_component_span_q_e_click_Sk6T7tAJM2g\"); const i_vbEaih0SxYg = () => import(\"./test.tsx_App_component_button_q_e_click_vbEaih0SxYg\"); export const App_component_XumqEURaLxI = () => { const cart = useStore<string[]>([]); const results = useSignal([\"foo\"]); function loopArrowFn(results: string[]) { return results.map((item) => /* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, \"App_component_span_q_e_click_Sk6T7tAJM2g\", [cart]) }, item, 3, \"u6_0\")); } function loopForI(results: string[]) { const output = []; for (let i = 0; i < results.length; i++) { output.push(/* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, \"App_component_span_q_e_click_Sk6T7tAJM2g\", [cart, results]) }, results[i], 3, \"u6_1\")); } return output; } function loopForOf(results: string[]) { const output = []; for (const item of results) { output.push(/* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, \"App_component_span_q_e_click_Sk6T7tAJM2g\", [cart]) }, item, 3, \"u6_2\")); } return output; } function loopForIn(results: string[]) { const output = []; for (const key in results) { output.push(/* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, \"App_component_span_q_e_click_Sk6T7tAJM2g\", [cart, results]) }, results[key], 3, \"u6_3\")); } return output; } function loopWhile(results: string[]) { const output = []; let i = 0; while (i < results.length) { output.push(/* @__PURE__ */ _jsxSorted(\"span\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_Sk6T7tAJM2g, \"App_component_span_q_e_click_Sk6T7tAJM2g\", [cart, results]) }, results[i], 3, \"u6_4\")); i++; } return output; } return /* @__PURE__ */ _jsxSorted(\"div\", null, null, [ results.value.map((item) => /* @__PURE__ */ _jsxSorted(\"button\", null, { id: \"second\", \"q-e:click\": /* @__PURE__ */ qrl(i_vbEaih0SxYg, \"App_component_button_q_e_click_vbEaih0SxYg\", [cart]) }, item, 3, \"u6_5\")), loopArrowFn(results.value), loopForI(results.value), loopForOf(results.value), loopForIn(results.value), loopWhile(results.value) ], 1, \"u6_6\"); }",
-      "diff_summary": "const/let/var diff: expected {\"const\": 5}, actual {\"let\": 1, \"const\": 13}; missing imports: 1; qrl count: expected 0, actual 6",
+      "diff_summary": "const/let/var diff: expected {\"const\": 5}, actual {\"const\": 13, \"let\": 1}; missing imports: 1; qrl count: expected 0, actual 6",
       "expected_code_normalized": "import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useSignal } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const _hf0 = (p0, p1)=>p1[p0]; const _hf0_str = \"p1[p0]\"; // ... lazy imports for 6 event handlers ... export const App_component_ckEPmXZlub0 = ()=>{ const cart = useStore([]); const results = useSignal(['foo']); // Each loop function creates a qrl with captures and uses _jsxSorted with \"q:p\" // for-i/for-in/while use _fnSignal(_hf0, [index, array], _hf0_str) for reactive access // map/for-of pass item directly return /*#__PURE__*/ _jsxSorted(\"div\", null, null, [...], 1, \"u6_6\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_XumqEURaLxI.js",
@@ -901,8 +901,8 @@
       "spec_name": "example_drop_side_effects"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_zo9wkw0NBzs = () => import(\"./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs\"); export const default_component_jN9ZUuuADmk = () => { return /* @__PURE__ */ _jsxSorted(\"button\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_zo9wkw0NBzs, \"default_component_button_q_e_click_zo9wkw0NBzs\") }, null, 3, \"u6_0\"); };",
-      "diff_summary": "missing imports: 1; extra imports: 1; qrl count: expected 0, actual 1",
+      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { api } from \"./test\"; import { qrl } from \"@qwik.dev/core\"; const i_zo9wkw0NBzs = () => import(\"./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs\"); export const default_component_jN9ZUuuADmk = () => { return /* @__PURE__ */ _jsxSorted(\"button\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_zo9wkw0NBzs, \"default_component_button_q_e_click_zo9wkw0NBzs\") }, null, 3, \"u6_0\"); };",
+      "diff_summary": "missing imports: 1; extra imports: 2; qrl count: expected 0, actual 1",
       "expected_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { qrlDEV } from \"@qwik.dev/core\"; const i_qwSL5gM03T4 = ()=>import(\"./test.tsx_test_component_button_q_e_click_qwSL5gM03T4\"); export const test_component_LUXeXe0DQrg = ()=>{ return /*#__PURE__*/ _jsxSorted(\"button\", null, { \"q-e:click\": /*#__PURE__*/ qrlDEV(i_qwSL5gM03T4, \"test_component_button_q_e_click_qwSL5gM03T4\", { file: \"/user/qwik/src/test.tsx\", lo: 541, hi: 558, displayName: \"test.tsx_test_component_button_q_e_click\" }) }, null, 3, \"u6_0\", { fileName: \"test.tsx\", lineNumber: 27, columnNumber: 3 }); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_jN9ZUuuADmk.js",
@@ -991,8 +991,8 @@
       "spec_name": "example_export_issue"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; export const Root_component_YvjM3SoLvrM = (props: Stuff) => { return /* @__PURE__ */ _jsxSorted(App, null, null, null, 3, null); }",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { App } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const Root_component_YvjM3SoLvrM = (props: Stuff) => { return /* @__PURE__ */ _jsxSorted(App, null, null, null, 3, null); }",
+      "diff_summary": "missing imports: 1; extra imports: 1",
       "expected_code_normalized": "import { _auto_App as App } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const Root_component_royhjYaCbYE = (props)=>{ return /*#__PURE__*/ _jsxSorted(App, null, null, null, 3, \"u6_1\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Root_component_YvjM3SoLvrM.js",
@@ -1009,7 +1009,7 @@
       "spec_name": "example_export_issue"
     },
     {
-      "actual_code_normalized": "import { qrl } from \"@qwik.dev/core\"; const i_0hncTFTaevI = () => import(\"./project/test.tsx_Header_0hncTFTaevI\"); export const Header_component_sHTSaq0AU4w = () => { return /* @__PURE__ */ qrl(i_0hncTFTaevI, \"Header_0hncTFTaevI\", [ d, f, DefaultFn, v1, v2, v3, obj ]); };",
+      "actual_code_normalized": "import { qrl } from \"@qwik.dev/core\"; const i_0hncTFTaevI = () => import(\"./project/test.tsx_Header_0hncTFTaevI\"); export const Header_component_sHTSaq0AU4w = () => { return /* @__PURE__ */ qrl(i_0hncTFTaevI, \"Header_0hncTFTaevI\", [ v1, v2, v3, obj ]); };",
       "diff_summary": "token diff at position 7: expected 'i_uWM1kg0IGO0', actual 'i_0hncTFTaevI'",
       "expected_code_normalized": "import { qrl } from \"@qwik.dev/core\"; const i_uWM1kg0IGO0 = ()=>import(\"./test.tsx_Header_component_1_uWM1kg0IGO0\"); export const Header_component_UVBJuFYfvDo = ()=>{ return /*#__PURE__*/ qrl(i_uWM1kg0IGO0, \"Header_component_1_uWM1kg0IGO0\"); };",
       "match_type": "structural",
@@ -1027,8 +1027,8 @@
       "spec_name": "example_exports"
     },
     {
-      "actual_code_normalized": "import { _captures } from \"@qwik.dev/core\"; export const Header_0hncTFTaevI = () => { const d = _captures[0]; const f = _captures[1]; const DefaultFn = _captures[2]; const v1 = _captures[3]; const v2 = _captures[4]; const v3 = _captures[5]; const obj = _captures[6]; return <Footer> <div>{a}{b}{c}{d}{e}{f}{exp1}{internal}{foo}{bar}{DefaultFn}</div> <div>{v1}{v2}{v3}{obj}</div> </Footer>; }",
-      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {\"const\": 8}; missing imports: 12; extra imports: 1",
+      "actual_code_normalized": "import { DefaultFn } from \"./test\"; import { Footer } from \"./test\"; import { _captures } from \"@qwik.dev/core\"; import { a } from \"./test\"; import { b } from \"./test\"; import { bar } from \"./test\"; import { c } from \"./test\"; import { d } from \"./test\"; import { e } from \"./test\"; import { exp1 } from \"./test\"; import { f } from \"./test\"; import { foo } from \"./test\"; import { internal } from \"./test\"; export const Header_0hncTFTaevI = () => { const v1 = _captures[0]; const v2 = _captures[1]; const v3 = _captures[2]; const obj = _captures[3]; return <Footer> <div>{a}{b}{c}{d}{e}{f}{exp1}{internal}{foo}{bar}{DefaultFn}</div> <div>{v1}{v2}{v3}{obj}</div> </Footer>; }",
+      "diff_summary": "const/let/var diff: expected {\"const\": 1}, actual {\"const\": 5}; missing imports: 2; extra imports: 3",
       "expected_code_normalized": "import { Footer } from \"./test\"; import { a } from \"./test\"; import { b } from \"./test\"; import { bar } from \"./test\"; import { c } from \"./test\"; import { d } from \"./test\"; import { default as DefaultFn } from \"./test\"; import { e } from \"./test\"; import { exp1 } from \"./test\"; import { expr2 as internal } from \"./test\"; import { f } from \"./test\"; import { foo } from \"./test\"; export const Header_component_1_uWM1kg0IGO0 = ()=><Footer> <div>{a}{b}{c}{d}{e}{f}{exp1}{internal}{foo}{bar}{DefaultFn}</div> <div>{v1}{v2}{v3}{obj}</div> </Footer>;",
       "match_type": "structural",
       "module_path_actual": "project/test.tsx_Header_0hncTFTaevI.jsx",
@@ -1099,8 +1099,8 @@
       "spec_name": "example_functional_component_2"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const i_vbEaih0SxYg = () => import(\"./test.tsx_App_component_button_q_e_click_vbEaih0SxYg\"); const i_wANYt0I0EHI = () => import(\"./test.tsx_App_component_div_q_e_click_wANYt0I0EHI\"); export const App_component_XumqEURaLxI = (props) => { const state = useCounter(); const thing = useStore({ thing: 0 }); const STEP_2 = 2; const count2 = state.count * 2; return /* @__PURE__ */ _jsxSorted(\"div\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_wANYt0I0EHI, \"App_component_div_q_e_click_wANYt0I0EHI\", [state, count2]) }, [/* @__PURE__ */ _jsxSorted(\"span\", null, null, state.count, 3, \"u6_1\"), buttons.map((btn) => /* @__PURE__ */ _jsxSorted(\"button\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_vbEaih0SxYg, \"App_component_button_q_e_click_vbEaih0SxYg\", [ state, thing, STEP_2, props ]) }, btn.name, 3, \"u6_0\"))], 1, \"u6_2\"); };",
-      "diff_summary": "missing imports: 2",
+      "actual_code_normalized": "import { STEP } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useCounter } from \"./test\"; import { useStore } from \"@qwik.dev/core\"; const i_vbEaih0SxYg = () => import(\"./test.tsx_App_component_button_q_e_click_vbEaih0SxYg\"); const i_wANYt0I0EHI = () => import(\"./test.tsx_App_component_div_q_e_click_wANYt0I0EHI\"); export const App_component_XumqEURaLxI = (props) => { const state = useCounter(); const thing = useStore({ thing: 0 }); const STEP_2 = 2; const count2 = state.count * 2; return /* @__PURE__ */ _jsxSorted(\"div\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_wANYt0I0EHI, \"App_component_div_q_e_click_wANYt0I0EHI\", [state, count2]) }, [/* @__PURE__ */ _jsxSorted(\"span\", null, null, state.count, 3, \"u6_1\"), buttons.map((btn) => /* @__PURE__ */ _jsxSorted(\"button\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_vbEaih0SxYg, \"App_component_button_q_e_click_vbEaih0SxYg\", [ state, thing, STEP_2, props ]) }, btn.name, 3, \"u6_0\"))], 1, \"u6_2\"); };",
+      "diff_summary": "missing imports: 1; extra imports: 1",
       "expected_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { _wrapProp } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useCounter } from \"./test\"; import { useStore } from \"@qwik.dev/core\"; const i_UB6Fs5a3bd8 = ()=>import(\"./test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8\"); const i_mi4E1piTWe8 = ()=>import(\"./test.tsx_App_component_div_q_e_click_mi4E1piTWe8\"); export const App_component_ckEPmXZlub0 = (props)=>{ const state = useCounter(); const thing = useStore({ thing: 0 }); const count2 = state.count * 2; const App_component_div_button_q_e_click_UB6Fs5a3bd8 = /*#__PURE__*/ qrl(i_UB6Fs5a3bd8, \"App_component_div_button_q_e_click_UB6Fs5a3bd8\", [ props, state, thing ]); return /*#__PURE__*/ _jsxSorted(\"div\", { \"q-e:click\": /*#__PURE__*/ qrl(i_mi4E1piTWe8, \"App_component_div_q_e_click_mi4E1piTWe8\", [ count2, state ]) }, null, [ /*#__PURE__*/ _jsxSorted(\"span\", null, null, _wrapProp(state, \"count\"), 3, null), buttons.map((btn)=>/*#__PURE__*/ _jsxSorted(\"button\", { \"q-e:click\": App_component_div_button_q_e_click_UB6Fs5a3bd8, \"q:p\": btn }, null, _wrapProp(btn, \"name\"), 0, \"u6_0\")) ], 0, \"u6_1\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_XumqEURaLxI.js",
@@ -1171,8 +1171,8 @@
       "spec_name": "example_getter_generation"
     },
     {
-      "actual_code_normalized": "import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const _hf0 = (p0) => p0.nested.count; const _hf0_str = \"p0.nested.count\"; export const App_component_XumqEURaLxI = () => { const store = useStore({ count: 0, stuff: 0, nested: { count: 0 } }); const signal = useSignal(0); return /* @__PURE__ */ _jsxSorted(Cmp, { count: store.count, signal, store: store.stuff + 12, value: signal.formData?.get(\"username\") }, { prop: \"true\" + 1 ? \"true\" : \"\", nested: _fnSignal(_hf0, [store], _hf0_str) }, null, 3, \"u6_0\"); };",
-      "diff_summary": "const/let/var diff: expected {\"const\": 9}, actual {\"const\": 5}; missing imports: 2",
+      "actual_code_normalized": "import { Cmp } from \"./test\"; import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const _hf0 = (p0) => p0.nested.count; const _hf0_str = \"p0.nested.count\"; export const App_component_XumqEURaLxI = () => { const store = useStore({ count: 0, stuff: 0, nested: { count: 0 } }); const signal = useSignal(0); return /* @__PURE__ */ _jsxSorted(Cmp, { count: store.count, signal, store: store.stuff + 12, value: signal.formData?.get(\"username\") }, { prop: \"true\" + 1 ? \"true\" : \"\", nested: _fnSignal(_hf0, [store], _hf0_str) }, null, 3, \"u6_0\"); };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 9}, actual {\"const\": 5}; missing imports: 1",
       "expected_code_normalized": "import { Cmp } from \"./test\"; import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { _wrapProp } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const _hf0 = (p0)=>p0.nested.count; const _hf0_str = \"p0.nested.count\"; const _hf1 = (p0)=>p0.stuff + 12; const _hf1_str = \"p0.stuff+12\"; const _hf2 = (p0)=>p0.formData?.get('username'); const _hf2_str = 'p0.formData?.get(\"username\")'; export const App_component_ckEPmXZlub0 = ()=>{ const store = useStore({ count: 0, stuff: 0, nested: { count: 0 } }); const signal = useSignal(0); return /*#__PURE__*/ _jsxSorted(Cmp, null, { prop: 'true', count: _wrapProp(store, \"count\"), nested: _fnSignal(_hf0, [store], _hf0_str), signal: signal, store: _fnSignal(_hf1, [store], _hf1_str), value: _fnSignal(_hf2, [signal], _hf2_str) }, null, 3, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_XumqEURaLxI.js",
@@ -1288,8 +1288,8 @@
       "spec_name": "example_invalid_references"
     },
     {
-      "actual_code_normalized": "import { qrl } from \"@qwik.dev/core\"; const i_w3unmdi0sm4 = () => import(\"./test.tsx_App_w3unmdi0sm4\"); export const App_component_XumqEURaLxI = (_rawProps) => { console.log(I1, I2, I3, I4, I5, I6, I7, I8, I9); console.log(itsok, v1, v2, v3, obj); return /* @__PURE__ */ qrl(i_w3unmdi0sm4, \"App_w3unmdi0sm4\"); };",
-      "diff_summary": "missing imports: 9",
+      "actual_code_normalized": "import { I1 } from \"./test\"; import { I2 } from \"./test\"; import { I3 } from \"./test\"; import { I4 } from \"./test\"; import { I5 } from \"./test\"; import { I6 } from \"./test\"; import { I7 } from \"./test\"; import { I8 } from \"./test\"; import { I9 } from \"./test\"; import { qrl } from \"@qwik.dev/core\"; const i_w3unmdi0sm4 = () => import(\"./test.tsx_App_w3unmdi0sm4\"); export const App_component_XumqEURaLxI = (_rawProps) => { console.log(I1, I2, I3, I4, I5, I6, I7, I8, I9); console.log(itsok, v1, v2, v3, obj); return /* @__PURE__ */ qrl(i_w3unmdi0sm4, \"App_w3unmdi0sm4\"); };",
+      "diff_summary": "missing imports: 9; extra imports: 9",
       "expected_code_normalized": "import { _auto_I1 as I1 } from \"./test\"; import { _auto_I2 as I2 } from \"./test\"; import { _auto_I3 as I3 } from \"./test\"; import { _auto_I4 as I4 } from \"./test\"; import { _auto_I5 as I5 } from \"./test\"; import { _auto_I6 as I6 } from \"./test\"; import { _auto_I7 as I7 } from \"./test\"; import { _auto_I8 as I8 } from \"./test\"; import { _auto_I9 as I9 } from \"./test\"; import { qrl } from \"@qwik.dev/core\"; const i_w0t0o3QMovU = ()=>import(\"./test.tsx_App_component_1_w0t0o3QMovU\"); export const App_component_ckEPmXZlub0 = (_rawProps)=>{ console.log(I1, I2, I3, I4, I5, I6, I7, I8, I9); console.log(itsok, v1, v2, v3, obj); return /*#__PURE__*/ qrl(i_w0t0o3QMovU, \"App_component_1_w0t0o3QMovU\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_XumqEURaLxI.js",
@@ -1297,8 +1297,8 @@
       "spec_name": "example_invalid_references"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; export const App_w3unmdi0sm4 = () => { return /* @__PURE__ */ _jsxSorted(I10, null, null, null, 3, null); };",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { I10 } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const App_w3unmdi0sm4 = () => { return /* @__PURE__ */ _jsxSorted(I10, null, null, null, 3, null); };",
+      "diff_summary": "missing imports: 1; extra imports: 1",
       "expected_code_normalized": "import { _auto_I10 as I10 } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const App_component_1_w0t0o3QMovU = ()=>{ return /*#__PURE__*/ _jsxSorted(I10, null, null, null, 3, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_w3unmdi0sm4.js",
@@ -1378,8 +1378,8 @@
       "spec_name": "example_jsx"
     },
     {
-      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _captures } from \"@qwik.dev/core\"; import { _getConstProps } from \"@qwik.dev/core\"; import { _getVarProps } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { _jsxSplit } from \"@qwik.dev/core\"; export const Foo_T0dY5k6mBgU = () => { const props = _captures[0]; const children = _captures[1]; return /* @__PURE__ */ _jsxSorted(\"div\", null, null, [ /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [ /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, null, 3, \"u6_2\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, null, 3, \"u6_3\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, \"12\", 3, \"u6_4\") ], 1, \"u6_5\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, /* @__PURE__ */ _jsxSplit(Lightweight, { ..._getVarProps(props) }, _getConstProps(props), null, 0, null), 3, \"u6_6\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, [ /* @__PURE__ */ _jsxSorted(\"div\", null, null, null, 3, null), /* @__PURE__ */ _jsxSorted(\"div\", null, null, null, 3, null), /* @__PURE__ */ _jsxSorted(\"div\", null, null, null, 3, null) ], 1, \"u6_7\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, children, 3, \"u6_8\") ], 1, \"u6_9\"); };",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 3}; missing imports: 1",
+      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { Lightweight } from \"./test\"; import { _captures } from \"@qwik.dev/core\"; import { _getConstProps } from \"@qwik.dev/core\"; import { _getVarProps } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { _jsxSplit } from \"@qwik.dev/core\"; export const Foo_T0dY5k6mBgU = () => { const props = _captures[0]; const children = _captures[1]; return /* @__PURE__ */ _jsxSorted(\"div\", null, null, [ /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [ /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, null, 3, \"u6_2\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, null, 3, \"u6_3\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, \"12\", 3, \"u6_4\") ], 1, \"u6_5\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, /* @__PURE__ */ _jsxSplit(Lightweight, { ..._getVarProps(props) }, _getConstProps(props), null, 0, null), 3, \"u6_6\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, [ /* @__PURE__ */ _jsxSorted(\"div\", null, null, null, 3, null), /* @__PURE__ */ _jsxSorted(\"div\", null, null, null, 3, null), /* @__PURE__ */ _jsxSorted(\"div\", null, null, null, 3, null) ], 1, \"u6_7\"), /* @__PURE__ */ _jsxSorted(\"div\", null, { class: \"class\" }, children, 3, \"u6_8\") ], 1, \"u6_9\"); };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2}, actual {\"const\": 3}",
       "expected_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { Lightweight } from \"./test\"; import { _captures } from \"@qwik.dev/core\"; import { _getConstProps } from \"@qwik.dev/core\"; import { _getVarProps } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { _jsxSplit } from \"@qwik.dev/core\"; export const Foo_component_1_DvU6FitWglY = ()=>{ const props = _captures[0]; return /*#__PURE__*/ _jsxSorted(\"div\", null, null, [ /*#__PURE__*/ _jsxSorted(_Fragment, null, null, [ /*#__PURE__*/ _jsxSorted(\"div\", null, { class: \"class\" }, null, 3, null), /*#__PURE__*/ _jsxSorted(\"div\", null, { class: \"class\" }, null, 3, null), /*#__PURE__*/ _jsxSorted(\"div\", null, { class: \"class\" }, \"12\", 3, null) ], 3, \"u6_2\"), /*#__PURE__*/ _jsxSorted(\"div\", null, { class: \"class\" }, /*#__PURE__*/ _jsxSplit(Lightweight, { ..._getVarProps(props) }, _getConstProps(props), null, 0, \"u6_3\"), 1, null), /*#__PURE__*/ _jsxSorted(\"div\", null, { class: \"class\" }, [ /*#__PURE__*/ _jsxSorted(\"div\", null, null, null, 3, null), /*#__PURE__*/ _jsxSorted(\"div\", null, null, null, 3, null), /*#__PURE__*/ _jsxSorted(\"div\", null, null, null, 3, null) ], 3, null), /*#__PURE__*/ _jsxSorted(\"div\", null, { class: \"class\" }, children, 1, null) ], 1, \"u6_4\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_T0dY5k6mBgU.js",
@@ -1387,8 +1387,8 @@
       "spec_name": "example_jsx"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { qwikify$ } from \"./qwikfy\"; import { qwikifyQrl } from \"@qwik.dev/core\"; const i_4Tc4MzcFY0U = () => import(\"./test.tsx_App2_qwikify_4Tc4MzcFY0U.js\"); /* @jsxImportSource react */ export const App = () => /* @__PURE__ */ _jsxSorted(\"div\", null, { \"q-e:click\": () => console.log(\"App\") }, null, 3, \"u6_0\"); export const App2 = qwikifyQrl(/* @__PURE__ */ qrl(i_4Tc4MzcFY0U, \"App2_qwikify_4Tc4MzcFY0U\"));",
-      "diff_summary": "missing imports: 2; extra imports: 3",
+      "actual_code_normalized": "import { jsx as _jsx } from \"react/jsx-runtime\"; import { qrl } from \"@qwik.dev/core\"; import { qwikify$ } from \"./qwikfy\"; import { qwikifyQrl } from \"@qwik.dev/core\"; const i_4Tc4MzcFY0U = () => import(\"./test.tsx_App2_qwikify_4Tc4MzcFY0U.js\"); /* @jsxImportSource react */ export const App = () => /* @__PURE__ */ _jsx(\"div\", { \"onClick$\": () => console.log(\"App\") }); export const App2 = qwikifyQrl(/* @__PURE__ */ qrl(i_4Tc4MzcFY0U, \"App2_qwikify_4Tc4MzcFY0U\"));",
+      "diff_summary": "missing imports: 1; extra imports: 2",
       "expected_code_normalized": "import { jsx as _jsx } from \"react/jsx-runtime\"; import { qrl } from \"@qwik.dev/core\"; /* @jsxImportSource react */ import { qwikifyQrl } from \"./qwikfy\"; const i_RKJW7oCMdS4 = ()=>import(\"./test.tsx_App2_qwikify_RKJW7oCMdS4.js\"); export const App = ()=>/*#__PURE__*/ _jsx(\"div\", { onClick$: ()=>console.log('App') }); export const App2 = qwikifyQrl(/*#__PURE__*/ qrl(i_RKJW7oCMdS4, \"App2_qwikify_RKJW7oCMdS4\"));",
       "match_type": "exact_path",
       "module_path_actual": "test.js",
@@ -1396,8 +1396,8 @@
       "spec_name": "example_jsx_import_source"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; export const App2_qwikify_4Tc4MzcFY0U = () => /* @__PURE__ */ _jsxSorted(\"div\", null, { \"q-e:click\": () => console.log(\"App2\") }, null, 3, \"u6_1\");",
-      "diff_summary": "missing imports: 1; extra imports: 1",
+      "actual_code_normalized": "import { jsx as _jsx } from \"react/jsx-runtime\"; export const App2_qwikify_4Tc4MzcFY0U = () => /* @__PURE__ */ _jsx(\"div\", { \"onClick$\": () => console.log(\"App2\") });",
+      "diff_summary": "token diff at position 10: expected 'App2_qwikify_RKJW7oCMdS4', actual 'App2_qwikify_4Tc4MzcFY0U'",
       "expected_code_normalized": "import { jsx as _jsx } from \"react/jsx-runtime\"; export const App2_qwikify_RKJW7oCMdS4 = ()=>/*#__PURE__*/ _jsx(\"div\", { onClick$: ()=>console.log('App2') });",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App2_qwikify_4Tc4MzcFY0U.js",
@@ -1675,8 +1675,8 @@
       "spec_name": "example_lightweight_functional"
     },
     {
-      "actual_code_normalized": "export const Foo_component_gZqPatVoDqw = (props) => { return <div> <Button {...props} /> <ButtonArrow {...props} /> </div>; }",
-      "diff_summary": "missing imports: 2",
+      "actual_code_normalized": "import { Button } from \"./test\"; import { ButtonArrow } from \"./test\"; export const Foo_component_gZqPatVoDqw = (props) => { return <div> <Button {...props} /> <ButtonArrow {...props} /> </div>; }",
+      "diff_summary": "token diff at position 14: expected 'Foo_component_HTDRsvUbLiE', actual 'Foo_component_gZqPatVoDqw'",
       "expected_code_normalized": "import { Button } from \"./test\"; import { ButtonArrow } from \"./test\"; export const Foo_component_HTDRsvUbLiE = (props)=>{ return <div> <Button {...props}/> <ButtonArrow {...props}/> </div>; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_component_gZqPatVoDqw.tsx",
@@ -1892,7 +1892,7 @@
     },
     {
       "actual_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { inlinedQrl } from \"@qwik.dev/core\"; export const AtomStatus = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => { let status = _rawProps.atom.status; if (!_rawProps.atom.real) { status = \"WILL-VANISH\"; } else if (JSON.stringify(undefined) == JSON.stringify(undefined)) { status = \"WTFED\"; } return <span title={atom.ID} onClick$={/* @__PURE__ */ inlinedQrl((ev) => atomStatusClick(ctx, ev, [atom]), \"AtomStatus_component_span_q_e_click_umHjCmk9egM\", [ctx, atom])} class={[ \"atom\", status, ctx.store[atom.ID] ? \"selected\" : null ]}> </span>; }, \"AtomStatus_component_BHJ0BemzHIo\"));",
-      "diff_summary": "const/let/var diff: expected {\"let\": 1, \"const\": 2}, actual {\"let\": 1, \"const\": 1}; missing imports: 1",
+      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"let\": 1}, actual {\"let\": 1, \"const\": 1}; missing imports: 1",
       "expected_code_normalized": "import { _captures } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { inlinedQrl } from \"@qwik.dev/core\"; export const AtomStatus = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((_rawProps)=>{ let status = _rawProps.atom.status; if (!_rawProps.atom.real) status = \"WILL-VANISH\"; else if (JSON.stringify(_rawProps.atom.atom) == JSON.stringify(_rawProps.atom.real)) status = \"WTFED\"; return <span title={_rawProps.atom.ID} q-e:click={/*#__PURE__*/ inlinedQrl((ev)=>{ const _rawProps = _captures[0]; return atomStatusClick(_rawProps.ctx, ev, [ _rawProps.atom ]); }, \"AtomStatus_component_span_q_e_click_0yqKAycyBF0\", [ _rawProps ])} class={[ \"atom\", status, _rawProps.ctx.store[_rawProps.atom.ID] ? \"selected\" : null ]}> </span>; }, \"AtomStatus_component_hdwpoUtydSA\"));",
       "match_type": "exact_path",
       "module_path_actual": "test.jsx",
@@ -1972,8 +1972,8 @@
       "spec_name": "example_preserve_filenames_segments"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_0VoFXPYUR5E = () => import(\"./test.tsx_App_component_p_q_e_click_0VoFXPYUR5E.js\"); export const App_component_XumqEURaLxI = (props: Stuff) => { foo(); return /* @__PURE__ */ _jsxSorted(Cmp, null, null, /* @__PURE__ */ _jsxSorted(\"p\", null, { class: \"stuff\", \"q-e:click\": /* @__PURE__ */ qrl(i_0VoFXPYUR5E, \"App_component_p_q_e_click_0VoFXPYUR5E\") }, \"Hello Qwik\", 3, \"u6_0\"), 3, \"u6_1\"); }",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { foo } from \"./test\"; import { qrl } from \"@qwik.dev/core\"; const i_0VoFXPYUR5E = () => import(\"./test.tsx_App_component_p_q_e_click_0VoFXPYUR5E.js\"); export const App_component_XumqEURaLxI = (props: Stuff) => { foo(); return /* @__PURE__ */ _jsxSorted(Cmp, null, null, /* @__PURE__ */ _jsxSorted(\"p\", null, { class: \"stuff\", \"q-e:click\": /* @__PURE__ */ qrl(i_0VoFXPYUR5E, \"App_component_p_q_e_click_0VoFXPYUR5E\") }, \"Hello Qwik\", 3, \"u6_0\"), 3, \"u6_1\"); }",
+      "diff_summary": "missing imports: 1; extra imports: 1",
       "expected_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { foo } from \"./test.tsx\"; import { qrl } from \"@qwik.dev/core\"; const i_Yl4ybrJWrt4 = ()=>import(\"./test.tsx_App_component_Cmp_p_q_e_click_Yl4ybrJWrt4.js\"); export const App_component_ckEPmXZlub0 = (props)=>{ foo(); return /*#__PURE__*/ _jsxSorted(Cmp, null, null, /*#__PURE__*/ _jsxSorted(\"p\", null, { class: \"stuff\", \"q-e:click\": /*#__PURE__*/ qrl(i_Yl4ybrJWrt4, \"App_component_Cmp_p_q_e_click_Yl4ybrJWrt4\") }, \"Hello Qwik\", 3, null), 3, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_XumqEURaLxI.js",
@@ -2081,7 +2081,7 @@
     },
     {
       "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { inlinedQrl } from \"@qwik.dev/core\"; import { useSignal } from \"@qwik.dev/core\"; export const Works = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((props: { fromProps: number; }) => { let fromLocal = useSignal(0); return /* @__PURE__ */ _jsxSorted(\"div\", { computed: fromLocal + props.fromProps, local: fromLocal, props-wrap: props.fromProps, props-only: { props: props.fromProps }, props: { props: props.fromProps, local: fromLocal } }, null, null, 3, \"u6_0\"); }, \"Works_component_xJyUXaLUiKw\"));",
-      "diff_summary": "const/let/var diff: expected {\"let\": 1, \"const\": 7}, actual {\"const\": 1, \"let\": 1}; missing imports: 3; extra imports: 1",
+      "diff_summary": "const/let/var diff: expected {\"const\": 7, \"let\": 1}, actual {\"const\": 1, \"let\": 1}; missing imports: 3; extra imports: 1",
       "expected_code_normalized": "import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { _wrapProp } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { inlinedQrl } from \"@qwik.dev/core\"; import { useSignal } from '@qwik.dev/core'; const _hf0 = (p0, p1)=>p0 + p1.fromProps; const _hf0_str = \"p0+p1.fromProps\"; const _hf1 = (p0)=>({ props: p0.fromProps }); const _hf1_str = \"{props:p0.fromProps}\"; const _hf2 = (p0, p1)=>({ props: p1.fromProps, local: p0 }); const _hf2_str = \"{props:p1.fromProps,local:p0}\"; export const Works = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((props)=>{ let fromLocal = useSignal(0); return /*#__PURE__*/ _jsxSorted(\"div\", { computed: _fnSignal(_hf0, [fromLocal, props], _hf0_str), local: fromLocal, props: _fnSignal(_hf2, [fromLocal, props], _hf2_str), \"props-only\": _fnSignal(_hf1, [props], _hf1_str), \"props-wrap\": _wrapProp(props, \"fromProps\") }, null, null, 3, \"u6_0\"); }, \"Works_component_t45qL4vNGv0\"));",
       "match_type": "exact_path",
       "module_path_actual": "test.js",
@@ -2170,8 +2170,8 @@
       "spec_name": "example_qwik_conflict"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_OJboCLusyIA = () => import(\"./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA\"); export const Foo_component_gZqPatVoDqw = () => { useStyles$(\"thing\"); const qwik = hW + handleWatch; console.log(qwik); const qrl = 23; return /* @__PURE__ */ _jsxSorted(\"div\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_OJboCLusyIA, \"Foo_component_div_q_e_click_OJboCLusyIA\") }, null, 3, \"u6_0\"); };",
-      "diff_summary": "const/let/var diff: expected {\"const\": 3}, actual {\"const\": 4}; missing imports: 2",
+      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { hW } from \"./test\"; import { handleWatch } from \"./test\"; import { qrl } from \"@qwik.dev/core\"; const i_OJboCLusyIA = () => import(\"./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA\"); export const Foo_component_gZqPatVoDqw = () => { useStyles$(\"thing\"); const qwik = hW + handleWatch; console.log(qwik); const qrl = 23; return /* @__PURE__ */ _jsxSorted(\"div\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_OJboCLusyIA, \"Foo_component_div_q_e_click_OJboCLusyIA\") }, null, 3, \"u6_0\"); };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 3}, actual {\"const\": 4}",
       "expected_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { hW } from \"./test\"; import { handleWatch } from \"./test\"; import { qrl } from \"@qwik.dev/core\"; const i_YEa2A5ADUOg = ()=>import(\"./test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg\"); export const Foo_component_HTDRsvUbLiE = ()=>{ useStyles$('thing'); const qwik = hW + handleWatch; console.log(qwik); return /*#__PURE__*/ _jsxSorted(\"div\", null, { \"q-e:click\": /*#__PURE__*/ qrl(i_YEa2A5ADUOg, \"Foo_component_div_q_e_click_YEa2A5ADUOg\") }, null, 3, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Foo_component_gZqPatVoDqw.js",
@@ -2386,8 +2386,8 @@
       "spec_name": "example_strip_exports_used"
     },
     {
-      "actual_code_normalized": "export const default_useResource_Qfn0duyjgAo = () => { return onGet(); };",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { onGet } from \"./test\"; export const default_useResource_Qfn0duyjgAo = () => { return onGet(); };",
+      "diff_summary": "token diff at position 8: expected 'test_component_useResource_4a8wVY7wh38', actual 'default_useResource_Qfn0duyjgAo'",
       "expected_code_normalized": "import { onGet } from \"./test\"; export const test_component_useResource_4a8wVY7wh38 = ()=>{ return onGet(); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_useResource_Qfn0duyjgAo.tsx",
@@ -2522,7 +2522,7 @@
     },
     {
       "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const i_XumqEURaLxI = () => import(\"./test.tsx_App_component_XumqEURaLxI\"); export enum Thing { A, B } export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, \"App_component_XumqEURaLxI\"));",
-      "diff_summary": "const/let/var diff: expected {\"const\": 2, \"var\": 1}, actual {\"const\": 2}; extra imports: 3",
+      "diff_summary": "const/let/var diff: expected {\"var\": 1, \"const\": 2}, actual {\"const\": 2}; extra imports: 3",
       "expected_code_normalized": "import { componentQrl } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_ckEPmXZlub0 = ()=>import(\"./test.tsx_App_component_ckEPmXZlub0\"); export var Thing = /*#__PURE__*/ function(Thing) { Thing[Thing[\"A\"] = 0] = \"A\"; Thing[Thing[\"B\"] = 1] = \"B\"; return Thing; }({}); export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, \"App_component_ckEPmXZlub0\"));",
       "match_type": "exact_path",
       "module_path_actual": "test.js",
@@ -2530,8 +2530,8 @@
       "spec_name": "example_ts_enums"
     },
     {
-      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const App_component_XumqEURaLxI = () => { console.log(Thing.A); return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(\"p\", null, { class: \"stuff\" }, \"Hello Qwik\", 3, \"u6_0\"), 3, \"u6_1\"); };",
-      "diff_summary": "token diff at position 16: expected 'App_component_ckEPmXZlub0', actual 'App_component_XumqEURaLxI'",
+      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { Thing } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const App_component_XumqEURaLxI = () => { console.log(Thing.A); return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(\"p\", null, { class: \"stuff\" }, \"Hello Qwik\", 3, \"u6_0\"), 3, \"u6_1\"); };",
+      "diff_summary": "extra imports: 1",
       "expected_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const App_component_ckEPmXZlub0 = ()=>{ console.log(0); return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, /*#__PURE__*/ _jsxSorted(\"p\", null, { class: \"stuff\" }, \"Hello Qwik\", 3, null), 3, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_XumqEURaLxI.js",
@@ -2548,8 +2548,8 @@
       "spec_name": "example_ts_enums_issue_1341"
     },
     {
-      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const App_component_XumqEURaLxI = () => { console.log(Thing.A); return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(\"p\", null, { class: \"stuff\" }, \"Hello Qwik\", 3, \"u6_0\"), 3, \"u6_1\"); };",
-      "diff_summary": "token diff at position 16: expected 'App_component_ckEPmXZlub0', actual 'App_component_XumqEURaLxI'",
+      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { Thing } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const App_component_XumqEURaLxI = () => { console.log(Thing.A); return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(\"p\", null, { class: \"stuff\" }, \"Hello Qwik\", 3, \"u6_0\"), 3, \"u6_1\"); };",
+      "diff_summary": "extra imports: 1",
       "expected_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const App_component_ckEPmXZlub0 = ()=>{ console.log(0); return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, /*#__PURE__*/ _jsxSorted(\"p\", null, { class: \"stuff\" }, \"Hello Qwik\", 3, null), 3, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_XumqEURaLxI.js",
@@ -2566,8 +2566,8 @@
       "spec_name": "example_ts_enums_no_transpile"
     },
     {
-      "actual_code_normalized": "export const App_component_XumqEURaLxI = () => { console.log(Thing.A); return <> <p class=\"stuff\">Hello Qwik</p> </>; }",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { Thing } from \"./test\"; export const App_component_XumqEURaLxI = () => { console.log(Thing.A); return <> <p class=\"stuff\">Hello Qwik</p> </>; }",
+      "diff_summary": "token diff at position 8: expected 'App_component_ckEPmXZlub0', actual 'App_component_XumqEURaLxI'",
       "expected_code_normalized": "import { Thing } from \"./test\"; export const App_component_ckEPmXZlub0 = ()=>{ console.log(Thing.A); return <> <p class=\"stuff\">Hello Qwik</p> </>; };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_App_component_XumqEURaLxI.tsx",
@@ -2773,8 +2773,8 @@
       "spec_name": "impure_template_fns"
     },
     {
-      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useSignal } from \"@qwik.dev/core\"; const i_zo9wkw0NBzs = () => import(\"./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs\"); export const default_component_jN9ZUuuADmk = () => { const count = useSignal(0); const foo = useFoo(count); return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [ /* @__PURE__ */ _jsxSorted(\"p\", null, null, foo(\"test\"), 3, \"u6_0\"), /* @__PURE__ */ _jsxSorted(\"p\", null, null, foo`test`, 3, \"u6_1\"), /* @__PURE__ */ _jsxSorted(\"button\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_zo9wkw0NBzs, \"default_component_button_q_e_click_zo9wkw0NBzs\", [count]) }, \"Count up\", 3, \"u6_2\") ], 1, \"u6_3\"); };",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useFoo } from \"./test\"; import { useSignal } from \"@qwik.dev/core\"; const i_zo9wkw0NBzs = () => import(\"./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs\"); export const default_component_jN9ZUuuADmk = () => { const count = useSignal(0); const foo = useFoo(count); return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [ /* @__PURE__ */ _jsxSorted(\"p\", null, null, foo(\"test\"), 3, \"u6_0\"), /* @__PURE__ */ _jsxSorted(\"p\", null, null, foo`test`, 3, \"u6_1\"), /* @__PURE__ */ _jsxSorted(\"button\", null, { \"q-e:click\": /* @__PURE__ */ qrl(i_zo9wkw0NBzs, \"default_component_button_q_e_click_zo9wkw0NBzs\", [count]) }, \"Count up\", 3, \"u6_2\") ], 1, \"u6_3\"); };",
+      "diff_summary": "missing imports: 1; extra imports: 1",
       "expected_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { _auto_useFoo as useFoo } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useSignal } from \"@qwik.dev/core\"; const i_7MTd2pAiliw = ()=>import(\"./test.tsx_test_component_Fragment_button_q_e_click_7MTd2pAiliw\"); export const test_component_LUXeXe0DQrg = ()=>{ const count = useSignal(0); const foo = useFoo(count); return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, [ /*#__PURE__*/ _jsxSorted(\"p\", null, null, foo(\"test\"), 1, null), /*#__PURE__*/ _jsxSorted(\"p\", null, null, foo`test`, 1, null), /*#__PURE__*/ _jsxSorted(\"button\", null, { \"q-e:click\": /*#__PURE__*/ qrl(i_7MTd2pAiliw, \"test_component_Fragment_button_q_e_click_7MTd2pAiliw\", [count]) }, \"Count up\", 3, null) ], 1, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_jN9ZUuuADmk.ts",
@@ -3439,8 +3439,8 @@
       "spec_name": "should_mark_props_as_var_props_for_inner_cmp"
     },
     {
-      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { ModelProps } from \"./modelMenu\"; import { Resource } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useResourceQrl } from \"@qwik.dev/core\"; const i_bT0HZe0FfwQ = () => import(\"./test.tsx_imgLoc_useResource_bT0HZe0FfwQ\"); export const ModelImg_component_N1fNAC4qw7Q = (props) => { const imgLoc = useResourceQrl(/* @__PURE__ */ qrl(i_bT0HZe0FfwQ, \"imgLoc_useResource_bT0HZe0FfwQ\", [props])); return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(Resource, { value: imgLoc, onRejected: () => /* @__PURE__ */ _jsxSorted(\"p\", null, null, \"error ...\", 3, \"u6_2\"), onResolved: (res) => res && /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(Image, { src: res }, null, null, 3, \"u6_3\"), 3, \"u6_4\") }, null, null, 3, \"u6_5\"), 3, \"u6_6\"); };",
-      "diff_summary": "missing imports: 1; extra imports: 1",
+      "actual_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { Image } from \"./test\"; import { ModelProps } from \"./modelMenu\"; import { Resource } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useResourceQrl } from \"@qwik.dev/core\"; const i_bT0HZe0FfwQ = () => import(\"./test.tsx_imgLoc_useResource_bT0HZe0FfwQ\"); export const ModelImg_component_N1fNAC4qw7Q = (props) => { const imgLoc = useResourceQrl(/* @__PURE__ */ qrl(i_bT0HZe0FfwQ, \"imgLoc_useResource_bT0HZe0FfwQ\", [props])); return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(Resource, { value: imgLoc, onRejected: () => /* @__PURE__ */ _jsxSorted(\"p\", null, null, \"error ...\", 3, \"u6_2\"), onResolved: (res) => res && /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted(Image, { src: res }, null, null, 3, \"u6_3\"), 3, \"u6_4\") }, null, null, 3, \"u6_5\"), 3, \"u6_6\"); };",
+      "diff_summary": "extra imports: 1",
       "expected_code_normalized": "import { Fragment as _Fragment } from \"@qwik.dev/core/jsx-runtime\"; import { Image } from \"./test\"; import { Resource } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; import { useResourceQrl } from \"@qwik.dev/core\"; const i_Ogi9hEJvtmI = ()=>import(\"./test.tsx_ModelImg_component_imgLoc_useResource_Ogi9hEJvtmI\"); export const ModelImg_component_iJe6ICWVnyA = (props)=>{ const imgLoc = useResourceQrl(/*#__PURE__*/ qrl(i_Ogi9hEJvtmI, \"ModelImg_component_imgLoc_useResource_Ogi9hEJvtmI\", [props])); return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, /*#__PURE__*/ _jsxSorted(Resource, null, { value: imgLoc, onRejected: ()=>/*#__PURE__*/ _jsxSorted(\"p\", null, null, \"error ...\", 3, \"u6_1\"), onResolved: (res)=>res && /*#__PURE__*/ _jsxSorted(_Fragment, null, null, /*#__PURE__*/ _jsxSorted(Image, { src: res }, null, null, 3, \"u6_2\"), 1, \"u6_3\") }, null, 3, \"u6_4\"), 1, \"u6_5\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_ModelImg_component_N1fNAC4qw7Q.js",
@@ -3943,8 +3943,8 @@
       "spec_name": "should_split_spread_props_with_additional_prop5"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; export const default_component_jN9ZUuuADmk = () => { return /* @__PURE__ */ _jsxSorted(Hola, null, null, [/* @__PURE__ */ _jsxSorted(\"div\", null, null, \"1\", 3, \"u6_0\"), /* @__PURE__ */ _jsxSorted(\"div\", null, null, \"2\", 3, \"u6_1\")], 1, \"u6_2\"); };",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { Hola } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const default_component_jN9ZUuuADmk = () => { return /* @__PURE__ */ _jsxSorted(Hola, null, null, [/* @__PURE__ */ _jsxSorted(\"div\", null, null, \"1\", 3, \"u6_0\"), /* @__PURE__ */ _jsxSorted(\"div\", null, null, \"2\", 3, \"u6_1\")], 1, \"u6_2\"); };",
+      "diff_summary": "missing imports: 1; extra imports: 1",
       "expected_code_normalized": "import { _auto_Hola as Hola } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; export const test_component_LUXeXe0DQrg = ()=>{ return /*#__PURE__*/ _jsxSorted(Hola, null, null, [ /*#__PURE__*/ _jsxSorted(\"div\", null, null, \"1\", 3, null), /*#__PURE__*/ _jsxSorted(\"div\", null, null, \"2\", 3, null) ], 3, \"u6_1\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_jN9ZUuuADmk.js",
@@ -4402,8 +4402,8 @@
       "spec_name": "should_wrap_store_expression"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; export const default_component_jN9ZUuuADmk = () => { const panelStore = useStore(() => ({ active: \"Input\", list: PANELS })); return /* @__PURE__ */ _jsxSorted(\"div\", { stuff: panelStore.active ? \"yes\" : \"no\", class: { \"too-long-to-wrap\": true, \"examples-panel-input\": panelStore.active === \"Input\", \"examples-panel-output\": panelStore.active === \"Output\", \"examples-panel-console\": panelStore.active === \"Console\" } }, null, null, 3, \"u6_0\"); };",
-      "diff_summary": "const/let/var diff: expected {\"const\": 4}, actual {\"const\": 2}; missing imports: 2",
+      "actual_code_normalized": "import { PANELS } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; export const default_component_jN9ZUuuADmk = () => { const panelStore = useStore(() => ({ active: \"Input\", list: PANELS })); return /* @__PURE__ */ _jsxSorted(\"div\", { stuff: panelStore.active ? \"yes\" : \"no\", class: { \"too-long-to-wrap\": true, \"examples-panel-input\": panelStore.active === \"Input\", \"examples-panel-output\": panelStore.active === \"Output\", \"examples-panel-console\": panelStore.active === \"Console\" } }, null, null, 3, \"u6_0\"); };",
+      "diff_summary": "const/let/var diff: expected {\"const\": 4}, actual {\"const\": 2}; missing imports: 1",
       "expected_code_normalized": "import { PANELS } from \"./test\"; import { _fnSignal } from \"@qwik.dev/core\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { useStore } from \"@qwik.dev/core\"; const _hf0 = (p0)=>p0.active ? 'yes' : 'no'; const _hf0_str = 'p0.active?\"yes\":\"no\"'; export const test_component_LUXeXe0DQrg = ()=>{ const panelStore = useStore(()=>({ active: 'Input', list: PANELS })); return /*#__PURE__*/ _jsxSorted(\"div\", { class: { 'too-long-to-wrap': true, 'examples-panel-input': panelStore.active === 'Input', 'examples-panel-output': panelStore.active === 'Output', 'examples-panel-console': panelStore.active === 'Console' } }, { stuff: _fnSignal(_hf0, [ panelStore ], _hf0_str) }, null, 3, \"u6_0\"); };",
       "match_type": "structural",
       "module_path_actual": "test.tsx_default_component_jN9ZUuuADmk.js",
@@ -4492,8 +4492,8 @@
       "spec_name": "ternary_prop"
     },
     {
-      "actual_code_normalized": "import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_Zh6Ty0n2aaA = () => import(\"./test.tsx_Cmp_Zh6Ty0n2aaA\"); export const Cmp_component_qsBJpzBk9qc = () => /* @__PURE__ */ _jsxSorted(Cmp, { foo: /* @__PURE__ */ qrl(i_Zh6Ty0n2aaA, \"Cmp_Zh6Ty0n2aaA\") }, null, \"Hello Qwik\", 3, \"u6_0\");",
-      "diff_summary": "missing imports: 1",
+      "actual_code_normalized": "import { Cmp } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_Zh6Ty0n2aaA = () => import(\"./test.tsx_Cmp_Zh6Ty0n2aaA\"); export const Cmp_component_qsBJpzBk9qc = () => /* @__PURE__ */ _jsxSorted(Cmp, { foo: /* @__PURE__ */ qrl(i_Zh6Ty0n2aaA, \"Cmp_Zh6Ty0n2aaA\") }, null, \"Hello Qwik\", 3, \"u6_0\");",
+      "diff_summary": "token diff at position 19: expected 'i_iPpdemxi0uE', actual 'i_Zh6Ty0n2aaA'",
       "expected_code_normalized": "import { Cmp } from \"./test\"; import { _jsxSorted } from \"@qwik.dev/core\"; import { qrl } from \"@qwik.dev/core\"; const i_iPpdemxi0uE = ()=>import(\"./test.tsx_Cmp_component_Cmp_foo_iPpdemxi0uE\"); export const Cmp_component_4ryKJTOKjWE = ()=>/*#__PURE__*/ _jsxSorted(Cmp, { foo: /*#__PURE__*/ qrl(i_iPpdemxi0uE, \"Cmp_component_Cmp_foo_iPpdemxi0uE\") }, null, \"Hello Qwik\", 3, \"u6_0\");",
       "match_type": "structural",
       "module_path_actual": "test.tsx_Cmp_component_qsBJpzBk9qc.ts",
