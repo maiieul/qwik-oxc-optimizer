@@ -3031,6 +3031,138 @@ export const result = myServer;"#
     }
 
     // -----------------------------------------------------------------------
+    // Import Correctness Tests (IMPORT-01, IMPORT-02)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_import_01_consumed_dollar_imports_stripped() {
+        // IMPORT-01: Consumed $-suffixed imports must NOT appear in main module output.
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { $, component$, useStyles$ } from '@qwik.dev/core';
+export const Foo = component$(() => {
+    useStyles$('.class {}');
+    return <div class="class"/>;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+        let main_code = &result.modules[0].code;
+
+        // Must NOT contain original $-suffixed imports
+        assert!(
+            !main_code.contains("component$"),
+            "component$ should be stripped from main module: {}",
+            main_code
+        );
+        assert!(
+            !main_code.contains("useStyles$"),
+            "useStyles$ should be stripped from main module: {}",
+            main_code
+        );
+        // Must contain Qrl-suffixed imports
+        assert!(
+            main_code.contains("componentQrl"),
+            "Expected componentQrl import in main module: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("qrl"),
+            "Expected qrl import in main module: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_import_02_qrl_imports_scoped_to_segments() {
+        // IMPORT-02: useStylesQrl should NOT appear in main module, only in segment module.
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$, useStyles$ } from '@qwik.dev/core';
+export const Foo = component$(() => {
+    useStyles$('.class {}');
+    return <div/>;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+        let main_code = &result.modules[0].code;
+        assert!(
+            !main_code.contains("useStylesQrl"),
+            "useStylesQrl should NOT be in main module: {}",
+            main_code
+        );
+
+        // Find the component segment module (the one with component in the path, not useStyles)
+        let component_seg = result
+            .modules
+            .iter()
+            .find(|m| m.is_entry && m.path.contains("component") && !m.path.contains("useStyles"))
+            .expect("Expected component segment module");
+        assert!(
+            component_seg.code.contains("useStylesQrl"),
+            "useStylesQrl should be in component segment: {}",
+            component_seg.code
+        );
+    }
+
+    #[test]
+    fn test_import_01_non_dollar_imports_preserved() {
+        // Non-$-suffixed imports from @qwik.dev/core should remain in main module.
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$, useStore } from '@qwik.dev/core';
+export const App = component$(() => {
+    const state = useStore({count: 0});
+    return <div>{state.count}</div>;
+});"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+        let main_code = &result.modules[0].code;
+        assert!(
+            !main_code.contains("component$"),
+            "component$ should be stripped: {}",
+            main_code
+        );
+        assert!(
+            main_code.contains("useStore"),
+            "useStore should be preserved in main module: {}",
+            main_code
+        );
+    }
+
+    #[test]
+    fn test_import_02_top_level_qrl_import_in_main() {
+        // Top-level $-calls should keep Qrl import in main module.
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+export const App = component$(() => <div/>);"#
+                    .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("componentQrl"),
+            "componentQrl should be in main module for top-level calls: {}",
+            main_code
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Source Maps Integration Tests
     // -----------------------------------------------------------------------
 
