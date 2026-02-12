@@ -23,7 +23,7 @@ const dfd = new Client(secret);
 	console.log("run");
 })();
 sideEffect();
-export const api = /* @__PURE__ */ serverQrl(/* @__PURE__ */ _noopQrl("api_server_qbklcEGqqcY"));
+export const api = serverQrl(/* @__PURE__ */ _noopQrl("api_server_qbklcEGqqcY"));
 export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
 
 === test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)

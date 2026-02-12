@@ -226,6 +226,9 @@ struct CollectContext {
     parent_display_name: Option<String>,
     /// Current variable name context (set when walking a variable declarator).
     current_var_name: Option<String>,
+    /// Scope prefix from enclosing function declarations.
+    /// E.g., when inside `function App() { ... }`, scope_prefix is "App".
+    scope_prefix: Option<String>,
     /// The core module import path(s) to recognize as Qwik imports.
     /// Always includes "@qwik.dev/core"; may also include a custom core_module.
     core_modules: Vec<String>,
@@ -252,6 +255,7 @@ impl CollectContext {
             nesting_depth: 0,
             parent_display_name: None,
             current_var_name: None,
+            scope_prefix: None,
             core_modules,
         }
     }
@@ -490,11 +494,22 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
             }
             Declaration::FunctionDeclaration(func) => {
                 if let Some(id) = &func.id {
+                    let func_name = id.name.as_str().to_string();
                     ctx.module_exports.push(ExportInfo {
-                        name: id.name.as_str().to_string(),
+                        name: func_name.clone(),
                         is_reexport: false,
                         span: (export.span.start, export.span.end),
                     });
+
+                    // Walk function body to find dollar calls inside exported functions
+                    if let Some(body) = &func.body {
+                        let prev_scope = ctx.scope_prefix.take();
+                        ctx.scope_prefix = Some(func_name);
+                        for s in &body.statements {
+                            walk_statement_for_calls(ctx, s);
+                        }
+                        ctx.scope_prefix = prev_scope;
+                    }
                 }
             }
             Declaration::ClassDeclaration(class) => {
@@ -617,6 +632,24 @@ fn walk_statement_for_calls(ctx: &mut CollectContext, stmt: &Statement<'_>) {
         }
         Statement::ExportDefaultDeclaration(export) => {
             collect_default_export(ctx, export);
+        }
+        Statement::FunctionDeclaration(func) => {
+            if let Some(body) = &func.body {
+                let func_name = func.id.as_ref().map(|id| id.name.as_str().to_string());
+                let prev_scope = ctx.scope_prefix.take();
+                if let Some(ref name) = func_name {
+                    // Compose with existing scope prefix for deeply nested functions
+                    ctx.scope_prefix = Some(if let Some(ref prev) = prev_scope {
+                        format!("{}_{}", prev, name)
+                    } else {
+                        name.clone()
+                    });
+                }
+                for s in &body.statements {
+                    walk_statement_for_calls(ctx, s);
+                }
+                ctx.scope_prefix = prev_scope;
+            }
         }
         _ => {}
     }
@@ -928,11 +961,21 @@ fn derive_jsx_event_display_name(
     element_name: Option<&str>,
     event_suffix: &str,
 ) -> String {
-    let parent_ctx = ctx
-        .parent_display_name
-        .as_deref()
-        .or(ctx.current_var_name.as_deref())
-        .unwrap_or("");
+    // When inside a $()-body, parent_display_name already includes scope_prefix.
+    // When NOT inside a $()-body, fall back to current_var_name with scope_prefix prepended.
+    let parent_ctx = if let Some(ref parent) = ctx.parent_display_name {
+        parent.clone()
+    } else if let Some(ref var_name) = ctx.current_var_name {
+        if let Some(ref prefix) = ctx.scope_prefix {
+            format!("{}_{}", prefix, var_name)
+        } else {
+            var_name.clone()
+        }
+    } else if let Some(ref prefix) = ctx.scope_prefix {
+        prefix.clone()
+    } else {
+        String::new()
+    };
 
     let elem = element_name.unwrap_or("_");
 
@@ -976,7 +1019,7 @@ fn derive_display_name(ctx: &CollectContext, callee_name: &str) -> String {
 
     let callee_suffix = callee_name.strip_suffix('$').unwrap_or("");
 
-    if var_name.is_empty() {
+    let base = if var_name.is_empty() {
         if callee_suffix.is_empty() {
             "s_".to_string()
         } else {
@@ -986,6 +1029,13 @@ fn derive_display_name(ctx: &CollectContext, callee_name: &str) -> String {
         var_name.to_string()
     } else {
         format!("{var_name}_{callee_suffix}")
+    };
+
+    // Prepend scope prefix (from enclosing function declarations)
+    if let Some(ref prefix) = ctx.scope_prefix {
+        format!("{prefix}_{base}")
+    } else {
+        base
     }
 }
 

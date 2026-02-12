@@ -10,7 +10,7 @@ const i_4Tc4MzcFY0U = () => import("./test.tsx_App2_qwikify_4Tc4MzcFY0U.js");
 /* @jsxImportSource react */
 import { qwikify$ } from "./qwikfy";
 export const App = () => /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log("App") }, null, 3, "u6_0");
-export const App2 = /* @__PURE__ */ qwikifyQrl(/* @__PURE__ */ qrl(i_4Tc4MzcFY0U, "App2_qwikify_4Tc4MzcFY0U"));
+export const App2 = qwikifyQrl(/* @__PURE__ */ qrl(i_4Tc4MzcFY0U, "App2_qwikify_4Tc4MzcFY0U"));
 
 === test.tsx_App2_qwikify_4Tc4MzcFY0U.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";

@@ -11,5 +11,5 @@ import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { foo } from "./foo";
 export const Works = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((props) => {
 	const text = "hola";
-	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [/* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ serverQrl(/* @__PURE__ */ inlinedQrl(() => console.log("in server", text), "Works_component_div_q_e_click_RawfByrs1Jk", [text])) }, null, 3, "u6_0"), /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => foo() }, null, 3, "u6_1")], 1, "u6_2");
+	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [/* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": serverQrl(/* @__PURE__ */ inlinedQrl(() => console.log("in server", text), "Works_component_div_q_e_click_RawfByrs1Jk", [text])) }, null, 3, "u6_0"), /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => foo() }, null, 3, "u6_1")], 1, "u6_2");
 }, "Works_component_xJyUXaLUiKw"));

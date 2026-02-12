@@ -18,7 +18,7 @@ import { useComputedQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 export const default_component_jN9ZUuuADmk = () => {
 	const t = inlineTranslate();
-	const productTitle = /* @__PURE__ */ useComputedQrl(/* @__PURE__ */ qrl(i_hufCehIw5mI, "productTitle_useComputed_hufCehIw5mI"));
+	const productTitle = useComputedQrl(/* @__PURE__ */ qrl(i_hufCehIw5mI, "productTitle_useComputed_hufCehIw5mI"));
 	return /* @__PURE__ */ _jsxSorted("img", {
 		attr: t("home.imageAlt.founded-product:"),
 		alt: `${t("home.imageAlt.founded-product:")} ${productTitle.value}`

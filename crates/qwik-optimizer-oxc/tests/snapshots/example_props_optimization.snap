@@ -16,7 +16,7 @@ import { CONST } from "const";
 export const Works = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
 	const rest = _restProps(_rawProps, ["count", "stuff"]);
 	console.log(_rawProps.stuff, some);
-	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ inlinedQrl(({ track }) => {
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(({ track }) => {
 		track(() => _rawProps.count);
 		console.log(_rawProps.count, rest, _rawProps.stuff, some, hey2);
 	}, "Works_useTask_D1e4kX2NEEI", [
@@ -34,7 +34,7 @@ export const Works = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_r
 }, "Works_component_xJyUXaLUiKw"));
 export const NoWorks2 = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
 	console.log(hey);
-	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ inlinedQrl(({ track }) => {
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(({ track }) => {
 		track(() => _rawProps.count);
 		console.log(_rawProps.count);
 	}, "NoWorks2_useTask_opHchYaRhnE", [count]));
@@ -42,7 +42,7 @@ export const NoWorks2 = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(
 }, "NoWorks2_component_Jhs0YVs504k"));
 export const NoWorks3 = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
 	console.log(stuff);
-	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ inlinedQrl(({ track }) => {
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(({ track }) => {
 		track(() => _rawProps.count);
 		console.log(_rawProps.count);
 	}, "NoWorks3_useTask_mjdi0dWJNHk", [count]));

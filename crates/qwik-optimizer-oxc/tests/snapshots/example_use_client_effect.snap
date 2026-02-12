@@ -18,7 +18,7 @@ import { useBrowserVisibleTaskQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 export const Child_component_80js9RUUsfM = () => {
 	const state = useStore({ count: 0 });
-	/* @__PURE__ */ useBrowserVisibleTaskQrl(/* @__PURE__ */ qrl(i_0qCMfawldvU, "useBrowserVisibleTask_0qCMfawldvU", [state]));
+	useBrowserVisibleTaskQrl(/* @__PURE__ */ qrl(i_0qCMfawldvU, "useBrowserVisibleTask_0qCMfawldvU", [state]));
 	return /* @__PURE__ */ _jsxSorted("div", null, null, state.count, 3, "u6_0");
 };
 

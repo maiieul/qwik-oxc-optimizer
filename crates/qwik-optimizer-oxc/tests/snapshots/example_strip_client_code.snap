@@ -17,11 +17,11 @@ import { c } from "../../remove";
 export const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
 	const state = useStore({ text: "" });
 	// Double count watch
-	/* @__PURE__ */ useClientMountQrl(/* @__PURE__ */ inlinedQrl(async () => {
+	useClientMountQrl(/* @__PURE__ */ inlinedQrl(async () => {
 		state.text = await mongo.users();
 		redis.set(state.text, a, b, c);
 	}, "useClientMount_HL0udnF1YjQ", [state]));
-	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
 		// Code
 	}, "useTask_Vmh2TI9KAKU"));
 	return /* @__PURE__ */ _jsxSorted("div", null, {

@@ -26,7 +26,7 @@ import { useTaskQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 export const Parent_component_fxETLug1yE4 = () => {
 	const state = useStore({ text: "" });
-	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
+	useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
 	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log("parent") }, state.text, 3, "u6_0");
 };
 
@@ -49,7 +49,7 @@ import { useTaskQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 export const Child_component_80js9RUUsfM = () => {
 	const state = useStore({ text: "" });
-	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
+	useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
 	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => console.log("child") }, state.text, 3, "u6_1");
 };
 

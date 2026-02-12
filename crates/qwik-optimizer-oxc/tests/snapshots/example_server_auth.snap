@@ -12,8 +12,8 @@ import GitHub from "@auth/core/providers/github";
 import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
 import { serverAuth$, auth$ } from "@auth/qwik";
-export const { onRequest, logout, getSession, signup } = /* @__PURE__ */ serverAuthQrl(/* @__PURE__ */ qrl(i_7qRdElk79Fw, "s_0_7qRdElk79Fw"));
-export const { onRequest, logout, getSession, signup } = /* @__PURE__ */ authQrl(/* @__PURE__ */ qrl(i_axfrT8CMT4s, "s_1_axfrT8CMT4s"));
+export const { onRequest, logout, getSession, signup } = serverAuthQrl(/* @__PURE__ */ qrl(i_7qRdElk79Fw, "s_0_7qRdElk79Fw"));
+export const { onRequest, logout, getSession, signup } = authQrl(/* @__PURE__ */ qrl(i_axfrT8CMT4s, "s_1_axfrT8CMT4s"));
 
 === test.tsx_s_0_7qRdElk79Fw.js === (ENTRY)
 export const s_0_7qRdElk79Fw = { providers: [

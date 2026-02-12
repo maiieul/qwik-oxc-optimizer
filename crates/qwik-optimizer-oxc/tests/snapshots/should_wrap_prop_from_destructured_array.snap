@@ -45,7 +45,7 @@ const _hf3_str = "p0.errors.test";
 const _hf4 = (p0) => p0.errors.test;
 const _hf4_str = "p0.errors.test";
 export const Input_component_BdCmNVLMFOM = (props) => {
-	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ qrl(i_onHnlG6lktY, "Input_useTask_onHnlG6lktY", [props]));
+	useTaskQrl(/* @__PURE__ */ qrl(i_onHnlG6lktY, "Input_useTask_onHnlG6lktY", [props]));
 	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, null, 3, "u6_0");
 };
 

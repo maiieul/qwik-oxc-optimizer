@@ -17,8 +17,8 @@ import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrl } from "@qwik.dev/core";
 export const App_component_XumqEURaLxI = () => {
 	const stuff = useStore();
-	/* @__PURE__ */ serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw", [stuff]));
-	/* @__PURE__ */ serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw"));
+	serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw", [stuff]));
+	serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw"));
 	return /* @__PURE__ */ _jsxSorted(Cmp, null, null, /* @__PURE__ */ _jsxSorted("p", null, {
 		class: "stuff",
 		"shouldRemove$": () => stuff.count,

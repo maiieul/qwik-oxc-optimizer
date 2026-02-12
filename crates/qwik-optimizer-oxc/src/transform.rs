@@ -1077,14 +1077,27 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     let qrl_callee = ctx.ast.expression_identifier(SPAN, qrl_atom);
                     let mut args = ctx.ast.vec_with_capacity(1);
                     args.push(Argument::from(replacement));
-                    ctx.ast.expression_call_with_pure(
-                        SPAN,
-                        qrl_callee,
-                        None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
-                        args,
-                        false,
-                        true,
-                    )
+                    // Only component$ is tree-shakeable and gets PURE annotation.
+                    // Side-effectful wrappers (useStylesQrl, useTaskQrl, etc.) must NOT
+                    // have PURE because bundlers would incorrectly remove them.
+                    if is_tree_shakeable_dollar_call(name) {
+                        ctx.ast.expression_call_with_pure(
+                            SPAN,
+                            qrl_callee,
+                            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                            args,
+                            false,
+                            true,
+                        )
+                    } else {
+                        ctx.ast.expression_call(
+                            SPAN,
+                            qrl_callee,
+                            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                            args,
+                            false,
+                        )
+                    }
                 }
             };
 
@@ -1248,6 +1261,16 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
         program.body = new_body;
     }
+}
+
+/// Check if a dollar-suffixed call name produces a tree-shakeable wrapper.
+///
+/// Only `component$` produces a side-effect-free wrapper (`componentQrl`).
+/// All other wrappers (useStylesQrl, useTaskQrl, useVisibleTaskQrl,
+/// serverStuffQrl, serverLoaderQrl, useResourceQrl, etc.) are side-effectful
+/// runtime calls that must NOT be annotated with `/*#__PURE__*/`.
+fn is_tree_shakeable_dollar_call(name: &str) -> bool {
+    name == "component$"
 }
 
 /// Minify a function string for sync$ serialization.

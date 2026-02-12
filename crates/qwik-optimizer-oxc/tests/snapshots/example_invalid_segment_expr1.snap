@@ -21,7 +21,7 @@ import { useStylesQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 export const App_component_XumqEURaLxI = () => {
 	const style = `${css1}${css2}`;
-	/* @__PURE__ */ useStylesQrl(/* @__PURE__ */ qrl(i_zs0gpM06Gq4, "useStyles_zs0gpM06Gq4", [style]));
+	useStylesQrl(/* @__PURE__ */ qrl(i_zs0gpM06Gq4, "useStyles_zs0gpM06Gq4", [style]));
 	const render = () => {
 		return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
 	};

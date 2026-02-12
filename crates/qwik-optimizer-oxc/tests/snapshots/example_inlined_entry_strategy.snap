@@ -10,10 +10,10 @@ import { useStore } from "@qwik.dev/core";
 import { thing } from "./sibling";
 import mongodb from "mongodb";
 export const Child = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
-	/* @__PURE__ */ useStylesQrl(/* @__PURE__ */ inlinedQrl("somestring", "Child_useStyles_g6bzNLMa4kA"));
+	useStylesQrl(/* @__PURE__ */ inlinedQrl("somestring", "Child_useStyles_g6bzNLMa4kA"));
 	const state = useStore({ count: 0 });
 	// Double count watch
-	/* @__PURE__ */ useBrowserVisibleTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
+	useBrowserVisibleTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
 		state.count = thing.doStuff() + import("./sibling");
 	}, "useBrowserVisibleTask_0qCMfawldvU", [state]));
 	return <div onClick$={() => console.log(mongodb)}>

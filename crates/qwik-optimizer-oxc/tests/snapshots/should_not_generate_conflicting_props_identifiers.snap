@@ -9,8 +9,8 @@ import { _captures } from "@qwik.dev/core";
 import { _restProps } from "@qwik.dev/core";
 export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
 	const props = _restProps(_rawProps, ["color"]);
-	/* @__PURE__ */ useComputedQrl(/* @__PURE__ */ inlinedQrl(() => _rawProps.color, "default_useComputed_V2bMj82VCAE", [color]));
-	/* @__PURE__ */ useTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
+	useComputedQrl(/* @__PURE__ */ inlinedQrl(() => _rawProps.color, "default_useComputed_V2bMj82VCAE", [color]));
+	useTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
 		props.checked;
 	}, "default_useTask_cu78f7005P4", [props]));
 	return "hi";
