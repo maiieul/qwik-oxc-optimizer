@@ -189,9 +189,10 @@ pub(crate) fn compute_captures(
             continue;
         }
 
-        if collect_result.module_level_decls.contains(name) {
-            continue;
-        }
+        // NOTE: module_level_decls are NOT skipped here. They need to be captured
+        // for nested segments because the segment module can't access the parent
+        // module's top-level scope. Top-level segments already zero out their
+        // captures in transform.rs (is_top_level_dollar_call).
 
         let mut is_import = false;
         for import_info in &collect_result.module_imports {
@@ -1468,6 +1469,35 @@ import { thing } from './sibling';"#,
 
         let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
         assert_eq!(result.capture_names, vec!["_rawProps".to_string()]);
+    }
+
+    #[test]
+    fn test_compute_captures_module_level_decl_captured() {
+        // Module-level declarations should be captured (not skipped)
+        // when referenced in a $()-body. The segment module can't access
+        // the parent module's top-level scope.
+        let collect_result = parse_and_collect(
+            r#"import { $, component$ } from '@qwik.dev/core';
+const foo = 1;
+function Header() {}
+export const App = component$(() => {
+    return $(() => foo + Header);
+});"#,
+        );
+
+        // Simulating the inner $() body referencing module-level decls
+        let body_ident_refs = vec!["foo".to_string(), "Header".to_string()];
+        let body_local_decls: HashSet<String> = HashSet::new();
+
+        let result = compute_captures(&body_ident_refs, &body_local_decls, &collect_result);
+        // foo and Header are module-level decls, but should be captured
+        // for nested segments (the segment can't access parent module scope)
+        assert_eq!(
+            result.capture_names,
+            vec!["foo".to_string(), "Header".to_string()],
+            "Module-level declarations should be captured, not skipped"
+        );
+        assert!(result.reemitted_imports.is_empty());
     }
 
     // -----------------------------------------------------------------------
