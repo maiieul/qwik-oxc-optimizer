@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 20 of 22 (Path Resolution)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-02-11 -- v5.0 roadmap created (3 phases, 8 requirements)
+Plan: 1 of 1 in current phase (COMPLETE)
+Status: Phase 20 complete
+Last activity: 2026-02-12 -- Phase 20 Plan 01 executed (path resolution fixes)
 
-Progress: [####################..........] 19/22 phases (v5.0: 0/3)
+Progress: [####################..........] 20/22 phases (v5.0: 1/3)
 
 ## Performance Metrics
 
@@ -38,11 +38,19 @@ Progress: [####################..........] 19/22 phases (v5.0: 0/3)
 - Average duration: 5min
 - Total execution time: ~39min
 
+**Velocity (v5.0):**
+- Total plans completed: 1
+- Average duration: 4min
+- Total execution time: ~4min
+
 ## Accumulated Context
 
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+- Phase 20-01: Extension mapping uses (transpile_ts, transpile_jsx, ext) match triple
+- Phase 20-01: main_path rewrite triggers on transpile_jsx too, not just transpile_ts
 
 ### Pending Todos
 
@@ -54,6 +62,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-11
-Stopped at: v5.0 roadmap created -- ready to plan Phase 20
+Last session: 2026-02-12
+Stopped at: Completed 20-01-PLAN.md -- ready for Phase 21
 Resume file: None
