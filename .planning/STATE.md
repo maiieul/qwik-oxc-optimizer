@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 21 of 22 (Import Correctness)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-02-12 -- Phase 20 complete (1/1 plans, verified passed)
+Plan: 1 of 1 in current phase
+Status: Phase 21 complete
+Last activity: 2026-02-12 -- Phase 21 complete (1/1 plans)
 
-Progress: [####################..........] 20/22 phases (v5.0: 1/3)
+Progress: [#####################.........] 21/22 phases (v5.0: 2/3)
 
 ## Performance Metrics
 
@@ -39,9 +39,9 @@ Progress: [####################..........] 20/22 phases (v5.0: 1/3)
 - Total execution time: ~39min
 
 **Velocity (v5.0):**
-- Total plans completed: 1
-- Average duration: 4min
-- Total execution time: ~4min
+- Total plans completed: 2
+- Average duration: 8min
+- Total execution time: ~16min
 
 ## Accumulated Context
 
@@ -51,6 +51,8 @@ Full decision log in PROJECT.md Key Decisions table.
 
 - Phase 20-01: Extension mapping uses (transpile_ts, transpile_jsx, ext) match triple
 - Phase 20-01: main_path rewrite triggers on transpile_jsx too, not just transpile_ts
+- Phase 21-01: Strip ALL Qwik core imports and re-emit only needed specifiers (simpler than AST mutation)
+- Phase 21-01: Exclude build constants from import re-emission since const_replace handles them
 
 ### Pending Todos
 
@@ -63,5 +65,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Phase 20 complete, verified -- ready to plan Phase 21
+Stopped at: Phase 21 complete (1/1 plans) -- ready to plan Phase 22
 Resume file: None
