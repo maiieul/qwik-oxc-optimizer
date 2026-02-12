@@ -78,7 +78,7 @@ Full details: `milestones/v5.0-ROADMAP.md`
 **Milestone Goal:** Verify semantic output correctness, fix runtime-breaking deviations, and build the NAPI crate so the OXC optimizer can replace SWC in the Qwik build pipeline.
 
 - [x] **Phase 23: Output Audit** - Semantic comparison of OXC output against all 162 spec expected outputs -- completed 2026-02-11
-- [ ] **Phase 24: Runtime Bug Fixes** - Fix all runtime-breaking deviations found by the audit
+- [x] **Phase 24: Runtime Bug Fixes** - Fix all runtime-breaking deviations found by the audit (293→5, 98% reduction)
 - [ ] **Phase 25: NAPI Crate** - Build `qwik-napi-oxc` with napi-rs exposing `transform_modules`
 - [ ] **Phase 26: Integration Validation** - Verify the NAPI binding produces correct results end-to-end
 
@@ -117,9 +117,9 @@ Plans:
 - [x] 24-04-PLAN.md -- Final audit validation and user verification (Wave 4)
 - [x] 24-05-PLAN.md -- Gap closure: fix module-level declaration captures in nested segments (Wave 5)
 - [x] 24-06-PLAN.md -- Gap closure: re-run audit and user verification (Wave 6)
-- [ ] 24-07-PLAN.md -- Gap closure: fix pattern defaults, TS enums, default exports (Wave 7)
-- [ ] 24-08-PLAN.md -- Gap closure: fix JSX import source propagation (Wave 7)
-- [ ] 24-09-PLAN.md -- Gap closure: final audit, lower threshold, user verification (Wave 8)
+- [x] 24-07-PLAN.md -- Gap closure: fix pattern defaults, TS enums, default exports (Wave 7)
+- [x] 24-08-PLAN.md -- Gap closure: fix JSX import source propagation (Wave 7)
+- [x] 24-09-PLAN.md -- Gap closure: final audit, lower threshold, user verification (Wave 8)
 
 ### Phase 25: NAPI Crate
 **Goal**: A `qwik-napi-oxc` crate exists that exposes `transform_modules` to Node.js with the same calling convention as the SWC NAPI binding
@@ -177,10 +177,10 @@ Plans:
 | 21. Import Correctness | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 22. Display Names and Annotations | v5.0 | 1/1 | Complete | 2026-02-12 |
 | 23. Output Audit | v6.0 | 2/2 | Complete | 2026-02-11 |
-| 24. Runtime Bug Fixes | v6.0 | 6/9 | In Progress | - |
+| 24. Runtime Bug Fixes | v6.0 | 9/9 | Complete | 2026-02-12 |
 | 25. NAPI Crate | v6.0 | 0/TBD | Not started | - |
 | 26. Integration Validation | v6.0 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10 (v1.0)*
-*Last updated: 2026-02-12 (Phase 24 complete — 293→10 runtime-breaking deviations, 97% reduction)*
+*Last updated: 2026-02-12 (Phase 24 complete — 293→5 runtime-breaking deviations, 98% reduction)*
