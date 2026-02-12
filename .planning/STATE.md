@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 24 complete (all 11 plans done, 293->4 runtime-breaking, 99% reduction)
+**Current focus:** Phase 25 complete (NAPI crate with napi-rs v2, transform_modules export)
 
 ## Current Position
 
-Phase: 24 of 26 (Runtime Bug Fixes) -- COMPLETE
-Plan: 11 of 11 in current phase (all complete)
-Status: Phase 24 fully complete, user approved
-Last activity: 2026-02-12 -- Plan 11 complete (final validation, user approval, Phase 24 done)
+Phase: 25 of 26 (NAPI Crate) -- COMPLETE
+Plan: 1 of 1 in current phase (all complete)
+Status: Phase 25 fully complete
+Last activity: 2026-02-12 -- Plan 01 complete (qwik-napi-oxc crate, wire format adapter, Node.js verified)
 
-Progress: [########################......] 24/26 phases (v1.0-v5.0 shipped, v6.0 Phase 24 complete)
+Progress: [#########################.....] 25/26 phases (v1.0-v5.0 shipped, v6.0 Phases 23-25 complete)
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [########################......] 24/26 phases (v1.0-v5.0 shipped, v6.0
 | 24    | 09   | 5min     | 2     | 3     |
 | 24    | 10   | 9min     | 3     | 15    |
 | 24    | 11   | 3min     | 2     | 2     |
+| 25    | 01   | 4min     | 2     | 7     |
 
 ## Accumulated Context
 
@@ -103,6 +104,10 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 24-10: Runtime-breaking threshold tightened from 5 to 4 (missing-import-used: 1->0)
 - 24-11: Final validation confirms 4 runtime-breaking (99% reduction from 293 baseline)
 - 24-11: Phase 24 approved by user as complete
+- 25-01: serde_json::Value as NAPI boundary type for flexible JS<->Rust conversion
+- 25-01: Synchronous transform_modules export (platform.ts wraps as Promise at TS layer)
+- 25-01: manualChunks accepted but ignored (OXC EntryStrategy has no manual variant)
+- 25-01: Diagnostic scope field always "optimizer" matching SWC wire format
 
 ### Pending Todos
 
@@ -118,5 +123,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 24-11-PLAN.md (Phase 24 fully complete, all 11 plans done, user approved)
+Stopped at: Completed 25-01-PLAN.md (Phase 25 fully complete, NAPI crate built and verified)
 Resume file: None
