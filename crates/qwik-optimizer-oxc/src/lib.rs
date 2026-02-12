@@ -3246,4 +3246,193 @@ export const handler = $(() => console.log('hello'));"#
             );
         }
     }
+
+    // -----------------------------------------------------------------------
+    // NAME-01: Display Name Function Scope Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_display_name_function_scope() {
+        // NAME-01: Dollar calls inside exported function declarations should
+        // include the function name as scope prefix in their display names.
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+export function App() {
+    const Header = component$(() => <div/>);
+    return Header;
+}"#
+                .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find the segment module for the component$ call
+        let segment = result
+            .modules
+            .iter()
+            .find(|m| {
+                m.segment
+                    .as_ref()
+                    .map_or(false, |s| s.ctx_name == "component$")
+            })
+            .expect("Expected a component$ segment");
+
+        let seg = segment.segment.as_ref().unwrap();
+
+        // Display name should include App (function scope) and Header (variable name)
+        assert!(
+            seg.display_name.contains("App_Header_component"),
+            "Expected display_name to contain 'App_Header_component', got '{}'",
+            seg.display_name
+        );
+
+        // Canonical filename should also include the full hierarchy
+        assert!(
+            seg.canonical_filename.contains("App_Header_component"),
+            "Expected canonical_filename to contain 'App_Header_component', got '{}'",
+            seg.canonical_filename
+        );
+    }
+
+    #[test]
+    fn test_display_name_nested_jsx_event() {
+        // NAME-01: JSX event handlers inside function-scoped components should
+        // include the function scope, variable name, and component context.
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$ } from '@qwik.dev/core';
+export function App() {
+    const Cmp = component$(() => <div onClick$={() => {}}/>);
+    return Cmp;
+}"#
+                .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Find the onClick$ event handler segment
+        let event_segment = result
+            .modules
+            .iter()
+            .find(|m| {
+                m.segment
+                    .as_ref()
+                    .map_or(false, |s| s.ctx_name == "onClick$")
+            })
+            .expect("Expected an onClick$ segment");
+
+        let seg = event_segment.segment.as_ref().unwrap();
+
+        // Display name should include App (function scope), Cmp (variable), component (callee), div (element), onClick (event)
+        assert!(
+            seg.display_name.contains("App_Cmp_component_div"),
+            "Expected display_name to contain 'App_Cmp_component_div', got '{}'",
+            seg.display_name
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // PURE-01: Selective PURE Annotation Tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_pure_annotation_component_only() {
+        // PURE-01: componentQrl() should have PURE annotation,
+        // useStylesQrl() should NOT have PURE annotation.
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$, useStyles$ } from '@qwik.dev/core';
+export const Foo = component$(() => {
+    useStyles$('.class {}');
+    return <div/>;
+});"#
+                .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Main module: componentQrl should have PURE
+        let main_code = &result.modules[0].code;
+        assert!(
+            main_code.contains("@__PURE__") && main_code.contains("componentQrl"),
+            "Expected PURE annotation on componentQrl in main module: {}",
+            main_code
+        );
+
+        // Segment module (component body): useStylesQrl should NOT have PURE prefix
+        let component_segment = result
+            .modules
+            .iter()
+            .find(|m| {
+                m.segment
+                    .as_ref()
+                    .map_or(false, |s| s.ctx_name == "component$")
+            })
+            .expect("Expected component$ segment");
+
+        let seg_code = &component_segment.code;
+        // useStylesQrl should NOT be preceded by PURE
+        assert!(
+            !seg_code.contains("@__PURE__ */ useStylesQrl"),
+            "useStylesQrl should NOT have PURE annotation, got: {}",
+            seg_code
+        );
+        // But the inner qrl() call inside useStylesQrl SHOULD have PURE
+        assert!(
+            seg_code.contains("useStylesQrl(/* @__PURE__ */ qrl(")
+                || seg_code.contains("useStylesQrl(/*#__PURE__*/ qrl("),
+            "Inner qrl() inside useStylesQrl should have PURE, got: {}",
+            seg_code
+        );
+    }
+
+    #[test]
+    fn test_pure_annotation_use_task() {
+        // PURE-01: useTaskQrl() should NOT have PURE annotation.
+        let config = TransformModulesOptions {
+            input: vec![TransformModuleInput {
+                code: r#"import { component$, useTask$ } from '@qwik.dev/core';
+export const App = component$(() => {
+    useTask$(() => { console.log('task'); });
+    return <div/>;
+});"#
+                .to_string(),
+                path: "test.tsx".to_string(),
+            }],
+            ..TransformModulesOptions::default()
+        };
+        let result = transform_modules(config).unwrap();
+
+        // Segment module (component body): useTaskQrl should NOT have PURE prefix
+        let component_segment = result
+            .modules
+            .iter()
+            .find(|m| {
+                m.segment
+                    .as_ref()
+                    .map_or(false, |s| s.ctx_name == "component$")
+            })
+            .expect("Expected component$ segment");
+
+        let seg_code = &component_segment.code;
+        assert!(
+            !seg_code.contains("@__PURE__ */ useTaskQrl"),
+            "useTaskQrl should NOT have PURE annotation, got: {}",
+            seg_code
+        );
+        // But inner qrl() should have PURE
+        assert!(
+            seg_code.contains("useTaskQrl(/* @__PURE__ */ qrl(")
+                || seg_code.contains("useTaskQrl(/*#__PURE__*/ qrl("),
+            "Inner qrl() inside useTaskQrl should have PURE, got: {}",
+            seg_code
+        );
+    }
 }
