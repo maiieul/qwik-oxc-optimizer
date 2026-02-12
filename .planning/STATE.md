@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 23 - Output Audit (v6.0)
+**Current focus:** Phase 24 - Runtime Bug Fixes (v6.0)
 
 ## Current Position
 
-Phase: 23 of 26 (Output Audit)
-Plan: 2 of 2 in current phase
-Status: Complete
-Last activity: 2026-02-11 -- Plan 02 complete (deviation classification)
+Phase: 24 of 26 (Runtime Bug Fixes)
+Plan: 1 of 4 in current phase
+Status: In Progress
+Last activity: 2026-02-12 -- Plan 01 complete (optimizer failures and QRL extraction)
 
-Progress: [####################..........] 22/26 phases (v1.0-v5.0 shipped, v6.0 started)
+Progress: [######################........] 23/26 phases (v1.0-v5.0 shipped, v6.0 in progress)
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Progress: [####################..........] 22/26 phases (v1.0-v5.0 shipped, v6.0
 |-------|------|----------|-------|-------|
 | 23    | 01   | 2min     | 1     | 2     |
 | 23    | 02   | 3min     | 2     | 1     |
+| 24    | 01   | 13min    | 2     | 6     |
 
 ## Accumulated Context
 
@@ -61,6 +62,9 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 23-02: 293 runtime-breaking deviations across 140 specs require fixes in Phase 24
 - 23-02: 206 cosmetic deviations can be deferred indefinitely
 - 23-02: 5 high-priority fix patterns: module generation failures, QRL extraction, code generation, import resolution, capture analysis
+- 24-01: Parse-roundtrip approach for JSX lambda serialization (extract source by span, re-parse, codegen)
+- 24-01: Store source_code on QwikTransform for span-based extraction during traversal
+- 24-01: Fixed spec inputs rather than making optimizer tolerant of invalid syntax
 
 ### Pending Todos
 
@@ -68,13 +72,12 @@ None.
 
 ### Blockers/Concerns
 
-- 293 runtime-breaking deviations across 140 specs require fixes in Phase 24
-- 3 specs produce zero output (optimizer-failure pattern) - may indicate fundamental issues
-- 78 missing modules indicate systematic segment extraction failures
-- 45 QRL extraction failures (event handlers remain inline) suggest QRL analysis pass issues
+- Runtime-breaking deviations reduced but still significant (optimizer-failure: 0, empty-segment: 0, remaining patterns in plans 02-04)
+- Module count mismatches reduced to 2, unmatched expected modules at 67
+- Remaining deviations concentrated in code generation, capture analysis, and JSX transform patterns
 
 ## Session Continuity
 
-Last session: 2026-02-11
-Stopped at: Completed 23-02-PLAN.md (deviation classification)
+Last session: 2026-02-12
+Stopped at: Completed 24-01-PLAN.md (optimizer failures and QRL extraction)
 Resume file: None
