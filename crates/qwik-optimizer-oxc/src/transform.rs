@@ -136,10 +136,10 @@ pub(crate) struct QwikTransform {
     /// Each entry: (parent_display_name, qrl_name).
     pending_segment_qrl_imports: Vec<(String, String)>,
 
-    /// Whether this module has a custom JSX import source (e.g., `@jsxImportSource react`).
-    /// When true, JSX event handler `$`-attributes are NOT extracted as segments
+    /// Custom JSX import source module path (e.g., "react" from `@jsxImportSource react`).
+    /// When Some, JSX event handler `$`-attributes are NOT extracted as segments
     /// because the JSX is not Qwik JSX.
-    has_custom_jsx_import_source: bool,
+    custom_jsx_import_source: Option<String>,
 
     /// Original source code, used for extracting JSX lambda body code by span.
     source_code: String,
@@ -189,7 +189,7 @@ impl QwikTransform {
             stripped_segments: HashSet::new(),
             pending_sync_calls: HashSet::new(),
             pending_segment_qrl_imports: Vec::new(),
-            has_custom_jsx_import_source: false,
+            custom_jsx_import_source: None,
             source_code: source_code.to_string(),
             jsx_event_replacements: std::collections::HashMap::new(),
         }
@@ -223,10 +223,15 @@ impl QwikTransform {
         &self.stripped_segments
     }
 
-    /// Mark this module as having a custom JSX import source (e.g., `@jsxImportSource react`).
-    /// When set, JSX event handler `$`-attributes are NOT extracted as segments.
-    pub fn set_custom_jsx_import_source(&mut self, has: bool) {
-        self.has_custom_jsx_import_source = has;
+    /// Set the custom JSX import source module path (e.g., "react" from `@jsxImportSource react`).
+    /// When Some, JSX event handler `$`-attributes are NOT extracted as segments.
+    pub fn set_custom_jsx_import_source(&mut self, source: Option<String>) {
+        self.custom_jsx_import_source = source;
+    }
+
+    /// Get the custom JSX import source module path, if any.
+    pub fn custom_jsx_import_source(&self) -> Option<&str> {
+        self.custom_jsx_import_source.as_deref()
     }
 
     /// Check if a ctx name should be stripped based on strip_ctx_name config.
@@ -625,7 +630,7 @@ impl QwikTransform {
         }
         // When a custom JSX import source is set (e.g., React), JSX $-attributes
         // are not Qwik event handlers -- do not extract them.
-        if self.has_custom_jsx_import_source {
+        if self.custom_jsx_import_source.is_some() {
             return;
         }
         let element_name = match &element.opening_element.name {

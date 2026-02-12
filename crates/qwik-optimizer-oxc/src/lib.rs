@@ -114,8 +114,17 @@ pub fn transform_modules(
         let mut qwik_transform =
             transform::QwikTransform::new(&transform_options, collect_result, &input.path, &input.code);
 
-        if input.code.contains("@jsxImportSource") {
-            qwik_transform.set_custom_jsx_import_source(true);
+        if let Some(idx) = input.code.find("@jsxImportSource") {
+            let after = &input.code[idx + "@jsxImportSource".len()..];
+            let module_path = after
+                .trim_start()
+                .split(|c: char| c.is_whitespace() || c == '*' || c == '/')
+                .next()
+                .unwrap_or("")
+                .trim();
+            if !module_path.is_empty() {
+                qwik_transform.set_custom_jsx_import_source(Some(module_path.to_string()));
+            }
         }
 
         let _scoping =
