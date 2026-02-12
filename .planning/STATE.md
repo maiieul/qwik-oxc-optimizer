@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 24 of 26 (Runtime Bug Fixes)
-Plan: 1 of 4 in current phase
+Plan: 2 of 4 in current phase
 Status: In Progress
-Last activity: 2026-02-12 -- Plan 01 complete (optimizer failures and QRL extraction)
+Last activity: 2026-02-12 -- Plan 02 complete (segment import resolution)
 
 Progress: [######################........] 23/26 phases (v1.0-v5.0 shipped, v6.0 in progress)
 
@@ -50,6 +50,7 @@ Progress: [######################........] 23/26 phases (v1.0-v5.0 shipped, v6.0
 | 23    | 01   | 2min     | 1     | 2     |
 | 23    | 02   | 3min     | 2     | 1     |
 | 24    | 01   | 13min    | 2     | 6     |
+| 24    | 02   | 7min     | 2     | 82    |
 
 ## Accumulated Context
 
@@ -65,6 +66,9 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 24-01: Parse-roundtrip approach for JSX lambda serialization (extract source by span, re-parse, codegen)
 - 24-01: Store source_code on QwikTransform for span-based extraction during traversal
 - 24-01: Fixed spec inputs rather than making optimizer tolerant of invalid syntax
+- 24-02: ImportKind enum to distinguish default/namespace/named import specifiers
+- 24-02: ReemittedImport struct with kind and alias tracking for capture-to-segment import propagation
+- 24-02: Store needed_imports on all segments (top-level and nested)
 
 ### Pending Todos
 
@@ -72,12 +76,12 @@ None.
 
 ### Blockers/Concerns
 
-- Runtime-breaking deviations reduced but still significant (optimizer-failure: 0, empty-segment: 0, remaining patterns in plans 02-04)
-- Module count mismatches reduced to 2, unmatched expected modules at 67
-- Remaining deviations concentrated in code generation, capture analysis, and JSX transform patterns
+- User-code import re-emission now working, but self-import pattern (module own exports as JSX components) still missing
+- Module count mismatches at 2, unmatched modules at 130 (actual + expected)
+- Remaining deviations concentrated in self-imports, code generation patterns, capture analysis, and JSX transform details
 
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 24-01-PLAN.md (optimizer failures and QRL extraction)
+Stopped at: Completed 24-02-PLAN.md (segment import resolution)
 Resume file: None
