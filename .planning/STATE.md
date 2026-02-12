@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A working OXC-based Qwik optimizer crate that passes all 162 spec tests
-**Current focus:** Phase 24 complete. Ready for Phase 25 - NAPI Crate (v6.0)
+**Current focus:** Phase 24 Plans 10-11 executing (display name collisions + api import fixes)
 
 ## Current Position
 
-Phase: 24 of 26 (Runtime Bug Fixes) -- COMPLETE
-Plan: 9 of 9 in current phase (all complete)
-Status: Phase complete, approved by user
-Last activity: 2026-02-12 -- Plan 09 complete (final audit validation, user approval, 293->5 runtime-breaking)
+Phase: 24 of 26 (Runtime Bug Fixes)
+Plan: 10 of 11 in current phase
+Status: Plan 10 complete, Plan 11 remaining
+Last activity: 2026-02-12 -- Plan 10 complete (display name collision fix, api import fix, 5->4 runtime-breaking)
 
 Progress: [########################......] 24/26 phases (v1.0-v5.0 shipped, v6.0 Phase 24 complete)
 
@@ -58,6 +58,7 @@ Progress: [########################......] 24/26 phases (v1.0-v5.0 shipped, v6.0
 | 24    | 07   | 6min     | 2     | 7     |
 | 24    | 08   | 11min    | 2     | 5     |
 | 24    | 09   | 5min     | 2     | 3     |
+| 24    | 10   | 9min     | 3     | 15    |
 
 ## Accumulated Context
 
@@ -96,6 +97,9 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 24-09: Final audit confirms 5 runtime-breaking (1 missing-import-used + 4 truly-missing-module), 98% reduction from baseline
 - 24-09: Remaining missing-import-used (example_drop_side_effects api from server$()) accepted as architectural limitation
 - 24-09: Phase 24 approved by user as complete
+- 24-10: wrapper_callee_name context for non-dollar wrapper function display names (component($()) -> renderHeader_component)
+- 24-10: analyze_lambda_captures proceeds on semantic parse errors (only bails on empty body)
+- 24-10: Runtime-breaking threshold tightened from 5 to 4 (missing-import-used: 1->0)
 
 ### Pending Todos
 
@@ -103,7 +107,7 @@ None.
 
 ### Blockers/Concerns
 
-- 1 missing-import-used edge case remains (example_drop_side_effects: api from server$() call pattern)
+- 0 missing-import-used edge cases remain (Plan 10 fixed example_drop_side_effects api import)
 - 4 truly-missing-module deviations remain (pre-compiled QRL, multi-file)
 - Module count mismatches at 2 (example_qwik_react, relative_paths require pre-compiled QRL reverse-engineering)
 - All above accepted as architectural limitations, deferred beyond Phase 24
@@ -111,5 +115,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 24-09-PLAN.md (Phase 24 complete, user approved, ready for Phase 25)
+Stopped at: Completed 24-10-PLAN.md (display name collisions fixed, api import fixed, Plan 11 remaining)
 Resume file: None
