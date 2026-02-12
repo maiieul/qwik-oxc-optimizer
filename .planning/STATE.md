@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 24 of 26 (Runtime Bug Fixes)
-Plan: 2 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: In Progress
-Last activity: 2026-02-12 -- Plan 02 complete (segment import resolution)
+Last activity: 2026-02-12 -- Plan 03 complete (capture analysis and JSX event handler codegen)
 
 Progress: [######################........] 23/26 phases (v1.0-v5.0 shipped, v6.0 in progress)
 
@@ -51,6 +51,7 @@ Progress: [######################........] 23/26 phases (v1.0-v5.0 shipped, v6.0
 | 23    | 02   | 3min     | 2     | 1     |
 | 24    | 01   | 13min    | 2     | 6     |
 | 24    | 02   | 7min     | 2     | 82    |
+| 24    | 03   | 20min    | 2     | 52    |
 
 ## Accumulated Context
 
@@ -69,6 +70,10 @@ Recent: "Semantic verification before NAPI" and "Fix only runtime-breaking devia
 - 24-02: ImportKind enum to distinguish default/namespace/named import specifiers
 - 24-02: ReemittedImport struct with kind and alias tracking for capture-to-segment import propagation
 - 24-02: Store needed_imports on all segments (top-level and nested)
+- 24-03: Merge all capture_stack frames for JSX handler filtering (not just last frame) to support nested $() scopes
+- 24-03: Skip capture filtering when capture_stack is empty (bare function handlers like export default)
+- 24-03: Pre-transform JSX attribute value replacement before JSX transform runs (avoid invasive signature changes)
+- 24-03: Add known_ctxkind_deviations for example_immutable_analysis jSXProp vs eventHandler classification
 
 ### Pending Todos
 
@@ -76,12 +81,12 @@ None.
 
 ### Blockers/Concerns
 
-- User-code import re-emission now working, but self-import pattern (module own exports as JSX components) still missing
-- Module count mismatches at 2, unmatched modules at 130 (actual + expected)
-- Remaining deviations concentrated in self-imports, code generation patterns, capture analysis, and JSX transform details
+- Module count mismatches at 2 (example_qwik_react, relative_paths require pre-compiled QRL reverse-engineering)
+- Capture analysis and JSX event handler codegen now working; remaining deviations in self-imports, const-let-var, and inlinedQrl-diff patterns
+- 9 inlinedQrl-diff specs and 2 module-count specs remain as known deviations for Plan 04
 
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 24-02-PLAN.md (segment import resolution)
+Stopped at: Completed 24-03-PLAN.md (capture analysis and JSX event handler codegen)
 Resume file: None
