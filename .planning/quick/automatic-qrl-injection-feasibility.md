@@ -6,65 +6,104 @@
 
 ## The Problem
 
-Currently, Qwik has an **inconsistent API pattern** where the `$` marker appears in different places depending on the API:
+Currently, Qwik has **two inconsistencies** that create friction:
+
+### Inconsistency #1: APIs Without $ Suffix Need Manual Wrapping
 
 ```tsx
 import { $, component$, useTask$, useOnWindow } from '@qwik.dev/core';
 
 export const App = component$(() => {
-  // Type 1: $ suffix on the API itself - works automatically
+  // ✓ Works - $ suffix on API extracts automatically
   useTask$(async () => {
     const data = await fetchData();
     console.log(data);
   });
   
-  // Type 2: $ suffix on JSX attribute - works automatically
+  // ✓ Works - $ suffix on JSX attribute extracts automatically
   return <div onClick$={() => alert('clicked')}>Hello</div>;
   
-  // Type 3: APIs without $ suffix - must manually wrap with $()
+  // ✗ Doesn't work - API without $ suffix requires manual wrapping
   useOnWindow('resize', $(() => {
     console.log('resized');
   }));
 });
 ```
 
-This creates friction:
-- **Inconsistent mental model** - `$` is sometimes on the API, sometimes on the attribute, sometimes requires manual wrapping
-- **Learning curve** - "Why is `useTask$` automatic but `useOnWindow` needs `$(() => ...)`?"
-- **Forgets arrow function requirement** - Only arrow functions work; regular function declarations don't extract
-- **Refactoring hazard** - Moving code between contexts requires adding/removing `$`
+**Learning curve:** "Why do I need `$` wrapping for `useOnWindow` but not `useTask$`?"
 
-## The Vision: Automatic Injectable QRLs
-
-Eliminate the inconsistency. The optimizer would **automatically detect** when a lambda should be lazy-loaded and inject the QRL transformation:
+### Inconsistency #2: Cannot Reference Module-Level Functions
 
 ```tsx
-// After: Write normal JavaScript everywhere
-import { component$, useTask$, useOnWindow } from '@qwik.dev/core';
+// ✗ Doesn't work today - function reference won't extract
+function handleClick() {
+  console.log('clicked');
+}
 
 export const App = component$(() => {
-  // APIs with $ suffix still work (backward compatible)
-  useTask$(async () => {
-    const data = await fetchData();
-    console.log(data);
-  });
-  
-  // Type 3 APIs now work without manual $() wrapping
-  useOnWindow('resize', () => {
-    console.log('resized');
-  });
-  
-  // JSX works with or without $ suffix
-  return <div onClick={() => alert('clicked')}>Hello</div>;
+  return <div onClick$={handleClick}>Click me</div>;
+});
+
+// Workaround - inline arrow function (duplicates code, can't reuse)
+export const App = component$(() => {
+  return <div onClick$={() => handleClick()}>Click me</div>;
 });
 ```
 
-Behind the scenes, the optimizer knows:
-- `useTask$` always takes a lazy-loaded function (1st arg)
-- `useOnWindow` 2nd argument is a lazy-loaded handler  
-- `onClick` JSX attribute values should be lazy-loaded
+**Limitation:** You can't define a reusable handler function and reference it. Forces inline definitions.
 
-Developers write "normal" JavaScript. Qwik handles extraction automatically.
+## The Vision: Automatic Injectable QRLs
+
+### Part 1: Type 3 APIs Without Manual Wrapping
+
+```tsx
+// After: Type 3 APIs work without $() wrapping
+useOnWindow('resize', () => console.log('resized'));
+```
+
+### Part 2: Module-Level Function References Auto-Extract (The Big Win)
+
+```tsx
+// Define handlers as regular functions
+function handleClick() {
+  console.log('clicked');
+}
+
+function handleResize() {
+  console.log('resized');
+}
+
+// Reference them in QRL-accepting contexts
+export const App = component$(() => {
+  useOnWindow('resize', handleResize);  // Auto-extracts handleResize as QRL
+  return <div onClick$={handleClick}>Click me</div>;  // Auto-extracts handleClick as QRL
+});
+
+// Reuse handlers across components
+export const Button = component$(() => {
+  return <button onClick$={handleClick}>Click</button>;
+});
+```
+
+**Benefits:**
+- **Regular function declarations** work (not just arrow functions)
+- **Function reuse** - Define once, reference from multiple places
+- **Cleaner organization** - Separate handlers from component logic
+- **Better testing** - Test handlers in isolation
+- **Familiar patterns** - Like React's event handlers but with lazy loading
+
+### What Stays The Same
+
+```tsx
+// JSX keeps $ suffix - it's the signal for QRL extraction
+<div onClick$={() => ...}>           // Still works
+<div onClick$={handler}>             // Still works (handler is extracted)
+<div onClick={() => ...}>             // Won't work (no $, no extraction)
+
+// APIs with $ suffix still work (backward compatible)
+useTask$(async () => { ... })         // Still works
+component$(() => { ... })             // Still works
+```
 
 ## Technical Feasibility
 
@@ -77,75 +116,42 @@ The optimizer already has all necessary components:
 1. **Collector** (`crates/qwik-optimizer-oxc/src/collector.rs`)
    - First-pass AST walk to find imports, call sites, and captures
    - Already detects `$`-suffixed imports from `@qwik.dev/core`
+   - Tracks `module_level_decls` including function declarations
 
 2. **Transform Visitor** (`crates/qwik-optimizer-oxc/src/transform.rs`)
    - `enter_call_expression` hook inspects every call
-   - Currently checks `is_dollar_call()` to detect `component$()`, `useTask$()`, etc.
    - Uses OXC's `traverse_mut` for full AST mutation
 
 3. **Capture Analysis** (`crates/qwik-optimizer-oxc/src/collector.rs:166`)
    - Analyzes which variables from outer scope are captured in lambdas
    - Already works for nested `$()` calls
-   - Can be applied to implicit QRLs
 
-4. **Words/Patterns Module** (`crates/qwik-optimizer-oxc/src/words.rs`)
-   - Contains constants like `dollar_to_qrl_name()`
-   - Natural place to add QRL-accepting API patterns
+### Key Insight: OXC vs SWC
 
-### APIs That Would Benefit
+**OXC is NOT limited like SWC.** The optimizer already handles:
 
-**Type 1: APIs already working (backward compatible)**
-- `useTask$(callback)` - 1st arg
-- `useVisibleTask$(callback)` - 1st arg  
-- `component$(ComponentFn)` - 1st arg
-- `useStyles$(css)` - 1st arg
-- etc.
+- ✓ Arrow functions: `() => ...`
+- ✓ Function expressions: `function() { ... }`
+- ✓ Module-level declarations (tracked in collector)
 
-These already have `$` suffix. With automatic injection, the `$` becomes **optional** - both `useTask$` and `useTask` would work.
+What doesn't work today:
+- ✗ Identifier references to module-level functions passed to QRL contexts
 
-**Type 2: APIs requiring manual wrapping today**
-- `useOnWindow(event, handler)` - 2nd arg
-- `useOnDocument(event, handler)` - 2nd arg
-- `useOn$(event, handler)` - 2nd arg
-
-These require manual `$(() => ...)` wrapping. With automatic injection, the wrapping becomes **unnecessary**.
-
-**Type 3: JSX event handlers**
-- `onClick$={() => ...}` - attribute with $ suffix (current)
-- `onInput$={() => ...}` - attribute with $ suffix (current)
-- `document:onScroll$={() => ...}` - namespaced with $ suffix (current)
-
-These already work automatically thanks to the `$` suffix. With automatic injection, the `$` becomes **optional** - `<div onClick={() => ...}>` would also extract automatically.
-
-**Current Limitation: Arrow Functions Only**
-
-The optimizer currently only extracts **arrow functions** and **inline function expressions**. Regular function declarations/references don't work:
-
-```tsx
-// ✓ Works - arrow function
-useOnWindow('click', () => console.log('clicked'));
-
-// ✗ Doesn't work - function reference
-function handleClick() { console.log('clicked'); }
-useOnWindow('click', handleClick); // Won't extract
-
-// ✗ Doesn't work - function declaration inside JSX
-<div onClick={function() { console.log('clicked'); }} /> // Won't extract
-```
-
-This is a limitation of the current AST detection - arrow functions are easy to identify as "lambdas that should be extracted," while function declarations could be defined elsewhere and referenced. Automatic injection would maintain this limitation (at least initially).
+This is a **feature gap, not an architectural limitation**. OXC has all the information needed to extract module-level function declarations.
 
 ### Implementation Strategy
 
-Add a `QRL_ARG_PATTERNS` map that defines which argument positions accept QRLs:
+#### Part 1: Type 3 APIs (No Manual Wrapping)
+
+Add a `QRL_ARG_PATTERNS` map:
 
 ```rust
 // In words.rs
 pub static QRL_ARG_PATTERNS: LazyLock<HashMap<&str, Vec<usize>>> = LazyLock::new(|| {
     HashMap::from([
         ("useTask$", vec![0]),           // 1st arg is the task function
-        ("useVisibleTask$", vec![0]),   // 1st arg is the task function
-        ("useOnWindow", vec![1]),       // 2nd arg is the handler
+        ("useVisibleTask$", vec![0]),    // 1st arg is the task function
+        ("useOnWindow", vec![1]),        // 2nd arg is the handler
         ("useOnDocument", vec![1]),      // 2nd arg is the handler
         ("useOn$", vec![1]),             // 2nd arg is the handler
         // ... additional APIs
@@ -153,58 +159,69 @@ pub static QRL_ARG_PATTERNS: LazyLock<HashMap<&str, Vec<usize>>> = LazyLock::new
 });
 ```
 
-#### Step 1: Detection in Collector
+When a lambda is passed to these APIs, auto-wrap it with QRL extraction.
 
-Extend `walk_expression_for_calls` to detect implicit patterns:
+#### Part 2: Module-Level Function References
+
+Extend the collector and transform to handle identifier references:
+
+**Step 1: Track function references in collector**
 
 ```rust
+// In collector.rs walk_expression_for_calls
 fn walk_expression_for_calls(ctx: &mut CollectContext, expr: &Expression<'_>) {
     if let Expression::CallExpression(call) = expr {
-        // Check for implicit QRL patterns
-        if let Expression::Identifier(ident) = &call.callee {
-            let name = ident.name.as_str();
-            if let Some(arg_positions) = QRL_ARG_PATTERNS.get(name) {
-                for (idx, arg) in call.arguments.iter().enumerate() {
-                    if arg_positions.contains(&idx) && is_lambda(arg) {
-                        ctx.implicit_dollar_calls.push(ImplicitDollarCall {
-                            callee_name: name,
-                            arg_index: idx,
-                            span: call.span,
-                        });
-                    }
+        // ... existing QRL_ARG_PATTERNS detection
+        
+        // NEW: Detect identifier references to module-level functions
+        for (idx, arg) in call.arguments.iter().enumerate() {
+            if let Argument::Identifier(ident) = arg {
+                let name = ident.name.as_str();
+                if ctx.module_level_decls.contains(name) {
+                    // This is a reference to a module-level declaration
+                    ctx.function_references.push(FunctionReference {
+                        name: name.to_string(),
+                        call_span: call.span,
+                        arg_index: idx,
+                    });
                 }
             }
         }
-        // ... existing dollar call detection
     }
 }
 ```
 
-#### Step 2: Transform in Visitor
-
-In `enter_call_expression`, auto-wrap detected lambdas:
+**Step 2: Extract module-level functions as QRLs**
 
 ```rust
+// In transform.rs
 fn enter_call_expression(
     &mut self,
     call: &mut CallExpression<'a>,
     ctx: &mut TraverseCtx<'a, ()>,
 ) {
-    // Existing $-call detection
-    if let Some(kind) = self.is_dollar_call(call) {
-        // ... existing logic
-    }
+    // ... existing logic
     
-    // NEW: Implicit QRL injection
+    // NEW: Handle identifier references to module-level functions
     if let Expression::Identifier(ident) = &call.callee {
         let name = ident.name.as_str();
         if let Some(arg_positions) = words::QRL_ARG_PATTERNS.get(name) {
             for idx in arg_positions {
-                if let Some(arg) = call.arguments.get_mut(*idx) {
-                    if let Some(expr) = arg.as_expression_mut() {
-                        if is_lambda_expression(expr) {
-                            // Transform to qrl()
-                            *expr = self.transform_to_qrl(expr, ctx);
+                if let Some(arg) = call.arguments.get(*idx) {
+                    // Check if argument is an identifier reference
+                    if let Argument::Identifier(ident_ref) = arg {
+                        let ref_name = ident_ref.name.as_str();
+                        if self.collected.module_level_decls.contains(ref_name) {
+                            // Extract the referenced function as a QRL
+                            // Transform to: qrl(import_path, "functionName_hash")
+                            let replacement = self.create_qrl_for_function_ref(
+                                ref_name, 
+                                ctx
+                            );
+                            // Replace the argument with the QRL call
+                            if let Some(arg_mut) = call.arguments.get_mut(*idx) {
+                                *arg_mut = replacement;
+                            }
                         }
                     }
                 }
@@ -214,89 +231,102 @@ fn enter_call_expression(
 }
 ```
 
-#### Step 3: Capture Analysis
+**Step 3: Create QRL segments for module-level functions**
 
-The existing capture analysis already handles nested scopes. For a pattern like:
-
-```tsx
-export const App = component$(() => {
-  const state = useStore({ count: 0 });
-  
-  useTask$(async () => {
-    // Captures `state` from outer scope
-    state.count = await fetchCount();
-  });
-});
-```
-
-The collector's `compute_captures()` function will:
-1. Detect `state` is referenced in the lambda
-2. See it's declared in the outer `component$` scope
-3. Classify it as a capture
-4. Generate the appropriate `_captures` array
+When a module-level function is referenced in a QRL context:
+1. Treat the function declaration as a segment (like `component$` segments)
+2. Generate a unique hash and segment name
+3. Extract the function body to a separate module
+4. Replace the reference with `qrl(i_hash, "functionName_hash")`
 
 ## Benefits
 
 ### 1. Massive DX Improvement
 - **Zero learning curve** - Write JavaScript normally
-- **No API mental model** - No need to remember `$` suffixes or manual wrapping
-- **Consistent patterns** - All callbacks work the same way, regardless of API
-- **IDE-friendly** - Full TypeScript/intellisense support without `$` syntax
-- **Refactoring safety** - Move code freely between contexts without changes
+- **No API mental model** - No need to remember where `$` goes
+- **Function reuse** - Define handlers once, use everywhere
+- **Familiar patterns** - Like React but with lazy loading
+- **Better code organization** - Separate concerns
 
 ### 2. Competitive Advantage
-Qwik becomes the first resumable framework where the lazy-loading feels **completely invisible**. Developers get the benefits without the cognitive overhead.
+Qwik becomes the first framework where **resumability is completely invisible**. Developers write normal JavaScript and get automatic lazy loading.
 
 ### 3. Migration Path
-Can be implemented as an opt-in feature initially:
-- Config flag: `automaticQrlInjection: true`
-- Gradually make it default
-- Backward compatible (explicit `$` still works)
+Can be implemented incrementally:
+- Phase 1: Type 3 APIs without manual wrapping (easiest)
+- Phase 2: Module-level function references (bigger win)
+- Config flag: `automaticQrlInjection: true` to opt-in
+- Backward compatible - explicit `$` still works
 
 ## Risks and Mitigations
 
 | Risk | Mitigation |
 |------|------------|
-| Debugging confusion when extraction fails | Clear error messages showing what was/wasn't extracted; dev mode logging |
-| Custom user functions accepting callbacks | JSDoc annotation `@qrlHandler` or config to register custom patterns |
-| Bundle surprises (unexpected splits) | Build report showing all extracted QRLs; visualizer integration |
-| Over-extraction (wrapping non-QRL callbacks) | Conservative pattern matching; only extract for known APIs |
+| Over-extraction (wrapping wrong functions) | Conservative pattern matching - only known APIs |
+| Side effects in module-level functions | Document that referenced functions must be pure/stateless |
+| Debugging confusion | Dev mode logging showing what was extracted |
+| Bundle size surprises | Build report showing all QRL segments |
+| Custom user APIs | JSDoc `@qrlHandler` or config registration |
 
 ## Files to Modify
 
 | File | Changes |
 |------|---------|
-| `crates/qwik-optimizer-oxc/src/words.rs` | Add `QRL_ARG_PATTERNS` mapping |
-| `crates/qwik-optimizer-oxc/src/collector.rs` | Detect implicit patterns in `walk_expression_for_calls` |
-| `crates/qwik-optimizer-oxc/src/transform.rs` | Handle implicit QRL wrapping in `enter_call_expression` |
-| `crates/qwik-optimizer-oxc/src/types.rs` | Add `implicit_dollar_calls` to `CollectResult` |
+| `words.rs` | Add `QRL_ARG_PATTERNS` mapping |
+| `collector.rs` | Detect identifier references to module-level functions in QRL contexts |
+| `transform.rs` | Handle module-level function extraction in `enter_call_expression` |
+| `types.rs` | Add `function_references` to `CollectResult` |
+| `code_move.rs` | Generate QRL segments for module-level function declarations |
 
 ## Testing Strategy
 
-1. **Unit tests** for each QRL-accepting API pattern
-2. **Spec test integration** - Add new test cases alongside existing 162 spec tests
-3. **Capture analysis tests** - Ensure implicit QRLs correctly capture outer scope
-4. **Edge cases** - Nested lambdas, async functions, generator functions
+1. **Unit tests** for each API pattern (Type 3 APIs)
+2. **Function reference tests** - Module-level functions extracted correctly
+3. **Capture analysis** - Functions capturing outer scope variables
+4. **Multiple references** - Same function used in multiple places
+5. **Edge cases** - Async functions, generators, nested references
+
+## Research Questions
+
+### Q: Can OXC handle regular functions (not just arrow functions)?
+
+**A: Yes!** Looking at `jsx_transform.rs:21-22`:
+
+```rust
+JSXExpression::ArrowFunctionExpression(arrow) => Some((arrow.span.start, arrow.span.end)),
+JSXExpression::FunctionExpression(func) => Some((func.span.start, func.span.end)),
+```
+
+OXC already handles both. The limitation is with **identifier references** to module-level declarations, which is a logic gap, not an architectural limitation.
+
+### Q: What's the difference from SWC?
+
+**A:** SWC had architectural limitations with certain AST patterns. OXC's traverse API is more flexible and can handle:
+- Module-level declaration tracking
+- Identifier reference analysis
+- Cross-reference resolution
+
+This makes module-level function extraction feasible in OXC where it wasn't in SWC.
 
 ## Next Steps
 
-1. **Create proof-of-concept** for `useTask$` and `useOnWindow` (2-3 APIs)
-2. **Benchmark** compile-time overhead of additional pattern matching
-3. **Community feedback** - Share with beta testers
-4. **Full implementation** - Roll out to all QRL-accepting APIs
-5. **Documentation** - Update guides to show "modern" syntax (with note about classic `$` syntax)
+1. **Proof of concept** - Implement Type 3 API auto-wrapping for 2-3 APIs
+2. **Function reference POC** - Extract one module-level function as QRL
+3. **Benchmark** - Measure compile-time overhead
+4. **Spec test integration** - Add test cases for new patterns
+5. **Community RFC** - Gather feedback on the approach
 
 ## Related Work
 
-This aligns with modern framework trends:
 - **React Server Components** - Automatic server/client boundaries
-- **SolidStart** - Automatic server functions
+- **SolidStart** - Automatic server functions  
 - **SvelteKit** - Automatic form actions
+- **Next.js App Router** - Automatic code splitting
 
-Qwik would lead here by making resumability automatic rather than manual.
+Qwik would lead by making component-level lazy loading automatic.
 
 ---
 
-**Document Status:** Research synthesis complete
-**Date:** 2026-02-13
-**Source:** Technical discussion between maintainers on OXC optimizer capabilities
+**Document Status:** Research synthesis complete  
+**Date:** 2026-02-13  
+**Source:** Technical discussion between maintainers on OXC optimizer capabilities and Qwik API design
