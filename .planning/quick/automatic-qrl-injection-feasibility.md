@@ -6,32 +6,32 @@
 
 ## The Problem
 
-Currently, Qwik has an **inconsistent API pattern**. Some APIs have `$` suffixes and automatically extract QRLs, while others require manual `$()` wrapping:
+Currently, Qwik has an **inconsistent API pattern** where the `$` marker appears in different places depending on the API:
 
 ```tsx
 import { $, component$, useTask$, useOnWindow } from '@qwik.dev/core';
 
 export const App = component$(() => {
-  // Already works - APIs with $ suffix
+  // Type 1: $ suffix on the API itself - works automatically
   useTask$(async () => {
     const data = await fetchData();
     console.log(data);
   });
   
-  // Must manually wrap - APIs without $ suffix
+  // Type 2: $ suffix on JSX attribute - works automatically
+  return <div onClick$={() => alert('clicked')}>Hello</div>;
+  
+  // Type 3: APIs without $ suffix - must manually wrap with $()
   useOnWindow('resize', $(() => {
     console.log('resized');
   }));
-  
-  // Must manually wrap - JSX event handlers
-  return <div onClick$={$(() => alert('clicked'))}>Hello</div>;
 });
 ```
 
 This creates friction:
-- **Inconsistent mental model** - Must remember which APIs need manual wrapping
-- **Cognitive overhead** - Understanding which callbacks are lazy-loaded vs synchronous
-- **Learning curve** - "Why do I need `$` here but not there?"
+- **Inconsistent mental model** - `$` is sometimes on the API, sometimes on the attribute, sometimes requires manual wrapping
+- **Learning curve** - "Why is `useTask$` automatic but `useOnWindow` needs `$(() => ...)`?"
+- **Forgets arrow function requirement** - Only arrow functions work; regular function declarations don't extract
 - **Refactoring hazard** - Moving code between contexts requires adding/removing `$`
 
 ## The Vision: Automatic Injectable QRLs
@@ -43,25 +43,25 @@ Eliminate the inconsistency. The optimizer would **automatically detect** when a
 import { component$, useTask$, useOnWindow } from '@qwik.dev/core';
 
 export const App = component$(() => {
-  // Still works - but $ suffix now optional
+  // APIs with $ suffix still work (backward compatible)
   useTask$(async () => {
     const data = await fetchData();
     console.log(data);
   });
   
-  // Now works without manual wrapping
+  // Type 3 APIs now work without manual $() wrapping
   useOnWindow('resize', () => {
     console.log('resized');
   });
   
-  // JSX event handlers work without $ suffix
+  // JSX works with or without $ suffix
   return <div onClick={() => alert('clicked')}>Hello</div>;
 });
 ```
 
 Behind the scenes, the optimizer knows:
-- `useTask$` always takes a lazy-loaded function
-- `useOnWindow` 2nd argument is a lazy-loaded handler
+- `useTask$` always takes a lazy-loaded function (1st arg)
+- `useOnWindow` 2nd argument is a lazy-loaded handler  
 - `onClick` JSX attribute values should be lazy-loaded
 
 Developers write "normal" JavaScript. Qwik handles extraction automatically.
@@ -111,11 +111,29 @@ These already have `$` suffix. With automatic injection, the `$` becomes **optio
 These require manual `$(() => ...)` wrapping. With automatic injection, the wrapping becomes **unnecessary**.
 
 **Type 3: JSX event handlers**
-- `onClick$={handler}` - attribute value
-- `onInput$={handler}` - attribute value
-- `document:onScroll$={handler}` - namespaced attribute value
+- `onClick$={() => ...}` - attribute with $ suffix (current)
+- `onInput$={() => ...}` - attribute with $ suffix (current)
+- `document:onScroll$={() => ...}` - namespaced with $ suffix (current)
 
-These require `$` suffix on attribute names. With automatic injection, `<div onClick={() => ...}>` would work automatically.
+These already work automatically thanks to the `$` suffix. With automatic injection, the `$` becomes **optional** - `<div onClick={() => ...}>` would also extract automatically.
+
+**Current Limitation: Arrow Functions Only**
+
+The optimizer currently only extracts **arrow functions** and **inline function expressions**. Regular function declarations/references don't work:
+
+```tsx
+// ✓ Works - arrow function
+useOnWindow('click', () => console.log('clicked'));
+
+// ✗ Doesn't work - function reference
+function handleClick() { console.log('clicked'); }
+useOnWindow('click', handleClick); // Won't extract
+
+// ✗ Doesn't work - function declaration inside JSX
+<div onClick={function() { console.log('clicked'); }} /> // Won't extract
+```
+
+This is a limitation of the current AST detection - arrow functions are easy to identify as "lambdas that should be extracted," while function declarations could be defined elsewhere and referenced. Automatic injection would maintain this limitation (at least initially).
 
 ### Implementation Strategy
 
