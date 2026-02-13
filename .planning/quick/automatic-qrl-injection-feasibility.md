@@ -6,55 +6,65 @@
 
 ## The Problem
 
-Currently, Qwik developers must manually wrap callbacks with `$()` to mark lazy-loading boundaries:
+Currently, Qwik has an **inconsistent API pattern**. Some APIs have `$` suffixes and automatically extract QRLs, while others require manual `$()` wrapping:
 
 ```tsx
 import { $, component$, useTask$, useOnWindow } from '@qwik.dev/core';
 
 export const App = component$(() => {
-  // Manual wrapping required
-  useTask$($(async () => {
-    const data = await fetchData();
-    console.log(data);
-  }));
-  
-  useOnWindow('resize', $(() => {
-    console.log('resized');
-  }));
-  
-  return <div onClick$={$(() => alert('clicked'))}>Hello</div>;
-});
-```
-
-This creates friction:
-- Must remember which APIs require `$` suffix
-- Cognitive overhead of understanding lazy-loading boundaries
-- IDE/type-checker confusion with `$` patterns
-- Learning curve for new developers
-
-## The Vision: Automatic Injectable QRLs
-
-Instead of manual wrapping, the optimizer would **automatically detect** when a lambda is passed to a known QRL-accepting API and inject the `$` transformation:
-
-```tsx
-// After: Write normal JavaScript
-import { component$, useTask$, useOnWindow } from '@qwik.dev/core';
-
-export const App = component$(() => {
+  // Already works - APIs with $ suffix
   useTask$(async () => {
     const data = await fetchData();
     console.log(data);
   });
   
+  // Must manually wrap - APIs without $ suffix
+  useOnWindow('resize', $(() => {
+    console.log('resized');
+  }));
+  
+  // Must manually wrap - JSX event handlers
+  return <div onClick$={$(() => alert('clicked'))}>Hello</div>;
+});
+```
+
+This creates friction:
+- **Inconsistent mental model** - Must remember which APIs need manual wrapping
+- **Cognitive overhead** - Understanding which callbacks are lazy-loaded vs synchronous
+- **Learning curve** - "Why do I need `$` here but not there?"
+- **Refactoring hazard** - Moving code between contexts requires adding/removing `$`
+
+## The Vision: Automatic Injectable QRLs
+
+Eliminate the inconsistency. The optimizer would **automatically detect** when a lambda should be lazy-loaded and inject the QRL transformation:
+
+```tsx
+// After: Write normal JavaScript everywhere
+import { component$, useTask$, useOnWindow } from '@qwik.dev/core';
+
+export const App = component$(() => {
+  // Still works - but $ suffix now optional
+  useTask$(async () => {
+    const data = await fetchData();
+    console.log(data);
+  });
+  
+  // Now works without manual wrapping
   useOnWindow('resize', () => {
     console.log('resized');
   });
   
+  // JSX event handlers work without $ suffix
   return <div onClick={() => alert('clicked')}>Hello</div>;
 });
 ```
 
-Behind the scenes, the optimizer transforms this to the same QRL calls, but developers write "normal" code.
+Behind the scenes, the optimizer knows:
+- `useTask$` always takes a lazy-loaded function
+- `useOnWindow` 2nd argument is a lazy-loaded handler
+- `onClick` JSX attribute values should be lazy-loaded
+
+Developers write "normal" JavaScript. Qwik handles extraction automatically.
 
 ## Technical Feasibility
 
@@ -81,6 +91,31 @@ The optimizer already has all necessary components:
 4. **Words/Patterns Module** (`crates/qwik-optimizer-oxc/src/words.rs`)
    - Contains constants like `dollar_to_qrl_name()`
    - Natural place to add QRL-accepting API patterns
+
+### APIs That Would Benefit
+
+**Type 1: APIs already working (backward compatible)**
+- `useTask$(callback)` - 1st arg
+- `useVisibleTask$(callback)` - 1st arg  
+- `component$(ComponentFn)` - 1st arg
+- `useStyles$(css)` - 1st arg
+- etc.
+
+These already have `$` suffix. With automatic injection, the `$` becomes **optional** - both `useTask$` and `useTask` would work.
+
+**Type 2: APIs requiring manual wrapping today**
+- `useOnWindow(event, handler)` - 2nd arg
+- `useOnDocument(event, handler)` - 2nd arg
+- `useOn$(event, handler)` - 2nd arg
+
+These require manual `$(() => ...)` wrapping. With automatic injection, the wrapping becomes **unnecessary**.
+
+**Type 3: JSX event handlers**
+- `onClick$={handler}` - attribute value
+- `onInput$={handler}` - attribute value
+- `document:onScroll$={handler}` - namespaced attribute value
+
+These require `$` suffix on attribute names. With automatic injection, `<div onClick={() => ...}>` would work automatically.
 
 ### Implementation Strategy
 
@@ -186,9 +221,10 @@ The collector's `compute_captures()` function will:
 
 ### 1. Massive DX Improvement
 - **Zero learning curve** - Write JavaScript normally
-- **No API mental model** - Don't need to know which functions are "special"
+- **No API mental model** - No need to remember `$` suffixes or manual wrapping
+- **Consistent patterns** - All callbacks work the same way, regardless of API
 - **IDE-friendly** - Full TypeScript/intellisense support without `$` syntax
-- **Refactoring safety** - Move code freely without adding/removing `$`
+- **Refactoring safety** - Move code freely between contexts without changes
 
 ### 2. Competitive Advantage
 Qwik becomes the first resumable framework where the lazy-loading feels **completely invisible**. Developers get the benefits without the cognitive overhead.
