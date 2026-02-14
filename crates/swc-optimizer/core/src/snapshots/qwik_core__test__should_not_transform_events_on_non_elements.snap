@@ -70,11 +70,7 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    194,
-    374
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Greeter_component_div_CustomComponent_onClick_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -92,11 +88,7 @@ export const Greeter_component_div_CustomComponent_onClick_XXXXXXXXXXXX = () => 
   "parent": "Greeter_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    256,
-    264
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Greeter_component_div_AnotherComponent_onClick_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -114,11 +106,7 @@ export const Greeter_component_div_AnotherComponent_onClick_XXXXXXXXXXXX = () =>
   "parent": "Greeter_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    334,
-    342
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

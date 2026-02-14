@@ -51,10 +51,6 @@ export const test_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    73,
-    165
-  ],
   "paramNames": [
     "props"
   ]
@@ -80,10 +76,6 @@ export const test_component_button_q_e_click_XXXXXXXXXXXX = () => {
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    129,
-    151
-  ],
   "captureNames": [
     "props"
   ]

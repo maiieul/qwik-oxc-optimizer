@@ -40,11 +40,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    83,
-    252
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Header_component_1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -68,10 +64,6 @@ export const Header_component_1_XXXXXXXXXXXX = (hola) => {
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,
-  "loc": [
-    102,
-    248
-  ],
   "paramNames": [
     "hola"
   ]

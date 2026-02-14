@@ -123,11 +123,7 @@ export const Parent_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    93,
-    652
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Parent_component_div_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -150,10 +146,6 @@ export const Parent_component_div_button_q_e_click_XXXXXXXXXXXX = () => {
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    238,
-    280
-  ],
   "captureNames": [
     "results"
   ]
@@ -179,10 +171,6 @@ export const Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX = (_, _1, item
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    402,
-    450
-  ],
   "paramNames": [
     "_",
     "_",

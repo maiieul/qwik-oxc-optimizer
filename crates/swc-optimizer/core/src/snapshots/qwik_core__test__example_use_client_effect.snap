@@ -60,11 +60,7 @@ export const Child_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    125,
-    408
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Child_component_useBrowserVisibleTask_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -92,10 +88,6 @@ export const Child_component_useBrowserVisibleTask_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "useBrowserVisibleTask$",
   "captures": true,
-  "loc": [
-    230,
-    368
-  ],
   "captureNames": [
     "state"
   ]

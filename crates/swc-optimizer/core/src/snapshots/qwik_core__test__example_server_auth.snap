@@ -84,11 +84,7 @@ export const serverAuth_XXXXXXXXXXXX = {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "serverAuth$",
-  "captures": false,
-  "loc": [
-    272,
-    630
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_auth_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -124,11 +120,7 @@ export const auth_XXXXXXXXXXXX = {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "auth$",
-  "captures": false,
-  "loc": [
-    697,
-    1047
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

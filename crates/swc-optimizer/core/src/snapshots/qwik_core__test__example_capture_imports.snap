@@ -42,11 +42,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    186,
-    247
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_useStyles_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -66,11 +62,7 @@ export const App_component_useStyles_XXXXXXXXXXXX = `${css1}${css2}`;
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useStyles$",
-  "captures": false,
-  "loc": [
-    207,
-    223
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_useStyles_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -89,11 +81,7 @@ export const App_component_useStyles_1_XXXXXXXXXXXX = css3;
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useStyles$",
-  "captures": false,
-  "loc": [
-    239,
-    243
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

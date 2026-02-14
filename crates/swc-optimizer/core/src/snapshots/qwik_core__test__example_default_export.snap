@@ -46,11 +46,7 @@ export const slug_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    110,
-    188
-  ]
+  "captures": false
 }
 */
 ============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -69,11 +65,7 @@ export const slug_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(mongo
   "parent": "slug_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    142,
-    177
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

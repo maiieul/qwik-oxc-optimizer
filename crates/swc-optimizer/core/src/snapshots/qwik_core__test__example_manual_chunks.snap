@@ -83,11 +83,7 @@ export const Parent_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    168,
-    419
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Parent_component_useTask_XXXXXXXXXXXX.js ==
@@ -113,10 +109,6 @@ export const Parent_component_useTask_XXXXXXXXXXXX = async () => {
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": true,
-  "loc": [
-    259,
-    341
-  ],
   "captureNames": [
     "state"
   ]
@@ -137,11 +129,7 @@ export const Parent_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("pa
   "parent": "Parent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    369,
-    396
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Child_component_XXXXXXXXXXXX.js ==
@@ -182,11 +170,7 @@ export const Child_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    455,
-    678
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Child_component_useTask_XXXXXXXXXXXX.js ==
@@ -210,10 +194,6 @@ export const Child_component_useTask_XXXXXXXXXXXX = async () => {
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": true,
-  "loc": [
-    546,
-    601
-  ],
   "captureNames": [
     "state"
   ]
@@ -234,11 +214,7 @@ export const Child_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("chi
   "parent": "Child_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    629,
-    655
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

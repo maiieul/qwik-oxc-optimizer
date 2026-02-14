@@ -172,10 +172,6 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    163,
-    1338
-  ],
   "paramNames": [
     "props"
   ]
@@ -205,10 +201,6 @@ export const App_component_remove_XXXXXXXXXXXX = (id) => {
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
-  "loc": [
-    262,
-    378
-  ],
   "paramNames": [
     "id"
   ],
@@ -232,11 +224,7 @@ export const App_component_Fragment_Div_onEvent_XXXXXXXXXXXX = () => console.log
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "jSXProp",
   "ctxName": "onEvent$",
-  "captures": false,
-  "loc": [
-    604,
-    630
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_Fragment_Div_transparent_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -256,11 +244,7 @@ export const App_component_Fragment_Div_transparent_XXXXXXXXXXXX = () => {
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "jSXProp",
   "ctxName": "transparent$",
-  "captures": false,
-  "loc": [
-    654,
-    703
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_Fragment_Div_immutable4_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -283,10 +267,6 @@ export const App_component_Fragment_Div_immutable4_XXXXXXXXXXXX = (ev) => {
   "ctxKind": "jSXProp",
   "ctxName": "immutable4$",
   "captures": true,
-  "loc": [
-    876,
-    908
-  ],
   "paramNames": [
     "ev"
   ],

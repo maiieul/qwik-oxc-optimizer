@@ -104,10 +104,6 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    184,
-    612
-  ],
   "paramNames": [
     "props"
   ]
@@ -134,10 +130,6 @@ export const App_component_div_q_e_click_XXXXXXXXXXXX = () => {
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    352,
-    381
-  ],
   "captureNames": [
     "count2",
     "state"
@@ -167,10 +159,6 @@ export const App_component_div_button_q_e_click_XXXXXXXXXXXX = (_, _1, btn) => {
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    473,
-    543
-  ],
   "paramNames": [
     "_",
     "_",

@@ -53,11 +53,7 @@ export const test_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    242,
-    325
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_test_component_useResource_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -78,11 +74,7 @@ export const test_component_useResource_XXXXXXXXXXXX = () => {
   "parent": "test_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useResource$",
-  "captures": false,
-  "loc": [
-    265,
-    296
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

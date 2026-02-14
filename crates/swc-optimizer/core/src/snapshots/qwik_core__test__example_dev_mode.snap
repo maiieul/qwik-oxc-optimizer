@@ -83,11 +83,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    87,
-    224
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_Cmp_p_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -105,11 +101,7 @@ export const App_component_Cmp_p_q_e_click_XXXXXXXXXXXX = () => console.log("war
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    149,
-    174
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

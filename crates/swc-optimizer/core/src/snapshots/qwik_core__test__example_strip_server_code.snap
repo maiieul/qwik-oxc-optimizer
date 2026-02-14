@@ -99,11 +99,7 @@ export const s_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    293,
-    877
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Parent_component_useTask_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -129,10 +125,6 @@ export const s_XXXXXXXXXXXX = async () => {
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": true,
-  "loc": [
-    384,
-    493
-  ],
   "captureNames": [
     "state"
   ]
@@ -155,11 +147,7 @@ export const s_XXXXXXXXXXXX = () => {
   "parent": "s_r1qAHX7Opp0",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    571,
-    625
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Parent_component_serverStuff_b_client_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -179,11 +167,7 @@ export const s_XXXXXXXXXXXX = () => {
   "parent": "s_r1qAHX7Opp0",
   "ctxKind": "function",
   "ctxName": "client$",
-  "captures": false,
-  "loc": [
-    650,
-    709
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Parent_component_useTask_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -203,11 +187,7 @@ export const s_XXXXXXXXXXXX = () => {
   "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useTask$",
-  "captures": false,
-  "loc": [
-    776,
-    799
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -225,11 +205,7 @@ export const s_XXXXXXXXXXXX = () => console.log("parent");
   "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    827,
-    854
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

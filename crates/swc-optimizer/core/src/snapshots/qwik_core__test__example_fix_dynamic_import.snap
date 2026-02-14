@@ -52,11 +52,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    174,
-    269
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

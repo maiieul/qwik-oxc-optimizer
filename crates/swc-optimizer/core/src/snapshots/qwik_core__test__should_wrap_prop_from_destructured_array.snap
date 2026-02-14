@@ -84,10 +84,6 @@ export const Input_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    202,
-    359
-  ],
   "paramNames": [
     "props"
   ]
@@ -115,10 +111,6 @@ export const Input_component_useTask_XXXXXXXXXXXX = ({ track }) => {
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": true,
-  "loc": [
-    226,
-    338
-  ],
   "paramNames": [
     "{track}"
   ],
@@ -222,11 +214,7 @@ export const test_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    389,
-    1235
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_test_component_div_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -249,10 +237,6 @@ export const test_component_div_button_q_e_click_XXXXXXXXXXXX = () => {
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    799,
-    892
-  ],
   "captureNames": [
     "store"
   ]

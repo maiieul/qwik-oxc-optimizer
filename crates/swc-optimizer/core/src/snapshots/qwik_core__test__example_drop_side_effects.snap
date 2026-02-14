@@ -103,11 +103,7 @@ export const test_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    503,
-    575
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_test_component_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -126,11 +122,7 @@ export const test_component_button_q_e_click_XXXXXXXXXXXX = async () => await ap
   "parent": "test_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    538,
-    561
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

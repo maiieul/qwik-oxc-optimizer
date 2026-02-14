@@ -62,11 +62,7 @@ export const FieldInput_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    95,
-    267
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_FieldInput_component_input_q_e_input_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -86,11 +82,7 @@ export const FieldInput_component_input_q_e_input_XXXXXXXXXXXX = () => {
   "parent": "FieldInput_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onInput$",
-  "captures": false,
-  "loc": [
-    208,
-    252
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

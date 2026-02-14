@@ -42,11 +42,7 @@ export const Cmp_component_XXXXXXXXXXXX = () =>
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    79,
-    145
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Cmp_component_Cmp_foo_XXXXXXXXXXXX.ts (ENTRY POINT)==
@@ -64,11 +60,7 @@ export const Cmp_component_Cmp_foo_XXXXXXXXXXXX = () => console.log("hi there");
   "parent": "Cmp_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    97,
-    126
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

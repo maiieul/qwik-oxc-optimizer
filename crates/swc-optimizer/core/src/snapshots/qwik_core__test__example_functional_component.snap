@@ -40,11 +40,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    85,
-    182
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

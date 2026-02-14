@@ -141,11 +141,7 @@ export const RouterHead_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    236,
-    831
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

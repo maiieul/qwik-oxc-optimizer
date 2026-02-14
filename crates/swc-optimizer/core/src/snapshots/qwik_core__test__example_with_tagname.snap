@@ -45,11 +45,7 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    83,
-    149
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -69,11 +65,7 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
   "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    104,
-    143
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

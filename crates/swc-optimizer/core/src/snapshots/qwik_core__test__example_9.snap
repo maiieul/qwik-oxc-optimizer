@@ -42,10 +42,6 @@ export const Header_XXXXXXXXXXXX = (decl1, { decl2 }, [decl3]) => {
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,
-  "loc": [
-    66,
-    379
-  ],
   "paramNames": [
     "decl1",
     "{decl2}",

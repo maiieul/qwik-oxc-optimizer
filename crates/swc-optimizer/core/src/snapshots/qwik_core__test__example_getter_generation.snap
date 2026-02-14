@@ -99,11 +99,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    87,
-    460
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Cmp_component_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -160,10 +156,6 @@ export const Cmp_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    494,
-    669
-  ],
   "paramNames": [
     "props"
   ]

@@ -65,11 +65,7 @@ export const test_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    136,
-    409
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_test_component_productTitle_useComputed_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -89,11 +85,7 @@ export const test_component_productTitle_useComputed_XXXXXXXXXXXX = () => {
   "parent": "test_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useComputed$",
-  "captures": false,
-  "loc": [
-    212,
-    248
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

@@ -46,11 +46,7 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    95,
-    169
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_useStyles_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -68,11 +64,7 @@ export const Foo_component_useStyles_XXXXXXXXXXXX = ".class {}";
   "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useStyles$",
-  "captures": false,
-  "loc": [
-    118,
-    129
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

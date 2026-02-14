@@ -42,10 +42,6 @@ export const App_Component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    114,
-    220
-  ],
   "paramNames": [
     "props"
   ]
@@ -73,10 +69,6 @@ export const App_Component_1_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
-  "loc": [
-    186,
-    216
-  ],
   "captureNames": [
     "state"
   ]

@@ -66,10 +66,6 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    87,
-    245
-  ],
   "paramNames": [
     "props"
   ]
@@ -90,11 +86,7 @@ export const App_component_Cmp_p_q_e_click_XXXXXXXXXXXX = () => console.log("war
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    170,
-    195
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

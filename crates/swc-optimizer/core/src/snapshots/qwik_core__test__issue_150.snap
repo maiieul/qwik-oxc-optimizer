@@ -52,11 +52,7 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    114,
-    337
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Greeter_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -94,10 +90,6 @@ export const Greeter_component_1_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
-  "loc": [
-    161,
-    333
-  ],
   "captureNames": [
     "stuff"
   ]
@@ -118,11 +110,7 @@ export const d_XXXXXXXXXXXX = () => console.log("thing");
   "parent": null,
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    353,
-    379
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

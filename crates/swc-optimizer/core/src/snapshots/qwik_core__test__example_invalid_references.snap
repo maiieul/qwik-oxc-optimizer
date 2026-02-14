@@ -90,10 +90,6 @@ export const App_component_XXXXXXXXXXXX = (_rawProps) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    222,
-    379
-  ],
   "paramNames": [
     "_rawProps"
   ]
@@ -118,11 +114,7 @@ export const App_component_1_XXXXXXXXXXXX = () => {
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    340,
-    375
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

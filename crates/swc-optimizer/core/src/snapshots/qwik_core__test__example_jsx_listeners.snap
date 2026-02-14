@@ -62,11 +62,7 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    83,
-    971
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -145,11 +141,7 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
   "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    104,
-    965
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_handler_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -167,11 +159,7 @@ export const Foo_component_handler_XXXXXXXXXXXX = () => console.log("reused");
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    136,
-    163
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -189,11 +177,7 @@ export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("onCli
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    214,
-    243
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -212,11 +196,7 @@ export const Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX = () =>
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocumentScroll$",
-  "captures": false,
-  "loc": [
-    274,
-    311
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -235,11 +215,7 @@ export const Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX = () =>
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocumentScroll$",
-  "captures": false,
-  "loc": [
-    342,
-    377
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -257,11 +233,7 @@ export const Foo_component_div_q_e_c_lick_XXXXXXXXXXXX = () => console.log("on-c
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "on-cLick$",
-  "captures": false,
-  "loc": [
-    400,
-    430
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -280,11 +252,7 @@ export const Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX = () =>
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocument-sCroll$",
-  "captures": false,
-  "loc": [
-    462,
-    500
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -303,11 +271,7 @@ export const Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX = () =>
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocument-scroLL$",
-  "captures": false,
-  "loc": [
-    532,
-    570
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -325,11 +289,7 @@ export const Foo_component_div_host_onClick_XXXXXXXXXXXX = () => console.log("ho
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "host:onClick$",
-  "captures": false,
-  "loc": [
-    597,
-    631
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -348,11 +308,7 @@ export const Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX = () =>
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "host:onDocumentScroll$",
-  "captures": false,
-  "loc": [
-    667,
-    710
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -371,11 +327,7 @@ export const Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX = () =>
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "host:onDocumentScroll$",
-  "captures": false,
-  "loc": [
-    746,
-    787
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_custom_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -393,11 +345,7 @@ export const Foo_component_div_custom_XXXXXXXXXXXX = () => console.log("custom")
   "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "custom$",
-  "captures": false,
-  "loc": [
-    911,
-    938
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

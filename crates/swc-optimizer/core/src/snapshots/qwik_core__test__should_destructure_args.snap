@@ -95,10 +95,6 @@ export const test_component_XXXXXXXXXXXX = (_rawProps) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    172,
-    512
-  ],
   "paramNames": [
     "_rawProps"
   ]

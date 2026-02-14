@@ -45,11 +45,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    83,
-    173
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Header_component_div_onClick_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -68,10 +64,6 @@ export const Header_component_div_onClick_XXXXXXXXXXXX = (ctx) => console.log(ct
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,
-  "loc": [
-    140,
-    165
-  ],
   "paramNames": [
     "ctx"
   ]
@@ -95,11 +87,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    200,
-    230
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

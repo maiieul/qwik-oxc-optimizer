@@ -63,10 +63,6 @@ export const test_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    74,
-    305
-  ],
   "paramNames": [
     "props"
   ]
@@ -87,11 +83,7 @@ export const test_component_p_q_e_hi_XXXXXXXXXXXX = () => "hi";
   "parent": "test_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onHi$",
-  "captures": false,
-  "loc": [
-    118,
-    128
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_test_component_p_q_e_const_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -109,11 +101,7 @@ export const test_component_p_q_e_const_XXXXXXXXXXXX = () => "const";
   "parent": "test_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onConst$",
-  "captures": false,
-  "loc": [
-    261,
-    274
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

@@ -47,11 +47,7 @@ export const s_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    77,
-    280
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -69,11 +65,7 @@ export const s_XXXXXXXXXXXX = () => console.log("first");
   "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    127,
-    153
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -91,11 +83,7 @@ export const s_XXXXXXXXXXXX = () => console.log("second");
   "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    179,
-    206
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_2_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -113,11 +101,7 @@ export const s_XXXXXXXXXXXX = () => console.log("third");
   "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    232,
-    258
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

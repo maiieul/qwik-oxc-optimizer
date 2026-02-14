@@ -55,10 +55,6 @@ export const test_div_q_e_click_XXXXXXXXXXXX = () => {
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    169,
-    231
-  ],
   "captureNames": [
     "props"
   ]

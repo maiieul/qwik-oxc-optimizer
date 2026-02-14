@@ -40,11 +40,7 @@ export const App2_qwikify_XXXXXXXXXXXX = () =>
   "parent": null,
   "ctxKind": "function",
   "ctxName": "qwikify$",
-  "captures": false,
-  "loc": [
-    173,
-    227
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

@@ -72,10 +72,6 @@ export const FieldInput_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    160,
-    446
-  ],
   "paramNames": [
     "props"
   ]
@@ -98,11 +94,7 @@ export const FieldInput_component_input_q_e_click_XXXXXXXXXXXX = () => {
   "parent": "FieldInput_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    384,
-    431
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

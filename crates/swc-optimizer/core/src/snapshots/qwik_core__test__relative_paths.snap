@@ -42,11 +42,7 @@ export const Local_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    118,
-    161
-  ]
+  "captures": false
 }
 */
 ============================= ../../node_modules/dep/dist/lib.mjs_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -102,11 +98,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    299,
-    772
-  ]
+  "captures": false
 }
 */
 ============================= ../../node_modules/dep/dist/lib.mjs_App_component_div_p_button_onClick_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -129,10 +121,6 @@ export const App_component_div_p_button_onClick_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "q-e:click",
   "captures": true,
-  "loc": [
-    570,
-    651
-  ],
   "captureNames": [
     "store"
   ]

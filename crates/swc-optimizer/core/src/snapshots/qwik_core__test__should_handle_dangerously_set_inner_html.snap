@@ -131,11 +131,7 @@ export const Cmp_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    69,
-    648
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Cmp_component_div_div_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -158,10 +154,6 @@ export const Cmp_component_div_div_button_q_e_click_XXXXXXXXXXXX = () => {
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    519,
-    597
-  ],
   "captureNames": [
     "htmlSignal"
   ]

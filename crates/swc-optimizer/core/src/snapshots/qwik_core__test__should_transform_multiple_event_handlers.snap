@@ -91,11 +91,7 @@ export const Foo_component_XXXXXXXXXXXX = function () {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    88,
-    471
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -115,10 +111,6 @@ export const Foo_component_div_div_q_e_click_XXXXXXXXXXXX = (_, _1, row) =>
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,
-  "loc": [
-    234,
-    265
-  ],
   "paramNames": [
     "_",
     "_",
@@ -143,10 +135,6 @@ export const Foo_component_div_div_q_e_mouseover_XXXXXXXXXXXX = (_, _1, row) =>
   "ctxKind": "eventHandler",
   "ctxName": "onMouseOver$",
   "captures": false,
-  "loc": [
-    291,
-    331
-  ],
   "paramNames": [
     "_",
     "_",
@@ -171,10 +159,6 @@ export const Foo_component_div_div_p_q_e_click_XXXXXXXXXXXX = (_, _1, row) =>
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,
-  "loc": [
-    366,
-    407
-  ],
   "paramNames": [
     "_",
     "_",

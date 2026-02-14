@@ -47,11 +47,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    157,
-    295
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_useStyles_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -69,11 +65,7 @@ export const App_component_useStyles_XXXXXXXXXXXX = style;
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useStyles$",
-  "captures": false,
-  "loc": [
-    212,
-    217
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -91,11 +83,7 @@ export const App_component_1_XXXXXXXXXXXX = render;
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    285,
-    291
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

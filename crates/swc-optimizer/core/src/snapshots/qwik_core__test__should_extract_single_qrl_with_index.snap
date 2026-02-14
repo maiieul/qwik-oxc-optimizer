@@ -184,11 +184,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    98,
-    1397
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -215,10 +211,6 @@ export const App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX = (_, _1, row, idx
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    535,
-    818
-  ],
   "paramNames": [
     "_",
     "_",
@@ -255,10 +247,6 @@ export const App_component_div_tr_td_a_q_e_click_1_XXXXXXXXXXXX = (_, _1, row) =
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    976,
-    1225
-  ],
   "paramNames": [
     "_",
     "_",

@@ -220,10 +220,6 @@ export const qwikifyQrl_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": true,
-  "loc": [
-    389,
-    2749
-  ],
   "paramNames": [
     "props"
   ],
@@ -277,10 +273,6 @@ export const qwikifyQrl_component_useWatch_XXXXXXXXXXXX = async (track) => {
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": true,
-  "loc": [
-    735,
-    1906
-  ],
   "paramNames": [
     "track"
   ],

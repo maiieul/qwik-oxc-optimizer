@@ -51,11 +51,7 @@ export const Foo_qwikify_XXXXXXXXXXXX = MyReactComponent;
   "parent": null,
   "ctxKind": "function",
   "ctxName": "qwikify$",
-  "captures": false,
-  "loc": [
-    322,
-    338
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Bar_XXXXXXXXXXXX.ts (ENTRY POINT)==
@@ -73,11 +69,7 @@ export const Bar_XXXXXXXXXXXX = "a thing";
   "parent": null,
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    363,
-    372
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_XXXXXXXXXXXX.ts (ENTRY POINT)==
@@ -104,11 +96,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    406,
-    505
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

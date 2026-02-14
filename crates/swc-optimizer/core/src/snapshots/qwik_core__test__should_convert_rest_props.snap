@@ -44,10 +44,6 @@ export const test_component_XXXXXXXXXXXX = (_rawProps) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    88,
-    169
-  ],
   "paramNames": [
     "_rawProps"
   ]
@@ -73,10 +69,6 @@ export const test_component_useTask_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": true,
-  "loc": [
-    119,
-    149
-  ],
   "captureNames": [
     "props"
   ]

@@ -41,10 +41,6 @@ export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    106,
-    203
-  ],
   "paramNames": [
     "_rawProps"
   ]

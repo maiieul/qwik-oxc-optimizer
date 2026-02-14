@@ -84,10 +84,6 @@ export const Image_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    211,
-    291
-  ],
   "paramNames": [
     "props"
   ]
@@ -157,10 +153,6 @@ export const ModelImg_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    342,
-    749
-  ],
   "paramNames": [
     "props"
   ]
@@ -188,10 +180,6 @@ export const ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX = async (_rawPro
   "ctxKind": "function",
   "ctxName": "useResource$",
   "captures": true,
-  "loc": [
-    385,
-    487
-  ],
   "paramNames": [
     "_rawProps"
   ],

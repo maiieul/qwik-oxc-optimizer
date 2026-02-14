@@ -67,11 +67,7 @@ export const s_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    422,
-    690
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

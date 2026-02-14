@@ -120,11 +120,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    104,
-    469
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

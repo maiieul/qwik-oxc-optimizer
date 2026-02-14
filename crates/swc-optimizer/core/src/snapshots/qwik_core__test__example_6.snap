@@ -26,10 +26,6 @@ export const sym1_XXXXXXXXXXXX = (ctx) => console.log("1");
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,
-  "loc": [
-    71,
-    96
-  ],
   "paramNames": [
     "ctx"
   ]

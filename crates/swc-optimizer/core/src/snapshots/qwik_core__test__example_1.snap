@@ -43,11 +43,7 @@ export const renderHeader_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    89,
-    155
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_renderHeader_div_onClick_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -66,10 +62,6 @@ export const renderHeader_div_onClick_XXXXXXXXXXXX = (ctx) => console.log(ctx);
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,
-  "loc": [
-    122,
-    147
-  ],
   "paramNames": [
     "ctx"
   ]
@@ -93,11 +85,7 @@ export const renderHeader_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    194,
-    250
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

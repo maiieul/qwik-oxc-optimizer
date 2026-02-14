@@ -59,11 +59,7 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    91,
-    422
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_Inner_component_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -115,10 +111,6 @@ export const Foo_component_Inner_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    171,
-    386
-  ],
   "paramNames": [
     "props"
   ]
@@ -141,10 +133,6 @@ export const Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX = (_, _1
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,
-  "loc": [
-    297,
-    329
-  ],
   "paramNames": [
     "_",
     "_",

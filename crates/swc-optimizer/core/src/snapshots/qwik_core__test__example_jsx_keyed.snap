@@ -75,10 +75,6 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    87,
-    303
-  ],
   "paramNames": [
     "props"
   ]

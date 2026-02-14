@@ -56,10 +56,6 @@ export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    80,
-    262
-  ],
   "paramNames": [
     "_rawProps"
   ]
@@ -92,10 +88,6 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
-  "loc": [
-    125,
-    258
-  ],
   "captureNames": [
     "_rawProps"
   ]
@@ -121,10 +113,6 @@ export const Bar_component_XXXXXXXXXXXX = (_rawProps) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    296,
-    366
-  ],
   "paramNames": [
     "_rawProps"
   ]
@@ -150,10 +138,6 @@ export const Bar_component_1_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
-  "loc": [
-    322,
-    362
-  ],
   "captureNames": [
     "_rawProps"
   ]

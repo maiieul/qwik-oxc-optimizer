@@ -30,11 +30,7 @@ export const Greeter_component_XXXXXXXXXXXX = () =>
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    80,
-    93
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

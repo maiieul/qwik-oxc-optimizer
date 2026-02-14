@@ -91,11 +91,7 @@ export const test_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    83,
-    435
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_test_component_Fragment_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -118,10 +114,6 @@ export const test_component_Fragment_button_q_e_click_XXXXXXXXXXXX = () => {
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    175,
-    197
-  ],
   "captureNames": [
     "store"
   ]

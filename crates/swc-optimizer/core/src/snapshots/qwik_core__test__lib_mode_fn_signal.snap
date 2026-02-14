@@ -77,11 +77,7 @@ export const Counter_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    80,
-    278
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX.ts (ENTRY POINT)==
@@ -104,10 +100,6 @@ export const Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX = () => {
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
-  "loc": [
-    210,
-    229
-  ],
   "captureNames": [
     "count"
   ]

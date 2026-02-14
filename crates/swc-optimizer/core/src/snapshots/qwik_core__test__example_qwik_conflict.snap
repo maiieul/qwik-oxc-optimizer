@@ -93,11 +93,7 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    267,
-    435
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -115,11 +111,7 @@ export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(23);
   "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    404,
-    426
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Root_component_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -144,11 +136,7 @@ export const Root_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    507,
-    596
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Root_component_useStyles_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -166,11 +154,7 @@ export const Root_component_useStyles_XXXXXXXXXXXX = "thing";
   "parent": "Root_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    531,
-    538
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Root_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -191,11 +175,7 @@ export const Root_component_1_XXXXXXXXXXXX = () => {
   "parent": "Root_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    555,
-    590
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

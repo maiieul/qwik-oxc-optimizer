@@ -40,10 +40,6 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    92,
-    159
-  ],
   "paramNames": [
     "props"
   ]
@@ -64,11 +60,7 @@ export const App_component_useStyles_XXXXXXXXXXXX = "hola";
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useStyles$",
-  "captures": false,
-  "loc": [
-    118,
-    124
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_App_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
@@ -88,11 +80,7 @@ export const App_component_1_XXXXXXXXXXXX = () =>
   "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false,
-  "loc": [
-    138,
-    155
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

@@ -39,11 +39,7 @@ export const _404_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    73,
-    142
-  ]
+  "captures": false
 }
 */
 ============================= src/components/mongo/404.tsx__404_component_div_q_e_click_XXXXXXXXXXXX.tsx (ENTRY POINT)==
@@ -61,11 +57,7 @@ export const _404_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(mongo
   "parent": "_404_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    105,
-    131
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

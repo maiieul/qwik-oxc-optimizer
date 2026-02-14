@@ -68,10 +68,6 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
-  "loc": [
-    209,
-    362
-  ],
   "paramNames": [
     "props"
   ]
@@ -97,10 +93,6 @@ export const App_component_useMemo_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "useMemo$",
   "captures": true,
-  "loc": [
-    273,
-    314
-  ],
   "captureNames": [
     "state"
   ]
@@ -128,10 +120,6 @@ export const App_component_1_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
-  "loc": [
-    328,
-    358
-  ],
   "captureNames": [
     "state"
   ]
@@ -154,11 +142,7 @@ export const Lightweight_useMemo_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "useMemo$",
-  "captures": false,
-  "loc": [
-    417,
-    458
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

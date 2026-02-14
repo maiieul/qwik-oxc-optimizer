@@ -61,11 +61,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    193,
-    311
-  ]
+  "captures": false
 }
 */
 ============================= project/test.tsx_Header_component_Header_onClick_XXXXXXXXXXXX.tsx ==
@@ -85,10 +81,6 @@ export const Header_component_Header_onClick_XXXXXXXXXXXX = (ev) => dep3(ev);
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,
-  "loc": [
-    235,
-    251
-  ],
   "paramNames": [
     "ev"
   ]
@@ -113,11 +105,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    345,
-    389
-  ]
+  "captures": false
 }
 */
 == DIAGNOSTICS ==

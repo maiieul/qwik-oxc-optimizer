@@ -63,11 +63,7 @@ export const Cmp_component_XXXXXXXXXXXX = () => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    90,
-    368
-  ]
+  "captures": false
 }
 */
 ============================= test.tsx_Cmp_component_handleClick_XXXXXXXXXXXX.ts (ENTRY POINT)==
@@ -90,10 +86,6 @@ export const Cmp_component_handleClick_XXXXXXXXXXXX = () => {
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
-  "loc": [
-    162,
-    213
-  ],
   "captureNames": [
     "toggleSig"
   ]
