@@ -1,29 +1,26 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 1793
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
-
-import { component$, useResource$ } from '@qwik.dev/core';
-import mongodb from 'mongodb';
+import { component$, useResource$ } from "@qwik.dev/core";
+import mongodb from "mongodb";
 
 export const onGet = () => {
-	const data = mongodb.collection.whatever;
-	return {
-		body: {
-		data
-		}
-	}
+  const data = mongodb.collection.whatever;
+  return {
+    body: {
+      data,
+    },
+  };
 };
 
-export default component$(()=> {
-	useResource$(() => {
-		return onGet();
-	})
-	return <div>cmp</div>
+export default component$(() => {
+  useResource$(() => {
+    return onGet();
+  });
+  return <div>cmp</div>;
 });
 
 ============================= test.tsx_test_component_useResource_4a8wVY7wh38.tsx (ENTRY POINT)==
@@ -34,7 +31,7 @@ export const test_component_useResource_4a8wVY7wh38 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";sDAcc;IACZ,OAAO;AACR\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";sDAae;IACX,OAAO;AACT\"}")
 /*
 {
   "origin": "test.tsx",
@@ -50,8 +47,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "useResource$",
   "captures": false,
   "loc": [
-    250,
-    278
+    265,
+    296
   ]
 }
 */
@@ -66,7 +63,7 @@ export const onGet = ()=>{
 export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;aAIa;;;AASb,6BAAe,6EAKZ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;aAGa;;;AASb,6BAAe,6EAKZ\"}")
 ============================= test.tsx_test_component_LUXeXe0DQrg.tsx (ENTRY POINT)==
 
 import { qrl } from "@qwik.dev/core";
@@ -78,7 +75,7 @@ export const test_component_LUXeXe0DQrg = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;0CAa0B;IACzB;IAGA,QAAQ,IAAI,GAAG,EAAE;AAClB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;0CAY0B;IACxB;IAGA,QAAQ,IAAI,GAAG,EAAE;AACnB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -94,8 +91,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    229,
-    304
+    242,
+    325
   ]
 }
 */

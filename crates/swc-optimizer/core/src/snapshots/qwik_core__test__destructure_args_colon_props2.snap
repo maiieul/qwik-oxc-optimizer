@@ -1,23 +1,16 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 3736
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
+import { component$, useSignal } from "@qwik.dev/core";
+export default component$((props) => {
+  const { "bind:value": bindValue } = props;
+  const test = useSignal(bindValue);
+  return <>{test.value}</>;
+});
 
-		import { component$, useSignal } from "@qwik.dev/core";
-		export default component$((props) => {
-			const { 'bind:value': bindValue } = props;
-			const test = useSignal(bindValue);
-			return (
-				<>
-				{test.value}
-				</>
-			);
-		});
-		
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -26,7 +19,7 @@ const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
 export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEE,6BAAe,6EAQZ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,6BAAe,6EAIZ\"}")
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
 
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
@@ -39,7 +32,7 @@ export const test_component_LUXeXe0DQrg = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;0CAE4B,CAAC;IAE1B,MAAM,OAAO,UADuB;IAEpC,qBACC,4CACC;AAGH\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;0CAC0B,CAAC;IAEzB,MAAM,OAAO,UADuB;IAEpC,qBAAO,4CAAG;AACZ\"}")
 /*
 {
   "origin": "test.tsx",
@@ -55,8 +48,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    88,
-    238
+    83,
+    207
   ],
   "paramNames": [
     "props"

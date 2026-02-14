@@ -1,22 +1,15 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 3715
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
+import { component$ } from "@qwik.dev/core";
+export default component$((props) => {
+  const { "bind:value": bindValue } = props;
+  return <>{bindValue}</>;
+});
 
-		import { component$ } from "@qwik.dev/core";
-		export default component$((props) => {
-			const { 'bind:value': bindValue } = props;
-			return (
-				<>
-				{bindValue}
-				</>
-			);
-		});
-		
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -25,7 +18,7 @@ const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
 export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEE,6BAAe,6EAOZ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,6BAAe,6EAGZ\"}")
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
 
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
@@ -36,7 +29,7 @@ export const test_component_LUXeXe0DQrg = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;0CAE4B,CAAC;IAE1B,qBACC,4CAFmC;AAMrC\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;0CAC0B,CAAC;IAEzB,qBAAO,4CAD6B;AAEtC\"}")
 /*
 {
   "origin": "test.tsx",
@@ -52,8 +45,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    77,
-    188
+    72,
+    158
   ],
   "paramNames": [
     "props"

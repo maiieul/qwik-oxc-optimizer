@@ -3,13 +3,21 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$, $ } from '@qwik.dev/core';
-import { state } from './sibling';
+import { component$, useStore } from "@qwik.dev/core";
 
-export const Local = component$(() => {
-	return (
-		<div>{state}</div>
-	)
+export default component$(() => {
+  const store = useStore([{ value: 0 }]);
+  return (
+    <>
+      <button onClick$={() => store[0].value++}>+1</button>
+      {store.map(function (v, idx) {
+        return <div key={"fn_" + idx}>Function: {v.value}</div>;
+      })}
+      {store.map((v, idx) => (
+        <div key={"arrow_" + idx}>Arrow: {v.value}</div>
+      ))}
+    </>
+  );
 });
 
 === ../../node_modules/dep/dist/lib.mjs ===
@@ -37,30 +45,71 @@ export const App = /* @__PURE__ */ componentQrl(inlinedQrl(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_OCSspQ0ICD8 = () => import("./components/main.tsx_Local_component_OCSspQ0ICD8.js");
-import { state } from "./sibling";
-export const Local = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_OCSspQ0ICD8, "Local_component_OCSspQ0ICD8"));
+import { _wrapProp } from "@qwik.dev/core";
+const i_0hiu0PaEsFM = () => import("./components/main.tsx_default_component_0hiu0PaEsFM.js");
+const i_VusZBby9H0k = () => import("./components/main.tsx_default_component_button_q_e_click_VusZBby9H0k.js");
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { useStore } from "@qwik.dev/core";
+export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_0hiu0PaEsFM, "default_component_0hiu0PaEsFM"));
 
-=== components/main.tsx_Local_component_OCSspQ0ICD8.js === (ENTRY)
+=== components/main.tsx_default_component_0hiu0PaEsFM.js === (ENTRY)
+import { qrl } from "@qwik.dev/core";
+const i_VusZBby9H0k = () => import("./components/main.tsx_default_component_button_q_e_click_VusZBby9H0k.js");
 import { _jsxSorted } from "@qwik.dev/core";
-import { state } from "./sibling";
-export const Local_component_OCSspQ0ICD8 = () => {
-	return /* @__PURE__ */ _jsxSorted("div", null, null, state, 3, "u6_0");
+import { _wrapProp } from "@qwik.dev/core";
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { useStore } from "@qwik.dev/core";
+export const default_component_0hiu0PaEsFM = () => {
+	const store = useStore([{ value: 0 }]);
+	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [
+		/* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": /* @__PURE__ */ qrl(i_VusZBby9H0k, "default_component_button_q_e_click_VusZBby9H0k", [store]) }, "+1", 3, "u6_0"),
+		store.map(function(v, idx) {
+			return /* @__PURE__ */ _jsxSorted("div", null, null, ["Function:", _wrapProp(v)], 1, "fn_" + idx);
+		}),
+		store.map((v, idx) => /* @__PURE__ */ _jsxSorted("div", null, null, ["Arrow:", _wrapProp(v)], 1, "arrow_" + idx))
+	], 1, "u6_1");
 };
 
 /*
 {
   "origin": "components/main.tsx",
-  "name": "Local_component_OCSspQ0ICD8",
+  "name": "default_component_0hiu0PaEsFM",
   "entry": null,
-  "displayName": "components/main.tsx_Local_component",
-  "hash": "OCSspQ0ICD8",
-  "canonicalFilename": "components/main.tsx_Local_component_OCSspQ0ICD8",
+  "displayName": "components/main.tsx_default_component",
+  "hash": "0hiu0PaEsFM",
+  "canonicalFilename": "components/main.tsx_default_component_0hiu0PaEsFM",
   "path": "",
   "extension": "js",
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false
+}
+*/
+
+=== components/main.tsx_default_component_button_q_e_click_VusZBby9H0k.js === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const default_component_button_q_e_click_VusZBby9H0k = () => {
+	const store = _captures[0];
+	return store[0].value++;
+};
+
+/*
+{
+  "origin": "components/main.tsx",
+  "name": "default_component_button_q_e_click_VusZBby9H0k",
+  "entry": null,
+  "displayName": "components/main.tsx_default_component_button_q_e_click",
+  "hash": "VusZBby9H0k",
+  "canonicalFilename": "components/main.tsx_default_component_button_q_e_click_VusZBby9H0k",
+  "path": "",
+  "extension": "js",
+  "parent": "components/main.tsx_default_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "captureNames": [
+    "store"
+  ]
 }
 */

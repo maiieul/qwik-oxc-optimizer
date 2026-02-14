@@ -3,8 +3,8 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$ } from '@qwik.dev/core';
-export const Greeter = component$(() => <div/>)
+import { component$ } from "@qwik.dev/core";
+export const Greeter = component$(() => <div />);
 
 === components\\apps\\apps.ts ===
 import { componentQrl } from "@qwik.dev/core";

@@ -1,31 +1,27 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 3621
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
+import { component$ } from "@qwik.dev/core";
 
-		import { component$ } from "@qwik.dev/core";
+// the count results in _fnSignal because of the rename
+// would be nice to consider it a prop too
+export default component$(({ message, id, count: c, ...rest }: Record<string, any>) => {
+  const renders = useStore({ renders: 0 }, { reactive: false });
+  renders.renders++;
+  const rerenders = renders.renders + 0;
+  return (
+    <div id={id}>
+      <span {...rest}>
+        {message} {c}
+      </span>
+      <div class="renders">{rerenders}</div>
+    </div>
+  );
+});
 
-		// the count results in _fnSignal because of the rename
-		// would be nice to consider it a prop too
-		export default component$(({ message, id, count: c, ...rest }: Record<string, any>) => {
-			const renders = useStore({ renders: 0 }, { reactive: false });
-			renders.renders++;
-			const rerenders = renders.renders + 0;
-			return (
-				<div id={id}>
-					<span {...rest}>
-					{message} {c}
-					</span>
-					<div class="renders">{rerenders}</div>
-				</div>
-			);
-		}
-		);
-	
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -36,7 +32,7 @@ const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
 export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGE,uDAAuD;AACvD,0CAA0C;AAC1C,6BAAe,6EAab\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,uDAAuD;AACvD,0CAA0C;AAC1C,6BAAe,6EAYZ\"}")
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
 
 import { _getConstProps } from "@qwik.dev/core";
@@ -75,7 +71,7 @@ export const test_component_LUXeXe0DQrg = (_rawProps)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;0CAK4B;;;;;;IACzB,MAAM,UAAU,SAAS;QAAE,SAAS;IAAE,GAAG;QAAE,UAAU;IAAM;IAC3D,QAAQ,OAAO;IACf,MAAM,YAAY,QAAQ,OAAO,GAAG;IACpC,qBACC,WAAC;QAAI,EAAE;;sBACN,UAAC;4BAAS;0BAAA;;YACD;;;sBAET,WAAC;YAAI,OAAM;WAAW;;AAGzB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;0CAI0B;;;;;;IACxB,MAAM,UAAU,SAAS;QAAE,SAAS;IAAE,GAAG;QAAE,UAAU;IAAM;IAC3D,QAAQ,OAAO;IACf,MAAM,YAAY,QAAQ,OAAO,GAAG;IACpC,qBACE,WAAC;QAAI,EAAE;;sBACL,UAAC;4BAAS;0BAAA;;YACC;;;sBAEX,WAAC;YAAI,OAAM;WAAW;;AAG5B\"}")
 /*
 {
   "origin": "test.tsx",
@@ -91,8 +87,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    181,
-    522
+    172,
+    512
   ],
   "paramNames": [
     "_rawProps"

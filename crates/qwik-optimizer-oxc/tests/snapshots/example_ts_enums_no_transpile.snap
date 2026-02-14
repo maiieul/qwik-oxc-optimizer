@@ -3,20 +3,20 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$, useStore } from '@qwik.dev/core';
+import { component$, useStore } from "@qwik.dev/core";
 
 export enum Thing {
-	A,
-	B
+  A,
+  B,
 }
 
 export const App = component$(() => {
-	console.log(Thing.A);
-	return (
-		<>
-			<p class="stuff">Hello Qwik</p>
-		</>
-	);
+  console.log(Thing.A);
+  return (
+    <>
+      <p class="stuff">Hello Qwik</p>
+    </>
+  );
 });
 
 === test.tsx ===
@@ -35,8 +35,8 @@ import { Thing } from "./test";
 export const App_component_XumqEURaLxI = () => {
 	console.log(Thing.A);
 	return <>
-			<p class="stuff">Hello Qwik</p>
-		</>;
+      <p class="stuff">Hello Qwik</p>
+    </>;
 }
 
 /*

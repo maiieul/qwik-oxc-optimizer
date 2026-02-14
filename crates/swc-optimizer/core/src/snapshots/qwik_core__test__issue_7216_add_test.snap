@@ -1,22 +1,22 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 4276
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { component$ } from '@builder.io/qwik';
+import { component$ } from "@builder.io/qwik";
 export default component$((props) => {
-  return (<p 
-		onHi$={() => 'hi'} 
-		{...props.foo} 
-		onHello$={props.helloHandler$} 
-		{...props.rest} 
-		onVar$={props.onVarHandler$} 
-		onConst$={() => 'const'} 
-		asd={"1"}
-	/>);
+  return (
+    <p
+      onHi$={() => "hi"}
+      {...props.foo}
+      onHello$={props.helloHandler$}
+      {...props.rest}
+      onVar$={props.onVarHandler$}
+      onConst$={() => "const"}
+      asd={"1"}
+    />
+  );
 });
 
 ============================= test.js ==
@@ -27,13 +27,13 @@ const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
 export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,6BAAe,6EAUZ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,6BAAe,6EAYZ\"}")
 ============================= test.tsx_test_component_p_q_e_hi_ttOKZbY46GA.js (ENTRY POINT)==
 
-export const test_component_p_q_e_hi_ttOKZbY46GA = ()=>'hi';
+export const test_component_p_q_e_hi_ttOKZbY46GA = ()=>"hi";
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"mDAIS,IAAM\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"mDAIa,IAAM\"}")
 /*
 {
   "origin": "test.tsx",
@@ -49,17 +49,17 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onHi$",
   "captures": false,
   "loc": [
-    111,
-    121
+    118,
+    128
   ]
 }
 */
 ============================= test.tsx_test_component_p_q_e_const_e6TYnIxnPLY.js (ENTRY POINT)==
 
-export const test_component_p_q_e_const_e6TYnIxnPLY = ()=>'const';
+export const test_component_p_q_e_const_e6TYnIxnPLY = ()=>"const";
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"sDASY,IAAM\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"sDASgB,IAAM\"}")
 /*
 {
   "origin": "test.tsx",
@@ -75,8 +75,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onConst$",
   "captures": false,
   "loc": [
-    239,
-    252
+    261,
+    274
   ]
 }
 */
@@ -100,7 +100,7 @@ export const test_component_LUXeXe0DQrg = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;0CAE0B,CAAC;IACzB,qBAAQ,UAAC;QACT,QAAK;QACJ,GAAG,MAAM,GAAG;QACb,aAAU,MAAM,aAAa;QAC5B,GAAG,MAAM,IAAI;QACd,WAAQ,MAAM,aAAa;;QAC3B,WAAQ;QACR,KAAK;;AAEP\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;0CAC0B,CAAC;IACzB,qBACE,UAAC;QACC,QAAK;QACJ,GAAG,MAAM,GAAG;QACb,aAAU,MAAM,aAAa;QAC5B,GAAG,MAAM,IAAI;QACd,WAAQ,MAAM,aAAa;;QAC3B,WAAQ;QACR,KAAK;;AAGX\"}")
 /*
 {
   "origin": "test.tsx",
@@ -116,8 +116,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    75,
-    274
+    74,
+    305
   ],
   "paramNames": [
     "props"

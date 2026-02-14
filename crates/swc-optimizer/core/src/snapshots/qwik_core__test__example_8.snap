@@ -1,23 +1,18 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 224
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
-
-import { $, component$ } from '@qwik.dev/core';
+import { $, component$ } from "@qwik.dev/core";
 
 export const Header = component$(() => {
-	return $((hola) => {
-		const hola = this;
-		const {something, styff} = hola;
-		const hello = hola.nothere.stuff[global];
-		return (
-			<Header/>
-		);
-	});
+  return $((hola) => {
+    const hola = this;
+    const { something, styff } = hola;
+    const hello = hola.nothere.stuff[global];
+    return <Header />;
+  });
 });
 
 ============================= test.tsx_Header_component_J4uyIhaBNR4.tsx (ENTRY POINT)==
@@ -29,7 +24,7 @@ export const Header_component_J4uyIhaBNR4 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;4CAGiC;IAChC;AAQD\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;4CAEiC;IAC/B;AAMF\"}")
 /*
 {
   "origin": "test.tsx",
@@ -45,8 +40,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    84,
-    249
+    83,
+    252
   ]
 }
 */
@@ -60,7 +55,7 @@ export const Header_component_1_2B8d0oH9ZWc = (hola)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";8CAIU,CAAC;IACT,MAAM,OAAO,IAAI;IAEH,KAAK,OAAO,CAAC,KAAK,CAAC,OAAO;IACxC,QACE;AAEH\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";8CAGW,CAAC;IACR,MAAM,OAAO,IAAI;IAEH,KAAK,OAAO,CAAC,KAAK,CAAC,OAAO;IACxC,QAAQ;AACV\"}")
 /*
 {
   "origin": "test.tsx",
@@ -77,7 +72,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "captures": false,
   "loc": [
     102,
-    245
+    248
   ],
   "paramNames": [
     "hola"
@@ -92,7 +87,7 @@ const i_J4uyIhaBNR4 = ()=>import("./test.tsx_Header_component_J4uyIhaBNR4");
 export const Header = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_J4uyIhaBNR4, "Header_component_J4uyIhaBNR4"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,OAAO,MAAM,uBAAS,+EASnB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,uBAAS,+EAOnB\"}")
 == DIAGNOSTICS ==
 
 []

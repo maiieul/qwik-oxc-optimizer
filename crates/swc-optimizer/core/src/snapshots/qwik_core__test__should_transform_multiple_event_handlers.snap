@@ -1,22 +1,25 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 5072
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { component$, useSignal, Signal } from '@qwik.dev/core';
-const Foo = component$(function() {
+import { component$, useSignal, Signal } from "@qwik.dev/core";
+const Foo = component$(function () {
   const data = useSignal<Signal<any>[]>([]);
-  return <div>
-	{data.value.map(row => (
-	  <div onClick$={() => console.log(row.value.id)} onMouseOver$={() => console.log('over' + row.value.id)}>
-		<p onClick$={() => console.log('inner' + row.value.id)}>{item.value.id}</p>
-	  </div>
-	))}
-  </div>;
-})
+  return (
+    <div>
+      {data.value.map((row) => (
+        <div
+          onClick$={() => console.log(row.value.id)}
+          onMouseOver$={() => console.log("over" + row.value.id)}
+        >
+          <p onClick$={() => console.log("inner" + row.value.id)}>{item.value.id}</p>
+        </div>
+      ))}
+    </div>
+  );
+});
 
 ============================= test.js ==
 
@@ -26,7 +29,7 @@ const i_HTDRsvUbLiE = ()=>import("./test.tsx_Foo_component_HTDRsvUbLiE");
 /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;cAEY\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;cACY\"}")
 ============================= test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -51,7 +54,7 @@ export const Foo_component_HTDRsvUbLiE = function() {
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;yCAEuB;IACrB,MAAM,OAAO,UAAyB,EAAE;;;;IACxC,qBAAO,WAAC,mBACR,KAAK,KAAK,CAAC,GAAG,CAAC,CAAA,oBACd,WAAC;YAAI,WAAQ;YAAmC,eAAY;mBAD9C;+BAEf,WAAC;YAAE,WAAQ;mBAFI;iBAE0C,KAAK,KAAK,CAAC,EAAE;AAIxE\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;yCACuB;IACrB,MAAM,OAAO,UAAyB,EAAE;;;;IACxC,qBACE,WAAC,mBACE,KAAK,KAAK,CAAC,GAAG,CAAC,CAAC,oBACf,WAAC;YACC,WAAQ;YACR,eAAY;mBAHC;+BAKb,WAAC;YAAE,WAAQ;mBALE;iBAK4C,KAAK,KAAK,CAAC,EAAE;AAKhF\"}")
 /*
 {
   "origin": "test.tsx",
@@ -67,8 +70,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    89,
-    400
+    88,
+    471
   ]
 }
 */
@@ -77,7 +80,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const Foo_component_div_div_q_e_click_vKrX4PmH2aM = (_, _1, row)=>console.log(row.value.id);
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"2DAMkB,QADD,MACO,QAAQ,GAAG,CAAC,IAAI,KAAK,CAAC,EAAE\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"2DAOoB,QAFG,MAEG,QAAQ,GAAG,CAAC,IAAI,KAAK,CAAC,EAAE\"}")
 /*
 {
   "origin": "test.tsx",
@@ -93,8 +96,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    206,
-    237
+    234,
+    265
   ],
   "paramNames": [
     "_",
@@ -105,10 +108,10 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 */
 ============================= test.tsx_Foo_component_div_div_q_e_mouseover_P9F6Osn3X6Y.js (ENTRY POINT)==
 
-export const Foo_component_div_div_q_e_mouseover_P9F6Osn3X6Y = (_, _1, row)=>console.log('over' + row.value.id);
+export const Foo_component_div_div_q_e_mouseover_P9F6Osn3X6Y = (_, _1, row)=>console.log("over" + row.value.id);
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"+DAMiE,QADhD,MACsD,QAAQ,GAAG,CAAC,SAAS,IAAI,KAAK,CAAC,EAAE\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"+DAQwB,QAHD,MAGO,QAAQ,GAAG,CAAC,SAAS,IAAI,KAAK,CAAC,EAAE\"}")
 /*
 {
   "origin": "test.tsx",
@@ -124,8 +127,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onMouseOver$",
   "captures": false,
   "loc": [
-    253,
-    293
+    291,
+    331
   ],
   "paramNames": [
     "_",
@@ -136,10 +139,10 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 */
 ============================= test.tsx_Foo_component_div_div_p_q_e_click_PjMbeUzoAMk.js (ENTRY POINT)==
 
-export const Foo_component_div_div_p_q_e_click_PjMbeUzoAMk = (_, _1, row)=>console.log('inner' + row.value.id);
+export const Foo_component_div_div_p_q_e_click_PjMbeUzoAMk = (_, _1, row)=>console.log("inner" + row.value.id);
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6DAOe,QAFE,MAEI,QAAQ,GAAG,CAAC,UAAU,IAAI,KAAK,CAAC,EAAE\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6DAUuB,QALA,MAKM,QAAQ,GAAG,CAAC,UAAU,IAAI,KAAK,CAAC,EAAE\"}")
 /*
 {
   "origin": "test.tsx",
@@ -155,8 +158,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    311,
-    352
+    366,
+    407
   ],
   "paramNames": [
     "_",

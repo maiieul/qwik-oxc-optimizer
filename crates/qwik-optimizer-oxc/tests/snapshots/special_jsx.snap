@@ -4,12 +4,12 @@ expression: output
 ---
 === INPUT ===
 // don't transpile jsx with non-plain-object props
-import { jsx } from '@qwik.dev/core';
+import { jsx } from "@qwik.dev/core";
 
 export const App = () => {
-    const props = {}
-    return jsx('div', props, 'Hello Qwik');
-}
+  const props = {};
+  return jsx("div", props, "Hello Qwik");
+};
 
 === test.tsx ===
 import { jsx } from "@qwik.dev/core";

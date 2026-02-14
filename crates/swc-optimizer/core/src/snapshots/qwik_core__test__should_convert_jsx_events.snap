@@ -1,35 +1,30 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 4706
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
+import { component$ } from "@qwik.dev/core";
 
-		import { component$ } from '@qwik.dev/core';
+const ManyEventsComponent = component$(() => {
+  return (
+    <div>
+      <button onClick$={() => {}} onDblClick$={() => {}}>
+        click
+      </button>
+      <button
+        onClick$={() => {}}
+        onBlur$={() => {}}
+        on-anotherCustom$={() => {}}
+        document:onFocus$={() => {}}
+        window:onClick$={() => {}}
+      >
+        click
+      </button>
+    </div>
+  );
+});
 
-		const ManyEventsComponent = component$(() => {
-			return (
-				<div>
-					<button
-						onClick$={() => {}}
-						onDblClick$={() => {}}
-					>
-						click
-					</button>
-					<button
-						onClick$={() => {}}
-						onBlur$={() => {}}
-						on-anotherCustom$={() => {}}
-						document:onFocus$={() => {}}
-						window:onClick$={() => {}}
-					>
-						click
-					</button>
-				</div>
-			);
-		});
-		
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -38,13 +33,13 @@ const i_ndbrzxiyG3g = ()=>import("./test.tsx_ManyEventsComponent_component_ndbrz
 /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ndbrzxiyG3g, "ManyEventsComponent_component_ndbrzxiyG3g"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;cAG8B\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;cAE4B\"}")
 ============================= test.tsx_ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA.js (ENTRY POINT)==
 
 export const ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA = ()=>{};
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"gFAagB,KAAO\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"gFASkB,KAAO\"}")
 /*
 {
   "origin": "test.tsx",
@@ -60,8 +55,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    252,
-    260
+    235,
+    243
   ]
 }
 */
@@ -70,7 +65,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs = ()=>{};
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"8EAgByB,KAAO\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"8EAY2B,KAAO\"}")
 /*
 {
   "origin": "test.tsx",
@@ -86,8 +81,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "document:onFocus$",
   "captures": false,
   "loc": [
-    347,
-    355
+    336,
+    344
   ]
 }
 */
@@ -96,7 +91,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY = ()=>{};
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6EAce,KAAO\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6EAUiB,KAAO\"}")
 /*
 {
   "origin": "test.tsx",
@@ -112,8 +107,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onBlur$",
   "captures": false,
   "loc": [
-    277,
-    285
+    262,
+    270
   ]
 }
 */
@@ -145,7 +140,7 @@ export const ManyEventsComponent_component_ndbrzxiyG3g = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;;;yDAGyC;IACtC,qBACC,WAAC;sBACA,WAAC;YACA,WAAQ;YACR,cAAW;WACX;sBAGD,WAAC;YACA,WAAQ;YACR,UAAO;YACP,oBAAiB;YAHlB,WAQS;YART,WAQS;WAFR;;AAKJ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;;;yDAEuC;IACrC,qBACE,WAAC;sBACC,WAAC;YAAO,WAAQ;YAAY,cAAW;WAAY;sBAGnD,WAAC;YACC,WAAQ;YACR,UAAO;YACP,oBAAiB;YAHnB,WAQS;YART,WAQS;WAFR;;AAKP\"}")
 /*
 {
   "origin": "test.tsx",
@@ -161,8 +156,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    91,
-    444
+    86,
+    436
   ]
 }
 */
@@ -171,7 +166,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0 = ()=>{};
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"uFAeyB,KAAO\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"uFAW2B,KAAO\"}")
 /*
 {
   "origin": "test.tsx",
@@ -187,8 +182,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "on-anotherCustom$",
   "captures": false,
   "loc": [
-    312,
-    320
+    299,
+    307
   ]
 }
 */
@@ -197,7 +192,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs = ()=>{};
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"8EAiBuB,KAAO\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"8EAayB,KAAO\"}")
 /*
 {
   "origin": "test.tsx",
@@ -213,8 +208,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "window:onClick$",
   "captures": false,
   "loc": [
-    380,
-    388
+    371,
+    379
   ]
 }
 */
@@ -223,7 +218,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg = ()=>{};
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"8EAOgB,KAAO\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"8EAKwB,KAAO\"}")
 /*
 {
   "origin": "test.tsx",
@@ -239,8 +234,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    150,
-    158
+    139,
+    147
   ]
 }
 */
@@ -249,7 +244,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles = ()=>{};
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"iFAQmB,KAAO\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"iFAK+C,KAAO\"}")
 /*
 {
   "origin": "test.tsx",
@@ -265,8 +260,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onDblClick$",
   "captures": false,
   "loc": [
-    179,
-    187
+    162,
+    170
   ]
 }
 */

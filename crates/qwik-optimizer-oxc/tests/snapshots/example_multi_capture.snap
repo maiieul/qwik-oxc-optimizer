@@ -3,29 +3,27 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { $, component$ } from '@qwik.dev/core';
+import { $, component$ } from "@qwik.dev/core";
 
-export const Foo = component$(({foo}) => {
-	const arg0 = 20;
-	return $(() => {
-		const fn = ({aaa}) => aaa;
-		return (
-			<div>
-				{foo}{fn()}{arg0}
-			</div>
-		)
-	});
-})
+export const Foo = component$(({ foo }) => {
+  const arg0 = 20;
+  return $(() => {
+    const fn = ({ aaa }) => aaa;
+    return (
+      <div>
+        {foo}
+        {fn()}
+        {arg0}
+      </div>
+    );
+  });
+});
 
-export const Bar = component$(({bar}) => {
-	return $(() => {
-		return (
-			<div>
-				{bar}
-			</div>
-		)
-	});
-})
+export const Bar = component$(({ bar }) => {
+  return $(() => {
+    return <div>{bar}</div>;
+  });
+});
 
 === test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
@@ -78,8 +76,10 @@ const arg0 = _captures[2];
 
 	const fn = ({ aaa }) => aaa;
 	return <div>
-				{foo}{fn()}{arg0}
-			</div>;
+        {foo}
+        {fn()}
+        {arg0}
+      </div>;
 }
 
 /*
@@ -136,9 +136,7 @@ import { _captures } from "@qwik.dev/core";
 export const Bar_MSAJNhrvHtQ = () => {
 const _rawProps = _captures[0];
 
-	return <div>
-				{bar}
-			</div>;
+	return <div>{bar}</div>;
 }
 
 /*

@@ -1,57 +1,52 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 4946
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { $, component$, useSignal, Signal } from '@qwik.dev/core';
+import { $, component$, useSignal, Signal } from "@qwik.dev/core";
 export const App = component$(() => {
-	const data = useSignal<Signal<any>[]>([]);
-	const selectedItem = useSignal<any | null>(null);
-	const clickedIndex = useSignal<number | null>(null);
-    return (
-        <div>
-          {data.value.map((row, idx) => (
-              <tr
-                key={untrack(() => row.value.id)}
-                class={row.value.selected.value ? "danger" : ""}
-              >
-                <td class="col-md-1">{row.value.id}</td>
-                <td class="col-md-4">
-                  <a
-                    onClick$={() => {
-                      if (selectedItem.value) {
-                        selectedItem.value.selected.value = false;
-                      }
-                      selectedItem.value = row.value;
-                      row.value.selected.value = true;
-					  clickedIndex.value = idx;
-                    }}
-                  >
-                    {row.value.label.value}
-                  </a>
-                </td>
-                <td class="col-md-1">
-                  <a
-                    onClick$={() => {
-                      const dataValue = untrack(() => data.value);
-                      data.value = dataValue.toSpliced(
-                        dataValue.findIndex((d) => d.value.id === row.value.id),
-                        1,
-                      );
-                    }}
-                  >
-                    <span aria-hidden="true">x</span>
-                  </a>
-                </td>
-                <td class="col-md-6" />
-              </tr>
-          ))}
-        </div>
-      );
-    });
+  const data = useSignal<Signal<any>[]>([]);
+  const selectedItem = useSignal<any | null>(null);
+  const clickedIndex = useSignal<number | null>(null);
+  return (
+    <div>
+      {data.value.map((row, idx) => (
+        <tr key={untrack(() => row.value.id)} class={row.value.selected.value ? "danger" : ""}>
+          <td class="col-md-1">{row.value.id}</td>
+          <td class="col-md-4">
+            <a
+              onClick$={() => {
+                if (selectedItem.value) {
+                  selectedItem.value.selected.value = false;
+                }
+                selectedItem.value = row.value;
+                row.value.selected.value = true;
+                clickedIndex.value = idx;
+              }}
+            >
+              {row.value.label.value}
+            </a>
+          </td>
+          <td class="col-md-1">
+            <a
+              onClick$={() => {
+                const dataValue = untrack(() => data.value);
+                data.value = dataValue.toSpliced(
+                  dataValue.findIndex((d) => d.value.id === row.value.id),
+                  1,
+                );
+              }}
+            >
+              <span aria-hidden="true">x</span>
+            </a>
+          </td>
+          <td class="col-md-6" />
+        </tr>
+      ))}
+    </div>
+  );
+});
 
 ============================= test.js ==
 
@@ -61,7 +56,7 @@ const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0");
 export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,oBAAM,4EA4CZ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,OAAO,MAAM,oBAAM,4EAyChB\"}")
 ============================= test.tsx_App_component_div_tr_td_a_q_e_click_1_40fnSAlYI48.js (ENTRY POINT)==
 
 import { _captures } from "@qwik.dev/core";
@@ -72,7 +67,7 @@ export const App_component_div_tr_td_a_q_e_click_1_40fnSAlYI48 = (_, _1, row)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEA8B8B,QAtBH;;IAuBL,MAAM,YAAY,QAAQ,IAAM,KAAK,KAAK;IAC1C,KAAK,KAAK,GAAG,UAAU,SAAS,CAC9B,UAAU,SAAS,CAAC,CAAC,IAAM,EAAE,KAAK,CAAC,EAAE,KAAK,IAAI,KAAK,CAAC,EAAE,GACtD\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEA0BwB,QAnBD;;IAoBP,MAAM,YAAY,QAAQ,IAAM,KAAK,KAAK;IAC1C,KAAK,KAAK,GAAG,UAAU,SAAS,CAC9B,UAAU,SAAS,CAAC,CAAC,IAAM,EAAE,KAAK,CAAC,EAAE,KAAK,IAAI,KAAK,CAAC,EAAE,GACtD\"}")
 /*
 {
   "origin": "test.tsx",
@@ -88,8 +83,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": true,
   "loc": [
-    1130,
-    1415
+    976,
+    1225
   ],
   "paramNames": [
     "_",
@@ -162,7 +157,7 @@ export const App_component_ckEPmXZlub0 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;mBAWuB,GAAI,KAAK,CAAC,QAAQ,CAAC,KAAK,GAAG,WAAW;;mBAEvB,GAAI,KAAK,CAAC,EAAE;;mBAY7B,GAAI,KAAK,CAAC,KAAK,CAAC,KAAK;;;;yCAvBZ;IAC7B,MAAM,OAAO,UAAyB,EAAE;IACxC,MAAM,eAAe,UAAsB;IAC3C,MAAM,eAAe,UAAyB;;;;;;;;IAC3C,qBACI,WAAC,mBACE,KAAK,KAAK,CAAC,GAAG,CAAC,CAAC,KAAK,oBAClB,WAAC;YAEC,KAAK;;;;0BAEL,WAAC;gBAAG,OAAM;;;;0BACV,WAAC;gBAAG,OAAM;6BACR,WAAC;gBACC,WAAQ;;oBARD;oBAAK;;;;;0BAoBhB,WAAC;gBAAG,OAAM;6BACR,WAAC;gBACC,WAAQ;uBAtBD;mCA8BP,WAAC;gBAAK,eAAY;eAAO;0BAG7B,WAAC;gBAAG,OAAM;;cA/BL,QAAQ,IAAM,IAAI,KAAK,CAAC,EAAE;AAoC3C\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;mBAQqD,GAAI,KAAK,CAAC,QAAQ,CAAC,KAAK,GAAG,WAAW;;mBAC3D,GAAI,KAAK,CAAC,EAAE;;mBAY7B,GAAI,KAAK,CAAC,KAAK,CAAC,KAAK;;;;yCApBN;IAC5B,MAAM,OAAO,UAAyB,EAAE;IACxC,MAAM,eAAe,UAAsB;IAC3C,MAAM,eAAe,UAAyB;;;;;;;;IAC9C,qBACE,WAAC,mBACE,KAAK,KAAK,CAAC,GAAG,CAAC,CAAC,KAAK,oBACpB,WAAC;YAAqC,KAAK;;;;0BACzC,WAAC;gBAAG,OAAM;;;;0BACV,WAAC;gBAAG,OAAM;6BACR,WAAC;gBACC,WAAQ;;oBALC;oBAAK;;;;;0BAiBlB,WAAC;gBAAG,OAAM;6BACR,WAAC;gBACC,WAAQ;uBAnBC;mCA2BT,WAAC;gBAAK,eAAY;eAAO;0BAG7B,WAAC;gBAAG,OAAM;;cA7BH,QAAQ,IAAM,IAAI,KAAK,CAAC,EAAE;AAkC3C\"}")
 /*
 {
   "origin": "test.tsx",
@@ -178,8 +173,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    99,
-    1639
+    98,
+    1397
   ]
 }
 */
@@ -195,7 +190,7 @@ export const App_component_div_tr_td_a_q_e_click_lgbZkJXyLtg = (_, _1, row, idx)
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";+DAgB8B,QARH,KAAK;;IASV,IAAI,aAAa,KAAK,EACpB,aAAa,KAAK,CAAC,QAAQ,CAAC,KAAK,GAAG;IAEtC,aAAa,KAAK,GAAG,IAAI,KAAK;IAC9B,IAAI,KAAK,CAAC,QAAQ,CAAC,KAAK,GAAG;IAC1C,aAAa,KAAK,GAAG\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";+DAYwB,QALD,KAAK;;IAMZ,IAAI,aAAa,KAAK,EACpB,aAAa,KAAK,CAAC,QAAQ,CAAC,KAAK,GAAG;IAEtC,aAAa,KAAK,GAAG,IAAI,KAAK;IAC9B,IAAI,KAAK,CAAC,QAAQ,CAAC,KAAK,GAAG;IAC3B,aAAa,KAAK,GAAG\"}")
 /*
 {
   "origin": "test.tsx",
@@ -211,8 +206,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": true,
   "loc": [
-    620,
-    930
+    535,
+    818
   ],
   "paramNames": [
     "_",

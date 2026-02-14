@@ -3,16 +3,16 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$ } from '@qwik.dev/core';
+import { component$ } from "@qwik.dev/core";
 
 export const Foo = component$(() => {
-	return (
-		<div>
-			<div onClick$={() => console.log('first')}/>
-			<div onClick$={() => console.log('second')}/>
-			<div onClick$={() => console.log('third')}/>
-		</div>
-	);
+  return (
+    <div>
+      <div onClick$={() => console.log("first")} />
+      <div onClick$={() => console.log("second")} />
+      <div onClick$={() => console.log("third")} />
+    </div>
+  );
 });
 
 === test.tsx ===
@@ -31,10 +31,10 @@ const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboC
 const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA");
 export const Foo_component_gZqPatVoDqw = () => {
 	return <div>
-			<div onClick$={/* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA")} />
-			<div onClick$={/* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA")} />
-			<div onClick$={/* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA")} />
-		</div>;
+      <div onClick$={/* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA")} />
+      <div onClick$={/* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA")} />
+      <div onClick$={/* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA")} />
+    </div>;
 }
 
 /*

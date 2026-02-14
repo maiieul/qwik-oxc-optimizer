@@ -1,10 +1,8 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 5144
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 
 import { component$, useSignal } from "@qwik.dev/core";
 
@@ -29,7 +27,7 @@ const i_V4XAtJSTRKg = ()=>import("./test.tsx_FieldInput_component_V4XAtJSTRKg");
 export const FieldInput = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_V4XAtJSTRKg, "FieldInput_component_V4XAtJSTRKg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,OAAO,MAAM,2BAAa,mFAWvB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,2BAAa,mFAWvB\"}")
 ============================= test.tsx_FieldInput_component_V4XAtJSTRKg.js (ENTRY POINT)==
 
 import { _chk } from "@qwik.dev/core";
@@ -52,7 +50,7 @@ export const FieldInput_component_V4XAtJSTRKg = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;gDAGqC;IACnC,MAAM,aAAa,UAAU;IAE7B,qBACE,WAAC;mBACe;;;gBAAA;;;;;AAMpB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;gDAEqC;IACnC,MAAM,aAAa,UAAU;IAE7B,qBACE,WAAC;mBACe;;;gBAAA;;;;;AAMpB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -68,8 +66,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    96,
-    273
+    95,
+    272
   ]
 }
 */
@@ -80,7 +78,7 @@ export const FieldInput_component_input_q_e_input_wqR1xEjZjf4 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"gEASgB;IACR,QAAQ,GAAG,CAAC;AACd\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"gEAQgB;IACR,QAAQ,GAAG,CAAC;AACd\"}")
 /*
 {
   "origin": "test.tsx",
@@ -96,8 +94,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onInput$",
   "captures": false,
   "loc": [
-    214,
-    258
+    213,
+    257
   ]
 }
 */

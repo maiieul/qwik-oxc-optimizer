@@ -1,29 +1,21 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 5204
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
 import { $, component$, useSignal } from "@qwik.dev/core";
 
 export const FieldInput = component$((props) => {
-	const input = useSignal("");
+  const input = useSignal("");
 
   return (
-		<>
-			{/* var props */}
-			<input
-				bind:value={input}
-				{...props}
-			/>
-			{/* const props */}
-			<input
-				{...props}
-				bind:value={input}
-			/>
-		</>
+    <>
+      {/* var props */}
+      <input bind:value={input} {...props} />
+      {/* const props */}
+      <input {...props} bind:value={input} />
+    </>
   );
 });
 
@@ -35,7 +27,7 @@ const i_V4XAtJSTRKg = ()=>import("./test.tsx_FieldInput_component_V4XAtJSTRKg");
 export const FieldInput = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_V4XAtJSTRKg, "FieldInput_component_V4XAtJSTRKg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,OAAO,MAAM,2BAAa,mFAiBvB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,2BAAa,mFAWvB\"}")
 ============================= test.tsx_FieldInput_component_V4XAtJSTRKg.js (ENTRY POINT)==
 
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
@@ -59,7 +51,7 @@ export const FieldInput_component_V4XAtJSTRKg = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;gDAGqC,CAAC;IACrC,MAAM,QAAQ,UAAU;IAEvB,qBACA;sBAEC,UAAC;YAAD,cACa;4BACR;0BAAA;sBAGL,UAAC;4BACI;YADL,cAEa;0BADR;;AAKR\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;gDAEqC,CAAC;IACpC,MAAM,QAAQ,UAAU;IAExB,qBACE;sBAEE,UAAC;YAAD,cAAmB;4BAAW;0BAAA;sBAE9B,UAAC;4BAAU;YAAX,cAA8B;0BAAnB;;AAGjB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -75,8 +67,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    99,
-    323
+    98,
+    317
   ],
   "paramNames": [
     "props"

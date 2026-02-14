@@ -4,35 +4,32 @@ expression: output
 ---
 ==INPUT==
 
-
-import { component$ } from '@qwik.dev/core';
-import { server$ } from '@qwik.dev/router';
-import { clientSupabase } from 'supabase';
-import { Client } from 'openai';
-import { secret } from './secret';
-import { sideEffect } from './secret';
+import { component$ } from "@qwik.dev/core";
+import { server$ } from "@qwik.dev/router";
+import { clientSupabase } from "supabase";
+import { Client } from "openai";
+import { secret } from "./secret";
+import { sideEffect } from "./secret";
 
 const supabase = clientSupabase();
 const dfd = new Client(secret);
 
-(function() {
-	console.log('run');
-	})();
-	(() => {
-	console.log('run');
-	})();
+(function () {
+  console.log("run");
+})();
+(() => {
+  console.log("run");
+})();
 
 sideEffect();
 
 export const api = server$(() => {
-	supabase.from('ffg').do(dfd);
+  supabase.from("ffg").do(dfd);
 });
 
 export default component$(() => {
-	return (
-		<button onClick$={async () => await api()}></button>
-	)
-	});
+  return <button onClick$={async () => await api()}></button>;
+});
 
 ============================= test.js ==
 
@@ -41,12 +38,12 @@ import { _noopQrlDEV } from "@qwik.dev/core";
 import { componentQrl } from "@qwik.dev/core";
 import { qrlDEV } from "@qwik.dev/core";
 const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
-import { sideEffect } from './secret';
+import { sideEffect } from "./secret";
 (function() {
-    console.log('run');
+    console.log("run");
 })();
 (()=>{
-    console.log('run');
+    console.log("run");
 })();
 sideEffect();
 export const api = serverQrl(/*#__PURE__*/ _noopQrlDEV("api_server_JonPp043gH0", {
@@ -58,19 +55,19 @@ export const api = serverQrl(/*#__PURE__*/ _noopQrlDEV("api_server_JonPp043gH0",
 export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrlDEV(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg", {
     file: "/user/qwik/src/test.tsx",
     lo: 503,
-    hi: 581,
+    hi: 575,
     displayName: "test.tsx_test_component"
 }));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;AAMA,SAAS,UAAU,QAAQ,WAAW;AAKtC,CAAC;IACA,QAAQ,GAAG,CAAC;AACZ,CAAC;AACD,CAAC;IACD,QAAQ,GAAG,CAAC;AACZ,CAAC;AAEF;AAEA,OAAO,MAAM,MAAM;;;;;IAEhB;AAEH,6BAAe;;;;;IAIX\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;AAKA,SAAS,UAAU,QAAQ,WAAW;AAKtC,CAAC;IACC,QAAQ,GAAG,CAAC;AACd,CAAC;AACD,CAAC;IACC,QAAQ,GAAG,CAAC;AACd,CAAC;AAED;AAEA,OAAO,MAAM,MAAM;;;;;IAEhB;AAEH,6BAAe;;;;;IAEZ\"}")
 ============================= test.tsx_test_component_button_q_e_click_qwSL5gM03T4.js (ENTRY POINT)==
 
 import { api } from "./test";
 export const test_component_button_q_e_click_qwSL5gM03T4 = async ()=>await api();
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";2DA0BoB,UAAY,MAAM\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";2DAwB2B,UAAY,MAAM\"}")
 /*
 {
   "origin": "test.tsx",
@@ -86,8 +83,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    541,
-    564
+    538,
+    561
   ]
 }
 */
@@ -100,19 +97,19 @@ export const test_component_LUXeXe0DQrg = ()=>{
     return /*#__PURE__*/ _jsxSorted("button", null, {
         "q-e:click": /*#__PURE__*/ qrlDEV(i_qwSL5gM03T4, "test_component_button_q_e_click_qwSL5gM03T4", {
             file: "/user/qwik/src/test.tsx",
-            lo: 541,
-            hi: 564,
+            lo: 538,
+            hi: 561,
             displayName: "test.tsx_test_component_button_q_e_click"
         })
     }, null, 3, "u6_0", {
         fileName: "test.tsx",
-        lineNumber: 27,
-        columnNumber: 3
+        lineNumber: 25,
+        columnNumber: 10
     });
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;0CAwB0B;IACzB,qBACC,WAAC;QAAO,WAAQ;;;;;;;;;;;AAEjB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;0CAuB0B;IACxB,qBAAO,WAAC;QAAO,WAAQ;;;;;;;;;;;AACzB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -129,7 +126,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "captures": false,
   "loc": [
     503,
-    581
+    575
   ]
 }
 */

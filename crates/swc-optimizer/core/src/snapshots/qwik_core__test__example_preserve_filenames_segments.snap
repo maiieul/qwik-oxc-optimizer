@@ -1,23 +1,23 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 2705
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { component$, useStore } from '@qwik.dev/core';
+import { component$, useStore } from "@qwik.dev/core";
 
 export const App = component$((props: Stuff) => {
-	foo();
-	return (
-		<Cmp>
-			<p class="stuff" onClick$={() => console.log('warn')}>Hello Qwik</p>
-		</Cmp>
-	);
+  foo();
+  return (
+    <Cmp>
+      <p class="stuff" onClick$={() => console.log("warn")}>
+        Hello Qwik
+      </p>
+    </Cmp>
+  );
 });
 
-export const foo = () => console.log('foo');
+export const foo = () => console.log("foo");
 
 ============================= test.tsx ==
 
@@ -25,10 +25,10 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0.js");
 export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
-export const foo = ()=>console.log('foo');
+export const foo = ()=>console.log("foo");
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,OAAO,MAAM,oBAAM,4EAOhB;AAEH,OAAO,MAAM,MAAM,IAAM,QAAQ,GAAG,CAAC,OAAO\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,oBAAM,4EAShB;AAEH,OAAO,MAAM,MAAM,IAAM,QAAQ,GAAG,CAAC,OAAO\"}")
 ============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -44,7 +44,7 @@ export const App_component_ckEPmXZlub0 = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;yCAG8B,CAAC;IAC9B;IACA,qBACC,WAAC,+BACA,WAAC;QAAE,OAAM;QAAQ,WAAQ;OAA6B;AAGzD\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;yCAE8B,CAAC;IAC7B;IACA,qBACE,WAAC,+BACC,WAAC;QAAE,OAAM;QAAQ,WAAQ;OAA6B;AAK5D\"}")
 /*
 {
   "origin": "test.tsx",
@@ -60,8 +60,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    88,
-    220
+    87,
+    245
   ],
   "paramNames": [
     "props"
@@ -70,10 +70,10 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 */
 ============================= test.tsx_App_component_Cmp_p_q_e_click_Yl4ybrJWrt4.js (ENTRY POINT)==
 
-export const App_component_Cmp_p_q_e_click_Yl4ybrJWrt4 = ()=>console.log('warn');
+export const App_component_Cmp_p_q_e_click_Yl4ybrJWrt4 = ()=>console.log("warn");
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"yDAO8B,IAAM,QAAQ,GAAG,CAAC\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"yDAMiC,IAAM,QAAQ,GAAG,CAAC\"}")
 /*
 {
   "origin": "test.tsx",
@@ -89,8 +89,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    164,
-    189
+    170,
+    195
   ]
 }
 */

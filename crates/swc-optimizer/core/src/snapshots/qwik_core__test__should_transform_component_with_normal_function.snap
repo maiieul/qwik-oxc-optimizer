@@ -1,20 +1,24 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 5025
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { $, component$, useSignal, Signal } from '@qwik.dev/core';
-const Foo = component$(function() {
+import { $, component$, useSignal, Signal } from "@qwik.dev/core";
+const Foo = component$(function () {
   const data = useSignal<Signal<any>[]>([]);
-  const Inner = component$(function(props) {
-    const data = props.data
-    return <div>{data.value.map(item => <p onClick$={() => console.log(item.value.id)}>{item.value.id}</p>)}</div>
-  })
-  return <Inner data={data} />
-})
+  const Inner = component$(function (props) {
+    const data = props.data;
+    return (
+      <div>
+        {data.value.map((item) => (
+          <p onClick$={() => console.log(item.value.id)}>{item.value.id}</p>
+        ))}
+      </div>
+    );
+  });
+  return <Inner data={data} />;
+});
 
 ============================= test.js ==
 
@@ -24,7 +28,7 @@ const i_HTDRsvUbLiE = ()=>import("./test.tsx_Foo_component_HTDRsvUbLiE");
 /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;cAEY\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;cACY\"}")
 ============================= test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -41,7 +45,7 @@ export const Foo_component_HTDRsvUbLiE = function() {
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;yCAEuB;IACrB,MAAM,OAAO,UAAyB,EAAE;IACxC,MAAM,sBAAQ;IAId,qBAAO,WAAC;QAAM,MAAM;;AACtB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;yCACuB;IACrB,MAAM,OAAO,UAAyB,EAAE;IACxC,MAAM,sBAAQ;IAUd,qBAAO,WAAC;QAAM,MAAM;;AACtB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -57,8 +61,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    92,
-    375
+    91,
+    434
   ]
 }
 */
@@ -82,7 +86,7 @@ export const Foo_component_Inner_component_AuJ9mTBx5YA = function(props) {
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;mBAMwF,GAAK,KAAK,CAAC,EAAE;;;yDAF1E,SAAS,KAAK;IACrC,MAAM,OAAO,MAAM,IAAI;;IACvB,qBAAO,WAAC,mBAAK,KAAK,KAAK,CAAC,GAAG,CAAC,CAAA,qBAAQ,WAAC;YAAE,WAAQ;mBAAnB;;;;AAC9B\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;mBAQ0D,GAAK,KAAK,CAAC,EAAE;;;yDAL5C,SAAU,KAAK;IACtC,MAAM,OAAO,MAAM,IAAI;;IACvB,qBACE,WAAC,mBACE,KAAK,KAAK,CAAC,GAAG,CAAC,CAAC,qBACf,WAAC;YAAE,WAAQ;mBADI;;;;AAKvB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -99,7 +103,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "captures": false,
   "loc": [
     177,
-    341
+    398
   ],
   "paramNames": [
     "props"
@@ -111,7 +115,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY = (_, _1, item)=>console.log(item.value.id);
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"yEAMqD,QAArB,OAA2B,QAAQ,GAAG,CAAC,KAAK,KAAK,CAAC,EAAE\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"yEAQuB,QADE,OACI,QAAQ,GAAG,CAAC,KAAK,KAAK,CAAC,EAAE\"}")
 /*
 {
   "origin": "test.tsx",
@@ -127,8 +131,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    276,
-    308
+    309,
+    341
   ],
   "paramNames": [
     "_",

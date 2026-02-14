@@ -4,14 +4,14 @@ expression: output
 ---
 === INPUT ===
 export default ({ data }: { data: any }) => {
-    return (
-        <div
-            data-is-active={data.selectedOutputDetail === 'options'}
-            onClick$={() => {
-                data.selectedOutputDetail = 'options';
-            }}
-        />
-    );
+  return (
+    <div
+      data-is-active={data.selectedOutputDetail === "options"}
+      onClick$={() => {
+        data.selectedOutputDetail = "options";
+      }}
+    />
+  );
 };
 
 === test.js ===

@@ -1,18 +1,13 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 112
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
-
-import { $, component$ } from '@qwik.dev/core';
+import { $, component$ } from "@qwik.dev/core";
 export const Header = component$(() => {
-	console.log("mount");
-	return (
-		<div onClick={$((ctx) => console.log(ctx))}/>
-	);
+  console.log("mount");
+  return <div onClick={$((ctx) => console.log(ctx))} />;
 });
 
 ============================= test.tsx_Header_component_J4uyIhaBNR4.tsx (ENTRY POINT)==
@@ -25,7 +20,7 @@ export const Header_component_J4uyIhaBNR4 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;4CAEiC;IAChC,QAAQ,GAAG,CAAC;IACZ,QACE,IAAI;AAEP\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;4CACiC;IAC/B,QAAQ,GAAG,CAAC;IACZ,QAAQ,IAAI;AACd\"}")
 /*
 {
   "origin": "test.tsx",
@@ -41,8 +36,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    83,
-    177
+    82,
+    172
   ]
 }
 */
@@ -54,13 +49,13 @@ const i_J4uyIhaBNR4 = ()=>import("./test.tsx_Header_component_J4uyIhaBNR4");
 export const Header = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_J4uyIhaBNR4, "Header_component_J4uyIhaBNR4"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,uBAAS,+EAKnB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,OAAO,MAAM,uBAAS,+EAGnB\"}")
 ============================= test.tsx_Header_component_div_onClick_i7ekvWH3674.tsx (ENTRY POINT)==
 
 export const Header_component_div_onClick_i7ekvWH3674 = (ctx)=>console.log(ctx);
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"wDAKkB,CAAC,MAAQ,QAAQ,GAAG,CAAC\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"wDAGyB,CAAC,MAAQ,QAAQ,GAAG,CAAC\"}")
 /*
 {
   "origin": "test.tsx",
@@ -76,8 +71,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "$",
   "captures": false,
   "loc": [
-    142,
-    167
+    139,
+    164
   ],
   "paramNames": [
     "ctx"

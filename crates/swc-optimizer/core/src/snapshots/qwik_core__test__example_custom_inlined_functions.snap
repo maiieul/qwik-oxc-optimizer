@@ -1,33 +1,29 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 1308
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { component$, $, useStore, wrap, useEffect } from '@qwik.dev/core';
+import { component$, $, useStore, wrap, useEffect } from "@qwik.dev/core";
 
 export const useMemoQrl = (qrt) => {
-	useEffect(qrt);
+  useEffect(qrt);
 };
 
 export const useMemo$ = wrap(useMemoQrl);
 
 export const App = component$((props) => {
-	const state = useStore({count: 0});
-	useMemo$(() => {
-		console.log(state.count);
-	});
-	return $(() => (
-		<div>{state.count}</div>
-	));
+  const state = useStore({ count: 0 });
+  useMemo$(() => {
+    console.log(state.count);
+  });
+  return $(() => <div>{state.count}</div>);
 });
 
 export const Lightweight = (props) => {
-	useMemo$(() => {
-		console.log(state.count);
-	});
+  useMemo$(() => {
+    console.log(state.count);
+  });
 };
 
 ============================= test.js ==
@@ -36,7 +32,7 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_UIcxVTQF1a8 = ()=>import("./test.tsx_Lightweight_useMemo_UIcxVTQF1a8");
 const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0");
-import { wrap, useEffect } from '@qwik.dev/core';
+import { wrap, useEffect } from "@qwik.dev/core";
 export const useMemoQrl = (qrt)=>{
     useEffect(qrt);
 };
@@ -47,7 +43,7 @@ export const Lightweight = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AACA,SAAkC,IAAI,EAAE,SAAS,QAAQ,iBAAiB;AAE1E,OAAO,MAAM,aAAa,CAAC;IAC1B,UAAU;AACX,EAAE;AAEF,OAAO,MAAM,WAAW,KAAK,YAAY;AAEzC,OAAO,MAAM,oBAAM,4EAQhB;AAEH,OAAO,MAAM,cAAc,CAAC;IAC3B;AAGD,EAAE\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AAAA,SAAkC,IAAI,EAAE,SAAS,QAAQ,iBAAiB;AAE1E,OAAO,MAAM,aAAa,CAAC;IACzB,UAAU;AACZ,EAAE;AAEF,OAAO,MAAM,WAAW,KAAK,YAAY;AAEzC,OAAO,MAAM,oBAAM,4EAMhB;AAEH,OAAO,MAAM,cAAc,CAAC;IAC1B;AAGF,EAAE\"}")
 ============================= test.tsx_App_component_useMemo_6Sc9KVki3Y0.js (ENTRY POINT)==
 
 import { _captures } from "@qwik.dev/core";
@@ -57,7 +53,7 @@ export const App_component_useMemo_6Sc9KVki3Y0 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iDAWU;;IACR,QAAQ,GAAG,CAAC,MAAM,KAAK\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iDAUW;;IACP,QAAQ,GAAG,CAAC,MAAM,KAAK\"}")
 /*
 {
   "origin": "test.tsx",
@@ -73,8 +69,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "useMemo$",
   "captures": true,
   "loc": [
-    269,
-    307
+    273,
+    314
   ],
   "captureNames": [
     "state"
@@ -88,7 +84,7 @@ export const Lightweight_useMemo_UIcxVTQF1a8 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"+CAoBU;IACR,QAAQ,GAAG,CAAC,MAAM,KAAK;AACxB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"+CAiBW;IACP,QAAQ,GAAG,CAAC,MAAM,KAAK;AACzB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -104,8 +100,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "useMemo$",
   "captures": false,
   "loc": [
-    415,
-    453
+    417,
+    458
   ]
 }
 */
@@ -129,7 +125,7 @@ export const App_component_ckEPmXZlub0 = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;yCAS8B,CAAC;IAC9B,MAAM,QAAQ,SAAS;QAAC,OAAO;IAAC;IAChC;;;IAGA;;;AAGD\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;yCAQ8B,CAAC;IAC7B,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAClC;;;IAGA;;;AACF\"}")
 /*
 {
   "origin": "test.tsx",
@@ -146,7 +142,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "captures": false,
   "loc": [
     209,
-    361
+    362
   ],
   "paramNames": [
     "props"
@@ -164,7 +160,7 @@ export const App_component_1_w0t0o3QMovU = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;2CAcU;;yBACR,WAAC,6BAAK\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;2CAaW;;yBAAM,WAAC,6BAAK\"}")
 /*
 {
   "origin": "test.tsx",
@@ -180,8 +176,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "$",
   "captures": true,
   "loc": [
-    320,
-    357
+    328,
+    358
   ],
   "captureNames": [
     "state"

@@ -3,20 +3,20 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$ } from '@qwik.dev/core';
-import mongodb from 'mongodb';
+import { component$ } from "@qwik.dev/core";
+import mongodb from "mongodb";
 
 export const onGet = () => {
-	const data = mongodb.collection.whatever;
-	return {
-		body: {
-		data
-		}
-	}
+  const data = mongodb.collection.whatever;
+  return {
+    body: {
+      data,
+    },
+  };
 };
 
-export default component$(()=> {
-	return <div>cmp</div>
+export default component$(() => {
+  return <div>cmp</div>;
 });
 
 === test.tsx ===

@@ -4,63 +4,66 @@ expression: output
 ---
 ==INPUT==
 
-
-import { component$, useStore, $ } from '@qwik.dev/core';
-import importedValue from 'v';
-import styles from './styles.module.css';
+import { component$, useStore, $ } from "@qwik.dev/core";
+import importedValue from "v";
+import styles from "./styles.module.css";
 
 export const App = component$((props) => {
-	const {Model} = props;
-	const state = useStore({count: 0});
-	const remove = $((id: number) => {
-		const d = state.data;
-		d.splice(
-			d.findIndex((d) => d.id === id),
-			1
-		)
-		});
-	return (
-		<>
-			<p class="stuff" onClick$={props.onClick$}>Hello Qwik</p>
-			<Div
-				class={styles.foo}
-				document={window.document}
-				onClick$={props.onClick$}
-				onEvent$={() => console.log('stuff')}
-				transparent$={() => {console.log('stuff')}}
-				immutable1="stuff"
-				immutable2={{
-					foo: 'bar',
-					baz: importedValue ? true : false,
-				}}
-				immutable3={2}
-				immutable4$={(ev) => console.log(state.count)}
-				immutable5={[1, 2, importedValue, null, {}]}
-			>
-				<p>Hello Qwik</p>
-			</Div>
-			{[].map(() => (
-				<Model
-					class={state}
-					remove$={remove}
-					mutable1={{
-						foo: 'bar',
-						baz: state.count ? true : false,
-					}}
-					mutable2={(() => console.log(state.count))()}
-					mutable3={[1, 2, state, null, {}]}
-				/>
-			))}
-		</>
-	);
+  const { Model } = props;
+  const state = useStore({ count: 0 });
+  const remove = $((id: number) => {
+    const d = state.data;
+    d.splice(
+      d.findIndex((d) => d.id === id),
+      1,
+    );
+  });
+  return (
+    <>
+      <p class="stuff" onClick$={props.onClick$}>
+        Hello Qwik
+      </p>
+      <Div
+        class={styles.foo}
+        document={window.document}
+        onClick$={props.onClick$}
+        onEvent$={() => console.log("stuff")}
+        transparent$={() => {
+          console.log("stuff");
+        }}
+        immutable1="stuff"
+        immutable2={{
+          foo: "bar",
+          baz: importedValue ? true : false,
+        }}
+        immutable3={2}
+        immutable4$={(ev) => console.log(state.count)}
+        immutable5={[1, 2, importedValue, null, {}]}
+      >
+        <p>Hello Qwik</p>
+      </Div>
+      {[].map(() => (
+        <Model
+          class={state}
+          remove$={remove}
+          mutable1={{
+            foo: "bar",
+            baz: state.count ? true : false,
+          }}
+          mutable2={(() => console.log(state.count))()}
+          mutable3={[1, 2, state, null, {}]}
+        />
+      ))}
+    </>
+  );
 });
 
 ============================= test.tsx_App_component_Fragment_Div_onEvent_zrFduYbT3xM.js (ENTRY POINT)==
 
-export const App_component_Fragment_Div_onEvent_zrFduYbT3xM = ()=>console.log('stuff');
+export const App_component_Fragment_Div_onEvent_zrFduYbT3xM = ()=>console.log("stuff");
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"8DAsBc,IAAM,QAAQ,GAAG,CAAC\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"8DAuBkB,IAAM,QAAQ,GAAG,CAAC\"}")
 /*
 {
   "origin": "test.tsx",
@@ -76,8 +79,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onEvent$",
   "captures": false,
   "loc": [
-    543,
-    569
+    604,
+    630
   ]
 }
 */
@@ -89,7 +92,7 @@ const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0");
 export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAKA,OAAO,MAAM,oBAAM,4EA4ChB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAIA,OAAO,MAAM,oBAAM,4EAgDhB\"}")
 ============================= test.tsx_App_component_Fragment_Div_immutable4_2zF7jA3Yti0.js (ENTRY POINT)==
 
 import { _captures } from "@qwik.dev/core";
@@ -99,7 +102,7 @@ export const App_component_Fragment_Div_immutable4_2zF7jA3Yti0 = (ev)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEA8BiB,CAAC;;WAAO,QAAQ,GAAG,CAAC,MAAM,KAAK\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEAiCqB,CAAC;;WAAO,QAAQ,GAAG,CAAC,MAAM,KAAK\"}")
 /*
 {
   "origin": "test.tsx",
@@ -115,8 +118,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "immutable4$",
   "captures": true,
   "loc": [
-    760,
-    792
+    876,
+    908
   ],
   "paramNames": [
     "ev"
@@ -129,11 +132,11 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 ============================= test.tsx_App_component_Fragment_Div_transparent_eeDEK6EM1oo.js (ENTRY POINT)==
 
 export const App_component_Fragment_Div_transparent_eeDEK6EM1oo = ()=>{
-    console.log('stuff');
+    console.log("stuff");
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"kEAuBkB;IAAO,QAAQ,GAAG,CAAC;AAAQ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"kEAwBsB;IACZ,QAAQ,GAAG,CAAC;AACd\"}")
 /*
 {
   "origin": "test.tsx",
@@ -149,8 +152,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "transparent$",
   "captures": false,
   "loc": [
-    589,
-    617
+    654,
+    703
   ]
 }
 */
@@ -164,7 +167,7 @@ import { qrl } from "@qwik.dev/core";
 import styles from "./styles.module.css";
 import { useStore } from "@qwik.dev/core";
 const _hf0 = (p0)=>({
-        foo: 'bar',
+        foo: "bar",
         baz: p0.count ? true : false
     });
 const _hf0_str = '{foo:"bar",baz:p0.count?true:false}';
@@ -194,7 +197,7 @@ export const App_component_ckEPmXZlub0 = (props)=>{
             transparent$: /*#__PURE__*/ qrl(i_eeDEK6EM1oo, "App_component_Fragment_Div_transparent_eeDEK6EM1oo"),
             immutable1: "stuff",
             immutable2: {
-                foo: 'bar',
+                foo: "bar",
                 baz: importedValue ? true : false
             },
             immutable3: 2,
@@ -229,7 +232,7 @@ export const App_component_ckEPmXZlub0 = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;mBAuCe,CAAA;QACT,KAAK;QACL,KAAK,GAAM,KAAK,GAAG,OAAO;IAC3B,CAAA;;;;;;yCArCyB,CAAC;IAE9B,MAAM,QAAQ,SAAS;QAAC,OAAO;IAAC;IAChC,MAAM;;;IAON,qBACC;sBACC,WAAC;YAAgB,aAAU,MAAM,QAAQ;;YAAtC,OAAM;WAAkC;sBAC3C,WAAC;YAEA,UAAU,OAAO,QAAQ;YACzB,UAAU,MAAM,QAAQ;;YAFxB,OAAO,OAAO,GAAG;YAGjB,QAAQ;YACR,YAAY;YACZ,YAAW;YACX,YAAY;gBACX,KAAK;gBACL,KAAK,gBAAgB,OAAO;YAC7B;YACA,YAAY;YACZ,WAAW;;;YACX,YAAY;gBAAC;gBAAG;gBAAG;gBAAe;gBAAM,CAAC;aAAE;yBAE3C,WAAC,iBAAE;QAEH,EAAE,CAAC,GAAG,CAAC,kBACP,WA9Ba,MAAT;gBAqCH,UAAU,CAAC,IAAM,QAAQ,GAAG,CAAC,MAAM,KAAK,CAAC;;gBANzC,OAAO;gBACP,SAAS;gBACT,QAAQ;;;gBAKR,UAAU;oBAAC;oBAAG;oBAAG;oBAAO;oBAAM,CAAC;iBAAE;;;AAKtC\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;mBA0CoB,CAAA;QACR,KAAK;QACL,KAAK,GAAM,KAAK,GAAG,OAAO;IAC5B,CAAA;;;;;;yCAzCoB,CAAC;IAE7B,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAClC,MAAM;;;IAON,qBACE;sBACE,WAAC;YAAgB,aAAU,MAAM,QAAQ;;YAAtC,OAAM;WAAkC;sBAG3C,WAAC;YAEC,UAAU,OAAO,QAAQ;YACzB,UAAU,MAAM,QAAQ;;YAFxB,OAAO,OAAO,GAAG;YAGjB,QAAQ;YACR,YAAY;YAGZ,YAAW;YACX,YAAY;gBACV,KAAK;gBACL,KAAK,gBAAgB,OAAO;YAC9B;YACA,YAAY;YACZ,WAAW;;;YACX,YAAY;gBAAC;gBAAG;gBAAG;gBAAe;gBAAM,CAAC;aAAE;yBAE3C,WAAC,iBAAE;QAEJ,EAAE,CAAC,GAAG,CAAC,kBACN,WAlCY,MAAV;gBAyCA,UAAU,CAAC,IAAM,QAAQ,GAAG,CAAC,MAAM,KAAK,CAAC;;gBANzC,OAAO;gBACP,SAAS;gBACT,QAAQ;;;gBAKR,UAAU;oBAAC;oBAAG;oBAAG;oBAAO;oBAAM,CAAC;iBAAE;;;AAK3C\"}")
 /*
 {
   "origin": "test.tsx",
@@ -245,8 +248,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    164,
-    1149
+    163,
+    1338
   ],
   "paramNames": [
     "props"
@@ -263,7 +266,7 @@ export const App_component_remove_pU6yOC5P6sY = (id)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";gDAQkB,CAAC;;IACjB,MAAM,IAAI,MAAM,IAAI;IACpB,EAAE,MAAM,CACP,EAAE,SAAS,CAAC,CAAC,IAAM,EAAE,EAAE,KAAK,KAC5B\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";gDAOmB,CAAC;;IAChB,MAAM,IAAI,MAAM,IAAI;IACpB,EAAE,MAAM,CACN,EAAE,SAAS,CAAC,CAAC,IAAM,EAAE,EAAE,KAAK,KAC5B\"}")
 /*
 {
   "origin": "test.tsx",
@@ -279,8 +282,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "$",
   "captures": true,
   "loc": [
-    256,
-    358
+    262,
+    378
   ],
   "paramNames": [
     "id"

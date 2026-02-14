@@ -1,25 +1,17 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 2409
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
-
-import { component$ } from '@qwik.dev/core';
+import { component$ } from "@qwik.dev/core";
 
 const App = component$(() => {
-	return (
-		<div>hola</div>
-	);
+  return <div>hola</div>;
 });
 
-
 export const Root = component$((props: Stuff) => {
-	return (
-		<App/>
-	);
+  return <App />;
 });
 
 const Other = 12;
@@ -41,7 +33,7 @@ export default App;
 export { App as _auto_App };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AAGA,MAAM,oBAAM;AAOZ,OAAO,MAAM,qBAAO,6EAIjB;AAEH,MAAM,QAAQ;AACd,SAAS,SAAS,GAAG,GAAG;AAExB,eAAe,IAAI\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AAEA,MAAM,oBAAM;AAIZ,OAAO,MAAM,qBAAO,6EAEjB;AAEH,MAAM,QAAQ;AACd,SAAS,SAAS,GAAG,GAAG;AAExB,eAAe,IAAI\"}")
 ============================= test.tsx_Root_component_royhjYaCbYE.js (ENTRY POINT)==
 
 import { _auto_App as App } from "./test";
@@ -51,7 +43,7 @@ export const Root_component_royhjYaCbYE = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;0CAU+B,CAAC;IAC/B,qBACC,WAAC;AAEH\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;0CAM+B,CAAC;IAC9B,qBAAO,WAAC;AACV\"}")
 /*
 {
   "origin": "test.tsx",
@@ -67,8 +59,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    148,
-    192
+    140,
+    179
   ],
   "paramNames": [
     "props"
@@ -83,7 +75,7 @@ export const App_component_ckEPmXZlub0 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";yCAGuB;IACtB,qBACC,WAAC,mBAAI;AAEP\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";yCAEuB;IACrB,qBAAO,WAAC,mBAAI;AACd\"}")
 /*
 {
   "origin": "test.tsx",
@@ -99,8 +91,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    71,
-    112
+    70,
+    105
   ]
 }
 */

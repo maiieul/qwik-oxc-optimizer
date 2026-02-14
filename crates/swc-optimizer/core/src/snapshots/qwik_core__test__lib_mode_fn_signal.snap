@@ -1,24 +1,22 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 3854
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
+import { component$ } from "@qwik.dev/core";
+export const Counter = component$(() => {
+  const count = useSignal(0);
 
-		import { component$ } from '@qwik.dev/core';
-		export const Counter = component$(() => {
-			const count = useSignal(0);
-
-			return (
-				<div>
-					<p>Count: {count.value}</p>
-					<p>
-						<button onClick$={() => count.value++}>Increment</button>
-					</p>
-				</div>
-			);
-		});
+  return (
+    <div>
+      <p>Count: {count.value}</p>
+      <p>
+        <button onClick$={() => count.value++}>Increment</button>
+      </p>
+    </div>
+  );
+});
 
 ============================= test.tsx_Counter_component_div_p_button_q_e_click_Pq1pmfmJWUI.ts (ENTRY POINT)==
 
@@ -29,7 +27,7 @@ export const Counter_component_div_p_button_q_e_click_Pq1pmfmJWUI = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";oEASwB;;WAAM,MAAM,KAAK\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";oEAQ0B;;WAAM,MAAM,KAAK\"}")
 /*
 {
   "origin": "test.tsx",
@@ -45,8 +43,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": true,
   "loc": [
-    213,
-    232
+    210,
+    229
   ],
   "captureNames": [
     "count"
@@ -75,7 +73,7 @@ export const Counter_component_zTmRHlL09Gg = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;6CAEoC;IACjC,MAAM,QAAQ,UAAU;IAExB,qBACC,WAAC;sBACA,WAAC;YAAE;sBAAQ;;sBACX,WAAC,+BACA,WAAC;YAAO,WAAQ;;;WAAuB;;AAI3C\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;6CACkC;IAChC,MAAM,QAAQ,UAAU;IAExB,qBACE,WAAC;sBACC,WAAC;YAAE;sBAAQ;;sBACX,WAAC,+BACC,WAAC;YAAO,WAAQ;;;WAAuB;;AAI/C\"}")
 /*
 {
   "origin": "test.tsx",
@@ -91,8 +89,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    85,
-    283
+    80,
+    278
   ]
 }
 */
@@ -104,7 +102,7 @@ const i_zTmRHlL09Gg = ()=>import("./test.tsx_Counter_component_zTmRHlL09Gg");
 export const Counter = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_zTmRHlL09Gg, "Counter_component_zTmRHlL09Gg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEE,OAAO,MAAM,wBAAU,gFAWpB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,OAAO,MAAM,wBAAU,gFAWpB\"}")
 == DIAGNOSTICS ==
 
 []

@@ -1,42 +1,42 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 1238
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { $, component$, useStyles } from '@qwik.dev/core';
-import { qrl } from '@qwik.dev/core/what';
+import { $, component$, useStyles } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core/what";
 
 export const hW = 12;
 export const handleWatch = 42;
 
-const componentQrl = () => console.log('not this', qrl());
+const componentQrl = () => console.log("not this", qrl());
 
 componentQrl();
-export const Foo = component$(() => {
-	useStyles$('thing');
-	const qwik = hW + handleWatch;
-	console.log(qwik);
-	const qrl = 23;
-	return (
-		<div onClick$={()=> console.log(qrl)}/>
-	)
-}, {
-	tagName: "my-foo",
-});
+export const Foo = component$(
+  () => {
+    useStyles$("thing");
+    const qwik = hW + handleWatch;
+    console.log(qwik);
+    const qrl = 23;
+    return <div onClick$={() => console.log(qrl)} />;
+  },
+  {
+    tagName: "my-foo",
+  },
+);
 
-export const Root = component$(() => {
-	useStyles($('thing'));
-	return $(() => {
-		return (
-			<div/>
-		)
-	});
-}, {
-	tagName: "my-foo",
-});
+export const Root = component$(
+  () => {
+    useStyles($("thing"));
+    return $(() => {
+      return <div />;
+    });
+  },
+  {
+    tagName: "my-foo",
+  },
+);
 
 ============================= test.js ==
 
@@ -44,10 +44,10 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_HTDRsvUbLiE = ()=>import("./test.tsx_Foo_component_HTDRsvUbLiE");
 const i_royhjYaCbYE = ()=>import("./test.tsx_Root_component_royhjYaCbYE");
-import { qrl as qrl1 } from '@qwik.dev/core/what';
+import { qrl as qrl1 } from "@qwik.dev/core/what";
 export const hW = 12;
 export const handleWatch = 42;
-const componentQrl1 = ()=>console.log('not this', qrl1());
+const componentQrl1 = ()=>console.log("not this", qrl1());
 componentQrl1();
 export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"), {
     tagName: "my-foo"
@@ -57,7 +57,7 @@ export const Root = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_royhjYaCbYE, 
 });
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AAEA,SAAS,OAAA,IAAG,QAAQ,sBAAsB;AAE1C,OAAO,MAAM,KAAK,GAAG;AACrB,OAAO,MAAM,cAAc,GAAG;AAE9B,MAAM,gBAAe,IAAM,QAAQ,GAAG,CAAC,YAAY;AAEnD;AACA,OAAO,MAAM,oBAAM,4EAQhB;IACF,SAAS;AACV,GAAG;AAEH,OAAO,MAAM,qBAAO,6EAOjB;IACF,SAAS;AACV,GAAG\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AACA,SAAS,OAAA,IAAG,QAAQ,sBAAsB;AAE1C,OAAO,MAAM,KAAK,GAAG;AACrB,OAAO,MAAM,cAAc,GAAG;AAE9B,MAAM,gBAAe,IAAM,QAAQ,GAAG,CAAC,YAAY;AAEnD;AACA,OAAO,MAAM,oBAAM,4EAQjB;IACE,SAAS;AACX,GACA;AAEF,OAAO,MAAM,qBAAO,6EAOlB;IACE,SAAS;AACX,GACA\"}")
 ============================= test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -66,7 +66,7 @@ import { handleWatch } from "./test";
 import { qrl } from "@qwik.dev/core";
 const i_YEa2A5ADUOg = ()=>import("./test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg");
 export const Foo_component_HTDRsvUbLiE = ()=>{
-    useStyles$('thing');
+    useStyles$("thing");
     const qwik = hW + handleWatch;
     console.log(qwik);
     return /*#__PURE__*/ _jsxSorted("div", null, {
@@ -75,7 +75,7 @@ export const Foo_component_HTDRsvUbLiE = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;yCAU8B;IAC7B,WAAW;IACX,MAAM,OAAO,KAAK;IAClB,QAAQ,GAAG,CAAC;IAEZ,qBACC,WAAC;QAAI,WAAQ;;AAEf\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;yCAUE;IACE,WAAW;IACX,MAAM,OAAO,KAAK;IAClB,QAAQ,GAAG,CAAC;IAEZ,qBAAO,WAAC;QAAI,WAAQ;;AACtB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -91,17 +91,17 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    265,
-    420
+    267,
+    435
   ]
 }
 */
 ============================= test.tsx_Root_component_useStyles_u5DkUxGrGnU.js (ENTRY POINT)==
 
-export const Root_component_useStyles_u5DkUxGrGnU = 'thing';
+export const Root_component_useStyles_u5DkUxGrGnU = "thing";
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"oDAuBa\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"oDAwBgB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -117,8 +117,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "$",
   "captures": false,
   "loc": [
-    501,
-    508
+    531,
+    538
   ]
 }
 */
@@ -134,7 +134,7 @@ export const Root_component_royhjYaCbYE = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;0CAsB+B;IAC9B;IACA;AAKD\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;0CAuBE;IACE;IACA;AAGF\"}")
 /*
 {
   "origin": "test.tsx",
@@ -150,8 +150,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    480,
-    561
+    507,
+    596
   ]
 }
 */
@@ -163,7 +163,7 @@ export const Root_component_1_cBpQNYDUHI4 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";4CAwBU;IACR,qBACC,WAAC;AAEH\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";4CAyBa;IACP,qBAAO,WAAC;AACV\"}")
 /*
 {
   "origin": "test.tsx",
@@ -179,8 +179,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "$",
   "captures": false,
   "loc": [
-    522,
-    557
+    555,
+    590
   ]
 }
 */
@@ -189,7 +189,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const Foo_component_div_q_e_click_YEa2A5ADUOg = ()=>console.log(23);
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"uDAgBiB,IAAK,QAAQ,GAAG,CAFpB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"uDAe0B,IAAM,QAAQ,GAAG,CAD3B\"}")
 /*
 {
   "origin": "test.tsx",
@@ -205,8 +205,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    391,
-    412
+    404,
+    426
   ]
 }
 */

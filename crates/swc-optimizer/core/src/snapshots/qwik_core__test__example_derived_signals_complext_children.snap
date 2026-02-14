@@ -1,30 +1,27 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 2963
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
+import { component$, useStore, mutable } from "@qwik.dev/core";
 
-import { component$, useStore, mutable } from '@qwik.dev/core';
-
-import {dep} from './file';
+import { dep } from "./file";
 
 export const App = component$(() => {
-	const signal = useSignal(0);
-	const store = useStore({});
-	return (
-		<>
-			<ul id="issue-2800-result">
-				{Object.entries(store).map(([key, value]) => (
-				<li>
-					{key} - {value}
-				</li>
-				))}
-			</ul>
-		</>
-	);
+  const signal = useSignal(0);
+  const store = useStore({});
+  return (
+    <>
+      <ul id="issue-2800-result">
+        {Object.entries(store).map(([key, value]) => (
+          <li>
+            {key} - {value}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
 });
 
 ============================= test.js ==
@@ -33,7 +30,7 @@ import { componentQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { useStore } from '@qwik.dev/core';
+import { useStore } from "@qwik.dev/core";
 const App_component_ckEPmXZlub0 = ()=>{
     useSignal(0);
     const store = useStore({});
@@ -48,7 +45,7 @@ const App_component_ckEPmXZlub0 = ()=>{
 export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AACA,SAAqB,QAAQ,QAAiB,iBAAiB;kCAIjC;IACd,UAAU;IACzB,MAAM,QAAQ,SAAS,CAAC;IACxB,qBACC,gDACC,WAAC;QAAG,IAAG;OACL,OAAO,OAAO,CAAC,OAAO,GAAG,CAAC,CAAC,CAAC,KAAK,MAAM,iBACxC,WAAC;YACC;YAAI;YAAI;;AAMd;AAdA,OAAO,MAAM,oBAAM,+FAchB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AAAA,SAAqB,QAAQ,QAAiB,iBAAiB;kCAIjC;IACb,UAAU;IACzB,MAAM,QAAQ,SAAS,CAAC;IACxB,qBACE,gDACE,WAAC;QAAG,IAAG;OACJ,OAAO,OAAO,CAAC,OAAO,GAAG,CAAC,CAAC,CAAC,KAAK,MAAM,iBACtC,WAAC;YACE;YAAI;YAAI;;AAMrB;AAdA,OAAO,MAAM,oBAAM,+FAchB\"}")
 == DIAGNOSTICS ==
 
 []

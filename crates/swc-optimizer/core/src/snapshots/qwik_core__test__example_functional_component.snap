@@ -1,20 +1,15 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 328
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
-
-import { $, component$, useStore } from '@qwik.dev/core';
+import { $, component$, useStore } from "@qwik.dev/core";
 const Header = component$(() => {
-	const thing = useStore();
-	const {foo, bar} = foo();
+  const thing = useStore();
+  const { foo, bar } = foo();
 
-	return (
-		<div>{thing}</div>
-	);
+  return <div>{thing}</div>;
 });
 
 ============================= test.tsx_Header_component_J4uyIhaBNR4.tsx (ENTRY POINT)==
@@ -28,7 +23,7 @@ export const Header_component_J4uyIhaBNR4 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;4CAE0B;IACzB,MAAM,QAAQ;IACd,MAAM,EAAC,GAAG,EAAE,GAAG,EAAC,GAAG;IAEnB,QACE,KAAK,QAAQ;AAEhB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;4CAC0B;IACxB,MAAM,QAAQ;IACd,MAAM,EAAE,GAAG,EAAE,GAAG,EAAE,GAAG;IAErB,QAAQ,KAAK,QAAQ;AACvB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -44,8 +39,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    86,
-    185
+    85,
+    182
   ]
 }
 */
@@ -54,11 +49,11 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_J4uyIhaBNR4 = ()=>import("./test.tsx_Header_component_J4uyIhaBNR4");
-import { $, component$, useStore } from '@qwik.dev/core';
+import { $, component$, useStore } from "@qwik.dev/core";
 const Header = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_J4uyIhaBNR4, "Header_component_J4uyIhaBNR4"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,SAAS,CAAC,EAAE,UAAU,EAAE,QAAQ,QAAQ,iBAAiB;AACzD,MAAM,uBAAS\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAAA,SAAS,CAAC,EAAE,UAAU,EAAE,QAAQ,QAAQ,iBAAiB;AACzD,MAAM,uBAAS\"}")
 == DIAGNOSTICS ==
 
 []

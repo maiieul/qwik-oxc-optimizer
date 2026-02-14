@@ -1,32 +1,30 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 3918
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
+import { component$, useSignal } from "@qwik.dev/core";
+const useFoo = (count) => {
+  const tag = (s) => {
+    const value = typeof s === "string" ? s : s[0];
+    return `${value}-${count.value}`;
+  };
+  return tag;
+};
 
-		import { component$, useSignal } from '@qwik.dev/core';
-		const useFoo = (count) => {
-			const tag = (s) => {
-				const value = typeof s === "string" ? s : s[0];
-				return `${value}-${count.value}`;
-			}
-			return tag;
-		}
+export default component$(() => {
+  const count = useSignal(0);
+  const foo = useFoo(count);
+  return (
+    <>
+      <p>{foo("test")}</p>
+      <p>{foo`test`}</p>
+      <button onClick$={() => count.value++}>Count up</button>
+    </>
+  );
+});
 
-		export default component$(() => {
-			const count = useSignal(0);
-			const foo = useFoo(count);
-			return (
-				<>
-					<p>{foo("test")}</p>
-					<p>{foo`test`}</p>
-					<button onClick$={() => count.value++}>Count up</button>
-				</>
-			);
-		});
-		
 ============================= test.tsx_test_component_Fragment_button_q_e_click_7MTd2pAiliw.ts (ENTRY POINT)==
 
 import { _captures } from "@qwik.dev/core";
@@ -36,7 +34,7 @@ export const test_component_Fragment_button_q_e_click_7MTd2pAiliw = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";oEAiBuB;;WAAM,MAAM,KAAK\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";oEAgBwB;;WAAM,MAAM,KAAK\"}")
 /*
 {
   "origin": "test.tsx",
@@ -52,8 +50,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": true,
   "loc": [
-    418,
-    437
+    408,
+    427
   ],
   "captureNames": [
     "count"
@@ -83,7 +81,7 @@ export const test_component_LUXeXe0DQrg = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;0CAU4B;IACzB,MAAM,QAAQ,UAAU;IACxB,MAAM,MAAM,OAAO;IACnB,qBACC;sBACC,WAAC,iBAAG,IAAI;sBACR,WAAC,iBAAG,GAAG,CAAC,IAAI,CAAC;sBACb,WAAC;YAAO,WAAQ;;;WAAuB;;AAG1C\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;0CAS0B;IACxB,MAAM,QAAQ,UAAU;IACxB,MAAM,MAAM,OAAO;IACnB,qBACE;sBACE,WAAC,iBAAG,IAAI;sBACR,WAAC,iBAAG,GAAG,CAAC,IAAI,CAAC;sBACb,WAAC;YAAO,WAAQ;;;WAAuB;;AAG7C\"}")
 /*
 {
   "origin": "test.tsx",
@@ -99,8 +97,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    257,
-    474
+    247,
+    461
   ]
 }
 */
@@ -120,7 +118,7 @@ export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test
 export { useFoo as _auto_useFoo };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEE,MAAM,SAAS,CAAC;IACf,MAAM,MAAM,CAAC;QACZ,MAAM,QAAQ,OAAO,MAAM,WAAW,IAAI,CAAC,CAAC,EAAE;QAC9C,OAAO,GAAG,MAAM,CAAC,EAAE,MAAM,KAAK,EAAE;IACjC;IACA,OAAO;AACR;AAEA,6BAAe,6EAUZ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,MAAM,SAAS,CAAC;IACd,MAAM,MAAM,CAAC;QACX,MAAM,QAAQ,OAAO,MAAM,WAAW,IAAI,CAAC,CAAC,EAAE;QAC9C,OAAO,GAAG,MAAM,CAAC,EAAE,MAAM,KAAK,EAAE;IAClC;IACA,OAAO;AACT;AAEA,6BAAe,6EAUZ\"}")
 == DIAGNOSTICS ==
 
 []

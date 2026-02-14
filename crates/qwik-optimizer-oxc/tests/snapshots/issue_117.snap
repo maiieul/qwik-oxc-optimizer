@@ -3,7 +3,7 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-export const cache = patternCache[cacheKey] || (patternCache[cacheKey]={});
+export const cache = patternCache[cacheKey] || (patternCache[cacheKey] = {});
 
 === project/test.tsx ===
 export const cache = patternCache[cacheKey] || (patternCache[cacheKey] = {});

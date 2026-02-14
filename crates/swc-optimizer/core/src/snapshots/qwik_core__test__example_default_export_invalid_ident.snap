@@ -1,27 +1,21 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 1595
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { component$ } from '@qwik.dev/core';
+import { component$ } from "@qwik.dev/core";
 
 export default component$(() => {
-	return (
-		<div onClick$={() => console.log(mongodb)}>
-		</div>
-	);
+  return <div onClick$={() => console.log(mongodb)}></div>;
 });
-
 
 ============================= src/components/mongo/404.tsx__404_component_div_q_e_click_aMLnLWtkRhc.tsx (ENTRY POINT)==
 
 export const _404_component_div_q_e_click_aMLnLWtkRhc = ()=>console.log(mongodb);
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\"],\"names\":[],\"mappings\":\"wDAKiB,IAAM,QAAQ,GAAG,CAAC\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\"],\"names\":[],\"mappings\":\"wDAGwB,IAAM,QAAQ,GAAG,CAAC\"}")
 /*
 {
   "origin": "src/components/mongo/404.tsx",
@@ -37,8 +31,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\
   "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    109,
-    135
+    105,
+    131
   ]
 }
 */
@@ -50,18 +44,17 @@ const i_zRvoWc98eqo = ()=>import("./404.tsx__404_component_zRvoWc98eqo");
 export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_zRvoWc98eqo, "_404_component_zRvoWc98eqo"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,6BAAe,6EAKZ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,6BAAe,6EAEZ\"}")
 ============================= src/components/mongo/404.tsx__404_component_zRvoWc98eqo.tsx (ENTRY POINT)==
 
 import { qrl } from "@qwik.dev/core";
 const i_aMLnLWtkRhc = ()=>import("./404.tsx__404_component_div_q_e_click_aMLnLWtkRhc");
 export const _404_component_zRvoWc98eqo = ()=>{
-    return <div q-e:click={/*#__PURE__*/ qrl(i_aMLnLWtkRhc, "_404_component_div_q_e_click_aMLnLWtkRhc")}>
-		</div>;
+    return <div q-e:click={/*#__PURE__*/ qrl(i_aMLnLWtkRhc, "_404_component_div_q_e_click_aMLnLWtkRhc")}></div>;
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\"],\"names\":[],\"mappings\":\";;0CAG0B;IACzB,QACE,IAAI,yFAAsC;EAC3C,EAAE;AAEJ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\"],\"names\":[],\"mappings\":\";;0CAE0B;IACxB,QAAQ,IAAI,2FAAwC;AACtD\"}")
 /*
 {
   "origin": "src/components/mongo/404.tsx",
@@ -77,8 +70,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    74,
-    152
+    73,
+    142
   ]
 }
 */

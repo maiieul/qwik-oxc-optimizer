@@ -1,50 +1,42 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 516
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
+import { $, component$, useTask$ } from "@qwik.dev/core";
+import { CONST } from "const";
+export const Works = component$(
+  ({ count, some = 1 + 2, hello = CONST, stuff: hey, stuffDefault: hey2 = 123, ...rest }) => {
+    console.log(hey, some);
+    useTask$(({ track }) => {
+      track(() => count);
+      console.log(count, rest, hey, some, hey2);
+    });
+    return (
+      <div some={some} params={{ some }} class={count} {...rest} override>
+        {count}
+      </div>
+    );
+  },
+);
 
-import { $, component$, useTask$ } from '@qwik.dev/core';
-import { CONST } from 'const';
-export const Works = component$(({
-	count,
-	some = 1+2,
-	hello = CONST,
-	stuff: hey,
-	stuffDefault: hey2 = 123,
-	...rest}) => {
-	console.log(hey, some);
-	useTask$(({track}) => {
-		track(() => count);
-		console.log(count, rest, hey, some, hey2);
-	});
-	return (
-		<div some={some} params={{ some }} class={count} {...rest} override>{count}</div>
-	);
+export const NoWorks2 = component$(({ count, stuff: { hey } }) => {
+  console.log(hey);
+  useTask$(({ track }) => {
+    track(() => count);
+    console.log(count);
+  });
+  return <div class={count}>{count}</div>;
 });
 
-export const NoWorks2 = component$(({count, stuff: {hey}}) => {
-	console.log(hey);
-	useTask$(({track}) => {
-		track(() => count);
-		console.log(count);
-	});
-	return (
-		<div class={count}>{count}</div>
-	);
-});
-
-export const NoWorks3 = component$(({count, stuff = hola()}) => {
-	console.log(stuff);
-	useTask$(({track}) => {
-		track(() => count);
-		console.log(count);
-	});
-	return (
-		<div class={count}>{count}</div>
-	);
+export const NoWorks3 = component$(({ count, stuff = hola() }) => {
+  console.log(stuff);
+  useTask$(({ track }) => {
+    track(() => count);
+    console.log(count);
+  });
+  return <div class={count}>{count}</div>;
 });
 
 ============================= test.js ==
@@ -125,7 +117,7 @@ export const NoWorks3 = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(({ c
 }, "NoWorks3_component_fc13h5yYn14"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;;;;;sBAKC,QAAO;;mBAWmB,CAAA;QAAE,IAAI,KAXhC,QAAO;IAW0B,CAAA;;AAblC,OAAO,MAAM,sBAAQ,sCAAW;;;;;;;;IAO/B,QAAQ,GAAG,WAHX,iBAFA,QAAO;IAMP,oCAAS,CAAC,EAAC,KAAK,EAAC;;QAChB,MAAM,cARP;QASC,QAAQ,GAAG,WATZ,OASoB,gBANpB,iBAFA,QAAO,aAGP,gBAAqB;;;;;IAOrB,qBACC,UAAC;QAAI,IAAI;;;QAAQ,MAAM;;;QAAY,KAAK;wBAAa;;0BAAA;QAAM,QAAQ;;AAErE,mCAAG;AAEH,OAAO,MAAM,yBAAW,sCAAW,CAAC,EAAC,KAAK,EAAE,OAAO,EAAC,GAAG,EAAC,EAAC;IACxD,QAAQ,GAAG,CAAC;IACZ,oCAAS,CAAC,EAAC,KAAK,EAAC;;QAChB,MAAM,IAAM;QACZ,QAAQ,GAAG,CAAC;;;;IAEb,qBACC,WAAC;QAAI,OAAO;aAAQ;AAEtB,sCAAG;AAEH,OAAO,MAAM,yBAAW,sCAAW,CAAC,EAAC,KAAK,EAAE,QAAQ,MAAM,EAAC;IAC1D,QAAQ,GAAG,CAAC;IACZ,oCAAS,CAAC,EAAC,KAAK,EAAC;;QAChB,MAAM,IAAM;QACZ,QAAQ,GAAG,CAAC;;;;IAEb,qBACC,WAAC;QAAI,OAAO;aAAQ;AAEtB,sCAAG\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;;;;;sBAGY,QAAO;;mBAOY,CAAA;QAAE,IAAI,KAPzB,QAAO;IAOmB,CAAA;;AARtC,OAAO,MAAM,sBAAQ,sCACnB;;;;;;;;IACE,QAAQ,GAAG,WAD0B,iBAA7B,QAAO;IAEf,oCAAS,CAAC,EAAE,KAAK,EAAE;;QACjB,MAAM,cAHP;QAIC,QAAQ,GAAG,WAJZ,OAIoB,gBAJgB,iBAA7B,QAAO,aAAkC,gBAAqB;;;;;IAMtE,qBACE,UAAC;QAAI,IAAI;;;QAAQ,MAAM;;;QAAY,KAAK;wBAAa;;0BAAA;QAAM,QAAQ;;AAIvE,mCACA;AAEF,OAAO,MAAM,yBAAW,sCAAW,CAAC,EAAE,KAAK,EAAE,OAAO,EAAE,GAAG,EAAE,EAAE;IAC3D,QAAQ,GAAG,CAAC;IACZ,oCAAS,CAAC,EAAE,KAAK,EAAE;;QACjB,MAAM,IAAM;QACZ,QAAQ,GAAG,CAAC;;;;IAEd,qBAAO,WAAC;QAAI,OAAO;aAAQ;AAC7B,sCAAG;AAEH,OAAO,MAAM,yBAAW,sCAAW,CAAC,EAAE,KAAK,EAAE,QAAQ,MAAM,EAAE;IAC3D,QAAQ,GAAG,CAAC;IACZ,oCAAS,CAAC,EAAE,KAAK,EAAE;;QACjB,MAAM,IAAM;QACZ,QAAQ,GAAG,CAAC;;;;IAEd,qBAAO,WAAC;QAAI,OAAO;aAAQ;AAC7B,sCAAG\"}")
 == DIAGNOSTICS ==
 
 []

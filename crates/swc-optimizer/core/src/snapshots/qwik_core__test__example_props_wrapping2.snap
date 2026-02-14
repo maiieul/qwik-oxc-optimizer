@@ -1,24 +1,21 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 596
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { $, component$, useSignal } from '@qwik.dev/core';
+import { $, component$, useSignal } from "@qwik.dev/core";
 export const Works = component$((props: { fromProps: number }) => {
-	let fromLocal = useSignal(0);
-	return (
-		<div
-			computed={fromLocal + props.fromProps}
-			local={fromLocal}
-			props-wrap={props.fromProps}
-			props-only={{props: props.fromProps}}
-			props={{props: props.fromProps, local: fromLocal}}
-				>
-		</div>
-	);
+  let fromLocal = useSignal(0);
+  return (
+    <div
+      computed={fromLocal + props.fromProps}
+      local={fromLocal}
+      props-wrap={props.fromProps}
+      props-only={{ props: props.fromProps }}
+      props={{ props: props.fromProps, local: fromLocal }}
+    ></div>
+  );
 });
 
 ============================= test.js ==
@@ -39,7 +36,7 @@ const _hf2 = (p0, p1)=>({
         local: p0
     });
 const _hf2_str = "{props:p1.fromProps,local:p0}";
-import { useSignal } from '@qwik.dev/core';
+import { useSignal } from "@qwik.dev/core";
 export const Works = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((props)=>{
     let fromLocal = useSignal(0);
     return /*#__PURE__*/ _jsxSorted("div", {
@@ -60,7 +57,7 @@ export const Works = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((props)
 }, "Works_component_t45qL4vNGv0"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;uBAMa,KAAY,GAAM,SAAS;;mBAGzB,CAAA;QAAC,OAAO,GAAM,SAAS;IAAA,CAAA;;uBAC5B,CAAA;QAAC,OAAO,GAAM,SAAS;QAAE,KAAK;IAAW,CAAA;;AATnD,SAAwB,SAAS,QAAQ,iBAAiB;AAC1D,OAAO,MAAM,sBAAQ,sCAAW,CAAC;IAChC,IAAI,YAAY,UAAU;IAC1B,qBACC,WAAC;QACA,QAAQ;;;;QACR,OAAO;QAGP,KAAK;;;;QADL,YAAU;;;QADV,YAAU,YAAE;;AAMf,mCAAG\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;uBAKgB,KAAY,GAAM,SAAS;;mBAGzB,CAAA;QAAE,OAAO,GAAM,SAAS;IAAC,CAAA;;uBAC9B,CAAA;QAAE,OAAO,GAAM,SAAS;QAAE,KAAK;IAAY,CAAA;;AATxD,SAAwB,SAAS,QAAQ,iBAAiB;AAC1D,OAAO,MAAM,sBAAQ,sCAAW,CAAC;IAC/B,IAAI,YAAY,UAAU;IAC1B,qBACE,WAAC;QACC,QAAQ;;;;QACR,OAAO;QAGP,KAAK;;;;QADL,YAAU;;;QADV,YAAU,YAAE;;AAKlB,mCAAG\"}")
 == DIAGNOSTICS ==
 
 []

@@ -1,29 +1,27 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 4332
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
+import { component$, useComputed$ } from "@qwik.dev/core";
+import { inlineTranslate } from "translate-lib";
 
-		import { component$, useComputed$ } from '@qwik.dev/core';
-		import { inlineTranslate } from 'translate-lib';
+export default component$(() => {
+  const t = inlineTranslate();
 
-		export default component$(() => {
-			const t = inlineTranslate();
+  const productTitle = useComputed$(() => {
+    return "Test title";
+  });
 
-			const productTitle = useComputed$(() => {
-				return 'Test title';
-			});
+  return (
+    <img
+      attr={t("home.imageAlt.founded-product:")}
+      alt={`${t("home.imageAlt.founded-product:")} ${productTitle.value}`}
+    />
+  );
+});
 
-			return (
-				<img 
-					attr={t('home.imageAlt.founded-product:')}
-					alt={`${t('home.imageAlt.founded-product:')} ${productTitle.value}`} />
-			);
-		});
-		
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -32,15 +30,15 @@ const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
 export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAIE,6BAAe,6EAYZ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,6BAAe,6EAaZ\"}")
 ============================= test.tsx_test_component_productTitle_useComputed_ZVQVUkxqtiQ.js (ENTRY POINT)==
 
 export const test_component_productTitle_useComputed_ZVQVUkxqtiQ = ()=>{
-    return 'Test title';
+    return "Test title";
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"mEAOqC;IACjC,OAAO;AACR\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"mEAMoC;IAChC,OAAO;AACT\"}")
 /*
 {
   "origin": "test.tsx",
@@ -56,8 +54,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "useComputed$",
   "captures": false,
   "loc": [
-    221,
-    258
+    212,
+    248
   ]
 }
 */
@@ -72,13 +70,13 @@ export const test_component_LUXeXe0DQrg = ()=>{
     const t = inlineTranslate();
     const productTitle = useComputedQrl(/*#__PURE__*/ qrl(i_ZVQVUkxqtiQ, "test_component_productTitle_useComputed_ZVQVUkxqtiQ"));
     return /*#__PURE__*/ _jsxSorted("img", {
-        alt: `${t('home.imageAlt.founded-product:')} ${productTitle.value}`,
-        attr: t('home.imageAlt.founded-product:')
+        alt: `${t("home.imageAlt.founded-product:")} ${productTitle.value}`,
+        attr: t("home.imageAlt.founded-product:")
     }, null, null, 3, "u6_0");
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;0CAI4B;IACzB,MAAM,IAAI;IAEV,MAAM,eAAe;IAIrB,qBACC,WAAC;QAEA,KAAK,GAAG,EAAE,kCAAkC,CAAC,EAAE,aAAa,KAAK,EAAE;QADnE,MAAM,EAAE;;AAGX\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;0CAG0B;IACxB,MAAM,IAAI;IAEV,MAAM,eAAe;IAIrB,qBACE,WAAC;QAEC,KAAK,GAAG,EAAE,kCAAkC,CAAC,EAAE,aAAa,KAAK,EAAE;QADnE,MAAM,EAAE;;AAId\"}")
 /*
 {
   "origin": "test.tsx",
@@ -94,8 +92,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    143,
-    418
+    136,
+    409
   ]
 }
 */

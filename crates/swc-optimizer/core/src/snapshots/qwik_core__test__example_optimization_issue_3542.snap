@@ -1,25 +1,26 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 769
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
+import { component$ } from "@qwik.dev/core";
 
-import { component$ } from '@qwik.dev/core';
-
-export const AtomStatus = component$(({ctx,atom})=>{
-	let status = atom.status;
-	if(!atom.real) {
-		status="WILL-VANISH"
-	} else if (JSON.stringify(atom.atom)==JSON.stringify(atom.real)) {
-		status="WTFED"
-	}
-	return (
-		<span title={atom.ID} onClick$={(ev)=>atomStatusClick(ctx,ev,[atom])} class={["atom",status,ctx.store[atom.ID]?"selected":null]}>
-		</span>
-	);
-})
+export const AtomStatus = component$(({ ctx, atom }) => {
+  let status = atom.status;
+  if (!atom.real) {
+    status = "WILL-VANISH";
+  } else if (JSON.stringify(atom.atom) == JSON.stringify(atom.real)) {
+    status = "WTFED";
+  }
+  return (
+    <span
+      title={atom.ID}
+      onClick$={(ev) => atomStatusClick(ctx, ev, [atom])}
+      class={["atom", status, ctx.store[atom.ID] ? "selected" : null]}
+    ></span>
+  );
+});
 
 ============================= test.jsx ==
 
@@ -41,12 +42,11 @@ export const AtomStatus = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((_
         "atom",
         status,
         _rawProps.ctx.store[_rawProps.atom.ID] ? "selected" : null
-    ]}>
-		</span>;
+    ]}></span>;
 }, "AtomStatus_component_hdwpoUtydSA"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,OAAO,MAAM,2BAAa,sCAAW;IACpC,IAAI,SAAS,UAD6B,KACxB,MAAM;IACxB,IAAG,CAAC,UAFsC,KAEjC,IAAI,EACZ,SAAO;SACD,IAAI,KAAK,SAAS,CAAC,UAJgB,KAIX,IAAI,KAAG,KAAK,SAAS,CAAC,UAJX,KAIgB,IAAI,GAC7D,SAAO;IAER,QACE,KAAK,OAAO,UAR4B,KAQvB,EAAE,EAAE,oCAAU,CAAC;;eAAK,0BARD,KAQqB,IAAG;sBARpB;SAQ0B;;;QAAG,OAAO;QAAC;QAAO;QAAO,UARvD,IAQ2D,KAAK,CAAC,UAR7D,KAQkE,EAAE,CAAC,GAAC,aAAW;KAAK,EAAE;EACjI,EAAE;AAEJ,wCAAE\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,2BAAa,sCAAW;IACnC,IAAI,SAAS,UAD8B,KACzB,MAAM;IACxB,IAAI,CAAC,UAFsC,KAEjC,IAAI,EACZ,SAAS;SACJ,IAAI,KAAK,SAAS,CAAC,UAJiB,KAIZ,IAAI,KAAK,KAAK,SAAS,CAAC,UAJZ,KAIiB,IAAI,GAC9D,SAAS;IAEX,QACG,KACC,OAAO,UATgC,KAS3B,EAAE,EACd,oCAAU,CAAC;;eAAO,0BAVgB,KAUK,IAAI;sBAVJ;SAUU;;;QACjD,OAAO;QAAC;QAAQ;QAAQ,UAXU,IAWN,KAAK,CAAC,UAXK,KAWA,EAAE,CAAC,GAAG,aAAa;KAAK,IAC9D;AAEP,wCAAG\"}")
 == DIAGNOSTICS ==
 
 []

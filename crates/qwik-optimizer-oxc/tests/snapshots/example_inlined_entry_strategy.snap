@@ -3,26 +3,22 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from '@qwik.dev/core';
-import { thing } from './sibling';
-import mongodb from 'mongodb';
+import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from "@qwik.dev/core";
+import { thing } from "./sibling";
+import mongodb from "mongodb";
 
 export const Child = component$(() => {
+  useStyles$("somestring");
+  const state = useStore({
+    count: 0,
+  });
 
-	useStyles$('somestring');
-	const state = useStore({
-		count: 0
-	});
+  // Double count watch
+  useBrowserVisibleTask$(() => {
+    state.count = thing.doStuff() + import("./sibling");
+  });
 
-	// Double count watch
-	useBrowserVisibleTask$(() => {
-		state.count = thing.doStuff() + import("./sibling");
-	});
-
-	return (
-		<div onClick$={() => console.log(mongodb)}>
-		</div>
-	);
+  return <div onClick$={() => console.log(mongodb)}></div>;
 });
 
 === test.tsx ===
@@ -41,6 +37,5 @@ export const Child = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() 
 	useBrowserVisibleTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
 		state.count = thing.doStuff() + import("./sibling");
 	}, "useBrowserVisibleTask_0qCMfawldvU", [state]));
-	return <div onClick$={/* @__PURE__ */ inlinedQrl(() => console.log(mongodb), "Child_component_div_q_e_click_atbV2f006AU")}>
-		</div>;
+	return <div onClick$={/* @__PURE__ */ inlinedQrl(() => console.log(mongodb), "Child_component_div_q_e_click_atbV2f006AU")}></div>;
 }, "Child_component_80js9RUUsfM"));

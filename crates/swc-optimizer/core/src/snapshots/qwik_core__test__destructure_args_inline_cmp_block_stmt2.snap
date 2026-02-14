@@ -1,29 +1,27 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 3674
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
+export default (props: { data: any }) => {
+  const { data } = props;
+  return (
+    <div
+      data-is-active={data.selectedOutputDetail === "options"}
+      onClick$={() => {
+        data.selectedOutputDetail = "options";
+      }}
+    />
+  );
+};
 
-		export default (props: { data: any }) => {
-		  const { data } = props;
-          return (
-            <div
-              data-is-active={data.selectedOutputDetail === 'options'}
-              onClick$={() => {
-                data.selectedOutputDetail = 'options';
-              }}
-            />
-          );
-		};
-		
 ============================= test.js ==
 
 import { _fnSignal } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const _hf0 = (p0)=>p0.data.selectedOutputDetail === 'options';
+const _hf0 = (p0)=>p0.data.selectedOutputDetail === "options";
 const _hf0_str = 'p0.data.selectedOutputDetail==="options"';
 const i_pFqTss400MA = ()=>import("./test.tsx_test_div_q_e_click_pFqTss400MA");
 export default ((props)=>{
@@ -38,17 +36,17 @@ export default ((props)=>{
 });
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;mBAK8B,GAHlB,KAGuB,oBAAoB,KAAK;;;AAJ1D,eAAe,CAAA,CAAC;IAER,qBACE,WAAC;QACC,gBAAc;;;QACd,WAAQ;;;;AAKpB,CAAA,EAAE\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;mBAIsB,GAHZ,KAGiB,oBAAoB,KAAK;;;AAJpD,eAAe,CAAA,CAAC;IAEd,qBACE,WAAC;QACC,gBAAc;;;QACd,WAAQ;;;;AAKd,CAAA,EAAE\"}")
 ============================= test.tsx_test_div_q_e_click_pFqTss400MA.js (ENTRY POINT)==
 
 import { _captures } from "@qwik.dev/core";
 export const test_div_q_e_click_pFqTss400MA = ()=>{
     const props = _captures[0];
-    props.data.selectedOutputDetail = 'options';
+    props.data.selectedOutputDetail = "options";
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";8CAMwB;;IAJH,MAAT,KAKS,oBAAoB,GAAG\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";8CAKgB;;IAJG,MAAT,KAKG,oBAAoB,GAAG\"}")
 /*
 {
   "origin": "test.tsx",
@@ -64,8 +62,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": true,
   "loc": [
-    206,
-    284
+    169,
+    231
   ],
   "captureNames": [
     "props"

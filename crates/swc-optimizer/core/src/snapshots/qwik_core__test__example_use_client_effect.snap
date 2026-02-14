@@ -1,35 +1,28 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 1480
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from '@qwik.dev/core';
+import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from "@qwik.dev/core";
 
 export const Child = component$(() => {
-	const state = useStore({
-		count: 0
-	});
+  const state = useStore({
+    count: 0,
+  });
 
-	// Double count watch
-	useBrowserVisibleTask$(() => {
-		const timer = setInterval(() => {
-		state.count++;
-		}, 1000);
-		return () => {
-		clearInterval(timer);
-		}
-	});
+  // Double count watch
+  useBrowserVisibleTask$(() => {
+    const timer = setInterval(() => {
+      state.count++;
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  });
 
-	return (
-		<div>
-		{state.count}
-	</div>
-	);
+  return <div>{state.count}</div>;
 });
-
 
 ============================= test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA.js (ENTRY POINT)==
 
@@ -45,7 +38,7 @@ export const Child_component_useBrowserVisibleTask_0IGFPOyJmQA = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEASwB;;IACtB,MAAM,QAAQ,YAAY;QAC1B,MAAM,KAAK;IACX,GAAG;IACH,OAAO;QACP,cAAc;IACd\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEAQyB;;IACrB,MAAM,QAAQ,YAAY;QACxB,MAAM,KAAK;IACb,GAAG;IACH,OAAO;QACL,cAAc;IAChB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -61,8 +54,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "useBrowserVisibleTask$",
   "captures": true,
   "loc": [
-    224,
-    344
+    230,
+    368
   ],
   "captureNames": [
     "state"
@@ -77,7 +70,7 @@ const i_9GyF01GDKqw = ()=>import("./test.tsx_Child_component_9GyF01GDKqw");
 export const Child = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_9GyF01GDKqw, "Child_component_9GyF01GDKqw"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,OAAO,MAAM,sBAAQ,8EAoBlB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,sBAAQ,8EAgBlB\"}")
 ============================= test.tsx_Child_component_9GyF01GDKqw.js (ENTRY POINT)==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -98,7 +91,7 @@ export const Child_component_9GyF01GDKqw = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;2CAGgC;IAC/B,MAAM,QAAQ,SAAS;QACtB,OAAO;IACR;IAEA,qBAAqB;IACrB;;;IASA,qBACC,WAAC,6BACA;AAGH\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;2CAEgC;IAC9B,MAAM,QAAQ,SAAS;QACrB,OAAO;IACT;IAEA,qBAAqB;IACrB;;;IASA,qBAAO,WAAC,6BAAK;AACf\"}")
 /*
 {
   "origin": "test.tsx",
@@ -114,8 +107,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    126,
-    395
+    125,
+    408
   ]
 }
 */

@@ -1,46 +1,40 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 349
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
 
-
-import { $, component$, useStore } from '@qwik.dev/core';
+import { $, component$, useStore } from "@qwik.dev/core";
 export const useCounter = () => {
-	return useStore({count: 0});
-}
+  return useStore({ count: 0 });
+};
 
 export const STEP = 1;
 
 export const App = component$((props) => {
-	const state = useCounter();
-	const thing = useStore({thing: 0});
-	const STEP_2 = 2;
+  const state = useCounter();
+  const thing = useStore({ thing: 0 });
+  const STEP_2 = 2;
 
-	const count2 = state.count * 2;
-	return (
-		<div onClick$={() => state.count+=count2 }>
-			<span>{state.count}</span>
-			{buttons.map(btn => (
-				<button
-					onClick$={() => state.count += btn.offset + thing + STEP + STEP_2 + props.step}
-				>
-					{btn.name}
-				</button>
-			))}
-
-		</div>
-
-	);
-})
+  const count2 = state.count * 2;
+  return (
+    <div onClick$={() => (state.count += count2)}>
+      <span>{state.count}</span>
+      {buttons.map((btn) => (
+        <button onClick$={() => (state.count += btn.offset + thing + STEP + STEP_2 + props.step)}>
+          {btn.name}
+        </button>
+      ))}
+    </div>
+  );
+});
 
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0");
-import { useStore } from '@qwik.dev/core';
+import { useStore } from "@qwik.dev/core";
 export const useCounter = ()=>{
     return useStore({
         count: 0
@@ -50,7 +44,7 @@ export const STEP = 1;
 export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,SAAwB,QAAQ,QAAQ,iBAAiB;AACzD,OAAO,MAAM,aAAa;IACzB,OAAO,SAAS;QAAC,OAAO;IAAC;AAC1B,EAAC;AAED,OAAO,MAAM,OAAO,EAAE;AAEtB,OAAO,MAAM,oBAAM,4EAoBjB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAAA,SAAwB,QAAQ,QAAQ,iBAAiB;AACzD,OAAO,MAAM,aAAa;IACxB,OAAO,SAAS;QAAE,OAAO;IAAE;AAC7B,EAAE;AAEF,OAAO,MAAM,OAAO,EAAE;AAEtB,OAAO,MAAM,oBAAM,4EAgBhB\"}")
 ============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -86,7 +80,7 @@ export const App_component_ckEPmXZlub0 = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;yCAQ8B,CAAC;IAC9B,MAAM,QAAQ;IACd,MAAM,QAAQ,SAAS;QAAC,OAAO;IAAC;IAGhC,MAAM,SAAS,MAAM,KAAK,GAAG;;;;;;IAC7B,qBACC,WAAC;QAAI,WAAQ;;;;;sBACZ,WAAC,8BAAM;QACN,QAAQ,GAAG,CAAC,CAAA,oBACZ,WAAC;gBACA,WAAQ;uBAFG;+BAIV;;AAON\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;yCAO8B,CAAC;IAC7B,MAAM,QAAQ;IACd,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAGlC,MAAM,SAAS,MAAM,KAAK,GAAG;;;;;;IAC7B,qBACE,WAAC;QAAI,WAAQ;;;;;sBACX,WAAC,8BAAM;QACN,QAAQ,GAAG,CAAC,CAAC,oBACZ,WAAC;gBAAO,WAAQ;uBADJ;+BAET;;AAKX\"}")
 /*
 {
   "origin": "test.tsx",
@@ -102,8 +96,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    181,
-    580
+    184,
+    612
   ],
   "paramNames": [
     "props"
@@ -120,7 +114,7 @@ export const App_component_div_button_q_e_click_UB6Fs5a3bd8 = (_, _1, btn)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;8DAmBe,QAFC;;WAEK,MAAM,KAAK,IAAI,IAAI,MAAM,GAAG,QAAQ,OARzC,IAQyD,MAAM,IAAI\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;8DAiB0B,QADN;;WACa,MAAM,KAAK,IAAI,IAAI,MAAM,GAAG,QAAQ,OAPpD,IAOoE,MAAM,IAAI\"}")
 /*
 {
   "origin": "test.tsx",
@@ -136,8 +130,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": true,
   "loc": [
-    451,
-    519
+    473,
+    543
   ],
   "paramNames": [
     "_",
@@ -160,7 +154,7 @@ export const App_component_div_q_e_click_mi4E1piTWe8 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";uDAeiB;;WAAM,MAAM,KAAK,IAAE\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";uDAcmB;;WAAO,MAAM,KAAK,IAAI\"}")
 /*
 {
   "origin": "test.tsx",
@@ -176,8 +170,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "onClick$",
   "captures": true,
   "loc": [
-    340,
-    365
+    352,
+    381
   ],
   "captureNames": [
     "count2",

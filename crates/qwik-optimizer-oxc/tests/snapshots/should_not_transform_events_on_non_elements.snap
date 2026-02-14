@@ -3,19 +3,19 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$, $ } from '@qwik.dev/core';
-import { CustomComponent } from './custom-component';
-import { AnotherComponent } from './another-component';
+import { component$, $ } from "@qwik.dev/core";
+import { CustomComponent } from "./custom-component";
+import { AnotherComponent } from "./another-component";
 
 export const Greeter = component$(() => {
-	return (
-		<div>
-			<CustomComponent onClick$={() => {}}/>
-			{array.map(item => (
-				<AnotherComponent onClick$={() => {}}/>
-			))}
-		</div>
-	)
+  return (
+    <div>
+      <CustomComponent onClick$={() => {}} />
+      {array.map((item) => (
+        <AnotherComponent onClick$={() => {}} />
+      ))}
+    </div>
+  );
 });
 
 === test.tsx ===
@@ -36,9 +36,9 @@ import { CustomComponent } from "./custom-component";
 import { AnotherComponent } from "./another-component";
 export const Greeter_component_l5Al0251s9w = () => {
 	return <div>
-			<CustomComponent onClick$={/* @__PURE__ */ qrl(i_dWH0ComNdBo, "Greeter_component___q_e_click_dWH0ComNdBo")} />
-			{array.map((item) => <AnotherComponent onClick$={/* @__PURE__ */ qrl(i_dWH0ComNdBo, "Greeter_component___q_e_click_dWH0ComNdBo")} />)}
-		</div>;
+      <CustomComponent onClick$={/* @__PURE__ */ qrl(i_dWH0ComNdBo, "Greeter_component___q_e_click_dWH0ComNdBo")} />
+      {array.map((item) => <AnotherComponent onClick$={/* @__PURE__ */ qrl(i_dWH0ComNdBo, "Greeter_component___q_e_click_dWH0ComNdBo")} />)}
+    </div>;
 }
 
 /*

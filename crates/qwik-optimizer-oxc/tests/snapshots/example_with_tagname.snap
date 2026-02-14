@@ -3,18 +3,18 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { $, component$ } from '@qwik.dev/core';
+import { $, component$ } from "@qwik.dev/core";
 
-export const Foo = component$(() => {
-	return $(() => {
-		return (
-			<div>
-			</div>
-		)
-	});
-}, {
-	tagName: "my-foo",
-});
+export const Foo = component$(
+  () => {
+    return $(() => {
+      return <div></div>;
+    });
+  },
+  {
+    tagName: "my-foo",
+  },
+);
 
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
@@ -49,8 +49,7 @@ export const Foo_component_gZqPatVoDqw = () => {
 
 === test.tsx_Foo_T0dY5k6mBgU.tsx === (ENTRY)
 export const Foo_T0dY5k6mBgU = () => {
-	return <div>
-			</div>;
+	return <div></div>;
 }
 
 /*

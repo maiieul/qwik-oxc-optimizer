@@ -3,13 +3,11 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$ } from '@qwik.dev/core';
+import { component$ } from "@qwik.dev/core";
 
-		export default component$((props) => {
-			return (
-				<div test="test" {...props}></div>
-			);
-		});
+export default component$((props) => {
+  return <div test="test" {...props}></div>;
+});
 
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";

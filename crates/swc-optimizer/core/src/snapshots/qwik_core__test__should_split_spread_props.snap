@@ -1,20 +1,15 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 4434
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
+import { component$ } from "@qwik.dev/core";
 
-		import { component$ } from '@qwik.dev/core';
+export default component$((props) => {
+  return <div {...props}></div>;
+});
 
-		export default component$((props) => {
-			return (
-				<div {...props}></div>
-			);
-		});
-		
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -23,7 +18,7 @@ const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
 export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGE,6BAAe,6EAIZ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,6BAAe,6EAEZ\"}")
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
 
 import { _getConstProps } from "@qwik.dev/core";
@@ -36,7 +31,7 @@ export const test_component_LUXeXe0DQrg = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;0CAG4B,CAAC;IAC1B,qBACC,UAAC;wBAAQ;sBAAA;AAEX\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;0CAE0B,CAAC;IACzB,qBAAO,UAAC;wBAAQ;sBAAA;AAClB\"}")
 /*
 {
   "origin": "test.tsx",
@@ -52,8 +47,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    78,
-    139
+    73,
+    120
   ],
   "paramNames": [
     "props"

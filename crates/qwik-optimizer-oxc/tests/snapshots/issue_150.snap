@@ -3,25 +3,25 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$, $ } from '@qwik.dev/core';
-import { hola } from 'sdfds';
+import { component$, $ } from "@qwik.dev/core";
+import { hola } from "sdfds";
 
 export const Greeter = component$(() => {
-	const stuff = useStore();
-	return $(() => {
-		return (
-			<div
-				class={{
-					'foo': true,
-					'bar': stuff.condition,
-					'baz': hola ? 'true' : 'false',
-				}}
-			/>
-		)
-	});
+  const stuff = useStore();
+  return $(() => {
+    return (
+      <div
+        class={{
+          foo: true,
+          bar: stuff.condition,
+          baz: hola ? "true" : "false",
+        }}
+      />
+    );
+  });
 });
 
-const d = $(()=>console.log('thing'));
+const d = $(() => console.log("thing"));
 
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
@@ -66,9 +66,9 @@ import { hola } from "sdfds";
 export const s__Ma8uJBKLX2o = () => {
 	const stuff = _captures[0];
 	return /* @__PURE__ */ _jsxSorted("div", { class: {
-		"foo": true,
-		"bar": stuff.condition,
-		"baz": hola ? "true" : "false"
+		foo: true,
+		bar: stuff.condition,
+		baz: hola ? "true" : "false"
 	} }, null, null, 3, "u6_0");
 };
 

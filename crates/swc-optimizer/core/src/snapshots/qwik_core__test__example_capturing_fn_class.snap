@@ -1,29 +1,24 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 1045
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
-
-import { $, component$ } from '@qwik.dev/core';
+import { $, component$ } from "@qwik.dev/core";
 
 export const App = component$(() => {
-	function hola() {
-		console.log('hola');
-	}
-	class Thing {}
-	class Other {}
+  function hola() {
+    console.log("hola");
+  }
+  class Thing {}
+  class Other {}
 
-	return $(() => {
-		hola();
-		new Thing();
-		return (
-			<div></div>
-		)
-	});
-})
+  return $(() => {
+    hola();
+    new Thing();
+    return <div></div>;
+  });
+});
 
 ============================= test.js ==
 
@@ -33,7 +28,7 @@ const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0");
 export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,OAAO,MAAM,oBAAM,4EAcjB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,oBAAM,4EAYhB\"}")
 ============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
 
 import { qrl } from "@qwik.dev/core";
@@ -43,7 +38,7 @@ export const App_component_ckEPmXZlub0 = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;yCAG8B;IAO7B;AAOD\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;yCAE8B;IAO5B;AAKF\"}")
 /*
 {
   "origin": "test.tsx",
@@ -59,8 +54,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    81,
-    246
+    80,
+    251
   ]
 }
 */
@@ -74,7 +69,7 @@ export const App_component_1_w0t0o3QMovU = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";2CAUU;IACR;IACA,IAAI;IACJ,qBACC,WAAC;AAEH\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";2CASW;IACP;IACA,IAAI;IACJ,qBAAO,WAAC;AACV\"}")
 /*
 {
   "origin": "test.tsx",
@@ -90,8 +85,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "$",
   "captures": false,
   "loc": [
-    177,
-    242
+    183,
+    247
   ]
 }
 */

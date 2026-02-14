@@ -1,10 +1,8 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 4199
+source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 
 import { component$, useResource$, Resource } from "@qwik.dev/core";
 import { type ModelProps } from "./modelMenu";
@@ -21,7 +19,7 @@ export const Image = component$((props) => {
 export const ModelImg = component$<ModelProps>((props) => {
   const imgLoc = useResource$(async ({ track }) => {
     track(() => props.store.model);
-    return await serverImg('some.png');
+    return await serverImg("some.png");
   });
   return (
     <>
@@ -31,9 +29,7 @@ export const ModelImg = component$<ModelProps>((props) => {
         onResolved={(res) =>
           res && (
             <>
-              <Image
-                src={res}
-              />
+              <Image src={res} />
             </>
           )
         }
@@ -52,7 +48,7 @@ export const Image = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_CS20HgBlRYI,
 export const ModelImg = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_iJe6ICWVnyA, "ModelImg_component_iJe6ICWVnyA"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AAKA,OAAO,MAAM,sBAAQ,8EAMlB;AAEH,OAAO,MAAM,yBAAW,iFAsBrB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AAIA,OAAO,MAAM,sBAAQ,8EAMlB;AAEH,OAAO,MAAM,yBAAW,iFAoBrB\"}")
 ============================= test.tsx_ModelImg_component_iJe6ICWVnyA.js (ENTRY POINT)==
 
 import { Image } from "./test";
@@ -76,7 +72,7 @@ export const ModelImg_component_iJe6ICWVnyA = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;8CAa+C,CAAC;IAC9C,MAAM,SAAS;;;IAIf,qBACE,gDACE,WAAC;QACC,OAAO;QACP,YAAY,kBAAM,WAAC,iBAAE;QACrB,YAAY,CAAC,MACX,qBACE,gDACE,WAAC;gBACC,KAAK;;;AAQrB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;8CAY+C,CAAC;IAC9C,MAAM,SAAS;;;IAIf,qBACE,gDACE,WAAC;QACC,OAAO;QACP,YAAY,kBAAM,WAAC,iBAAE;QACrB,YAAY,CAAC,MACX,qBACE,gDACE,WAAC;gBAAM,KAAK;;;AAO1B\"}")
 /*
 {
   "origin": "test.tsx",
@@ -92,8 +88,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    343,
-    780
+    342,
+    749
   ],
   "paramNames": [
     "props"
@@ -107,11 +103,11 @@ import { serverImg } from "~/routes/(authenticated)/layout";
 export const ModelImg_component_imgLoc_useResource_Ogi9hEJvtmI = async (_rawProps)=>{
     const props = _captures[0];
     _rawProps.track(()=>props.store.model);
-    return await serverImg('some.png');
+    return await serverImg("some.png");
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;iEAc8B;;IAC1B,UADmC,MAC7B,IAAM,MAAM,KAAK,CAAC,KAAK;IAC7B,OAAO,MAAM,UAAU\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;iEAa8B;;IAC1B,UADmC,MAC7B,IAAM,MAAM,KAAK,CAAC,KAAK;IAC7B,OAAO,MAAM,UAAU\"}")
 /*
 {
   "origin": "test.tsx",
@@ -127,8 +123,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "useResource$",
   "captures": true,
   "loc": [
-    386,
-    488
+    385,
+    487
   ],
   "paramNames": [
     "_rawProps"
@@ -149,7 +145,7 @@ export const Image_component_CS20HgBlRYI = (props)=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;2CAKgC,CAAC;IAC/B,qBACE,gDACE,WAAC;QAAI,KAAK,GAAG,MAAM,GAAG,EAAE;;AAG9B\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;2CAIgC,CAAC;IAC/B,qBACE,gDACE,WAAC;QAAI,KAAK,GAAG,MAAM,GAAG,EAAE;;AAG9B\"}")
 /*
 {
   "origin": "test.tsx",
@@ -165,8 +161,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    212,
-    292
+    211,
+    291
   ],
   "paramNames": [
     "props"

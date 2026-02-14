@@ -3,23 +3,22 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { $, component$ } from '@qwik.dev/core';
-import {foo, bar as bbar} from "../state";
+import { $, component$ } from "@qwik.dev/core";
+import { foo, bar as bbar } from "../state";
 import * as dep2 from "dep2";
 import dep3 from "dep3/something";
 
 export const Header = component$(() => {
-	return (
-		<Header onClick={$((ev) => dep3(ev))}>
-			{dep2.stuff()}{bbar()}
-		</Header>
-	);
+  return (
+    <Header onClick={$((ev) => dep3(ev))}>
+      {dep2.stuff()}
+      {bbar()}
+    </Header>
+  );
 });
 
 export const App = component$(() => {
-	return (
-		<Header>{foo()}</Header>
-	);
+  return <Header>{foo()}</Header>;
 });
 
 === project/test.tsx ===
@@ -42,8 +41,9 @@ import { bar as bbar } from "../state";
 import { Header } from "./test";
 export const Header_component_sHTSaq0AU4w = () => {
 	return <Header onClick={/* @__PURE__ */ qrl(i_kRS1L5K0500, "Header_component___q_e_click_kRS1L5K0500")}>
-			{dep2.stuff()}{bbar()}
-		</Header>;
+      {dep2.stuff()}
+      {bbar()}
+    </Header>;
 }
 
 /*

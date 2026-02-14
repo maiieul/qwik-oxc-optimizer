@@ -1,4 +1,3 @@
-
 import { component$, useResource$, Resource } from "@qwik.dev/core";
 import { type ModelProps } from "./modelMenu";
 import { serverImg } from "~/routes/(authenticated)/layout";
@@ -14,7 +13,7 @@ export const Image = component$((props) => {
 export const ModelImg = component$<ModelProps>((props) => {
   const imgLoc = useResource$(async ({ track }) => {
     track(() => props.store.model);
-    return await serverImg('some.png');
+    return await serverImg("some.png");
   });
   return (
     <>
@@ -24,9 +23,7 @@ export const ModelImg = component$<ModelProps>((props) => {
         onResolved={(res) =>
           res && (
             <>
-              <Image
-                src={res}
-              />
+              <Image src={res} />
             </>
           )
         }

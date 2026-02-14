@@ -1,26 +1,23 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 1280
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
-
-import { $, component$ } from '@qwik.dev/core';
+import { $, component$ } from "@qwik.dev/core";
 import thing from "../state";
 
 export function foo() {
-	return import("../foo/state2")
+  return import("../foo/state2");
 }
 
 export const Header = component$(() => {
-	return (
-		<div>
-			{import("../folder/state3")}
-			{thing}
-		</div>
-	);
+  return (
+    <div>
+      {import("../folder/state3")}
+      {thing}
+    </div>
+  );
 });
 
 ============================= project/folder/test.tsx_Header_component_RGgm7Ks9QWI.tsx ==
@@ -28,13 +25,13 @@ export const Header = component$(() => {
 import thing from "../state";
 export const Header_component_RGgm7Ks9QWI = ()=>{
     return <div>
-			{import("../folder/state3")}
-			{thing}
-		</div>;
+      {import("../folder/state3")}
+      {thing}
+    </div>;
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/folder/test.tsx\"],\"names\":[],\"mappings\":\";4CAQiC;IAChC,QACE,IAAI;GACJ,CAAC,MAAM,CAAC,oBAAoB;GAC5B,CAAC,MAAM;EACR,EAAE;AAEJ\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/folder/test.tsx\"],\"names\":[],\"mappings\":\";4CAOiC;IAC/B,QACG,IAAI;MACH,CAAC,MAAM,CAAC,oBAAoB;MAC5B,CAAC,MAAM;IACT,EAAE;AAEN\"}")
 /*
 {
   "origin": "project/folder/test.tsx",
@@ -50,8 +47,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/folder/test.tsx\"],\"
   "ctxName": "component$",
   "captures": false,
   "loc": [
-    173,
-    256
+    174,
+    269
   ]
 }
 */
@@ -66,7 +63,7 @@ export function foo() {
 export const Header = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_RGgm7Ks9QWI, "Header_component_RGgm7Ks9QWI"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/folder/test.tsx\"],\"names\":[],\"mappings\":\";;;AAIA,OAAO,SAAS;IACf,OAAO,MAAM,CAAC;AACf;AAEA,OAAO,MAAM,uBAAS,+EAOnB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/folder/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA,OAAO,SAAS;IACd,OAAO,MAAM,CAAC;AAChB;AAEA,OAAO,MAAM,uBAAS,+EAOnB\"}")
 == DIAGNOSTICS ==
 
 []

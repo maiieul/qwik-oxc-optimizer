@@ -3,13 +3,11 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$, $, useStyles$ } from '@qwik.dev/core';
+import { component$, $, useStyles$ } from "@qwik.dev/core";
 
 export const App = component$((props) => {
-	useStyles$('hola');
-	return $(() => (
-		<div></div>
-	));
+  useStyles$("hola");
+  return $(() => <div></div>);
 });
 
 === test.tsx ===

@@ -1,21 +1,16 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 149
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
-
-import { $, component$ } from '@qwik.dev/core';
+import { $, component$ } from "@qwik.dev/core";
 export function App() {
-	const Header = component$(() => {
-		console.log("mount");
-		return (
-			<div onClick={$((ctx) => console.log(ctx))}/>
-		);
-	});
-	return Header;
+  const Header = component$(() => {
+    console.log("mount");
+    return <div onClick={$((ctx) => console.log(ctx))} />;
+  });
+  return Header;
 }
 
 ============================= test.tsx_App_Header_component_B9F3YeqcO1w.tsx (ENTRY POINT)==
@@ -28,7 +23,7 @@ export const App_Header_component_B9F3YeqcO1w = ()=>{
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;gDAG2B;IACzB,QAAQ,GAAG,CAAC;IACZ,QACE,IAAI;AAEP\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;gDAE4B;IACxB,QAAQ,GAAG,CAAC;IACZ,QAAQ,IAAI;AACd\"}")
 /*
 {
   "origin": "test.tsx",
@@ -45,7 +40,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "captures": false,
   "loc": [
     101,
-    200
+    197
   ]
 }
 */
@@ -54,7 +49,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 export const App_Header_component_div_onClick_aO7uI7Iw6oQ = (ctx)=>console.log(ctx);
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"4DAMmB,CAAC,MAAQ,QAAQ,GAAG,CAAC\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"4DAI2B,CAAC,MAAQ,QAAQ,GAAG,CAAC\"}")
 /*
 {
   "origin": "test.tsx",
@@ -70,8 +65,8 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "ctxName": "$",
   "captures": false,
   "loc": [
-    163,
-    188
+    162,
+    187
   ],
   "paramNames": [
     "ctx"
@@ -89,7 +84,7 @@ export function App() {
 }
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,SAAS;IACf,MAAM,uBAAS;IAMf,OAAO;AACR\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AACA,OAAO,SAAS;IACd,MAAM,uBAAS;IAIf,OAAO;AACT\"}")
 == DIAGNOSTICS ==
 
 []

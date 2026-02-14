@@ -30,8 +30,7 @@ function qwikifyQrl(reactCmpQrl) {
         useTaskQrl(
           inlinedQrl(
             async (track) => {
-              const [hostElement, props, reactCmpQrl, store] =
-                useLexicalScope();
+              const [hostElement, props, reactCmpQrl, store] = useLexicalScope();
               track(props);
               if (isBrowser) {
                 if (store.data)
@@ -69,16 +68,15 @@ function qwikifyQrl(reactCmpQrl) {
           },
         );
         if (isServer && !props["client:only"]) {
-          const jsx$1 = Promise.all([
-            reactCmpQrl.resolve(),
-            import("./server-9ac6caad.js"),
-          ]).then(([Cmp, server]) => {
-            const html = server.render(Cmp, filterProps(props));
-            return /*#__PURE__*/ jsx(Host, {
-              dangerouslySetInnerHTML: html,
-              [_IMMUTABLE]: ["dangerouslySetInnerHTML"],
-            });
-          });
+          const jsx$1 = Promise.all([reactCmpQrl.resolve(), import("./server-9ac6caad.js")]).then(
+            ([Cmp, server]) => {
+              const html = server.render(Cmp, filterProps(props));
+              return /*#__PURE__*/ jsx(Host, {
+                dangerouslySetInnerHTML: html,
+                [_IMMUTABLE]: ["dangerouslySetInnerHTML"],
+              });
+            },
+          );
           return /*#__PURE__*/ jsx(Fragment, {
             children: jsx$1,
           });

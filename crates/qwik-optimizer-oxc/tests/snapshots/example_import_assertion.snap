@@ -3,11 +3,11 @@ source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
 === INPUT ===
-import { component$, $ } from '@qwik.dev/core';
+import { component$, $ } from "@qwik.dev/core";
 import json from "./foo.json" assert { type: "json" };
 
 export const Greeter = component$(() => {
-	return json;
+  return json;
 });
 
 === test.js ===
