@@ -1,7 +1,18 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$, useSignal, Signal } from '@qwik.dev/core';
+const Foo = component$(() => {
+  const data = useSignal<Signal<any>[]>([]);
+  const Inner = component$((props) => {
+    const data = props.data
+    return <div>{data.value.map(item => <p onClick$={() => console.log(item.value.id)}>{item.value.id}</p>)}</div>
+  })
+  return <Inner data={data} />
+})
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -26,6 +37,23 @@ export const Foo_component_gZqPatVoDqw = () => {
 	return /* @__PURE__ */ _jsxSorted(Inner, { data }, null, null, 3, "u6_2");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_gZqPatVoDqw",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component",
+  "hash": "gZqPatVoDqw",
+  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Inner_component_7dSOr7rhY8c.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -37,5 +65,42 @@ export const Inner_component_7dSOr7rhY8c = (props) => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, data.value.map((item) => /* @__PURE__ */ _jsxSorted("p", null, { "q-e:click": /* @__PURE__ */ qrl(i_Kwn9b5UeNMU, "Inner_component_p_q_e_click_Kwn9b5UeNMU") }, item.value.id, 3, "u6_0")), 3, "u6_1");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Inner_component_7dSOr7rhY8c",
+  "entry": null,
+  "displayName": "test.tsx_Inner_component",
+  "hash": "7dSOr7rhY8c",
+  "canonicalFilename": "test.tsx_Inner_component_7dSOr7rhY8c",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": true,
+  "captureNames": [
+    "item"
+  ]
+}
+*/
+
 === test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU.js === (ENTRY)
 export const Inner_component_p_q_e_click_Kwn9b5UeNMU = () => console.log(item.value.id);
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Inner_component_p_q_e_click_Kwn9b5UeNMU",
+  "entry": null,
+  "displayName": "test.tsx_Inner_component_p_q_e_click",
+  "hash": "Kwn9b5UeNMU",
+  "canonicalFilename": "test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Inner_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/

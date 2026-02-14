@@ -1,7 +1,20 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useComputed$, useTask$ } from '@qwik.dev/core'
+
+export default component$(({ color, ...props }) => {
+	useComputed$(() => color)
+
+	useTask$(() => {
+		props.checked
+	})
+
+	return 'hi'
+})
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { useComputedQrl } from "@qwik.dev/core";

@@ -1,7 +1,40 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$, useStyles } from '@qwik.dev/core';
+import { qrl } from '@qwik.dev/core/what';
+
+export const hW = 12;
+export const handleWatch = 42;
+
+const componentQrl = () => console.log('not this', qrl());
+
+componentQrl();
+export const Foo = component$(() => {
+	useStyles$('thing');
+	const qwik = hW + handleWatch;
+	console.log(qwik);
+	const qrl = 23;
+	return (
+		<div onClick$={()=> console.log(qrl)}/>
+	)
+}, {
+	tagName: "my-foo",
+});
+
+export const Root = component$(() => {
+	useStyles($('thing'));
+	return $(() => {
+		return (
+			<div/>
+		)
+	});
+}, {
+	tagName: "my-foo",
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -34,9 +67,43 @@ export const Foo_component_gZqPatVoDqw = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA") }, null, 3, "u6_0");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_gZqPatVoDqw",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component",
+  "hash": "gZqPatVoDqw",
+  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js === (ENTRY)
 import { qrl } from "@qwik.dev/core/what";
 export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(qrl);
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_click_OJboCLusyIA",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_click",
+  "hash": "OJboCLusyIA",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_OJboCLusyIA",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/
 
 === test.tsx_Root_component_YvjM3SoLvrM.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -48,11 +115,62 @@ export const Root_component_YvjM3SoLvrM = () => {
 	return /* @__PURE__ */ qrl(i_JSvK9zVuQxw, "Root_JSvK9zVuQxw");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Root_component_YvjM3SoLvrM",
+  "entry": null,
+  "displayName": "test.tsx_Root_component",
+  "hash": "YvjM3SoLvrM",
+  "canonicalFilename": "test.tsx_Root_component_YvjM3SoLvrM",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Root_useStyles_b1oI4QMvfDY.js === (ENTRY)
 export const Root_useStyles_b1oI4QMvfDY = "thing";
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Root_useStyles_b1oI4QMvfDY",
+  "entry": null,
+  "displayName": "test.tsx_Root_useStyles",
+  "hash": "b1oI4QMvfDY",
+  "canonicalFilename": "test.tsx_Root_useStyles_b1oI4QMvfDY",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Root_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/
 
 === test.tsx_Root_JSvK9zVuQxw.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const Root_JSvK9zVuQxw = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Root_JSvK9zVuQxw",
+  "entry": null,
+  "displayName": "test.tsx_Root",
+  "hash": "JSvK9zVuQxw",
+  "canonicalFilename": "test.tsx_Root_JSvK9zVuQxw",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Root_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/

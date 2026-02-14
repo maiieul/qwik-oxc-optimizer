@@ -1,7 +1,24 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useStore } from '@qwik.dev/core';
+
+export enum Thing {
+	A,
+	B
+}
+
+export const App = component$(() => {
+	console.log(Thing.A);
+	return (
+		<>
+			<p class="stuff">Hello Qwik</p>
+		</>
+	);
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -23,3 +40,20 @@ export const App_component_XumqEURaLxI = () => {
 	console.log(Thing.A);
 	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted("p", null, { class: "stuff" }, "Hello Qwik", 3, "u6_0"), 3, "u6_1");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "App_component_XumqEURaLxI",
+  "entry": null,
+  "displayName": "test.tsx_App_component",
+  "hash": "XumqEURaLxI",
+  "canonicalFilename": "test.tsx_App_component_XumqEURaLxI",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

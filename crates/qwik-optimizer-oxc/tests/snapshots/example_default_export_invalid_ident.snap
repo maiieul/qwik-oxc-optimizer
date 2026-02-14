@@ -1,7 +1,17 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+
+export default component$(() => {
+	return (
+		<div onClick$={() => console.log(mongodb)}>
+		</div>
+	);
+});
+
 === src/components/mongo/404.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -17,5 +27,39 @@ export const default_component_PS0fTRVnPOE = () => {
 		</div>;
 }
 
+/*
+{
+  "origin": "src/components/mongo/404.tsx",
+  "name": "default_component_PS0fTRVnPOE",
+  "entry": null,
+  "displayName": "src/components/mongo/404.tsx_default_component",
+  "hash": "PS0fTRVnPOE",
+  "canonicalFilename": "src/components/mongo/404.tsx_default_component_PS0fTRVnPOE",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === src/components/mongo/404.tsx_default_component_div_q_e_click_41GceC3v3n8.tsx === (ENTRY)
 export const default_component_div_q_e_click_41GceC3v3n8 = () => console.log(mongodb);
+
+/*
+{
+  "origin": "src/components/mongo/404.tsx",
+  "name": "default_component_div_q_e_click_41GceC3v3n8",
+  "entry": null,
+  "displayName": "src/components/mongo/404.tsx_default_component_div_q_e_click",
+  "hash": "41GceC3v3n8",
+  "canonicalFilename": "src/components/mongo/404.tsx_default_component_div_q_e_click_41GceC3v3n8",
+  "path": "",
+  "extension": "tsx",
+  "parent": "src/components/mongo/404.tsx_default_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/

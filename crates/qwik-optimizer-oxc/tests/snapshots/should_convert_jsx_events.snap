@@ -1,7 +1,32 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+
+		const ManyEventsComponent = component$(() => {
+			return (
+				<div>
+					<button
+						onClick$={() => {}}
+						onDblClick$={() => {}}
+					>
+						click
+					</button>
+					<button
+						onClick$={() => {}}
+						onBlur$={() => {}}
+						on-anotherCustom$={() => {}}
+						document:onFocus$={() => {}}
+						window:onClick$={() => {}}
+					>
+						click
+					</button>
+				</div>
+			);
+		});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -39,23 +64,159 @@ export const ManyEventsComponent_component_d0rUoq0Y7Qo = () => {
 	}, "click", 3, "u6_1")], 1, "u6_2");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "ManyEventsComponent_component_d0rUoq0Y7Qo",
+  "entry": null,
+  "displayName": "test.tsx_ManyEventsComponent_component",
+  "hash": "d0rUoq0Y7Qo",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_d0rUoq0Y7Qo",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.js === (ENTRY)
 export const ManyEventsComponent_component_button_q_e_click_ygm370W5KJY = () => {};
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+  "entry": null,
+  "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_click",
+  "hash": "ygm370W5KJY",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_ManyEventsComponent_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/
 
 === test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04.js === (ENTRY)
 export const ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04 = () => {};
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04",
+  "entry": null,
+  "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_dblclick",
+  "hash": "ragb1RcWs04",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_ManyEventsComponent_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onDblClick$",
+  "captures": false
+}
+*/
+
 === test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.js === (ENTRY)
 export const ManyEventsComponent_component_button_q_e_click_ygm370W5KJY = () => {};
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+  "entry": null,
+  "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_click",
+  "hash": "ygm370W5KJY",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_ManyEventsComponent_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/
 
 === test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04.js === (ENTRY)
 export const ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04 = () => {};
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04",
+  "entry": null,
+  "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_blur",
+  "hash": "fzYpgq8WW04",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_ManyEventsComponent_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onBlur$",
+  "captures": false
+}
+*/
+
 === test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc.js === (ENTRY)
 export const ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc = () => {}
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc",
+  "entry": null,
+  "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom",
+  "hash": "HCrpsbAaSvc",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_ManyEventsComponent_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "on-anotherCustom$",
+  "captures": false
+}
+*/
 
 === test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE.js === (ENTRY)
 export const ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE = () => {};
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE",
+  "entry": null,
+  "displayName": "test.tsx_ManyEventsComponent_component_button_q_d_focus",
+  "hash": "p9PdBU5LvjE",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_ManyEventsComponent_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "document:onFocus$",
+  "captures": false
+}
+*/
+
 === test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4.js === (ENTRY)
 export const ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4 = () => {};
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4",
+  "entry": null,
+  "displayName": "test.tsx_ManyEventsComponent_component_button_q_w_click",
+  "hash": "KoKtNDq0WI4",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_ManyEventsComponent_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "window:onClick$",
+  "captures": false
+}
+*/

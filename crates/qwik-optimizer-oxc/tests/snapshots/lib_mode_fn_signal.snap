@@ -1,7 +1,22 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+export const Counter = component$(() => {
+	const count = useSignal(0);
+
+	return (
+		<div>
+			<p>Count: {count.value}</p>
+			<p>
+				<button onClick$={() => count.value++}>Increment</button>
+			</p>
+		</div>
+	);
+});
+
 === test.ts ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -21,9 +36,46 @@ export const Counter_component_g2b301BY00s = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, [/* @__PURE__ */ _jsxSorted("p", null, null, ["Count:", _wrapProp(count)], 1, "u6_0"), /* @__PURE__ */ _jsxSorted("p", null, null, /* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": /* @__PURE__ */ qrl(i_RfKynUVX1qo, "Counter_component_button_q_e_click_RfKynUVX1qo", [count]) }, "Increment", 3, "u6_1"), 3, "u6_2")], 1, "u6_3");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Counter_component_g2b301BY00s",
+  "entry": null,
+  "displayName": "test.tsx_Counter_component",
+  "hash": "g2b301BY00s",
+  "canonicalFilename": "test.tsx_Counter_component_g2b301BY00s",
+  "path": "",
+  "extension": "ts",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Counter_component_button_q_e_click_RfKynUVX1qo.ts === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Counter_component_button_q_e_click_RfKynUVX1qo = () => {
 	const count = _captures[0];
 	return count.value++;
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Counter_component_button_q_e_click_RfKynUVX1qo",
+  "entry": null,
+  "displayName": "test.tsx_Counter_component_button_q_e_click",
+  "hash": "RfKynUVX1qo",
+  "canonicalFilename": "test.tsx_Counter_component_button_q_e_click_RfKynUVX1qo",
+  "path": "",
+  "extension": "ts",
+  "parent": "test.tsx_Counter_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "captureNames": [
+    "count"
+  ]
+}
+*/

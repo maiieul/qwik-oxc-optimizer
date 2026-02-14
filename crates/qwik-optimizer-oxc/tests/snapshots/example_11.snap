@@ -1,7 +1,27 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$ } from '@qwik.dev/core';
+import {foo, bar as bbar} from "../state";
+import * as dep2 from "dep2";
+import dep3 from "dep3/something";
+
+export const Header = component$(() => {
+	return (
+		<Header onClick={$((ev) => dep3(ev))}>
+			{dep2.stuff()}{bbar()}
+		</Header>
+	);
+});
+
+export const App = component$(() => {
+	return (
+		<Header>{foo()}</Header>
+	);
+});
+
 === project/test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -26,9 +46,43 @@ export const Header_component_sHTSaq0AU4w = () => {
 		</Header>;
 }
 
+/*
+{
+  "origin": "project/test.tsx",
+  "name": "Header_component_sHTSaq0AU4w",
+  "entry": null,
+  "displayName": "project/test.tsx_Header_component",
+  "hash": "sHTSaq0AU4w",
+  "canonicalFilename": "project/test.tsx_Header_component_sHTSaq0AU4w",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === project/test.tsx_Header_component___q_e_click_kRS1L5K0500.tsx === (ENTRY)
 import dep3 from "dep3/something";
 export const Header_component___q_e_click_kRS1L5K0500 = (ev) => dep3(ev);
+
+/*
+{
+  "origin": "project/test.tsx",
+  "name": "Header_component___q_e_click_kRS1L5K0500",
+  "entry": null,
+  "displayName": "project/test.tsx_Header_component___q_e_click",
+  "hash": "kRS1L5K0500",
+  "canonicalFilename": "project/test.tsx_Header_component___q_e_click_kRS1L5K0500",
+  "path": "",
+  "extension": "tsx",
+  "parent": "project/test.tsx_Header_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/
 
 === project/test.tsx_App_component_36z8l5vFtdk.tsx === (ENTRY)
 import { foo } from "../state";
@@ -36,3 +90,20 @@ import { Header } from "./test";
 export const App_component_36z8l5vFtdk = () => {
 	return <Header>{foo()}</Header>;
 }
+
+/*
+{
+  "origin": "project/test.tsx",
+  "name": "App_component_36z8l5vFtdk",
+  "entry": null,
+  "displayName": "project/test.tsx_App_component",
+  "hash": "36z8l5vFtdk",
+  "canonicalFilename": "project/test.tsx_App_component_36z8l5vFtdk",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

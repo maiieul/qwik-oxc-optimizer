@@ -1,7 +1,17 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+
+export default component$(() => {
+	return (
+		<div onClick$={() => console.log(mongodb)}>
+		</div>
+	);
+});
+
 === src/components/mongo/index.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";

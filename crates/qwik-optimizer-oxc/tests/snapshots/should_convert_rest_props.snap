@@ -1,7 +1,18 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useTask$ } from '@qwik.dev/core'
+
+export default component$<any>(({ ...props }) => {
+	useTask$(() => {
+		props.checked
+	})
+
+	return 'hi'
+})
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -21,9 +32,49 @@ export const default_component_jN9ZUuuADmk = (_rawProps) => {
 	return "hi";
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_jN9ZUuuADmk",
+  "entry": null,
+  "displayName": "test.tsx_default_component",
+  "hash": "jN9ZUuuADmk",
+  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false,
+  "paramNames": [
+    "_rawProps"
+  ]
+}
+*/
+
 === test.tsx_default_useTask_cu78f7005P4.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const default_useTask_cu78f7005P4 = () => {
 	const props = _captures[0];
 	props.checked;
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_useTask_cu78f7005P4",
+  "entry": null,
+  "displayName": "test.tsx_default_useTask",
+  "hash": "cu78f7005P4",
+  "canonicalFilename": "test.tsx_default_useTask_cu78f7005P4",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_default_component",
+  "ctxKind": "function",
+  "ctxName": "useTask$",
+  "captures": true,
+  "captureNames": [
+    "props"
+  ]
+}
+*/

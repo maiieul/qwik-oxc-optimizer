@@ -1,7 +1,32 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, $, useStore, wrap, useEffect } from '@qwik.dev/core';
+
+export const useMemoQrl = (qrt) => {
+	useEffect(qrt);
+};
+
+export const useMemo$ = wrap(useMemoQrl);
+
+export const App = component$((props) => {
+	const state = useStore({count: 0});
+	useMemo$(() => {
+		console.log(state.count);
+	});
+	return $(() => (
+		<div>{state.count}</div>
+	));
+});
+
+export const Lightweight = (props) => {
+	useMemo$(() => {
+		console.log(state.count);
+	});
+};
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { useMemoQrl } from "@qwik.dev/core";
@@ -35,12 +60,49 @@ export const App_component_XumqEURaLxI = (props) => {
 	return /* @__PURE__ */ qrl(i_Ma8uJBKLX2o, "s__Ma8uJBKLX2o", [state]);
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "App_component_XumqEURaLxI",
+  "entry": null,
+  "displayName": "test.tsx_App_component",
+  "hash": "XumqEURaLxI",
+  "canonicalFilename": "test.tsx_App_component_XumqEURaLxI",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_useMemo_920F189NvqI.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const useMemo_920F189NvqI = () => {
 	const state = _captures[0];
 	console.log(state.count);
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "useMemo_920F189NvqI",
+  "entry": null,
+  "displayName": "test.tsx_useMemo",
+  "hash": "920F189NvqI",
+  "canonicalFilename": "test.tsx_useMemo_920F189NvqI",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_App_component",
+  "ctxKind": "function",
+  "ctxName": "useMemo$",
+  "captures": true,
+  "captureNames": [
+    "state"
+  ]
+}
+*/
 
 === test.tsx_s__Ma8uJBKLX2o.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
@@ -50,7 +112,44 @@ export const s__Ma8uJBKLX2o = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, state.count, 3, "u6_0");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "s__Ma8uJBKLX2o",
+  "entry": null,
+  "displayName": "test.tsx_s_",
+  "hash": "Ma8uJBKLX2o",
+  "canonicalFilename": "test.tsx_s__Ma8uJBKLX2o",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_App_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": true,
+  "captureNames": [
+    "state"
+  ]
+}
+*/
+
 === test.tsx_Lightweight_useMemo_cCpbVobVcXY.js === (ENTRY)
 export const Lightweight_useMemo_cCpbVobVcXY = () => {
 	console.log(state.count);
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Lightweight_useMemo_cCpbVobVcXY",
+  "entry": null,
+  "displayName": "test.tsx_Lightweight_useMemo",
+  "hash": "cCpbVobVcXY",
+  "canonicalFilename": "test.tsx_Lightweight_useMemo_cCpbVobVcXY",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "useMemo$",
+  "captures": false
+}
+*/

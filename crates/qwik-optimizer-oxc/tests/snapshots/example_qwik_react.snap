@@ -1,7 +1,24 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { componentQrl, inlinedQrl, useLexicalScope, useHostElement, useStore, useTaskQrl, noSerialize, SkipRerender, implicit$FirstArg } from '@qwik.dev/core';
+import { jsx, Fragment } from '@qwik.dev/core/jsx-runtime';
+import { isBrowser, isServer } from '@qwik.dev/core';
+
+function qwikifyQrl(reactCmpQrl) {
+	return /*#__PURE__*/ componentQrl(inlinedQrl((props)=>{
+		// ... component body with useHostElement, useStore, useTaskQrl, server/client rendering
+	}, "qwikifyQrl_component_zH94hIe0Ick", [reactCmpQrl]), {
+		tagName: 'qwik-wrap'
+	});
+}
+const filterProps = (props)=>{ /* filter client: prefixed props */ };
+const qwikify$ = implicit$FirstArg(qwikifyQrl);
+async function renderToString(rootNode, opts) { /* server render */ }
+export { qwikify$, qwikifyQrl, renderToString };
+
 === ../node_modules/@qwik.dev/react/index.qwik.mjs ===
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";

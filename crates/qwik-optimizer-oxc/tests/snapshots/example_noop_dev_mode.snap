@@ -1,7 +1,32 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useStore, serverStuff$, $ } from '@qwik.dev/core';
+
+export const App = component$(() => {
+	const stuff = useStore();
+	serverStuff$(async () => {
+		// should be removed but keep scope
+		console.log(stuff.count)
+	})
+	serverStuff$(async () => {
+		// should be removed
+	})
+
+	return (
+		<Cmp>
+			<p class="stuff"
+				shouldRemove$={() => stuff.count}
+				onClick$={() => console.log('warn')}
+			>
+				Hello Qwik
+			</p>
+		</Cmp>
+	);
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -26,3 +51,20 @@ export const App_component_XumqEURaLxI = () => {
 		"q-e:click": () => console.log("warn")
 	}, "Hello Qwik", 3, "u6_0"), 3, "u6_1");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "App_component_XumqEURaLxI",
+  "entry": null,
+  "displayName": "test.tsx_App_component",
+  "hash": "XumqEURaLxI",
+  "canonicalFilename": "test.tsx_App_component_XumqEURaLxI",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

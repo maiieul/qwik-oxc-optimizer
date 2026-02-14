@@ -1,7 +1,11 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$ } from '@qwik.dev/core';
+export const sym1 = $((ctx) => console.log("1"));
+
 === test.tsx ===
 import { qrl } from "@qwik.dev/core";
 const i_YcWWmS5BN0c = () => import("./test.tsx_sym1_YcWWmS5BN0c");
@@ -9,3 +13,20 @@ export const sym1 = /* @__PURE__ */ qrl(i_YcWWmS5BN0c, "sym1_YcWWmS5BN0c");
 
 === test.tsx_sym1_YcWWmS5BN0c.tsx === (ENTRY)
 export const sym1_YcWWmS5BN0c = (ctx) => console.log("1");
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "sym1_YcWWmS5BN0c",
+  "entry": null,
+  "displayName": "test.tsx_sym1",
+  "hash": "YcWWmS5BN0c",
+  "canonicalFilename": "test.tsx_sym1_YcWWmS5BN0c",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/

@@ -1,7 +1,20 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useSignal, Signal } from '@qwik.dev/core';
+const Foo = component$(function() {
+  const data = useSignal<Signal<any>[]>([]);
+  return <div>
+	{data.value.map((row, idx) => (
+	  <div onClick$={() => console.log(row.value.id, idx)} onMouseOver$={() => console.log('over' + row.value.id)}>
+		<p onClick$={() => console.log('inner' + row.value.id)}>{item.value.id}</p>
+	  </div>
+	))}
+  </div>;
+})
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -30,11 +43,79 @@ export const Foo_component_gZqPatVoDqw = (function() {
 	}, /* @__PURE__ */ _jsxSorted("p", null, { "q-e:click": /* @__PURE__ */ qrl(i_MWp7oW4SJcQ, "Foo_component_p_q_e_click_MWp7oW4SJcQ") }, item.value.id, 3, "u6_0"), 3, "u6_1")), 3, "u6_2");
 });
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_gZqPatVoDqw",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component",
+  "hash": "gZqPatVoDqw",
+  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js === (ENTRY)
 export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(row.value.id, idx);
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_click_OJboCLusyIA",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_click",
+  "hash": "OJboCLusyIA",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_OJboCLusyIA",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/
 
 === test.tsx_Foo_component_div_q_e_mouseover_vfd9BKEsGeE.js === (ENTRY)
 export const Foo_component_div_q_e_mouseover_vfd9BKEsGeE = () => console.log("over" + row.value.id);
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_mouseover_vfd9BKEsGeE",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_mouseover",
+  "hash": "vfd9BKEsGeE",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_mouseover_vfd9BKEsGeE",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onMouseOver$",
+  "captures": false
+}
+*/
+
 === test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ.js === (ENTRY)
 export const Foo_component_p_q_e_click_MWp7oW4SJcQ = () => console.log("inner" + row.value.id);
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_p_q_e_click_MWp7oW4SJcQ",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_p_q_e_click",
+  "hash": "MWp7oW4SJcQ",
+  "canonicalFilename": "test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/

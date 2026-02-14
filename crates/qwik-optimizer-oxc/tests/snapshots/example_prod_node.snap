@@ -1,7 +1,20 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+
+export const Foo = component$(() => {
+	return (
+		<div>
+			<div onClick$={() => console.log('first')}/>
+			<div onClick$={() => console.log('second')}/>
+			<div onClick$={() => console.log('third')}/>
+		</div>
+	);
+});
+
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -24,11 +37,79 @@ export const Foo_component_gZqPatVoDqw = () => {
 		</div>;
 }
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_gZqPatVoDqw",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component",
+  "hash": "gZqPatVoDqw",
+  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.tsx === (ENTRY)
 export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log("first");
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_click_OJboCLusyIA",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_click",
+  "hash": "OJboCLusyIA",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_OJboCLusyIA",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/
 
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.tsx === (ENTRY)
 export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log("second");
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_click_OJboCLusyIA",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_click",
+  "hash": "OJboCLusyIA",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_OJboCLusyIA",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/
+
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.tsx === (ENTRY)
 export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log("third");
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_click_OJboCLusyIA",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_click",
+  "hash": "OJboCLusyIA",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_OJboCLusyIA",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/

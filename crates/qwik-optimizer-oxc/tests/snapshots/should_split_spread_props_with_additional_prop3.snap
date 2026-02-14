@@ -1,7 +1,17 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+		import { Foo } from './foo';
+
+		export default component$((props) => {
+			return (
+				<Foo s={Math.random()} {...props} hello {...globalThis.nothing} />
+			);
+		});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -23,3 +33,20 @@ export const default_component_jN9ZUuuADmk = (props) => {
 		s: Math.random()
 	}, _getConstProps(props), null, 0, "u6_0");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_jN9ZUuuADmk",
+  "entry": null,
+  "displayName": "test.tsx_default_component",
+  "hash": "jN9ZUuuADmk",
+  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

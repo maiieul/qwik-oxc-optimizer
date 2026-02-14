@@ -1,7 +1,20 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$, server$ } from '@qwik.dev/core';
+import { foo } from './foo';
+export const Works = component$((props) => {
+	const text = 'hola';
+	return (
+		<>
+		<div onClick$={server$(() => console.log('in server', text))}></div>
+		<div onClick$={() => foo()}></div>
+		</>
+	);
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { serverQrl } from "@qwik.dev/core";

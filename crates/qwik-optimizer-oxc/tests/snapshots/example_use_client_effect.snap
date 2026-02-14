@@ -1,7 +1,32 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from '@qwik.dev/core';
+
+export const Child = component$(() => {
+	const state = useStore({
+		count: 0
+	});
+
+	// Double count watch
+	useBrowserVisibleTask$(() => {
+		const timer = setInterval(() => {
+		state.count++;
+		}, 1000);
+		return () => {
+		clearInterval(timer);
+		}
+	});
+
+	return (
+		<div>
+		{state.count}
+	</div>
+	);
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -23,6 +48,23 @@ export const Child_component_80js9RUUsfM = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, state.count, 3, "u6_0");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Child_component_80js9RUUsfM",
+  "entry": null,
+  "displayName": "test.tsx_Child_component",
+  "hash": "80js9RUUsfM",
+  "canonicalFilename": "test.tsx_Child_component_80js9RUUsfM",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_useBrowserVisibleTask_0qCMfawldvU.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const useBrowserVisibleTask_0qCMfawldvU = () => {
@@ -34,3 +76,23 @@ export const useBrowserVisibleTask_0qCMfawldvU = () => {
 		clearInterval(timer);
 	};
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "useBrowserVisibleTask_0qCMfawldvU",
+  "entry": null,
+  "displayName": "test.tsx_useBrowserVisibleTask",
+  "hash": "0qCMfawldvU",
+  "canonicalFilename": "test.tsx_useBrowserVisibleTask_0qCMfawldvU",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Child_component",
+  "ctxKind": "function",
+  "ctxName": "useBrowserVisibleTask$",
+  "captures": true,
+  "captureNames": [
+    "state"
+  ]
+}
+*/

@@ -1,7 +1,23 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, $ } from '@qwik.dev/core';
+import { CustomComponent } from './custom-component';
+import { AnotherComponent } from './another-component';
+
+export const Greeter = component$(() => {
+	return (
+		<div>
+			<CustomComponent onClick$={() => {}}/>
+			{array.map(item => (
+				<AnotherComponent onClick$={() => {}}/>
+			))}
+		</div>
+	)
+});
+
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -25,8 +41,59 @@ export const Greeter_component_l5Al0251s9w = () => {
 		</div>;
 }
 
-=== test.tsx_Greeter_component___q_e_click_dWH0ComNdBo.tsx === (ENTRY)
-export const Greeter_component___q_e_click_dWH0ComNdBo = () => {};
+/*
+{
+  "origin": "test.tsx",
+  "name": "Greeter_component_l5Al0251s9w",
+  "entry": null,
+  "displayName": "test.tsx_Greeter_component",
+  "hash": "l5Al0251s9w",
+  "canonicalFilename": "test.tsx_Greeter_component_l5Al0251s9w",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
 
 === test.tsx_Greeter_component___q_e_click_dWH0ComNdBo.tsx === (ENTRY)
 export const Greeter_component___q_e_click_dWH0ComNdBo = () => {};
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Greeter_component___q_e_click_dWH0ComNdBo",
+  "entry": null,
+  "displayName": "test.tsx_Greeter_component___q_e_click",
+  "hash": "dWH0ComNdBo",
+  "canonicalFilename": "test.tsx_Greeter_component___q_e_click_dWH0ComNdBo",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_Greeter_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/
+
+=== test.tsx_Greeter_component___q_e_click_dWH0ComNdBo.tsx === (ENTRY)
+export const Greeter_component___q_e_click_dWH0ComNdBo = () => {};
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Greeter_component___q_e_click_dWH0ComNdBo",
+  "entry": null,
+  "displayName": "test.tsx_Greeter_component___q_e_click",
+  "hash": "dWH0ComNdBo",
+  "canonicalFilename": "test.tsx_Greeter_component___q_e_click_dWH0ComNdBo",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_Greeter_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/

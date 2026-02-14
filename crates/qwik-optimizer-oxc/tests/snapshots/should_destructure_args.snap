@@ -1,7 +1,27 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from "@qwik.dev/core";
+
+// the count results in _fnSignal because of the rename
+// would be nice to consider it a prop too
+export default component$(({ message, id, count: c, ...rest }: Record<string, any>) => {
+	const renders = useStore({ renders: 0 }, { reactive: false });
+	renders.renders++;
+	const rerenders = renders.renders + 0;
+	return (
+		<div id={id}>
+			<span {...rest}>
+			{message} {c}
+			</span>
+			<div class="renders">{rerenders}</div>
+		</div>
+	);
+}
+);
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -34,3 +54,23 @@ export const default_component_jN9ZUuuADmk = (_rawProps) => {
 	const rerenders = renders.renders + 0;
 	return /* @__PURE__ */ _jsxSorted("div", null, { id: _wrapProp(_rawProps, "id") }, [/* @__PURE__ */ _jsxSplit("span", { ..._getVarProps(rest) }, _getConstProps(rest), [message, c], 0, "u6_0"), /* @__PURE__ */ _jsxSorted("div", null, { class: "renders" }, rerenders, 3, "u6_1")], 1, "u6_2");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_jN9ZUuuADmk",
+  "entry": null,
+  "displayName": "test.tsx_default_component",
+  "hash": "jN9ZUuuADmk",
+  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false,
+  "paramNames": [
+    "_rawProps"
+  ]
+}
+*/

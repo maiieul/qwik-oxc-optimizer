@@ -1,7 +1,33 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+
+export const App = component$(() => {
+  const data = { value: [
+    { value: { id: 1, selected: { value: true } } },
+    { value: { id: 2, selected: { value: false } } },
+    { value: { id: 3, selected: { value: true } } }
+  ]};
+
+  return (
+    <table>
+      {data.value.map((row) => {
+        return (
+          <tr
+            key={row.value.id}
+            class={row.value.selected.value ? "danger" : ""}
+          >
+            <td>{row.value.id}</td>
+          </tr>
+        );
+      })}
+    </table>
+  );
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -36,3 +62,20 @@ export const App_component_XumqEURaLxI = () => {
 		return /* @__PURE__ */ _jsxSorted("tr", null, { class: _fnSignal(_hf0, [row], _hf0_str) }, /* @__PURE__ */ _jsxSorted("td", null, null, row.value.id, 3, "u6_0"), 3, row.value.id);
 	}), 3, "u6_1");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "App_component_XumqEURaLxI",
+  "entry": null,
+  "displayName": "test.tsx_App_component",
+  "hash": "XumqEURaLxI",
+  "canonicalFilename": "test.tsx_App_component_XumqEURaLxI",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

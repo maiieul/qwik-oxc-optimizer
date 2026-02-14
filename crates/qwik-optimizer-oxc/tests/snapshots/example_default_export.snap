@@ -1,7 +1,18 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+import { sibling } from './sibling';
+
+export default component$(() => {
+	return (
+		<div onClick$={() => console.log(mongodb, sibling)}>
+		</div>
+	);
+});
+
 === src/routes/_repl/[id]/[[...slug]].js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -20,6 +31,40 @@ export const default_component_rMtkV4ZNQIA = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_DIVjyCI2VsA, "default_component_div_q_e_click_DIVjyCI2VsA") }, null, 3, "u6_0");
 };
 
+/*
+{
+  "origin": "src/routes/_repl/[id]/[[...slug]].tsx",
+  "name": "default_component_rMtkV4ZNQIA",
+  "entry": null,
+  "displayName": "src/routes/_repl/[id]/[[...slug]].tsx_default_component",
+  "hash": "rMtkV4ZNQIA",
+  "canonicalFilename": "src/routes/_repl/[id]/[[...slug]].tsx_default_component_rMtkV4ZNQIA",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA.js === (ENTRY)
 import { sibling } from "./sibling";
 export const default_component_div_q_e_click_DIVjyCI2VsA = () => console.log(mongodb, sibling);
+
+/*
+{
+  "origin": "src/routes/_repl/[id]/[[...slug]].tsx",
+  "name": "default_component_div_q_e_click_DIVjyCI2VsA",
+  "entry": null,
+  "displayName": "src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click",
+  "hash": "DIVjyCI2VsA",
+  "canonicalFilename": "src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA",
+  "path": "",
+  "extension": "js",
+  "parent": "src/routes/_repl/[id]/[[...slug]].tsx_default_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/

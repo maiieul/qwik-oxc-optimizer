@@ -1,7 +1,31 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from "@qwik.dev/core";
+		const Cmp = component$(() => {
+			const htmlSignal = useSignal("<h2><span>I'm a signal value!</span></h2>");
+			return (
+				<div>
+					<div>
+						<span id="first" dangerouslySetInnerHTML="vanilla HTML here" />
+					</div>
+					<div>
+						<span id="second" dangerouslySetInnerHTML="<h1>I'm an h1!</h1>" class="after" />
+					</div>
+					<div>
+						<span id="third" dangerouslySetInnerHTML={htmlSignal.value} class="after" />
+						<button
+							onClick$={() =>
+								(htmlSignal.value = "<h2><span>I'm a updated signal value!</span></h2>")
+							}
+						></button>
+					</div>
+				</div>
+			);
+		});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -36,9 +60,46 @@ export const Cmp_component_qsBJpzBk9qc = () => {
 	], 1, "u6_7");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Cmp_component_qsBJpzBk9qc",
+  "entry": null,
+  "displayName": "test.tsx_Cmp_component",
+  "hash": "qsBJpzBk9qc",
+  "canonicalFilename": "test.tsx_Cmp_component_qsBJpzBk9qc",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Cmp_component_button_q_e_click_hiQTyBUK0Yk.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Cmp_component_button_q_e_click_hiQTyBUK0Yk = () => {
 	const htmlSignal = _captures[0];
 	return htmlSignal.value = "<h2><span>I'm a updated signal value!</span></h2>";
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Cmp_component_button_q_e_click_hiQTyBUK0Yk",
+  "entry": null,
+  "displayName": "test.tsx_Cmp_component_button_q_e_click",
+  "hash": "hiQTyBUK0Yk",
+  "canonicalFilename": "test.tsx_Cmp_component_button_q_e_click_hiQTyBUK0Yk",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Cmp_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "captureNames": [
+    "htmlSignal"
+  ]
+}
+*/

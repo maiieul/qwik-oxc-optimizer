@@ -1,7 +1,28 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+
+export const App2 = component$(() => {
+	const signal = useSignal();
+	const computed = signal.value + 'foo';
+	return (
+		<>
+			<div className="hola"></div>
+			<div className={signal.value}></div>
+			<div className={signal}></div>
+			<div className={computed}></div>
+
+			<Foo className="hola"></Foo>
+			<Foo className={signal.value}></Foo>
+			<Foo className={signal}></Foo>
+			<Foo className={computed}></Foo>
+		</>
+	);
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -29,3 +50,20 @@ export const App2_component_SxkiFEcj0nk = () => {
 		/* @__PURE__ */ _jsxSorted(Foo, { className: computed }, null, null, 3, "u6_7")
 	], 1, "u6_8");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "App2_component_SxkiFEcj0nk",
+  "entry": null,
+  "displayName": "test.tsx_App2_component",
+  "hash": "SxkiFEcj0nk",
+  "canonicalFilename": "test.tsx_App2_component_SxkiFEcj0nk",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

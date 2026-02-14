@@ -1,7 +1,42 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useResource$, Resource } from "@qwik.dev/core";
+import { type ModelProps } from "./modelMenu";
+import { serverImg } from "~/routes/(authenticated)/layout";
+
+export const Image = component$((props) => {
+  return (
+    <>
+      <img src={`${props.src}`} />
+    </>
+  );
+});
+
+export const ModelImg = component$<ModelProps>((props) => {
+  const imgLoc = useResource$(async ({ track }) => {
+    track(() => props.store.model);
+    return await serverImg('some.png');
+  });
+  return (
+    <>
+      <Resource
+        value={imgLoc}
+        onRejected={() => <p>error ...</p>}
+        onResolved={(res) =>
+          res && (
+            <>
+              <Image src={res} />
+            </>
+          )
+        }
+      />
+    </>
+  );
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -23,6 +58,23 @@ export const Image_component_JrQIeK5mMMM = (props) => {
 	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, /* @__PURE__ */ _jsxSorted("img", { src: `${props.src}` }, null, null, 3, "u6_0"), 3, "u6_1");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Image_component_JrQIeK5mMMM",
+  "entry": null,
+  "displayName": "test.tsx_Image_component",
+  "hash": "JrQIeK5mMMM",
+  "canonicalFilename": "test.tsx_Image_component_JrQIeK5mMMM",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_ModelImg_component_N1fNAC4qw7Q.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_bT0HZe0FfwQ = () => import("./test.tsx_imgLoc_useResource_bT0HZe0FfwQ");
@@ -41,6 +93,23 @@ export const ModelImg_component_N1fNAC4qw7Q = (props) => {
 	}, null, null, 3, "u6_5"), 3, "u6_6");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "ModelImg_component_N1fNAC4qw7Q",
+  "entry": null,
+  "displayName": "test.tsx_ModelImg_component",
+  "hash": "N1fNAC4qw7Q",
+  "canonicalFilename": "test.tsx_ModelImg_component_N1fNAC4qw7Q",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_imgLoc_useResource_bT0HZe0FfwQ.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { serverImg } from "~/routes/(authenticated)/layout";
@@ -49,3 +118,23 @@ export const imgLoc_useResource_bT0HZe0FfwQ = async ({ track }) => {
 	track(() => props.store.model);
 	return await serverImg("some.png");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "imgLoc_useResource_bT0HZe0FfwQ",
+  "entry": null,
+  "displayName": "test.tsx_imgLoc_useResource",
+  "hash": "bT0HZe0FfwQ",
+  "canonicalFilename": "test.tsx_imgLoc_useResource_bT0HZe0FfwQ",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_ModelImg_component",
+  "ctxKind": "function",
+  "ctxName": "useResource$",
+  "captures": true,
+  "captureNames": [
+    "props"
+  ]
+}
+*/

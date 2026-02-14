@@ -1,7 +1,16 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+
+export default component$((props) => {
+	return (
+		<div {...props}></div>
+	);
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -18,3 +27,20 @@ import { _getConstProps } from "@qwik.dev/core";
 export const default_component_jN9ZUuuADmk = (props) => {
 	return /* @__PURE__ */ _jsxSplit("div", { ..._getVarProps(props) }, _getConstProps(props), null, 0, null);
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_jN9ZUuuADmk",
+  "entry": null,
+  "displayName": "test.tsx_default_component",
+  "hash": "jN9ZUuuADmk",
+  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

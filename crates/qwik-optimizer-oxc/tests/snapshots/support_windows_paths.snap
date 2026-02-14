@@ -1,7 +1,11 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+export const Greeter = component$(() => <div/>)
+
 === components\\apps\\apps.ts ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -12,3 +16,20 @@ export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_nlrDHF
 === components\\apps\\apps.tsx_Greeter_component_nlrDHFFtOtc.ts === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const Greeter_component_nlrDHFFtOtc = () => /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
+
+/*
+{
+  "origin": "components\\\\apps\\\\apps.tsx",
+  "name": "Greeter_component_nlrDHFFtOtc",
+  "entry": null,
+  "displayName": "components\\\\apps\\\\apps.tsx_Greeter_component",
+  "hash": "nlrDHFFtOtc",
+  "canonicalFilename": "components\\\\apps\\\\apps.tsx_Greeter_component_nlrDHFFtOtc",
+  "path": "",
+  "extension": "ts",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

@@ -1,7 +1,27 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useResource$ } from '@qwik.dev/core';
+import mongodb from 'mongodb';
+
+export const onGet = () => {
+	const data = mongodb.collection.whatever;
+	return {
+		body: {
+		data
+		}
+	}
+};
+
+export default component$(()=> {
+	useResource$(() => {
+		return onGet();
+	})
+	return <div>cmp</div>
+});
+
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -22,8 +42,42 @@ export const default_component_jN9ZUuuADmk = () => {
 	return <div>cmp</div>;
 }
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_jN9ZUuuADmk",
+  "entry": null,
+  "displayName": "test.tsx_default_component",
+  "hash": "jN9ZUuuADmk",
+  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_default_useResource_Qfn0duyjgAo.tsx === (ENTRY)
 import { onGet } from "./test";
 export const default_useResource_Qfn0duyjgAo = () => {
 	return onGet();
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_useResource_Qfn0duyjgAo",
+  "entry": null,
+  "displayName": "test.tsx_default_useResource",
+  "hash": "Qfn0duyjgAo",
+  "canonicalFilename": "test.tsx_default_useResource_Qfn0duyjgAo",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_default_component",
+  "ctxKind": "function",
+  "ctxName": "useResource$",
+  "captures": false
+}
+*/

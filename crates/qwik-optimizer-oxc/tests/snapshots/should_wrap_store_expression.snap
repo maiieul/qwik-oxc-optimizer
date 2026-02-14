@@ -1,7 +1,30 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useStore } from '@qwik.dev/core';
+
+export default component$(() => {
+	const panelStore = useStore(() => ({
+		active: 'Input',
+		list: PANELS,
+	}));
+
+	return (
+		<div
+			stuff={panelStore.active ? 'yes' : 'no'}
+			class={{
+				'too-long-to-wrap': true,
+				'examples-panel-input': panelStore.active === 'Input',
+				'examples-panel-output': panelStore.active === 'Output',
+				'examples-panel-console': panelStore.active === 'Console',
+			}}
+		/>
+	);
+});
+export const PANELS: ActivePanel[] = ['Examples', 'Input', 'Output', 'Console'];
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -35,3 +58,20 @@ export const default_component_jN9ZUuuADmk = () => {
 		}
 	}, null, null, 3, "u6_0");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_jN9ZUuuADmk",
+  "entry": null,
+  "displayName": "test.tsx_default_component",
+  "hash": "jN9ZUuuADmk",
+  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

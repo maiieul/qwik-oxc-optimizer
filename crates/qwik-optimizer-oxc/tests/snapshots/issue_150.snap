@@ -1,7 +1,28 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, $ } from '@qwik.dev/core';
+import { hola } from 'sdfds';
+
+export const Greeter = component$(() => {
+	const stuff = useStore();
+	return $(() => {
+		return (
+			<div
+				class={{
+					'foo': true,
+					'bar': stuff.condition,
+					'baz': hola ? 'true' : 'false',
+				}}
+			/>
+		)
+	});
+});
+
+const d = $(()=>console.log('thing'));
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -21,6 +42,23 @@ export const Greeter_component_l5Al0251s9w = () => {
 	return /* @__PURE__ */ qrl(i_Ma8uJBKLX2o, "s__Ma8uJBKLX2o", [stuff]);
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Greeter_component_l5Al0251s9w",
+  "entry": null,
+  "displayName": "test.tsx_Greeter_component",
+  "hash": "l5Al0251s9w",
+  "canonicalFilename": "test.tsx_Greeter_component_l5Al0251s9w",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_s__Ma8uJBKLX2o.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -34,5 +72,42 @@ export const s__Ma8uJBKLX2o = () => {
 	} }, null, null, 3, "u6_0");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "s__Ma8uJBKLX2o",
+  "entry": null,
+  "displayName": "test.tsx_s_",
+  "hash": "Ma8uJBKLX2o",
+  "canonicalFilename": "test.tsx_s__Ma8uJBKLX2o",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Greeter_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": true,
+  "captureNames": [
+    "stuff"
+  ]
+}
+*/
+
 === test.tsx_d_j0uXtsz0eLE.js === (ENTRY)
 export const d_j0uXtsz0eLE = () => console.log("thing");
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "d_j0uXtsz0eLE",
+  "entry": null,
+  "displayName": "test.tsx_d",
+  "hash": "j0uXtsz0eLE",
+  "canonicalFilename": "test.tsx_d_j0uXtsz0eLE",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/

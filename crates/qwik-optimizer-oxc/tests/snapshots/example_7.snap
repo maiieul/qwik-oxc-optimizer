@@ -1,7 +1,23 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$ } from '@qwik.dev/core';
+
+export const Header = component$(() => {
+	console.log("mount");
+	return (
+		<div onClick={$((ctx) => console.log(ctx))}/>
+	);
+	});
+
+const App = component$(() => {
+	return (
+		<Header/>
+	);
+});
+
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -19,11 +35,62 @@ export const Header_component_Qw9nV3mG0KQ = () => {
 	return <div onClick={/* @__PURE__ */ qrl(i_F0ShKNzNoIM, "Header_component_div_q_e_click_F0ShKNzNoIM")} />;
 }
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Header_component_Qw9nV3mG0KQ",
+  "entry": null,
+  "displayName": "test.tsx_Header_component",
+  "hash": "Qw9nV3mG0KQ",
+  "canonicalFilename": "test.tsx_Header_component_Qw9nV3mG0KQ",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Header_component_div_q_e_click_F0ShKNzNoIM.tsx === (ENTRY)
 export const Header_component_div_q_e_click_F0ShKNzNoIM = (ctx) => console.log(ctx);
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Header_component_div_q_e_click_F0ShKNzNoIM",
+  "entry": null,
+  "displayName": "test.tsx_Header_component_div_q_e_click",
+  "hash": "F0ShKNzNoIM",
+  "canonicalFilename": "test.tsx_Header_component_div_q_e_click_F0ShKNzNoIM",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_Header_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/
 
 === test.tsx_App_component_XumqEURaLxI.tsx === (ENTRY)
 import { Header } from "./test";
 export const App_component_XumqEURaLxI = () => {
 	return <Header />;
 }
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "App_component_XumqEURaLxI",
+  "entry": null,
+  "displayName": "test.tsx_App_component",
+  "hash": "XumqEURaLxI",
+  "canonicalFilename": "test.tsx_App_component_XumqEURaLxI",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

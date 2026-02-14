@@ -1,7 +1,22 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useStore } from '@qwik.dev/core';
+
+export const App = component$((props: Stuff) => {
+	return (
+		<>
+			<Cmp key="stuff"></Cmp>
+			<Cmp></Cmp>
+			<Cmp prop="23"></Cmp>
+			<Cmp prop="23" key={props.stuff}></Cmp>
+			<p key={props.stuff}>Hello Qwik</p>
+		</>
+	);
+});
+
 === project/index.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -23,3 +38,20 @@ export const App_component_M1CbC3Yh9lM = (props: Stuff) => {
 		/* @__PURE__ */ _jsxSorted("p", null, null, "Hello Qwik", 3, props.stuff)
 	], 1, "u6_1");
 }
+
+/*
+{
+  "origin": "project/index.tsx",
+  "name": "App_component_M1CbC3Yh9lM",
+  "entry": null,
+  "displayName": "project/index.tsx_App_component",
+  "hash": "M1CbC3Yh9lM",
+  "canonicalFilename": "project/index.tsx_App_component_M1CbC3Yh9lM",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

@@ -1,7 +1,21 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@builder.io/qwik';
+export default component$((props) => {
+  return (<p 
+		onHi$={() => 'hi'} 
+		{...props.foo} 
+		onHello$={props.helloHandler$} 
+		{...props.rest} 
+		onVar$={props.onVarHandler$} 
+		onConst$={() => 'const'} 
+		asd={"1"}
+	/>);
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -24,8 +38,59 @@ export const default_component_jN9ZUuuADmk = (props) => {
 	return /* @__PURE__ */ _jsxSplit("p", { ..._getVarProps(props) }, _getConstProps(props.foo), null, 0, "u6_0");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_jN9ZUuuADmk",
+  "entry": null,
+  "displayName": "test.tsx_default_component",
+  "hash": "jN9ZUuuADmk",
+  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_default_component_p_q_e_hi_2p9z0XXdr7M.js === (ENTRY)
 export const default_component_p_q_e_hi_2p9z0XXdr7M = () => "hi";
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_p_q_e_hi_2p9z0XXdr7M",
+  "entry": null,
+  "displayName": "test.tsx_default_component_p_q_e_hi",
+  "hash": "2p9z0XXdr7M",
+  "canonicalFilename": "test.tsx_default_component_p_q_e_hi_2p9z0XXdr7M",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_default_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onHi$",
+  "captures": false
+}
+*/
+
 === test.tsx_default_component_p_q_e_const_W7e7jpgFEgw.js === (ENTRY)
 export const default_component_p_q_e_const_W7e7jpgFEgw = () => "const";
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_p_q_e_const_W7e7jpgFEgw",
+  "entry": null,
+  "displayName": "test.tsx_default_component_p_q_e_const",
+  "hash": "W7e7jpgFEgw",
+  "canonicalFilename": "test.tsx_default_component_p_q_e_const_W7e7jpgFEgw",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_default_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onConst$",
+  "captures": false
+}
+*/

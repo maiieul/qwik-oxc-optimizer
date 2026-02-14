@@ -1,7 +1,28 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$, useSignal } from "@qwik.dev/core";
+import { destructureBindings } from "./destructure-bindings";
+
+export const FieldInput = component$(
+  (props) => {
+    const initialValues = { value: undefined as string | undefined };
+    const rest = destructureBindings(props, initialValues);
+
+    return (
+      <input
+        {...rest}
+        bind:value={finalValue}
+		onClick$={() => {
+			console.log('clicked');
+		}}
+      />
+    );
+  }
+);
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -29,7 +50,41 @@ export const FieldInput_component_O84bGdeej0g = (props) => {
 	return /* @__PURE__ */ _jsxSplit("input", { ..._getVarProps(rest) }, _getConstProps(rest), null, 0, "u6_0");
 }
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "FieldInput_component_O84bGdeej0g",
+  "entry": null,
+  "displayName": "test.tsx_FieldInput_component",
+  "hash": "O84bGdeej0g",
+  "canonicalFilename": "test.tsx_FieldInput_component_O84bGdeej0g",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk.js === (ENTRY)
 export const FieldInput_component_input_q_e_click_jlpYRk03eHk = () => {
 	console.log("clicked");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "FieldInput_component_input_q_e_click_jlpYRk03eHk",
+  "entry": null,
+  "displayName": "test.tsx_FieldInput_component_input_q_e_click",
+  "hash": "jlpYRk03eHk",
+  "canonicalFilename": "test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_FieldInput_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/

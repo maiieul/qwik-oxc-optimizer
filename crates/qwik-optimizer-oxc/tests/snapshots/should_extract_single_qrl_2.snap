@@ -1,7 +1,38 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useStore, useSignal } from '@qwik.dev/core';
+      const Parent = component$(() => {
+      const cart = useStore<Cart>([]);
+      const results = useSignal(['foo', 'bar']);
+
+      return (
+        <div>
+          <button id="first" onClick$={() => (results.value = ['item1', 'item2'])}></button>
+
+          {results.value.map((item, key) => (
+            <button
+              id={'second-' + key}
+              onClick$={() => {
+                cart.push(item);
+              }}
+            >
+              {item}
+            </button>
+          ))}
+          <ul>
+            {cart.map((item) => (
+              <li>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    });
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -33,6 +64,23 @@ export const Parent_component_fxETLug1yE4 = () => {
 	], 1, "u6_5");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Parent_component_fxETLug1yE4",
+  "entry": null,
+  "displayName": "test.tsx_Parent_component",
+  "hash": "fxETLug1yE4",
+  "canonicalFilename": "test.tsx_Parent_component_fxETLug1yE4",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
@@ -40,9 +88,49 @@ export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
 	cart.push(item);
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Parent_component_button_q_e_click_I5Xm0lRBfsc",
+  "entry": null,
+  "displayName": "test.tsx_Parent_component_button_q_e_click",
+  "hash": "I5Xm0lRBfsc",
+  "canonicalFilename": "test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Parent_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "captureNames": [
+    "cart"
+  ]
+}
+*/
+
 === test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
 	const results = _captures[0];
 	return results.value = ["item1", "item2"];
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Parent_component_button_q_e_click_I5Xm0lRBfsc",
+  "entry": null,
+  "displayName": "test.tsx_Parent_component_button_q_e_click",
+  "hash": "I5Xm0lRBfsc",
+  "canonicalFilename": "test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Parent_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "captureNames": [
+    "results"
+  ]
+}
+*/

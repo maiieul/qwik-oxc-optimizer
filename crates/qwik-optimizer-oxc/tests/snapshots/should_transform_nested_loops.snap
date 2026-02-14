@@ -1,7 +1,23 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useSignal, Signal } from '@qwik.dev/core';
+const Foo = component$(function() {
+  const data = useSignal<Signal<any>[]>([]);
+  const data2 = useSignal<Signal<any>[]>([]);
+  return <div>
+	{data.value.map(row => (
+	  <div onClick$={() => console.log(row.value.id)}>
+		{data2.value.map(item => (
+		  <p onClick$={() => console.log(row.value.id, item.value.id)}>{row.value.id}-{item.value.id}</p>
+		))}
+	  </div>
+	))}
+  </div>;
+})
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -30,8 +46,59 @@ export const Foo_component_gZqPatVoDqw = (function() {
 	], 1, "u6_0")), 3, "u6_1")), 3, "u6_2");
 });
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_gZqPatVoDqw",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component",
+  "hash": "gZqPatVoDqw",
+  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ.js === (ENTRY)
 export const Foo_component_p_q_e_click_MWp7oW4SJcQ = () => console.log(row.value.id, item.value.id);
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_p_q_e_click_MWp7oW4SJcQ",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_p_q_e_click",
+  "hash": "MWp7oW4SJcQ",
+  "canonicalFilename": "test.tsx_Foo_component_p_q_e_click_MWp7oW4SJcQ",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/
+
 === test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js === (ENTRY)
 export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(row.value.id);
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_click_OJboCLusyIA",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_click",
+  "hash": "OJboCLusyIA",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_OJboCLusyIA",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false
+}
+*/

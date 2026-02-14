@@ -1,7 +1,18 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$ } from '@qwik.dev/core';
+export const Header = component$(() => {
+	return (
+		<>
+			<div onClick={(ctx) => console.log("1")}/>
+			<div onClick={$((ctx) => console.log("2"))}/>
+		</>
+	);
+});
+
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -19,5 +30,39 @@ export const Header_component_Qw9nV3mG0KQ = () => {
 		</>;
 }
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Header_component_Qw9nV3mG0KQ",
+  "entry": null,
+  "displayName": "test.tsx_Header_component",
+  "hash": "Qw9nV3mG0KQ",
+  "canonicalFilename": "test.tsx_Header_component_Qw9nV3mG0KQ",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Header_component_div_q_e_click_F0ShKNzNoIM.tsx === (ENTRY)
 export const Header_component_div_q_e_click_F0ShKNzNoIM = (ctx) => console.log("2");
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Header_component_div_q_e_click_F0ShKNzNoIM",
+  "entry": null,
+  "displayName": "test.tsx_Header_component_div_q_e_click",
+  "hash": "F0ShKNzNoIM",
+  "canonicalFilename": "test.tsx_Header_component_div_q_e_click_F0ShKNzNoIM",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_Header_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/

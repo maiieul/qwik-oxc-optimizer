@@ -1,7 +1,48 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$, h, Fragment } from '@qwik.dev/core';
+
+export const Lightweight = (props) => {
+	return (
+		<div>
+			<>
+				<div/>
+				<button {...props}/>
+			</>
+		</div>
+	)
+};
+
+export const Foo = component$((props) => {
+	return $(() => {
+		return (
+			<div>
+				<>
+					<div class="class"/>
+					<div class="class"></div>
+					<div class="class">12</div>
+				</>
+				<div class="class">
+					<Lightweight {...props}/>
+				</div>
+				<div class="class">
+					<div/>
+					<div/>
+					<div/>
+				</div>
+				<div class="class">
+					{children}
+				</div>
+			</div>
+		)
+	});
+}, {
+	tagName: "my-foo",
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -25,6 +66,23 @@ const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
 export const Foo_component_gZqPatVoDqw = (props) => {
 	return /* @__PURE__ */ qrl(i_T0dY5k6mBgU, "Foo_T0dY5k6mBgU", [props, children]);
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_gZqPatVoDqw",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component",
+  "hash": "gZqPatVoDqw",
+  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
 
 === test.tsx_Foo_T0dY5k6mBgU.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
@@ -52,3 +110,24 @@ export const Foo_T0dY5k6mBgU = () => {
 		/* @__PURE__ */ _jsxSorted("div", null, { class: "class" }, children, 3, "u6_8")
 	], 1, "u6_9");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_T0dY5k6mBgU",
+  "entry": null,
+  "displayName": "test.tsx_Foo",
+  "hash": "T0dY5k6mBgU",
+  "canonicalFilename": "test.tsx_Foo_T0dY5k6mBgU",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": true,
+  "captureNames": [
+    "props",
+    "children"
+  ]
+}
+*/

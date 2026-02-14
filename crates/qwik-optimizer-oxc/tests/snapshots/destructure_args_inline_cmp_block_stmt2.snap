@@ -1,7 +1,20 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+export default (props: { data: any }) => {
+    const { data } = props;
+    return (
+        <div
+            data-is-active={data.selectedOutputDetail === 'options'}
+            onClick$={() => {
+                data.selectedOutputDetail = 'options';
+            }}
+        />
+    );
+};
+
 === test.js ===
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -19,3 +32,23 @@ export const div_q_e_click_Lo4b850Oi8I = () => {
 	const data = _captures[0];
 	data.selectedOutputDetail = "options";
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "div_q_e_click_Lo4b850Oi8I",
+  "entry": null,
+  "displayName": "test.tsx_div_q_e_click",
+  "hash": "Lo4b850Oi8I",
+  "canonicalFilename": "test.tsx_div_q_e_click_Lo4b850Oi8I",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "captureNames": [
+    "data"
+  ]
+}
+*/

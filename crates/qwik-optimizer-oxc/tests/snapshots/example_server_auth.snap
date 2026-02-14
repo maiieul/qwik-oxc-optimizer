@@ -1,7 +1,29 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import GitHub from '@auth/core/providers/github'
+import Facebook from 'next-auth/providers/facebook'
+import Google from 'next-auth/providers/google'
+import {serverAuth$, auth$} from '@auth/qwik';
+
+export const { onRequest, logout, getSession, signup } = serverAuth$({
+	providers: [
+	GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
+	Facebook({ clientId: import.meta.env.FACEBOOK_ID, clientSecret: import.meta.env.FACEBOOK_SECRET }),
+	Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET })
+	]
+});
+
+export const { onRequest, logout, getSession, signup } = auth$({
+	providers: [
+	GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
+	Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),
+	Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET })
+	]
+});
+
 === test.js ===
 import { serverAuthQrl } from "@qwik.dev/core";
 import { authQrl } from "@qwik.dev/core";
@@ -34,6 +56,23 @@ export const s_0_7qRdElk79Fw = { providers: [
 	})
 ] };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "s_0_7qRdElk79Fw",
+  "entry": null,
+  "displayName": "test.tsx_s_0",
+  "hash": "7qRdElk79Fw",
+  "canonicalFilename": "test.tsx_s_0_7qRdElk79Fw",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "serverAuth$",
+  "captures": false
+}
+*/
+
 === test.tsx_s_1_axfrT8CMT4s.js === (ENTRY)
 import GitHub from "@auth/core/providers/github";
 import Facebook from "next-auth/providers/facebook";
@@ -52,3 +91,20 @@ export const s_1_axfrT8CMT4s = { providers: [
 		clientSecret: process.env.GOOGLE_SECRET
 	})
 ] };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "s_1_axfrT8CMT4s",
+  "entry": null,
+  "displayName": "test.tsx_s_1",
+  "hash": "axfrT8CMT4s",
+  "canonicalFilename": "test.tsx_s_1_axfrT8CMT4s",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "auth$",
+  "captures": false
+}
+*/

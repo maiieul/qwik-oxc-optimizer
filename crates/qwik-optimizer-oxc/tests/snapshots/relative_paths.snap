@@ -1,7 +1,17 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, $ } from '@qwik.dev/core';
+import { state } from './sibling';
+
+export const Local = component$(() => {
+	return (
+		<div>{state}</div>
+	)
+});
+
 === ../../node_modules/dep/dist/lib.mjs ===
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
@@ -37,3 +47,20 @@ import { state } from "./sibling";
 export const Local_component_OCSspQ0ICD8 = () => {
 	return /* @__PURE__ */ _jsxSorted("div", null, null, state, 3, "u6_0");
 };
+
+/*
+{
+  "origin": "components/main.tsx",
+  "name": "Local_component_OCSspQ0ICD8",
+  "entry": null,
+  "displayName": "components/main.tsx_Local_component",
+  "hash": "OCSspQ0ICD8",
+  "canonicalFilename": "components/main.tsx_Local_component_OCSspQ0ICD8",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

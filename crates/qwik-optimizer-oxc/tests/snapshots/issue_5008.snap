@@ -1,7 +1,25 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useStore } from "@qwik.dev/core";
+
+		export default component$(() => {
+		const store = useStore([{ value: 0 }]);
+		return (
+			<>
+			<button onClick$={() => store[0].value++}>+1</button>
+			{store.map(function (v, idx) {
+				return <div key={"fn_" + idx}>Function: {v.value}</div>;
+			})}
+			{store.map((v, idx) => (
+				<div key={"arrow_" + idx}>Arrow: {v.value}</div>
+			))}
+			</>
+		);
+		});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -31,9 +49,46 @@ export const default_component_jN9ZUuuADmk = () => {
 	], 1, "u6_1");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_jN9ZUuuADmk",
+  "entry": null,
+  "displayName": "test.tsx_default_component",
+  "hash": "jN9ZUuuADmk",
+  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const default_component_button_q_e_click_zo9wkw0NBzs = () => {
 	const store = _captures[0];
 	return store[0].value++;
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_button_q_e_click_zo9wkw0NBzs",
+  "entry": null,
+  "displayName": "test.tsx_default_component_button_q_e_click",
+  "hash": "zo9wkw0NBzs",
+  "canonicalFilename": "test.tsx_default_component_button_q_e_click_zo9wkw0NBzs",
+  "path": "",
+  "extension": "js",
+  "parent": "test.tsx_default_component",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "captureNames": [
+    "store"
+  ]
+}
+*/

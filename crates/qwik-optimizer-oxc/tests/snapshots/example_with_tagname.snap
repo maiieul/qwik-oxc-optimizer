@@ -1,7 +1,21 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$ } from '@qwik.dev/core';
+
+export const Foo = component$(() => {
+	return $(() => {
+		return (
+			<div>
+			</div>
+		)
+	});
+}, {
+	tagName: "my-foo",
+});
+
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -16,8 +30,42 @@ export const Foo_component_gZqPatVoDqw = () => {
 	return /* @__PURE__ */ qrl(i_T0dY5k6mBgU, "Foo_T0dY5k6mBgU");
 };
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_gZqPatVoDqw",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component",
+  "hash": "gZqPatVoDqw",
+  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Foo_T0dY5k6mBgU.tsx === (ENTRY)
 export const Foo_T0dY5k6mBgU = () => {
 	return <div>
 			</div>;
 }
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_T0dY5k6mBgU",
+  "entry": null,
+  "displayName": "test.tsx_Foo",
+  "hash": "T0dY5k6mBgU",
+  "canonicalFilename": "test.tsx_Foo_T0dY5k6mBgU",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/

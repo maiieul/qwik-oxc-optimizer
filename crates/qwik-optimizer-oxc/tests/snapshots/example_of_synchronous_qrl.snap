@@ -1,7 +1,25 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { sync$, component$ } from "@qwik.dev/core";
+
+		export default component$(() => {
+		return (
+			<>
+				<input onClick$={sync$(function(event, target) {
+					// comment should be removed
+					event.preventDefault();
+				})}/>
+				<input onClick$={sync$((event, target) => {
+					event.preventDefault();
+				})}/>
+				<input onClick$={sync$((event, target) => event.preventDefault())}/>
+			</>
+		);
+		});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -25,3 +43,20 @@ export const default_component_jN9ZUuuADmk = () => {
 		/* @__PURE__ */ _jsxSorted("input", null, { "q-e:click": _qrlSync((event, target) => event.preventDefault(), "(event, target) => event.preventDefault()") }, null, 3, "u6_2")
 	], 1, "u6_3");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "default_component_jN9ZUuuADmk",
+  "entry": null,
+  "displayName": "test.tsx_default_component",
+  "hash": "jN9ZUuuADmk",
+  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

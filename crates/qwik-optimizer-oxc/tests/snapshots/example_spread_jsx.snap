@@ -1,7 +1,41 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$ } from '@qwik.dev/core';
+import { useDocumentHead, useLocation } from '@qwik.dev/router';
+
+/**
+ * The RouterHead component is placed inside of the document `<head>` element.
+ */
+export const RouterHead = component$(() => {
+	const head = useDocumentHead();
+	const loc = useLocation();
+
+	return (
+	<>
+		<title>{head.title}</title>
+
+		<link rel="canonical" href={loc.href} />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+		{head.meta.map((m) => (
+			<meta {...m} />
+		))}
+
+		{head.links.map((l) => (
+			<link {...l} key={l.key} />
+		))}
+
+		{head.styles.map((s) => (
+			<style {...s.props} dangerouslySetInnerHTML={s.style} key={s.key} />
+		))}
+	</>
+	);
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -49,3 +83,20 @@ export const RouterHead_component_gzVhCyFtjZI = () => {
 		}, _getConstProps(s.props), null, 0, s.key))
 	], 1, "u6_4");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "RouterHead_component_gzVhCyFtjZI",
+  "entry": null,
+  "displayName": "test.tsx_RouterHead_component",
+  "hash": "gzVhCyFtjZI",
+  "canonicalFilename": "test.tsx_RouterHead_component_gzVhCyFtjZI",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

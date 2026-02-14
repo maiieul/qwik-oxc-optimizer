@@ -1,7 +1,35 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, useSignal } from "@qwik.dev/core";
+import { TestComponent } from "./testComponent";
+
+export const Child = component$(() => {
+  const propCounterWithNested = useSignal(() => {
+  return {
+      data: [
+        { attributeInArray: { counter: globalThis.propsCounter++ } },
+        { attributeInArray: { counter: globalThis.propsCounter } },
+      ],
+    };
+  })
+  return (
+    <div>
+        {propCounterWithNested.value.data.map((item, index) => {
+          return (
+            <TestComponent
+              counter={item.attributeInArray.counter}
+              logString="Nested read through array"
+              key={index}
+            />
+          );
+        })}
+    </div>
+  );
+})
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -32,3 +60,20 @@ export const Child_component_80js9RUUsfM = () => {
 		}, null, 3, index);
 	}), 3, "u6_0");
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Child_component_80js9RUUsfM",
+  "entry": null,
+  "displayName": "test.tsx_Child_component",
+  "hash": "80js9RUUsfM",
+  "canonicalFilename": "test.tsx_Child_component_80js9RUUsfM",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

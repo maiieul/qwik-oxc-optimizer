@@ -1,7 +1,19 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$, useStyles$ } from '@qwik.dev/core';
+
+export const Foo = component$(() => {
+	useStyles$('.class {}');
+	return (
+		<div class="class"/>
+	);
+}, {
+	tagName: "my-foo",
+});
+
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -18,5 +30,39 @@ export const Foo_component_gZqPatVoDqw = () => {
 	return <div class="class" />;
 }
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_gZqPatVoDqw",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component",
+  "hash": "gZqPatVoDqw",
+  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === test.tsx_Foo_useStyles_0cZU0P2qlwk.tsx === (ENTRY)
 export const Foo_useStyles_0cZU0P2qlwk = ".class {}";
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_useStyles_0cZU0P2qlwk",
+  "entry": null,
+  "displayName": "test.tsx_Foo_useStyles",
+  "hash": "0cZU0P2qlwk",
+  "canonicalFilename": "test.tsx_Foo_useStyles_0cZU0P2qlwk",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_Foo_component",
+  "ctxKind": "function",
+  "ctxName": "useStyles$",
+  "captures": false
+}
+*/

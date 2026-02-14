@@ -1,7 +1,33 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$ } from '@qwik.dev/core';
+
+export const Foo = component$((props) => {
+	return (
+		<div>
+			<Button {...props} />
+			<ButtonArrow {...props} />
+		</div>
+	);
+}, {
+	tagName: "my-foo",
+});
+
+export function Button({text, color}) {
+	return (
+		<button onColor$={color} onClick$={()=>console.log(text, color)}>{text}</button>
+	);
+}
+
+export const ButtonArrow = ({text, color}) => {
+	return (
+		<button onColor$={color} onClick$={()=>console.log(text, color)}>{text}</button>
+	);
+}
+
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -26,13 +52,22 @@ export const Foo_component_gZqPatVoDqw = (props) => {
 		</div>;
 }
 
-=== test.tsx_button_q_e_click_ODPc00H0FSA.tsx === (ENTRY)
-import { _captures } from "@qwik.dev/core";
-export const button_q_e_click_ODPc00H0FSA = () => {
-	const text = _captures[0];
-	const color = _captures[1];
-	return console.log(text, color);
-};
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_gZqPatVoDqw",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component",
+  "hash": "gZqPatVoDqw",
+  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
 
 === test.tsx_button_q_e_click_ODPc00H0FSA.tsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
@@ -41,3 +76,53 @@ export const button_q_e_click_ODPc00H0FSA = () => {
 	const color = _captures[1];
 	return console.log(text, color);
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "button_q_e_click_ODPc00H0FSA",
+  "entry": null,
+  "displayName": "test.tsx_button_q_e_click",
+  "hash": "ODPc00H0FSA",
+  "canonicalFilename": "test.tsx_button_q_e_click_ODPc00H0FSA",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "captureNames": [
+    "text",
+    "color"
+  ]
+}
+*/
+
+=== test.tsx_button_q_e_click_ODPc00H0FSA.tsx === (ENTRY)
+import { _captures } from "@qwik.dev/core";
+export const button_q_e_click_ODPc00H0FSA = () => {
+	const text = _captures[0];
+	const color = _captures[1];
+	return console.log(text, color);
+};
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "button_q_e_click_ODPc00H0FSA",
+  "entry": null,
+  "displayName": "test.tsx_button_q_e_click",
+  "hash": "ODPc00H0FSA",
+  "canonicalFilename": "test.tsx_button_q_e_click_ODPc00H0FSA",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "captureNames": [
+    "text",
+    "color"
+  ]
+}
+*/

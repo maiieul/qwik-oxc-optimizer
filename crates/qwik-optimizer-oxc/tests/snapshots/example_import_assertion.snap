@@ -1,7 +1,15 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, $ } from '@qwik.dev/core';
+import json from "./foo.json" assert { type: "json" };
+
+export const Greeter = component$(() => {
+	return json;
+});
+
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -14,3 +22,20 @@ import json from "./foo.json";
 export const Greeter_component_l5Al0251s9w = () => {
 	return json;
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "Greeter_component_l5Al0251s9w",
+  "entry": null,
+  "displayName": "test.tsx_Greeter_component",
+  "hash": "l5Al0251s9w",
+  "canonicalFilename": "test.tsx_Greeter_component_l5Al0251s9w",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/

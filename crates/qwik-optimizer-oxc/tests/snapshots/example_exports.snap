@@ -1,7 +1,32 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component$ } from '@qwik.dev/core';
+
+export const [a, {b, v1: [c], d=v2, ...e}, f=v3, ...g] = obj;
+
+const exp1 = 1;
+const internal = 2;
+export {exp1, internal as expr2};
+
+export function foo() { }
+export class bar {}
+
+export default function DefaultFn() {}
+
+export const Header = component$(() => {
+	return $(() => (
+		<Footer>
+			<div>{a}{b}{c}{d}{e}{f}{exp1}{internal}{foo}{bar}{DefaultFn}</div>
+			<div>{v1}{v2}{v3}{obj}</div>
+		</Footer>
+	))
+});
+
+export const Footer = component$();
+
 === project/test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -29,6 +54,23 @@ export const Header_component_sHTSaq0AU4w = () => {
 	]);
 };
 
+/*
+{
+  "origin": "project/test.tsx",
+  "name": "Header_component_sHTSaq0AU4w",
+  "entry": null,
+  "displayName": "project/test.tsx_Header_component",
+  "hash": "sHTSaq0AU4w",
+  "canonicalFilename": "project/test.tsx_Header_component_sHTSaq0AU4w",
+  "path": "",
+  "extension": "jsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false
+}
+*/
+
 === project/test.tsx_Header_0hncTFTaevI.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { Footer } from "./test";
@@ -53,3 +95,26 @@ return <Footer>
 			<div>{v1}{v2}{v3}{obj}</div>
 		</Footer>;
 }
+
+/*
+{
+  "origin": "project/test.tsx",
+  "name": "Header_0hncTFTaevI",
+  "entry": null,
+  "displayName": "project/test.tsx_Header",
+  "hash": "0hncTFTaevI",
+  "canonicalFilename": "project/test.tsx_Header_0hncTFTaevI",
+  "path": "",
+  "extension": "jsx",
+  "parent": "project/test.tsx_Header_component",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": true,
+  "captureNames": [
+    "v1",
+    "v2",
+    "v3",
+    "obj"
+  ]
+}
+*/

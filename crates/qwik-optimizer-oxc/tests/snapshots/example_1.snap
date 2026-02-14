@@ -1,7 +1,20 @@
 ---
-source: crates/qwik-optimizer-oxc/tests/snapshot_tests.rs
+source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { $, component, onRender } from '@qwik.dev/core';
+
+export const renderHeader = $(() => {
+	return (
+		<div onClick={$((ctx) => console.log(ctx))}/>
+	);
+});
+const renderHeader = component($(() => {
+	console.log("mount");
+	return render;
+}));
+
 === test.tsx ===
 import { qrl } from "@qwik.dev/core";
 const i_AcV95hWr76k = () => import("./test.tsx_renderHeader_AcV95hWr76k");
@@ -19,11 +32,62 @@ export const renderHeader_AcV95hWr76k = () => {
 	return <div onClick={/* @__PURE__ */ qrl(i_cwR88TdIVK4, "renderHeader_div_q_e_click_cwR88TdIVK4")} />;
 }
 
+/*
+{
+  "origin": "test.tsx",
+  "name": "renderHeader_AcV95hWr76k",
+  "entry": null,
+  "displayName": "test.tsx_renderHeader",
+  "hash": "AcV95hWr76k",
+  "canonicalFilename": "test.tsx_renderHeader_AcV95hWr76k",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/
+
 === test.tsx_renderHeader_div_q_e_click_cwR88TdIVK4.tsx === (ENTRY)
 export const renderHeader_div_q_e_click_cwR88TdIVK4 = (ctx) => console.log(ctx);
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "renderHeader_div_q_e_click_cwR88TdIVK4",
+  "entry": null,
+  "displayName": "test.tsx_renderHeader_div_q_e_click",
+  "hash": "cwR88TdIVK4",
+  "canonicalFilename": "test.tsx_renderHeader_div_q_e_click_cwR88TdIVK4",
+  "path": "",
+  "extension": "tsx",
+  "parent": "test.tsx_renderHeader",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/
 
 === test.tsx_renderHeader_component_dZG2Ib1X4QU.tsx === (ENTRY)
 export const renderHeader_component_dZG2Ib1X4QU = () => {
 	console.log("mount");
 	return render;
 };
+
+/*
+{
+  "origin": "test.tsx",
+  "name": "renderHeader_component_dZG2Ib1X4QU",
+  "entry": null,
+  "displayName": "test.tsx_renderHeader_component",
+  "hash": "dZG2Ib1X4QU",
+  "canonicalFilename": "test.tsx_renderHeader_component_dZG2Ib1X4QU",
+  "path": "",
+  "extension": "tsx",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false
+}
+*/
