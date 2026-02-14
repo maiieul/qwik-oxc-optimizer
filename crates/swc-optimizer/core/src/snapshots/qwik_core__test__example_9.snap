@@ -1,8 +1,6 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 246
+source: src/test.rs
 expression: output
-snapshot_kind: text
 ---
 ==INPUT==
 
@@ -11,7 +9,7 @@ import { $, component$ } from '@qwik.dev/core';
 const Header = $((decl1, {decl2}, [decl3]) => {
 	const {decl4, key: decl5} = this;
 	let [decl6, ...decl7] = stuff;
-	const decl8 = 1, decl9;
+	let decl8 = 1, decl9;
 	function decl10(decl11, {decl12}, [decl13]) {}
 	class decl14 {
 		method(decl15, {decl16}, [decl17]) {}
@@ -45,7 +43,7 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "captures": false,
   "loc": [
     67,
-    344
+    342
   ],
   "paramNames": [
     "decl1",

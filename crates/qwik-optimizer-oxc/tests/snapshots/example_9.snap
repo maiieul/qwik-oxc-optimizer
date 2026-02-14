@@ -7,7 +7,7 @@ import { $, component$ } from '@qwik.dev/core';
 const Header = $((decl1, {decl2}, [decl3]) => {
 	const {decl4, key: decl5} = this;
 	let [decl6, ...decl7] = stuff;
-	const decl8 = 1, decl9;
+	let decl8 = 1, decl9;
 	function decl10(decl11, {decl12}, [decl13]) {}
 	class decl14 {
 		method(decl15, {decl16}, [decl17]) {}
@@ -25,14 +25,14 @@ const Header = /* @__PURE__ */ qrl(i_QrzcmFeRo0o, "Header_QrzcmFeRo0o");
 export const Header_QrzcmFeRo0o = (decl1, { decl2 }, [decl3]) => {
 	const { decl4, key: decl5 } = this;
 	let [decl6, ...decl7] = stuff;
-	const decl8 = 1, decl9;
+	let decl8 = 1, decl9;
 	function decl10(decl11, { decl12 }, [decl13]) {}
 	class decl14 {
 		method(decl15, { decl16 }, [decl17]) {}
 	}
 	try {} catch (decl18) {}
 	try {} catch ({ decl19 }) {}
-}
+};
 
 /*
 {
@@ -50,6 +50,3 @@ export const Header_QrzcmFeRo0o = (decl1, { decl2 }, [decl3]) => {
   "captures": false
 }
 */
-
-=== DIAGNOSTICS ===
-[SourceError] Missing initializer in const declaration

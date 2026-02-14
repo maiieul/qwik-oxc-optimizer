@@ -28,7 +28,7 @@ export const api = server$(() => {
 
 export default component$(() => {
 	return (
-		<button onClick$={() => await api()}></button>
+		<button onClick$={async () => await api()}></button>
 	)
 	});
 
@@ -84,7 +84,7 @@ export const default_component_jN9ZUuuADmk = () => {
 
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)
 import { api } from "./test";
-export const default_component_button_q_e_click_zo9wkw0NBzs = () => await api()
+export const default_component_button_q_e_click_zo9wkw0NBzs = async () => await api();
 
 /*
 {
@@ -102,6 +102,3 @@ export const default_component_button_q_e_click_zo9wkw0NBzs = () => await api()
   "captures": false
 }
 */
-
-=== DIAGNOSTICS ===
-[SourceError] `await` is only allowed within async functions and at the top levels of modules

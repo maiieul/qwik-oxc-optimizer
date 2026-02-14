@@ -138,7 +138,7 @@ export const App = () => {
 		);
 	});
 	return Header;
-});
+};
 "#
 		.to_string(),
 		..TestInput::default()
@@ -250,7 +250,7 @@ import { $, component$ } from '@qwik.dev/core';
 const Header = $((decl1, {decl2}, [decl3]) => {
 	const {decl4, key: decl5} = this;
 	let [decl6, ...decl7] = stuff;
-	const decl8 = 1, decl9;
+	let decl8 = 1, decl9;
 	function decl10(decl11, {decl12}, [decl13]) {}
 	class decl14 {
 		method(decl15, {decl16}, [decl17]) {}
@@ -846,7 +846,7 @@ export const api = server$(() => {
 
 export default component$(() => {
 	return (
-		<button onClick$={() => await api()}></button>
+		<button onClick$={async () => await api()}></button>
 	)
 	});
 "#
@@ -2171,7 +2171,7 @@ export const App = component$((props) => {
 			>
 				<p>Hello Qwik</p>
 			</Div>
-			[].map(() => (
+			{[].map(() => (
 				<Model
 					class={state}
 					remove$={remove}
@@ -2182,7 +2182,7 @@ export const App = component$((props) => {
 					mutable2={(() => console.log(state.count))()}
 					mutable3={[1, 2, state, null, {}]}
 				/>
-			));
+			))}
 		</>
 	);
 });

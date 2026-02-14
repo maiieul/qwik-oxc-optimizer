@@ -23,6 +23,6 @@ export const api = server$(() => {
 
 export default component$(() => {
 	return (
-		<button onClick$={() => await api()}></button>
+		<button onClick$={async () => await api()}></button>
 	)
 	});
