@@ -26,22 +26,22 @@ const d = $(() => console.log("thing"));
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_n7HuG2hhU0Q = () => import("./test.tsx_Greeter_component_n7HuG2hhU0Q");
-const i_wKNFJEIQVUA = () => import("./test.tsx_d_wKNFJEIQVUA");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_d_XXXXXXXXXXXX");
 export const Greeter = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_n7HuG2hhU0Q, "Greeter_component_n7HuG2hhU0Q"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
-/*#__PURE__*/ qrl(i_wKNFJEIQVUA, "d_wKNFJEIQVUA");
+/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "d_XXXXXXXXXXXX");
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAGA,OAAO,MAAM,wBAAU,gFAapB"}',
 );
-============================= test.tsx_Greeter_component_n7HuG2hhU0Q.js (ENTRY POINT)==
+============================= test.tsx_Greeter_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
-const i_krCndSwhX4U = () => import("./test.tsx_Greeter_component_1_krCndSwhX4U");
-export const Greeter_component_n7HuG2hhU0Q = () => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_1_XXXXXXXXXXXX");
+export const Greeter_component_XXXXXXXXXXXX = () => {
   const stuff = useStore();
-  return /*#__PURE__*/ qrl(i_krCndSwhX4U, "Greeter_component_1_krCndSwhX4U", [stuff]);
+  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_1_XXXXXXXXXXXX", [stuff]);
 };
 
 Some(
@@ -50,11 +50,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Greeter_component_n7HuG2hhU0Q",
+  "name": "Greeter_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Greeter_component",
-  "hash": "n7HuG2hhU0Q",
-  "canonicalFilename": "test.tsx_Greeter_component_n7HuG2hhU0Q",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Greeter_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -67,11 +67,11 @@ Some(
   ]
 }
 */
-============================= test.tsx_Greeter_component_1_krCndSwhX4U.js (ENTRY POINT)==
+============================= test.tsx_Greeter_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { hola } from "sdfds";
-export const Greeter_component_1_krCndSwhX4U = () => {
+export const Greeter_component_1_XXXXXXXXXXXX = () => {
   const stuff = _captures[0];
   return /*#__PURE__*/ _jsxSorted(
     "div",
@@ -95,14 +95,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Greeter_component_1_krCndSwhX4U",
+  "name": "Greeter_component_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Greeter_component_1",
-  "hash": "krCndSwhX4U",
-  "canonicalFilename": "test.tsx_Greeter_component_1_krCndSwhX4U",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Greeter_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Greeter_component_n7HuG2hhU0Q",
+  "parent": "Greeter_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
@@ -115,8 +115,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_d_wKNFJEIQVUA.js (ENTRY POINT)==
-export const d_wKNFJEIQVUA = () => console.log("thing");
+============================= test.tsx_d_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const d_XXXXXXXXXXXX = () => console.log("thing");
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAkBY,IAAM,QAAQ,GAAG,CAAC"}',
@@ -124,11 +124,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "d_wKNFJEIQVUA",
+  "name": "d_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_d",
-  "hash": "wKNFJEIQVUA",
-  "canonicalFilename": "test.tsx_d_wKNFJEIQVUA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_d_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,

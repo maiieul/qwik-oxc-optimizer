@@ -27,9 +27,9 @@ export const App = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrlDEV } from "@qwik.dev/core";
-const i_ckEPmXZlub0 = () => import("./test.tsx_App_component_ckEPmXZlub0");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrlDEV(i_ckEPmXZlub0, "App_component_ckEPmXZlub0", {
+  /*#__PURE__*/ qrlDEV(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX", {
     file: "/hello/from/dev/test.tsx",
     lo: 104,
     hi: 469,
@@ -40,12 +40,12 @@ export const App = /*#__PURE__*/ componentQrl(
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM;;;;;IAiBhB"}',
 );
-============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
+============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrlDEV } from "@qwik.dev/core";
 import { serverStuffQrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
-export const App_component_ckEPmXZlub0 = () => {
+export const App_component_XXXXXXXXXXXX = () => {
   const stuff = useStore();
   serverStuffQrl(
     /*#__PURE__*/ _noopQrlDEV(
@@ -118,11 +118,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_ckEPmXZlub0",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component",
-  "hash": "ckEPmXZlub0",
-  "canonicalFilename": "test.tsx_App_component_ckEPmXZlub0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,

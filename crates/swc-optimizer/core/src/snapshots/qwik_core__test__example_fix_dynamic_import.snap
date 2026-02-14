@@ -22,20 +22,20 @@ export const Header = component$(() => {
 ============================= project/folder/test.tsx ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_RGgm7Ks9QWI = () => import("./test.tsx_Header_component_RGgm7Ks9QWI");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_XXXXXXXXXXXX");
 export function foo() {
   return import("../foo/state2");
 }
 export const Header = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_RGgm7Ks9QWI, "Header_component_RGgm7Ks9QWI"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/project/folder/test.tsx"],"names":[],"mappings":";;;AAGA,OAAO,SAAS;IACd,OAAO,MAAM,CAAC;AAChB;AAEA,OAAO,MAAM,uBAAS,+EAOnB"}',
 );
-============================= project/folder/test.tsx_Header_component_RGgm7Ks9QWI.tsx ==
+============================= project/folder/test.tsx_Header_component_XXXXXXXXXXXX.tsx ==
 import thing from "../state";
-export const Header_component_RGgm7Ks9QWI = () => {
+export const Header_component_XXXXXXXXXXXX = () => {
   return (
     <div>
       {import("../folder/state3")}
@@ -50,11 +50,11 @@ Some(
 /*
 {
   "origin": "project/folder/test.tsx",
-  "name": "Header_component_RGgm7Ks9QWI",
+  "name": "Header_component_XXXXXXXXXXXX",
   "entry": "entry_segments",
   "displayName": "test.tsx_Header_component",
-  "hash": "RGgm7Ks9QWI",
-  "canonicalFilename": "test.tsx_Header_component_RGgm7Ks9QWI",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Header_component_XXXXXXXXXXXX",
   "path": "project/folder",
   "extension": "tsx",
   "parent": null,

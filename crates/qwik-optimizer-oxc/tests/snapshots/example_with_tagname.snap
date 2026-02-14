@@ -19,27 +19,27 @@ export const Foo = component$(
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
-const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_XXXXXXXXXXXX");
 export const Foo = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Foo_component_gZqPatVoDqw.tsx === (ENTRY)
+=== test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
-export const Foo_component_gZqPatVoDqw = () => {
-  return /* @__PURE__ */ qrl(i_T0dY5k6mBgU, "Foo_T0dY5k6mBgU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_XXXXXXXXXXXX");
+export const Foo_component_XXXXXXXXXXXX = () => {
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_XXXXXXXXXXXX");
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_gZqPatVoDqw",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "gZqPatVoDqw",
-  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -49,19 +49,19 @@ export const Foo_component_gZqPatVoDqw = () => {
 }
 */
 
-=== test.tsx_Foo_T0dY5k6mBgU.tsx === (ENTRY)
-export const Foo_T0dY5k6mBgU = () => {
+=== test.tsx_Foo_XXXXXXXXXXXX.tsx === (ENTRY)
+export const Foo_XXXXXXXXXXXX = () => {
   return <div></div>;
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_T0dY5k6mBgU",
+  "name": "Foo_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo",
-  "hash": "T0dY5k6mBgU",
-  "canonicalFilename": "test.tsx_Foo_T0dY5k6mBgU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": "test.tsx_Foo_component",

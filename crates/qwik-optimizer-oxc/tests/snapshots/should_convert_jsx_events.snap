@@ -28,43 +28,43 @@ const ManyEventsComponent = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_d0rUoq0Y7Qo = () => import("./test.tsx_ManyEventsComponent_component_d0rUoq0Y7Qo");
-const i_ygm370W5KJY = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY");
-const i_ragb1RcWs04 = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04");
-const i_ygm370W5KJY = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY");
-const i_fzYpgq8WW04 = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04");
-const i_HCrpsbAaSvc = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc");
-const i_p9PdBU5LvjE = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE");
-const i_KoKtNDq0WI4 = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_ManyEventsComponent_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_dblclick_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_blur_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_d_focus_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_w_click_XXXXXXXXXXXX");
 const ManyEventsComponent = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_d0rUoq0Y7Qo, "ManyEventsComponent_component_d0rUoq0Y7Qo"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "ManyEventsComponent_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_ManyEventsComponent_component_d0rUoq0Y7Qo.js === (ENTRY)
+=== test.tsx_ManyEventsComponent_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_ygm370W5KJY = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY");
-const i_ragb1RcWs04 = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04");
-const i_ygm370W5KJY = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY");
-const i_fzYpgq8WW04 = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04");
-const i_HCrpsbAaSvc = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc");
-const i_p9PdBU5LvjE = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE");
-const i_KoKtNDq0WI4 = () =>
-  import("./test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_dblclick_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_blur_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_d_focus_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_button_q_w_click_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
-export const ManyEventsComponent_component_d0rUoq0Y7Qo = () => {
+export const ManyEventsComponent_component_XXXXXXXXXXXX = () => {
   return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
@@ -75,12 +75,12 @@ export const ManyEventsComponent_component_d0rUoq0Y7Qo = () => {
         null,
         {
           "q-e:click": /* @__PURE__ */ qrl(
-            i_ygm370W5KJY,
-            "ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX",
           ),
           "q-e:dblclick": /* @__PURE__ */ qrl(
-            i_ragb1RcWs04,
-            "ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_button_q_e_dblclick_XXXXXXXXXXXX",
           ),
         },
         "click",
@@ -92,24 +92,24 @@ export const ManyEventsComponent_component_d0rUoq0Y7Qo = () => {
         null,
         {
           "q-e:click": /* @__PURE__ */ qrl(
-            i_ygm370W5KJY,
-            "ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX",
           ),
           "q-e:blur": /* @__PURE__ */ qrl(
-            i_fzYpgq8WW04,
-            "ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_button_q_e_blur_XXXXXXXXXXXX",
           ),
           "q-e:-anothercustom": /* @__PURE__ */ qrl(
-            i_HCrpsbAaSvc,
-            "ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_button_q_e_-anothercustom_XXXXXXXXXXXX",
           ),
           "q-d:focus": /* @__PURE__ */ qrl(
-            i_p9PdBU5LvjE,
-            "ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_button_q_d_focus_XXXXXXXXXXXX",
           ),
           "q-w:click": /* @__PURE__ */ qrl(
-            i_KoKtNDq0WI4,
-            "ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_button_q_w_click_XXXXXXXXXXXX",
           ),
         },
         "click",
@@ -125,11 +125,11 @@ export const ManyEventsComponent_component_d0rUoq0Y7Qo = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_d0rUoq0Y7Qo",
+  "name": "ManyEventsComponent_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component",
-  "hash": "d0rUoq0Y7Qo",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_d0rUoq0Y7Qo",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -139,17 +139,17 @@ export const ManyEventsComponent_component_d0rUoq0Y7Qo = () => {
 }
 */
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.js === (ENTRY)
-export const ManyEventsComponent_component_button_q_e_click_ygm370W5KJY = () => {};
+=== test.tsx_ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+export const ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX = () => {};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+  "name": "ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_click",
-  "hash": "ygm370W5KJY",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_ManyEventsComponent_component",
@@ -159,17 +159,17 @@ export const ManyEventsComponent_component_button_q_e_click_ygm370W5KJY = () => 
 }
 */
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04.js === (ENTRY)
-export const ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04 = () => {};
+=== test.tsx_ManyEventsComponent_component_button_q_e_dblclick_XXXXXXXXXXXX.js === (ENTRY)
+export const ManyEventsComponent_component_button_q_e_dblclick_XXXXXXXXXXXX = () => {};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04",
+  "name": "ManyEventsComponent_component_button_q_e_dblclick_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_dblclick",
-  "hash": "ragb1RcWs04",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_dblclick_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_ManyEventsComponent_component",
@@ -179,17 +179,17 @@ export const ManyEventsComponent_component_button_q_e_dblclick_ragb1RcWs04 = () 
 }
 */
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY.js === (ENTRY)
-export const ManyEventsComponent_component_button_q_e_click_ygm370W5KJY = () => {};
+=== test.tsx_ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+export const ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX = () => {};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+  "name": "ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_click",
-  "hash": "ygm370W5KJY",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_click_ygm370W5KJY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_ManyEventsComponent_component",
@@ -199,17 +199,17 @@ export const ManyEventsComponent_component_button_q_e_click_ygm370W5KJY = () => 
 }
 */
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04.js === (ENTRY)
-export const ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04 = () => {};
+=== test.tsx_ManyEventsComponent_component_button_q_e_blur_XXXXXXXXXXXX.js === (ENTRY)
+export const ManyEventsComponent_component_button_q_e_blur_XXXXXXXXXXXX = () => {};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04",
+  "name": "ManyEventsComponent_component_button_q_e_blur_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_blur",
-  "hash": "fzYpgq8WW04",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_blur_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_ManyEventsComponent_component",
@@ -219,17 +219,17 @@ export const ManyEventsComponent_component_button_q_e_blur_fzYpgq8WW04 = () => {
 }
 */
 
-=== test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc.js === (ENTRY)
-export const ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc = () => {}
+=== test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_XXXXXXXXXXXX.js === (ENTRY)
+export const ManyEventsComponent_component_button_q_e_-anothercustom_XXXXXXXXXXXX = () => {}
 
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc",
+  "name": "ManyEventsComponent_component_button_q_e_-anothercustom_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom",
-  "hash": "HCrpsbAaSvc",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_e_-anothercustom_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_ManyEventsComponent_component",
@@ -239,17 +239,17 @@ export const ManyEventsComponent_component_button_q_e_-anothercustom_HCrpsbAaSvc
 }
 */
 
-=== test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE.js === (ENTRY)
-export const ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE = () => {};
+=== test.tsx_ManyEventsComponent_component_button_q_d_focus_XXXXXXXXXXXX.js === (ENTRY)
+export const ManyEventsComponent_component_button_q_d_focus_XXXXXXXXXXXX = () => {};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE",
+  "name": "ManyEventsComponent_component_button_q_d_focus_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_button_q_d_focus",
-  "hash": "p9PdBU5LvjE",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_d_focus_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_ManyEventsComponent_component",
@@ -259,17 +259,17 @@ export const ManyEventsComponent_component_button_q_d_focus_p9PdBU5LvjE = () => 
 }
 */
 
-=== test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4.js === (ENTRY)
-export const ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4 = () => {};
+=== test.tsx_ManyEventsComponent_component_button_q_w_click_XXXXXXXXXXXX.js === (ENTRY)
+export const ManyEventsComponent_component_button_q_w_click_XXXXXXXXXXXX = () => {};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4",
+  "name": "ManyEventsComponent_component_button_q_w_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_button_q_w_click",
-  "hash": "KoKtNDq0WI4",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_w_click_KoKtNDq0WI4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_button_q_w_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_ManyEventsComponent_component",

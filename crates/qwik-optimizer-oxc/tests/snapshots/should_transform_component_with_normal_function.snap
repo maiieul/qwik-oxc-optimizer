@@ -23,26 +23,26 @@ const Foo = component$(function () {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
-const i_7dSOr7rhY8c = () => import("./test.tsx_Inner_component_7dSOr7rhY8c");
-const i_Kwn9b5UeNMU = () => import("./test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Inner_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Inner_component_p_q_e_click_XXXXXXXXXXXX");
 import { useSignal } from "@qwik.dev/core";
 import { Signal } from "@qwik.dev/core";
 const Foo = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Foo_component_gZqPatVoDqw.js === (ENTRY)
+=== test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_7dSOr7rhY8c = () => import("./test.tsx_Inner_component_7dSOr7rhY8c");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Inner_component_XXXXXXXXXXXX");
 import { componentQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 import { Signal } from "@qwik.dev/core";
-export const Foo_component_gZqPatVoDqw = function () {
+export const Foo_component_XXXXXXXXXXXX = function () {
   const data = useSignal < Signal < any > [] > [];
   const Inner = /* @__PURE__ */ componentQrl(
-    /* @__PURE__ */ qrl(i_7dSOr7rhY8c, "Inner_component_7dSOr7rhY8c", [props, item]),
+    /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Inner_component_XXXXXXXXXXXX", [props, item]),
   );
   return /* @__PURE__ */ _jsxSorted(Inner, { data }, null, null, 3, "u6_2");
 };
@@ -50,11 +50,11 @@ export const Foo_component_gZqPatVoDqw = function () {
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_gZqPatVoDqw",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "gZqPatVoDqw",
-  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -64,12 +64,12 @@ export const Foo_component_gZqPatVoDqw = function () {
 }
 */
 
-=== test.tsx_Inner_component_7dSOr7rhY8c.js === (ENTRY)
+=== test.tsx_Inner_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_Kwn9b5UeNMU = () => import("./test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Inner_component_p_q_e_click_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
-export const Inner_component_7dSOr7rhY8c = function (props) {
+export const Inner_component_XXXXXXXXXXXX = function (props) {
   const data = props.data;
   return /* @__PURE__ */ _jsxSorted(
     "div",
@@ -81,8 +81,8 @@ export const Inner_component_7dSOr7rhY8c = function (props) {
         null,
         {
           "q-e:click": /* @__PURE__ */ qrl(
-            i_Kwn9b5UeNMU,
-            "Inner_component_p_q_e_click_Kwn9b5UeNMU",
+            i_XXXXXXXXXXXX,
+            "Inner_component_p_q_e_click_XXXXXXXXXXXX",
           ),
         },
         item.value.id,
@@ -98,11 +98,11 @@ export const Inner_component_7dSOr7rhY8c = function (props) {
 /*
 {
   "origin": "test.tsx",
-  "name": "Inner_component_7dSOr7rhY8c",
+  "name": "Inner_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Inner_component",
-  "hash": "7dSOr7rhY8c",
-  "canonicalFilename": "test.tsx_Inner_component_7dSOr7rhY8c",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Inner_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Foo_component",
@@ -116,17 +116,17 @@ export const Inner_component_7dSOr7rhY8c = function (props) {
 }
 */
 
-=== test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU.js === (ENTRY)
-export const Inner_component_p_q_e_click_Kwn9b5UeNMU = () => console.log(item.value.id);
+=== test.tsx_Inner_component_p_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+export const Inner_component_p_q_e_click_XXXXXXXXXXXX = () => console.log(item.value.id);
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Inner_component_p_q_e_click_Kwn9b5UeNMU",
+  "name": "Inner_component_p_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Inner_component_p_q_e_click",
-  "hash": "Kwn9b5UeNMU",
-  "canonicalFilename": "test.tsx_Inner_component_p_q_e_click_Kwn9b5UeNMU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Inner_component_p_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Inner_component",

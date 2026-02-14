@@ -51,7 +51,7 @@ import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_HTDRsvUbLiE = () => import("./test.tsx_Foo_component_HTDRsvUbLiE");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 export const Lightweight = (props) => {
   return /*#__PURE__*/ _jsxSorted(
@@ -83,7 +83,7 @@ export const Lightweight = (props) => {
   );
 };
 export const Foo = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
@@ -92,11 +92,11 @@ export const Foo = /*#__PURE__*/ componentQrl(
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;;AAEA,OAAO,MAAM,cAAc,CAAC;IAC1B,qBACE,WAAC,iCACC;sBACE,WAAC;sBACD,UAAC;4BAAW;0BAAA;;AAIpB,EAAE;AAEF,OAAO,MAAM,oBAAM,4EAuBjB;IACE,SAAS;AACX,GACA"}',
 );
-============================= test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)==
+============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
-const i_DvU6FitWglY = () => import("./test.tsx_Foo_component_1_DvU6FitWglY");
-export const Foo_component_HTDRsvUbLiE = (props) => {
-  return /*#__PURE__*/ qrl(i_DvU6FitWglY, "Foo_component_1_DvU6FitWglY", [props]);
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
+export const Foo_component_XXXXXXXXXXXX = (props) => {
+  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX", [props]);
 };
 
 Some(
@@ -105,11 +105,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_HTDRsvUbLiE",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "HTDRsvUbLiE",
-  "canonicalFilename": "test.tsx_Foo_component_HTDRsvUbLiE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -125,7 +125,7 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_1_DvU6FitWglY.js (ENTRY POINT)==
+============================= test.tsx_Foo_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
 import { Lightweight } from "./test";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
@@ -133,7 +133,7 @@ import { _getConstProps } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
-export const Foo_component_1_DvU6FitWglY = () => {
+export const Foo_component_1_XXXXXXXXXXXX = () => {
   const props = _captures[0];
   return /*#__PURE__*/ _jsxSorted(
     "div",
@@ -234,14 +234,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_1_DvU6FitWglY",
+  "name": "Foo_component_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_1",
-  "hash": "DvU6FitWglY",
-  "canonicalFilename": "test.tsx_Foo_component_1_DvU6FitWglY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_HTDRsvUbLiE",
+  "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,

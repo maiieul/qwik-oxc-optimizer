@@ -41,11 +41,11 @@ export const Root = component$(
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
-const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA");
-const i_YvjM3SoLvrM = () => import("./test.tsx_Root_component_YvjM3SoLvrM");
-const i_b1oI4QMvfDY = () => import("./test.tsx_Root_useStyles_b1oI4QMvfDY");
-const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_useStyles_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_XXXXXXXXXXXX");
 import { useStyles } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core/what";
 export const hW = 12;
@@ -53,19 +53,19 @@ export const handleWatch = 42;
 const componentQrl = () => console.log("not this", qrl());
 componentQrl();
 export const Foo = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
 );
 export const Root = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_YvjM3SoLvrM, "Root_component_YvjM3SoLvrM"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Root_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Foo_component_gZqPatVoDqw.js === (ENTRY)
+=== test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
 import { hW } from "./test";
 import { handleWatch } from "./test";
-export const Foo_component_gZqPatVoDqw = () => {
+export const Foo_component_XXXXXXXXXXXX = () => {
   useStyles$("thing");
   const qwik = hW + handleWatch;
   console.log(qwik);
@@ -73,7 +73,7 @@ export const Foo_component_gZqPatVoDqw = () => {
   return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
-    { "q-e:click": /* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA") },
+    { "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_click_XXXXXXXXXXXX") },
     null,
     3,
     "u6_0",
@@ -83,11 +83,11 @@ export const Foo_component_gZqPatVoDqw = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_gZqPatVoDqw",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "gZqPatVoDqw",
-  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -97,18 +97,18 @@ export const Foo_component_gZqPatVoDqw = () => {
 }
 */
 
-=== test.tsx_Foo_component_div_q_e_click_OJboCLusyIA.js === (ENTRY)
+=== test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core/what";
-export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(qrl);
+export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(qrl);
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_click_OJboCLusyIA",
+  "name": "Foo_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_q_e_click",
-  "hash": "OJboCLusyIA",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_OJboCLusyIA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Foo_component",
@@ -118,24 +118,24 @@ export const Foo_component_div_q_e_click_OJboCLusyIA = () => console.log(qrl);
 }
 */
 
-=== test.tsx_Root_component_YvjM3SoLvrM.js === (ENTRY)
+=== test.tsx_Root_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_b1oI4QMvfDY = () => import("./test.tsx_Root_useStyles_b1oI4QMvfDY");
-const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_useStyles_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_XXXXXXXXXXXX");
 import { useStyles } from "@qwik.dev/core";
-export const Root_component_YvjM3SoLvrM = () => {
-  useStyles(/* @__PURE__ */ qrl(i_b1oI4QMvfDY, "Root_useStyles_b1oI4QMvfDY"));
-  return /* @__PURE__ */ qrl(i_JSvK9zVuQxw, "Root_JSvK9zVuQxw");
+export const Root_component_XXXXXXXXXXXX = () => {
+  useStyles(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Root_useStyles_XXXXXXXXXXXX"));
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Root_XXXXXXXXXXXX");
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Root_component_YvjM3SoLvrM",
+  "name": "Root_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Root_component",
-  "hash": "YvjM3SoLvrM",
-  "canonicalFilename": "test.tsx_Root_component_YvjM3SoLvrM",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Root_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -145,17 +145,17 @@ export const Root_component_YvjM3SoLvrM = () => {
 }
 */
 
-=== test.tsx_Root_useStyles_b1oI4QMvfDY.js === (ENTRY)
-export const Root_useStyles_b1oI4QMvfDY = "thing";
+=== test.tsx_Root_useStyles_XXXXXXXXXXXX.js === (ENTRY)
+export const Root_useStyles_XXXXXXXXXXXX = "thing";
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Root_useStyles_b1oI4QMvfDY",
+  "name": "Root_useStyles_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Root_useStyles",
-  "hash": "b1oI4QMvfDY",
-  "canonicalFilename": "test.tsx_Root_useStyles_b1oI4QMvfDY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Root_useStyles_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Root_component",
@@ -165,20 +165,20 @@ export const Root_useStyles_b1oI4QMvfDY = "thing";
 }
 */
 
-=== test.tsx_Root_JSvK9zVuQxw.js === (ENTRY)
+=== test.tsx_Root_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
-export const Root_JSvK9zVuQxw = () => {
+export const Root_XXXXXXXXXXXX = () => {
   return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Root_JSvK9zVuQxw",
+  "name": "Root_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Root",
-  "hash": "JSvK9zVuQxw",
-  "canonicalFilename": "test.tsx_Root_JSvK9zVuQxw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Root_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Root_component",

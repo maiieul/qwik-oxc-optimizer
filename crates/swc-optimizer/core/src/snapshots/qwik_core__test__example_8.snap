@@ -17,19 +17,19 @@ export const Header = component$(() => {
 ============================= test.tsx ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_J4uyIhaBNR4 = () => import("./test.tsx_Header_component_J4uyIhaBNR4");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_XXXXXXXXXXXX");
 export const Header = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_J4uyIhaBNR4, "Header_component_J4uyIhaBNR4"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,uBAAS,+EAOnB"}',
 );
-============================= test.tsx_Header_component_J4uyIhaBNR4.tsx (ENTRY POINT)==
+============================= test.tsx_Header_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
-const i_2B8d0oH9ZWc = () => import("./test.tsx_Header_component_1_2B8d0oH9ZWc");
-export const Header_component_J4uyIhaBNR4 = () => {
-  return /*#__PURE__*/ qrl(i_2B8d0oH9ZWc, "Header_component_1_2B8d0oH9ZWc");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_1_XXXXXXXXXXXX");
+export const Header_component_XXXXXXXXXXXX = () => {
+  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Header_component_1_XXXXXXXXXXXX");
 };
 
 Some(
@@ -38,11 +38,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Header_component_J4uyIhaBNR4",
+  "name": "Header_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Header_component",
-  "hash": "J4uyIhaBNR4",
-  "canonicalFilename": "test.tsx_Header_component_J4uyIhaBNR4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Header_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -55,9 +55,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_Header_component_1_2B8d0oH9ZWc.tsx (ENTRY POINT)==
+============================= test.tsx_Header_component_1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { Header } from "./test";
-export const Header_component_1_2B8d0oH9ZWc = (hola) => {
+export const Header_component_1_XXXXXXXXXXXX = (hola) => {
   const hola = this;
   hola.nothere.stuff[global];
   return <Header />;
@@ -69,14 +69,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Header_component_1_2B8d0oH9ZWc",
+  "name": "Header_component_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Header_component_1",
-  "hash": "2B8d0oH9ZWc",
-  "canonicalFilename": "test.tsx_Header_component_1_2B8d0oH9ZWc",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Header_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
-  "parent": "Header_component_J4uyIhaBNR4",
+  "parent": "Header_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,

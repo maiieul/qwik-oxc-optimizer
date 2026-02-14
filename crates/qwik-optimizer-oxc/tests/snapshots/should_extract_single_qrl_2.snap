@@ -37,23 +37,23 @@ const Parent = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_fxETLug1yE4 = () => import("./test.tsx_Parent_component_fxETLug1yE4");
-const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
-const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_button_q_e_click_XXXXXXXXXXXX");
 import { useStore } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 const Parent = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_fxETLug1yE4, "Parent_component_fxETLug1yE4"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Parent_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Parent_component_fxETLug1yE4.js === (ENTRY)
+=== test.tsx_Parent_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
-const i_I5Xm0lRBfsc = () => import("./test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_button_q_e_click_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
-export const Parent_component_fxETLug1yE4 = () => {
+export const Parent_component_XXXXXXXXXXXX = () => {
   const cart = useStore < Cart > [];
   const results = useSignal(["foo", "bar"]);
   return /* @__PURE__ */ _jsxSorted(
@@ -67,8 +67,8 @@ export const Parent_component_fxETLug1yE4 = () => {
         {
           id: "first",
           "q-e:click": /* @__PURE__ */ qrl(
-            i_I5Xm0lRBfsc,
-            "Parent_component_button_q_e_click_I5Xm0lRBfsc",
+            i_XXXXXXXXXXXX,
+            "Parent_component_button_q_e_click_XXXXXXXXXXXX",
             [results],
           ),
         },
@@ -82,8 +82,8 @@ export const Parent_component_fxETLug1yE4 = () => {
           { id: "second-" + key },
           {
             "q-e:click": /* @__PURE__ */ qrl(
-              i_I5Xm0lRBfsc,
-              "Parent_component_button_q_e_click_I5Xm0lRBfsc",
+              i_XXXXXXXXXXXX,
+              "Parent_component_button_q_e_click_XXXXXXXXXXXX",
               [cart],
             ),
           },
@@ -118,11 +118,11 @@ export const Parent_component_fxETLug1yE4 = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_fxETLug1yE4",
+  "name": "Parent_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component",
-  "hash": "fxETLug1yE4",
-  "canonicalFilename": "test.tsx_Parent_component_fxETLug1yE4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -132,9 +132,9 @@ export const Parent_component_fxETLug1yE4 = () => {
 }
 */
 
-=== test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
+=== test.tsx_Parent_component_button_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
+export const Parent_component_button_q_e_click_XXXXXXXXXXXX = () => {
   const cart = _captures[0];
   cart.push(item);
 };
@@ -142,11 +142,11 @@ export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_button_q_e_click_I5Xm0lRBfsc",
+  "name": "Parent_component_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_button_q_e_click",
-  "hash": "I5Xm0lRBfsc",
-  "canonicalFilename": "test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Parent_component",
@@ -159,9 +159,9 @@ export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
 }
 */
 
-=== test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc.js === (ENTRY)
+=== test.tsx_Parent_component_button_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
+export const Parent_component_button_q_e_click_XXXXXXXXXXXX = () => {
   const results = _captures[0];
   return (results.value = ["item1", "item2"]);
 };
@@ -169,11 +169,11 @@ export const Parent_component_button_q_e_click_I5Xm0lRBfsc = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_button_q_e_click_I5Xm0lRBfsc",
+  "name": "Parent_component_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_button_q_e_click",
-  "hash": "I5Xm0lRBfsc",
-  "canonicalFilename": "test.tsx_Parent_component_button_q_e_click_I5Xm0lRBfsc",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Parent_component",

@@ -40,21 +40,21 @@ export const Root = component$(
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_HTDRsvUbLiE = () => import("./test.tsx_Foo_component_HTDRsvUbLiE");
-const i_royhjYaCbYE = () => import("./test.tsx_Root_component_royhjYaCbYE");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_component_XXXXXXXXXXXX");
 import { qrl as qrl1 } from "@qwik.dev/core/what";
 export const hW = 12;
 export const handleWatch = 42;
 const componentQrl1 = () => console.log("not this", qrl1());
 componentQrl1();
 export const Foo = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
 );
 export const Root = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_royhjYaCbYE, "Root_component_royhjYaCbYE"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Root_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
@@ -63,13 +63,13 @@ export const Root = /*#__PURE__*/ componentQrl(
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AACA,SAAS,OAAA,IAAG,QAAQ,sBAAsB;AAE1C,OAAO,MAAM,KAAK,GAAG;AACrB,OAAO,MAAM,cAAc,GAAG;AAE9B,MAAM,gBAAe,IAAM,QAAQ,GAAG,CAAC,YAAY;AAEnD;AACA,OAAO,MAAM,oBAAM,4EAQjB;IACE,SAAS;AACX,GACA;AAEF,OAAO,MAAM,qBAAO,6EAOlB;IACE,SAAS;AACX,GACA"}',
 );
-============================= test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)==
+============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { hW } from "./test";
 import { handleWatch } from "./test";
 import { qrl } from "@qwik.dev/core";
-const i_YEa2A5ADUOg = () => import("./test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg");
-export const Foo_component_HTDRsvUbLiE = () => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX");
+export const Foo_component_XXXXXXXXXXXX = () => {
   useStyles$("thing");
   const qwik = hW + handleWatch;
   console.log(qwik);
@@ -77,7 +77,7 @@ export const Foo_component_HTDRsvUbLiE = () => {
     "div",
     null,
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_YEa2A5ADUOg, "Foo_component_div_q_e_click_YEa2A5ADUOg"),
+      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_click_XXXXXXXXXXXX"),
     },
     null,
     3,
@@ -91,11 +91,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_HTDRsvUbLiE",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "HTDRsvUbLiE",
-  "canonicalFilename": "test.tsx_Foo_component_HTDRsvUbLiE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -108,8 +108,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg.js (ENTRY POINT)==
-export const Foo_component_div_q_e_click_YEa2A5ADUOg = () => console.log(23);
+============================= test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(23);
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"uDAe0B,IAAM,QAAQ,GAAG,CAD3B"}',
@@ -117,14 +117,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_click_YEa2A5ADUOg",
+  "name": "Foo_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_q_e_click",
-  "hash": "YEa2A5ADUOg",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_HTDRsvUbLiE",
+  "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,
@@ -134,14 +134,14 @@ Some(
   ]
 }
 */
-============================= test.tsx_Root_component_royhjYaCbYE.js (ENTRY POINT)==
+============================= test.tsx_Root_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 import { useStyles } from "@qwik.dev/core";
-const i_cBpQNYDUHI4 = () => import("./test.tsx_Root_component_1_cBpQNYDUHI4");
-const i_u5DkUxGrGnU = () => import("./test.tsx_Root_component_useStyles_u5DkUxGrGnU");
-export const Root_component_royhjYaCbYE = () => {
-  useStyles(/*#__PURE__*/ qrl(i_u5DkUxGrGnU, "Root_component_useStyles_u5DkUxGrGnU"));
-  return /*#__PURE__*/ qrl(i_cBpQNYDUHI4, "Root_component_1_cBpQNYDUHI4");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_component_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_component_useStyles_XXXXXXXXXXXX");
+export const Root_component_XXXXXXXXXXXX = () => {
+  useStyles(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Root_component_useStyles_XXXXXXXXXXXX"));
+  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Root_component_1_XXXXXXXXXXXX");
 };
 
 Some(
@@ -150,11 +150,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Root_component_royhjYaCbYE",
+  "name": "Root_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Root_component",
-  "hash": "royhjYaCbYE",
-  "canonicalFilename": "test.tsx_Root_component_royhjYaCbYE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Root_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -167,21 +167,21 @@ Some(
   ]
 }
 */
-============================= test.tsx_Root_component_useStyles_u5DkUxGrGnU.js (ENTRY POINT)==
-export const Root_component_useStyles_u5DkUxGrGnU = "thing";
+============================= test.tsx_Root_component_useStyles_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Root_component_useStyles_XXXXXXXXXXXX = "thing";
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"oDAwBgB"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "Root_component_useStyles_u5DkUxGrGnU",
+  "name": "Root_component_useStyles_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Root_component_useStyles",
-  "hash": "u5DkUxGrGnU",
-  "canonicalFilename": "test.tsx_Root_component_useStyles_u5DkUxGrGnU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Root_component_useStyles_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Root_component_royhjYaCbYE",
+  "parent": "Root_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,
@@ -191,9 +191,9 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
   ]
 }
 */
-============================= test.tsx_Root_component_1_cBpQNYDUHI4.js (ENTRY POINT)==
+============================= test.tsx_Root_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
-export const Root_component_1_cBpQNYDUHI4 = () => {
+export const Root_component_1_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ _jsxSorted("div", null, null, null, 3, "u6_1");
 };
 
@@ -203,14 +203,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Root_component_1_cBpQNYDUHI4",
+  "name": "Root_component_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Root_component_1",
-  "hash": "cBpQNYDUHI4",
-  "canonicalFilename": "test.tsx_Root_component_1_cBpQNYDUHI4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Root_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Root_component_royhjYaCbYE",
+  "parent": "Root_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,

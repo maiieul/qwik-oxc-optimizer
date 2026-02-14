@@ -29,22 +29,22 @@ import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 import { _val } from "@qwik.dev/core";
-const i_O84bGdeej0g = () => import("./test.tsx_FieldInput_component_O84bGdeej0g");
-const i_jlpYRk03eHk = () => import("./test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_input_q_e_click_XXXXXXXXXXXX");
 import { useSignal } from "@qwik.dev/core";
 import { destructureBindings } from "./destructure-bindings";
 export const FieldInput = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_O84bGdeej0g, "FieldInput_component_O84bGdeej0g"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "FieldInput_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_FieldInput_component_O84bGdeej0g.js === (ENTRY)
+=== test.tsx_FieldInput_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_jlpYRk03eHk = () => import("./test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_input_q_e_click_XXXXXXXXXXXX");
 import { _jsxSplit } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { destructureBindings } from "./destructure-bindings";
-export const FieldInput_component_O84bGdeej0g = (props) => {
+export const FieldInput_component_XXXXXXXXXXXX = (props) => {
 	const initialValues = { value: undefined as string | undefined };
 	const rest = destructureBindings(props, initialValues);
 	return /* @__PURE__ */ _jsxSplit("input", { ..._getVarProps(rest) }, _getConstProps(rest), null, 0, "u6_0");
@@ -53,11 +53,11 @@ export const FieldInput_component_O84bGdeej0g = (props) => {
 /*
 {
   "origin": "test.tsx",
-  "name": "FieldInput_component_O84bGdeej0g",
+  "name": "FieldInput_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_FieldInput_component",
-  "hash": "O84bGdeej0g",
-  "canonicalFilename": "test.tsx_FieldInput_component_O84bGdeej0g",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_FieldInput_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -67,19 +67,19 @@ export const FieldInput_component_O84bGdeej0g = (props) => {
 }
 */
 
-=== test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk.js === (ENTRY)
-export const FieldInput_component_input_q_e_click_jlpYRk03eHk = () => {
+=== test.tsx_FieldInput_component_input_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+export const FieldInput_component_input_q_e_click_XXXXXXXXXXXX = () => {
   console.log("clicked");
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "FieldInput_component_input_q_e_click_jlpYRk03eHk",
+  "name": "FieldInput_component_input_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_FieldInput_component_input_q_e_click",
-  "hash": "jlpYRk03eHk",
-  "canonicalFilename": "test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_FieldInput_component_input_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_FieldInput_component",

@@ -23,35 +23,35 @@ export const Greeter = component$(() => {
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_l5Al0251s9w = () => import("./test.tsx_Greeter_component_l5Al0251s9w");
-const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
-const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
-const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX");
 import mongo from "mongodb";
 export const Greeter = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Greeter_component_l5Al0251s9w.tsx === (ENTRY)
+=== test.tsx_Greeter_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
-const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
-const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX");
 import mongo from "mongodb";
-export const Greeter_component_l5Al0251s9w = () => {
+export const Greeter_component_XXXXXXXXXXXX = () => {
   useTask$(async () => {
     await mongo.users();
   });
   return (
     <div>
       <div
-        onClick$={/* @__PURE__ */ qrl(i_Rxdt6XL5GRU, "Greeter_component_div_q_e_click_Rxdt6XL5GRU")}
+        onClick$={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_div_q_e_click_XXXXXXXXXXXX")}
       />
       <div
-        onClick$={/* @__PURE__ */ qrl(i_Rxdt6XL5GRU, "Greeter_component_div_q_e_click_Rxdt6XL5GRU")}
+        onClick$={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_div_q_e_click_XXXXXXXXXXXX")}
       />
       <div
-        onClick$={/* @__PURE__ */ qrl(i_Rxdt6XL5GRU, "Greeter_component_div_q_e_click_Rxdt6XL5GRU")}
+        onClick$={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_div_q_e_click_XXXXXXXXXXXX")}
       />
     </div>
   );
@@ -60,11 +60,11 @@ export const Greeter_component_l5Al0251s9w = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Greeter_component_l5Al0251s9w",
+  "name": "Greeter_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Greeter_component",
-  "hash": "l5Al0251s9w",
-  "canonicalFilename": "test.tsx_Greeter_component_l5Al0251s9w",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Greeter_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -74,17 +74,17 @@ export const Greeter_component_l5Al0251s9w = () => {
 }
 */
 
-=== test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU.tsx === (ENTRY)
-export const Greeter_component_div_q_e_click_Rxdt6XL5GRU = () => {};
+=== test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
+export const Greeter_component_div_q_e_click_XXXXXXXXXXXX = () => {};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Greeter_component_div_q_e_click_Rxdt6XL5GRU",
+  "name": "Greeter_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Greeter_component_div_q_e_click",
-  "hash": "Rxdt6XL5GRU",
-  "canonicalFilename": "test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": "test.tsx_Greeter_component",
@@ -94,17 +94,17 @@ export const Greeter_component_div_q_e_click_Rxdt6XL5GRU = () => {};
 }
 */
 
-=== test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU.tsx === (ENTRY)
-export const Greeter_component_div_q_e_click_Rxdt6XL5GRU = () => {};
+=== test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
+export const Greeter_component_div_q_e_click_XXXXXXXXXXXX = () => {};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Greeter_component_div_q_e_click_Rxdt6XL5GRU",
+  "name": "Greeter_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Greeter_component_div_q_e_click",
-  "hash": "Rxdt6XL5GRU",
-  "canonicalFilename": "test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": "test.tsx_Greeter_component",
@@ -114,17 +114,17 @@ export const Greeter_component_div_q_e_click_Rxdt6XL5GRU = () => {};
 }
 */
 
-=== test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU.tsx === (ENTRY)
-export const Greeter_component_div_q_e_click_Rxdt6XL5GRU = () => {};
+=== test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
+export const Greeter_component_div_q_e_click_XXXXXXXXXXXX = () => {};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Greeter_component_div_q_e_click_Rxdt6XL5GRU",
+  "name": "Greeter_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Greeter_component_div_q_e_click",
-  "hash": "Rxdt6XL5GRU",
-  "canonicalFilename": "test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Greeter_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": "test.tsx_Greeter_component",

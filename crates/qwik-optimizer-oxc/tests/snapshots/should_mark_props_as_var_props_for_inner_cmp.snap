@@ -41,20 +41,20 @@ export const ModelImg = component$<ModelProps>((props) => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_JrQIeK5mMMM = () => import("./test.tsx_Image_component_JrQIeK5mMMM");
-const i_N1fNAC4qw7Q = () => import("./test.tsx_ModelImg_component_N1fNAC4qw7Q");
-const i_bT0HZe0FfwQ = () => import("./test.tsx_imgLoc_useResource_bT0HZe0FfwQ");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Image_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_ModelImg_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_imgLoc_useResource_XXXXXXXXXXXX");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { Resource } from "@qwik.dev/core";
 import { type ModelProps } from "./modelMenu";
 import { serverImg } from "~/routes/(authenticated)/layout";
-export const Image = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_JrQIeK5mMMM, "Image_component_JrQIeK5mMMM"));
-export const ModelImg = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_N1fNAC4qw7Q, "ModelImg_component_N1fNAC4qw7Q"));
+export const Image = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Image_component_XXXXXXXXXXXX"));
+export const ModelImg = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "ModelImg_component_XXXXXXXXXXXX"));
 
-=== test.tsx_Image_component_JrQIeK5mMMM.js === (ENTRY)
+=== test.tsx_Image_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-export const Image_component_JrQIeK5mMMM = (props) => {
+export const Image_component_XXXXXXXXXXXX = (props) => {
   return /* @__PURE__ */ _jsxSorted(
     _Fragment,
     null,
@@ -68,11 +68,11 @@ export const Image_component_JrQIeK5mMMM = (props) => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Image_component_JrQIeK5mMMM",
+  "name": "Image_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Image_component",
-  "hash": "JrQIeK5mMMM",
-  "canonicalFilename": "test.tsx_Image_component_JrQIeK5mMMM",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Image_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -82,18 +82,18 @@ export const Image_component_JrQIeK5mMMM = (props) => {
 }
 */
 
-=== test.tsx_ModelImg_component_N1fNAC4qw7Q.js === (ENTRY)
+=== test.tsx_ModelImg_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_bT0HZe0FfwQ = () => import("./test.tsx_imgLoc_useResource_bT0HZe0FfwQ");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_imgLoc_useResource_XXXXXXXXXXXX");
 import { useResourceQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { ModelProps } from "./modelMenu";
 import { Resource } from "@qwik.dev/core";
 import { Image } from "./test";
-export const ModelImg_component_N1fNAC4qw7Q = (props) => {
+export const ModelImg_component_XXXXXXXXXXXX = (props) => {
   const imgLoc = useResourceQrl(
-    /* @__PURE__ */ qrl(i_bT0HZe0FfwQ, "imgLoc_useResource_bT0HZe0FfwQ", [props]),
+    /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "imgLoc_useResource_XXXXXXXXXXXX", [props]),
   );
   return /* @__PURE__ */ _jsxSorted(
     _Fragment,
@@ -128,11 +128,11 @@ export const ModelImg_component_N1fNAC4qw7Q = (props) => {
 /*
 {
   "origin": "test.tsx",
-  "name": "ModelImg_component_N1fNAC4qw7Q",
+  "name": "ModelImg_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ModelImg_component",
-  "hash": "N1fNAC4qw7Q",
-  "canonicalFilename": "test.tsx_ModelImg_component_N1fNAC4qw7Q",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ModelImg_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -142,10 +142,10 @@ export const ModelImg_component_N1fNAC4qw7Q = (props) => {
 }
 */
 
-=== test.tsx_imgLoc_useResource_bT0HZe0FfwQ.js === (ENTRY)
+=== test.tsx_imgLoc_useResource_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { serverImg } from "~/routes/(authenticated)/layout";
-export const imgLoc_useResource_bT0HZe0FfwQ = async ({ track }) => {
+export const imgLoc_useResource_XXXXXXXXXXXX = async ({ track }) => {
   const props = _captures[0];
   track(() => props.store.model);
   return await serverImg("some.png");
@@ -154,11 +154,11 @@ export const imgLoc_useResource_bT0HZe0FfwQ = async ({ track }) => {
 /*
 {
   "origin": "test.tsx",
-  "name": "imgLoc_useResource_bT0HZe0FfwQ",
+  "name": "imgLoc_useResource_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_imgLoc_useResource",
-  "hash": "bT0HZe0FfwQ",
-  "canonicalFilename": "test.tsx_imgLoc_useResource_bT0HZe0FfwQ",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_imgLoc_useResource_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_ModelImg_component",

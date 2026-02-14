@@ -32,8 +32,8 @@ export const App = component$(({ count }) => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
-const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_XXXXXXXXXXXX");
 const I1 = 12;
 const [
   I2,
@@ -49,12 +49,12 @@ const [
 function I9() {}
 class I10 {}
 export const App = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
+=== test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_w3unmdi0sm4 = () => import("./test.tsx_App_w3unmdi0sm4");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_XXXXXXXXXXXX");
 import { I1 } from "./test";
 import { I2 } from "./test";
 import { I3 } from "./test";
@@ -64,20 +64,20 @@ import { I6 } from "./test";
 import { I7 } from "./test";
 import { I8 } from "./test";
 import { I9 } from "./test";
-export const App_component_XumqEURaLxI = (_rawProps) => {
+export const App_component_XXXXXXXXXXXX = (_rawProps) => {
   console.log(I1, I2, I3, I4, I5, I6, I7, I8, I9);
   console.log(itsok, v1, v2, v3, obj);
-  return /* @__PURE__ */ qrl(i_w3unmdi0sm4, "App_w3unmdi0sm4");
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_XXXXXXXXXXXX");
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_XumqEURaLxI",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component",
-  "hash": "XumqEURaLxI",
-  "canonicalFilename": "test.tsx_App_component_XumqEURaLxI",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -90,21 +90,21 @@ export const App_component_XumqEURaLxI = (_rawProps) => {
 }
 */
 
-=== test.tsx_App_w3unmdi0sm4.js === (ENTRY)
+=== test.tsx_App_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { I10 } from "./test";
-export const App_w3unmdi0sm4 = () => {
+export const App_XXXXXXXXXXXX = () => {
   return /* @__PURE__ */ _jsxSorted(I10, null, null, null, 3, null);
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "App_w3unmdi0sm4",
+  "name": "App_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App",
-  "hash": "w3unmdi0sm4",
-  "canonicalFilename": "test.tsx_App_w3unmdi0sm4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_App_component",

@@ -5,7 +5,7 @@ expression: output
 
 ============================= ../../node_modules/dep/dist/lib.mjs ==
 import { qrl } from "@qwik.dev/core";
-const i_AkbU84a8zes = () => import("./lib.mjs_App_component_AkbU84a8zes.js");
+const i_XXXXXXXXXXXX = () => import("./lib.mjs_App_component_XXXXXXXXXXXX.js");
 import { componentQrl, useStore } from "@qwik.dev/core";
 const useData = () => {
   return useStore({
@@ -13,7 +13,7 @@ const useData = () => {
   });
 };
 export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_AkbU84a8zes, "App_component_AkbU84a8zes"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 export { useData as _auto_useData };
 
@@ -23,18 +23,18 @@ Some(
 ============================= components/main.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_jJ0v28bs0p8 = () => import("./main.tsx_Local_component_jJ0v28bs0p8.js");
+const i_XXXXXXXXXXXX = () => import("./main.tsx_Local_component_XXXXXXXXXXXX.js");
 export const Local = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_jJ0v28bs0p8, "Local_component_jJ0v28bs0p8"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Local_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["src/thing/components/main.tsx"],"sourceRoot":"/path/to/app/","names":[],"mappings":";;;AAIA,OAAO,MAAM,sBAAQ,8EAIlB"}',
 );
-============================= components/main.tsx_Local_component_jJ0v28bs0p8.js (ENTRY POINT)==
+============================= components/main.tsx_Local_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { state } from "./sibling";
-export const Local_component_jJ0v28bs0p8 = () => {
+export const Local_component_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ _jsxSorted("div", null, null, state, 3, "zp_0");
 };
 
@@ -44,11 +44,11 @@ Some(
 /*
 {
   "origin": "components/main.tsx",
-  "name": "Local_component_jJ0v28bs0p8",
+  "name": "Local_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "main.tsx_Local_component",
-  "hash": "jJ0v28bs0p8",
-  "canonicalFilename": "main.tsx_Local_component_jJ0v28bs0p8",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "main.tsx_Local_component_XXXXXXXXXXXX",
   "path": "components",
   "extension": "js",
   "parent": null,
@@ -61,13 +61,13 @@ Some(
   ]
 }
 */
-============================= ../../node_modules/dep/dist/lib.mjs_App_component_AkbU84a8zes.js (ENTRY POINT)==
+============================= ../../node_modules/dep/dist/lib.mjs_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _auto_useData as useData } from "./lib.mjs";
-const i_8dWUa0cJAr4 = () => import("./lib.mjs_App_component_div_p_button_onClick_8dWUa0cJAr4.js");
-export const App_component_AkbU84a8zes = () => {
+const i_XXXXXXXXXXXX = () => import("./lib.mjs_App_component_div_p_button_onClick_XXXXXXXXXXXX.js");
+export const App_component_XXXXXXXXXXXX = () => {
   const store = useData();
   return /*#__PURE__*/ _jsxSorted(
     "div",
@@ -83,8 +83,8 @@ export const App_component_AkbU84a8zes = () => {
           "button",
           {
             "q-e:click": /*#__PURE__*/ qrl(
-              i_8dWUa0cJAr4,
-              "App_component_div_p_button_onClick_8dWUa0cJAr4",
+              i_XXXXXXXXXXXX,
+              "App_component_div_p_button_onClick_XXXXXXXXXXXX",
               [store],
             ),
           },
@@ -108,11 +108,11 @@ Some(
 /*
 {
   "origin": "../../node_modules/dep/dist/lib.mjs",
-  "name": "App_component_AkbU84a8zes",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "lib.mjs_App_component",
-  "hash": "AkbU84a8zes",
-  "canonicalFilename": "lib.mjs_App_component_AkbU84a8zes",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "lib.mjs_App_component_XXXXXXXXXXXX",
   "path": "../../node_modules/dep/dist",
   "extension": "js",
   "parent": null,
@@ -125,9 +125,9 @@ Some(
   ]
 }
 */
-============================= ../../node_modules/dep/dist/lib.mjs_App_component_div_p_button_onClick_8dWUa0cJAr4.js (ENTRY POINT)==
+============================= ../../node_modules/dep/dist/lib.mjs_App_component_div_p_button_onClick_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { useLexicalScope } from "@qwik.dev/core";
-export const App_component_div_p_button_onClick_8dWUa0cJAr4 = () => {
+export const App_component_div_p_button_onClick_XXXXXXXXXXXX = () => {
   const [store] = useLexicalScope();
   return store.count++;
 };
@@ -138,14 +138,14 @@ Some(
 /*
 {
   "origin": "../../node_modules/dep/dist/lib.mjs",
-  "name": "App_component_div_p_button_onClick_8dWUa0cJAr4",
+  "name": "App_component_div_p_button_onClick_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "lib.mjs_App_component_div_p_button_onClick",
-  "hash": "8dWUa0cJAr4",
-  "canonicalFilename": "lib.mjs_App_component_div_p_button_onClick_8dWUa0cJAr4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "lib.mjs_App_component_div_p_button_onClick_XXXXXXXXXXXX",
   "path": "../../node_modules/dep/dist",
   "extension": "js",
-  "parent": "App_component_AkbU84a8zes",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "q-e:click",
   "captures": true,

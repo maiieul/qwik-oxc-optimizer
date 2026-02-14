@@ -18,9 +18,9 @@ export const Foo = component$(
 ============================= test.tsx ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_HTDRsvUbLiE = () => import("./test.tsx_Foo_component_HTDRsvUbLiE");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 export const Foo = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
@@ -29,12 +29,12 @@ export const Foo = /*#__PURE__*/ componentQrl(
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAKjB;IACE,SAAS;AACX,GACA"}',
 );
-============================= test.tsx_Foo_component_HTDRsvUbLiE.tsx (ENTRY POINT)==
+============================= test.tsx_Foo_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
-const i_pV9TSCBIhw8 = () => import("./test.tsx_Foo_component_useStyles_pV9TSCBIhw8");
-export const Foo_component_HTDRsvUbLiE = () => {
-  useStylesQrl(/*#__PURE__*/ qrl(i_pV9TSCBIhw8, "Foo_component_useStyles_pV9TSCBIhw8"));
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_useStyles_XXXXXXXXXXXX");
+export const Foo_component_XXXXXXXXXXXX = () => {
+  useStylesQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_useStyles_XXXXXXXXXXXX"));
   return <div class="class" />;
 };
 
@@ -44,11 +44,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_HTDRsvUbLiE",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "HTDRsvUbLiE",
-  "canonicalFilename": "test.tsx_Foo_component_HTDRsvUbLiE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -61,21 +61,21 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_useStyles_pV9TSCBIhw8.tsx (ENTRY POINT)==
-export const Foo_component_useStyles_pV9TSCBIhw8 = ".class {}";
+============================= test.tsx_Foo_component_useStyles_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+export const Foo_component_useStyles_XXXXXXXXXXXX = ".class {}";
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"mDAIe"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_useStyles_pV9TSCBIhw8",
+  "name": "Foo_component_useStyles_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_useStyles",
-  "hash": "pV9TSCBIhw8",
-  "canonicalFilename": "test.tsx_Foo_component_useStyles_pV9TSCBIhw8",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_useStyles_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
-  "parent": "Foo_component_HTDRsvUbLiE",
+  "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useStyles$",
   "captures": false,

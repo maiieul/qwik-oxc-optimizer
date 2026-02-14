@@ -13,17 +13,17 @@ export const Greeter = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_n7HuG2hhU0Q = () => import("./test.tsx_Greeter_component_n7HuG2hhU0Q");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_XXXXXXXXXXXX");
 export const Greeter = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_n7HuG2hhU0Q, "Greeter_component_n7HuG2hhU0Q"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAGA,OAAO,MAAM,wBAAU,gFAEpB"}',
 );
-============================= test.tsx_Greeter_component_n7HuG2hhU0Q.js (ENTRY POINT)==
+============================= test.tsx_Greeter_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import json from "./foo.json" with { type: "json" };
-export const Greeter_component_n7HuG2hhU0Q = () => {
+export const Greeter_component_XXXXXXXXXXXX = () => {
   return json;
 };
 
@@ -33,11 +33,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Greeter_component_n7HuG2hhU0Q",
+  "name": "Greeter_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Greeter_component",
-  "hash": "n7HuG2hhU0Q",
-  "canonicalFilename": "test.tsx_Greeter_component_n7HuG2hhU0Q",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Greeter_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,

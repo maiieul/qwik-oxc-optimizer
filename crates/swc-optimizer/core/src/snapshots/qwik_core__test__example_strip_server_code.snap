@@ -52,13 +52,13 @@ export const Parent = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_0TaiDayHrlo = () => import("./test.tsx_Parent_component_0TaiDayHrlo");
-export const Parent = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_0TaiDayHrlo, "s_0TaiDayHrlo"));
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_XXXXXXXXXXXX");
+export const Parent = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"));
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAcA,OAAO,MAAM,uBAAS,gEA8BnB"}',
 );
-============================= test.tsx_Parent_component_0TaiDayHrlo.js (ENTRY POINT)==
+============================= test.tsx_Parent_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrl } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
@@ -67,23 +67,23 @@ import { serverLoaderQrl } from "@qwik.dev/core";
 import { serverStuffQrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 import { useTaskQrl } from "@qwik.dev/core";
-const i_P8oRQhHsurk = () => import("./test.tsx_Parent_component_useTask_1_P8oRQhHsurk");
-const i_gDH1EtUWqBU = () => import("./test.tsx_Parent_component_useTask_gDH1EtUWqBU");
-const i_zM9okM0TYrA = () => import("./test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA");
-export const s_0TaiDayHrlo = () => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_useTask_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_useTask_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX");
+export const s_XXXXXXXXXXXX = () => {
   const state = useStore({
     text: "",
   });
   // Double count watch
-  useTaskQrl(/*#__PURE__*/ qrl(i_gDH1EtUWqBU, "s_gDH1EtUWqBU", [state]));
+  useTaskQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX", [state]));
   serverStuffQrl(/*#__PURE__*/ _noopQrl("s_r1qAHX7Opp0"));
   serverLoaderQrl(/*#__PURE__*/ _noopQrl("s_k1L0DiPQV1I"));
-  useTaskQrl(/*#__PURE__*/ qrl(i_P8oRQhHsurk, "s_P8oRQhHsurk"));
+  useTaskQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"));
   return /*#__PURE__*/ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_zM9okM0TYrA, "s_zM9okM0TYrA"),
+      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"),
     },
     _wrapProp(state, "text"),
     3,
@@ -97,11 +97,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "s_0TaiDayHrlo",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component",
-  "hash": "0TaiDayHrlo",
-  "canonicalFilename": "test.tsx_Parent_component_0TaiDayHrlo",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -114,11 +114,11 @@ Some(
   ]
 }
 */
-============================= test.tsx_Parent_component_useTask_gDH1EtUWqBU.js (ENTRY POINT)==
+============================= test.tsx_Parent_component_useTask_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
 import mongo from "mongodb";
 import redis from "redis";
-export const s_gDH1EtUWqBU = async () => {
+export const s_XXXXXXXXXXXX = async () => {
   const state = _captures[0];
   state.text = await mongo.users();
   redis.set(state.text);
@@ -130,14 +130,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "s_gDH1EtUWqBU",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_useTask",
-  "hash": "gDH1EtUWqBU",
-  "canonicalFilename": "test.tsx_Parent_component_useTask_gDH1EtUWqBU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_useTask_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "s_0TaiDayHrlo",
+  "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": true,
@@ -150,8 +150,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Parent_component_serverStuff_a_2ca3HLDC7yc.js (ENTRY POINT)==
-export const s_2ca3HLDC7yc = () => {
+============================= test.tsx_Parent_component_serverStuff_a_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const s_XXXXXXXXXXXX = () => {
   // from $(), should not be removed
 };
 
@@ -161,11 +161,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "s_2ca3HLDC7yc",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_serverStuff_a",
-  "hash": "2ca3HLDC7yc",
-  "canonicalFilename": "test.tsx_Parent_component_serverStuff_a_2ca3HLDC7yc",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_serverStuff_a_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "s_r1qAHX7Opp0",
@@ -178,8 +178,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Parent_component_serverStuff_b_client_v9qawr2Inkk.js (ENTRY POINT)==
-export const s_v9qawr2Inkk = () => {
+============================= test.tsx_Parent_component_serverStuff_b_client_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const s_XXXXXXXXXXXX = () => {
   // from clien$(), should not be removed
 };
 
@@ -189,11 +189,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "s_v9qawr2Inkk",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_serverStuff_b_client",
-  "hash": "v9qawr2Inkk",
-  "canonicalFilename": "test.tsx_Parent_component_serverStuff_b_client_v9qawr2Inkk",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_serverStuff_b_client_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "s_r1qAHX7Opp0",
@@ -206,8 +206,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Parent_component_useTask_1_P8oRQhHsurk.js (ENTRY POINT)==
-export const s_P8oRQhHsurk = () => {
+============================= test.tsx_Parent_component_useTask_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const s_XXXXXXXXXXXX = () => {
   // Code
 };
 
@@ -217,14 +217,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "s_P8oRQhHsurk",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_useTask_1",
-  "hash": "P8oRQhHsurk",
-  "canonicalFilename": "test.tsx_Parent_component_useTask_1_P8oRQhHsurk",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_useTask_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "s_0TaiDayHrlo",
+  "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": false,
@@ -234,8 +234,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA.js (ENTRY POINT)==
-export const s_zM9okM0TYrA = () => console.log("parent");
+============================= test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const s_XXXXXXXXXXXX = () => console.log("parent");
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BA2CwB,IAAM,QAAQ,GAAG,CAAC"}',
@@ -243,14 +243,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "s_zM9okM0TYrA",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_div_q_e_click",
-  "hash": "zM9okM0TYrA",
-  "canonicalFilename": "test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "s_0TaiDayHrlo",
+  "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,

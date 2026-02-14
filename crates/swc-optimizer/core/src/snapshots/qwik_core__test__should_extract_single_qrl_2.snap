@@ -36,24 +36,24 @@ const Parent = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_0TaiDayHrlo = () => import("./test.tsx_Parent_component_0TaiDayHrlo");
-/*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_0TaiDayHrlo, "Parent_component_0TaiDayHrlo"));
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_XXXXXXXXXXXX");
+/*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Parent_component_XXXXXXXXXXXX"));
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;cACe"}');
-============================= test.tsx_Parent_component_0TaiDayHrlo.js (ENTRY POINT)==
+============================= test.tsx_Parent_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
-const i_5khsVRINUws = () => import("./test.tsx_Parent_component_div_button_q_e_click_5khsVRINUws");
-const i_rAeuW6OvuXM = () =>
-  import("./test.tsx_Parent_component_div_button_q_e_click_1_rAeuW6OvuXM");
-export const Parent_component_0TaiDayHrlo = () => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_div_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX");
+export const Parent_component_XXXXXXXXXXXX = () => {
   const cart = useStore([]);
   const results = useSignal(["foo", "bar"]);
-  const Parent_component_div_button_q_e_click_1_rAeuW6OvuXM = /*#__PURE__*/ qrl(
-    i_rAeuW6OvuXM,
-    "Parent_component_div_button_q_e_click_1_rAeuW6OvuXM",
+  const Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+    i_XXXXXXXXXXXX,
+    "Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX",
     [cart],
   );
   return /*#__PURE__*/ _jsxSorted(
@@ -67,8 +67,8 @@ export const Parent_component_0TaiDayHrlo = () => {
         {
           id: "first",
           "q-e:click": /*#__PURE__*/ qrl(
-            i_5khsVRINUws,
-            "Parent_component_div_button_q_e_click_5khsVRINUws",
+            i_XXXXXXXXXXXX,
+            "Parent_component_div_button_q_e_click_XXXXXXXXXXXX",
             [results],
           ),
         },
@@ -81,7 +81,7 @@ export const Parent_component_0TaiDayHrlo = () => {
           "button",
           {
             id: "second-" + key,
-            "q-e:click": Parent_component_div_button_q_e_click_1_rAeuW6OvuXM,
+            "q-e:click": Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX,
             "q:p": item,
           },
           null,
@@ -119,11 +119,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_0TaiDayHrlo",
+  "name": "Parent_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component",
-  "hash": "0TaiDayHrlo",
-  "canonicalFilename": "test.tsx_Parent_component_0TaiDayHrlo",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -136,9 +136,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_Parent_component_div_button_q_e_click_5khsVRINUws.js (ENTRY POINT)==
+============================= test.tsx_Parent_component_div_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const Parent_component_div_button_q_e_click_5khsVRINUws = () => {
+export const Parent_component_div_button_q_e_click_XXXXXXXXXXXX = () => {
   const results = _captures[0];
   return (results.value = ["item1", "item2"]);
 };
@@ -149,14 +149,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_div_button_q_e_click_5khsVRINUws",
+  "name": "Parent_component_div_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_div_button_q_e_click",
-  "hash": "5khsVRINUws",
-  "canonicalFilename": "test.tsx_Parent_component_div_button_q_e_click_5khsVRINUws",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_div_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Parent_component_0TaiDayHrlo",
+  "parent": "Parent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
@@ -169,9 +169,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_Parent_component_div_button_q_e_click_1_rAeuW6OvuXM.js (ENTRY POINT)==
+============================= test.tsx_Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const Parent_component_div_button_q_e_click_1_rAeuW6OvuXM = (_, _1, item) => {
+export const Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX = (_, _1, item) => {
   const cart = _captures[0];
   cart.push(item);
 };
@@ -182,14 +182,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_div_button_q_e_click_1_rAeuW6OvuXM",
+  "name": "Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_div_button_q_e_click_1",
-  "hash": "rAeuW6OvuXM",
-  "canonicalFilename": "test.tsx_Parent_component_div_button_q_e_click_1_rAeuW6OvuXM",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Parent_component_0TaiDayHrlo",
+  "parent": "Parent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,

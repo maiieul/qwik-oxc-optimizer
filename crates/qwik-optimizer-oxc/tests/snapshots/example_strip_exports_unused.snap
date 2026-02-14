@@ -22,28 +22,28 @@ export default component$(() => {
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_default_component_XXXXXXXXXXXX");
 import mongodb from "mongodb";
 export const onGet = () => {
   throw "Symbol removed by Qwik Optimizer, it can not be called from current platform";
 };
 export default /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "default_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_default_component_jN9ZUuuADmk.tsx === (ENTRY)
-export const default_component_jN9ZUuuADmk = () => {
+=== test.tsx_default_component_XXXXXXXXXXXX.tsx === (ENTRY)
+export const default_component_XXXXXXXXXXXX = () => {
   return <div>cmp</div>;
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "default_component_jN9ZUuuADmk",
+  "name": "default_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_default_component",
-  "hash": "jN9ZUuuADmk",
-  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_default_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,

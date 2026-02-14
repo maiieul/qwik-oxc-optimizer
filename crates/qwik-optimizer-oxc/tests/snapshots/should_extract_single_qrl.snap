@@ -50,28 +50,28 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
-const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
-const i_7dJ1fH050Bg = () => import("./test.tsx_App_component_a_q_e_click_7dJ1fH050Bg");
-const i_7dJ1fH050Bg = () => import("./test.tsx_App_component_a_q_e_click_7dJ1fH050Bg");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX");
 import { useSignal } from "@qwik.dev/core";
 import { Signal } from "@qwik.dev/core";
 const _hf0 = (p0) => (p0.value.selected.value ? "danger" : "");
 const _hf0_str = 'p0.value.selected.value?"danger":""';
 export const App = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
+=== test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_7dJ1fH050Bg = () => import("./test.tsx_App_component_a_q_e_click_7dJ1fH050Bg");
-const i_7dJ1fH050Bg = () => import("./test.tsx_App_component_a_q_e_click_7dJ1fH050Bg");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 import { Signal } from "@qwik.dev/core";
 const _hf0 = (p0) => (p0.value.selected.value ? "danger" : "");
 const _hf0_str = 'p0.value.selected.value?"danger":""';
-export const App_component_XumqEURaLxI = () => {
+export const App_component_XXXXXXXXXXXX = () => {
   const data = useSignal < Signal < any > [] > [];
   const selectedItem = (useSignal < any) | (null > null);
   return /* @__PURE__ */ _jsxSorted(
@@ -94,8 +94,8 @@ export const App_component_XumqEURaLxI = () => {
               null,
               {
                 "q-e:click": /* @__PURE__ */ qrl(
-                  i_7dJ1fH050Bg,
-                  "App_component_a_q_e_click_7dJ1fH050Bg",
+                  i_XXXXXXXXXXXX,
+                  "App_component_a_q_e_click_XXXXXXXXXXXX",
                   [selectedItem],
                 ),
               },
@@ -115,8 +115,8 @@ export const App_component_XumqEURaLxI = () => {
               null,
               {
                 "q-e:click": /* @__PURE__ */ qrl(
-                  i_7dJ1fH050Bg,
-                  "App_component_a_q_e_click_7dJ1fH050Bg",
+                  i_XXXXXXXXXXXX,
+                  "App_component_a_q_e_click_XXXXXXXXXXXX",
                   [data],
                 ),
               },
@@ -141,11 +141,11 @@ export const App_component_XumqEURaLxI = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_XumqEURaLxI",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component",
-  "hash": "XumqEURaLxI",
-  "canonicalFilename": "test.tsx_App_component_XumqEURaLxI",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -155,12 +155,12 @@ export const App_component_XumqEURaLxI = () => {
 }
 */
 
-=== test.tsx_App_component_a_q_e_click_7dJ1fH050Bg.js === (ENTRY)
+=== test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
 const _hf0 = (p0) => (p0.value.selected.value ? "danger" : "");
 const _hf0_str = 'p0.value.selected.value?"danger":""';
-export const App_component_a_q_e_click_7dJ1fH050Bg = () => {
+export const App_component_a_q_e_click_XXXXXXXXXXXX = () => {
   const selectedItem = _captures[0];
   if (selectedItem.value) {
     selectedItem.value.selected.value = false;
@@ -172,11 +172,11 @@ export const App_component_a_q_e_click_7dJ1fH050Bg = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_a_q_e_click_7dJ1fH050Bg",
+  "name": "App_component_a_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_a_q_e_click",
-  "hash": "7dJ1fH050Bg",
-  "canonicalFilename": "test.tsx_App_component_a_q_e_click_7dJ1fH050Bg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_App_component",
@@ -189,12 +189,12 @@ export const App_component_a_q_e_click_7dJ1fH050Bg = () => {
 }
 */
 
-=== test.tsx_App_component_a_q_e_click_7dJ1fH050Bg.js === (ENTRY)
+=== test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
 const _hf0 = (p0) => (p0.value.selected.value ? "danger" : "");
 const _hf0_str = 'p0.value.selected.value?"danger":""';
-export const App_component_a_q_e_click_7dJ1fH050Bg = () => {
+export const App_component_a_q_e_click_XXXXXXXXXXXX = () => {
   const data = _captures[0];
   const dataValue = untrack(() => data.value);
   data.value = dataValue.toSpliced(
@@ -206,11 +206,11 @@ export const App_component_a_q_e_click_7dJ1fH050Bg = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_a_q_e_click_7dJ1fH050Bg",
+  "name": "App_component_a_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_a_q_e_click",
-  "hash": "7dJ1fH050Bg",
-  "canonicalFilename": "test.tsx_App_component_a_q_e_click_7dJ1fH050Bg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_App_component",

@@ -19,9 +19,9 @@ export const Foo = component$(
 ============================= test.tsx ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_HTDRsvUbLiE = () => import("./test.tsx_Foo_component_HTDRsvUbLiE");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 export const Foo = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
@@ -30,11 +30,11 @@ export const Foo = /*#__PURE__*/ componentQrl(
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAMjB;IACE,SAAS;AACX,GACA"}',
 );
-============================= test.tsx_Foo_component_HTDRsvUbLiE.tsx (ENTRY POINT)==
+============================= test.tsx_Foo_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
-const i_DvU6FitWglY = () => import("./test.tsx_Foo_component_1_DvU6FitWglY");
-export const Foo_component_HTDRsvUbLiE = () => {
-  return /*#__PURE__*/ qrl(i_DvU6FitWglY, "Foo_component_1_DvU6FitWglY");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
+export const Foo_component_XXXXXXXXXXXX = () => {
+  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX");
 };
 
 Some(
@@ -43,11 +43,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_HTDRsvUbLiE",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "HTDRsvUbLiE",
-  "canonicalFilename": "test.tsx_Foo_component_HTDRsvUbLiE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -60,8 +60,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_1_DvU6FitWglY.tsx (ENTRY POINT)==
-export const Foo_component_1_DvU6FitWglY = () => {
+============================= test.tsx_Foo_component_1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+export const Foo_component_1_XXXXXXXXXXXX = () => {
   return <div></div>;
 };
 
@@ -71,14 +71,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_1_DvU6FitWglY",
+  "name": "Foo_component_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_1",
-  "hash": "DvU6FitWglY",
-  "canonicalFilename": "test.tsx_Foo_component_1_DvU6FitWglY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
-  "parent": "Foo_component_HTDRsvUbLiE",
+  "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,

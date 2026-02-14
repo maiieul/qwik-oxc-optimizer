@@ -20,9 +20,9 @@ export const App = component$((props: Stuff) => {
 ============================= project/index.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrlDEV } from "@qwik.dev/core";
-const i_KGLYFBhvJc0 = () => import("./index.tsx_App_component_KGLYFBhvJc0.js");
+const i_XXXXXXXXXXXX = () => import("./index.tsx_App_component_XXXXXXXXXXXX.js");
 export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrlDEV(i_KGLYFBhvJc0, "App_component_KGLYFBhvJc0", {
+  /*#__PURE__*/ qrlDEV(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX", {
     file: "/src/project/project/index.tsx",
     lo: 87,
     hi: 303,
@@ -33,10 +33,10 @@ export const App = /*#__PURE__*/ componentQrl(
 Some(
   '{"version":3,"sources":["/src/project/project/index.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM;;;;;IAUhB"}',
 );
-============================= project/index.tsx_App_component_KGLYFBhvJc0.js (ENTRY POINT)==
+============================= project/index.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
-export const App_component_KGLYFBhvJc0 = (props) => {
+export const App_component_XXXXXXXXXXXX = (props) => {
   return /*#__PURE__*/ _jsxSorted(
     _Fragment,
     null,
@@ -104,11 +104,11 @@ Some(
 /*
 {
   "origin": "project/index.tsx",
-  "name": "App_component_KGLYFBhvJc0",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "index.tsx_App_component",
-  "hash": "KGLYFBhvJc0",
-  "canonicalFilename": "index.tsx_App_component_KGLYFBhvJc0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "index.tsx_App_component_XXXXXXXXXXXX",
   "path": "project",
   "extension": "js",
   "parent": null,

@@ -20,21 +20,21 @@ export const Counter = component$(() => {
 ============================= test.ts ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_zTmRHlL09Gg = () => import("./test.tsx_Counter_component_zTmRHlL09Gg");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Counter_component_XXXXXXXXXXXX");
 export const Counter = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_zTmRHlL09Gg, "Counter_component_zTmRHlL09Gg"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Counter_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AACA,OAAO,MAAM,wBAAU,gFAWpB"}',
 );
-============================= test.tsx_Counter_component_zTmRHlL09Gg.ts (ENTRY POINT)==
+============================= test.tsx_Counter_component_XXXXXXXXXXXX.ts (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_Pq1pmfmJWUI = () =>
-  import("./test.tsx_Counter_component_div_p_button_q_e_click_Pq1pmfmJWUI");
-export const Counter_component_zTmRHlL09Gg = () => {
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX");
+export const Counter_component_XXXXXXXXXXXX = () => {
   const count = useSignal(0);
   return /*#__PURE__*/ _jsxSorted(
     "div",
@@ -51,8 +51,8 @@ export const Counter_component_zTmRHlL09Gg = () => {
           null,
           {
             "q-e:click": /*#__PURE__*/ qrl(
-              i_Pq1pmfmJWUI,
-              "Counter_component_div_p_button_q_e_click_Pq1pmfmJWUI",
+              i_XXXXXXXXXXXX,
+              "Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX",
               [count],
             ),
           },
@@ -75,11 +75,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Counter_component_zTmRHlL09Gg",
+  "name": "Counter_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Counter_component",
-  "hash": "zTmRHlL09Gg",
-  "canonicalFilename": "test.tsx_Counter_component_zTmRHlL09Gg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Counter_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "ts",
   "parent": null,
@@ -92,9 +92,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_Counter_component_div_p_button_q_e_click_Pq1pmfmJWUI.ts (ENTRY POINT)==
+============================= test.tsx_Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX.ts (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const Counter_component_div_p_button_q_e_click_Pq1pmfmJWUI = () => {
+export const Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX = () => {
   const count = _captures[0];
   return count.value++;
 };
@@ -105,14 +105,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Counter_component_div_p_button_q_e_click_Pq1pmfmJWUI",
+  "name": "Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Counter_component_div_p_button_q_e_click",
-  "hash": "Pq1pmfmJWUI",
-  "canonicalFilename": "test.tsx_Counter_component_div_p_button_q_e_click_Pq1pmfmJWUI",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "ts",
-  "parent": "Counter_component_zTmRHlL09Gg",
+  "parent": "Counter_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,

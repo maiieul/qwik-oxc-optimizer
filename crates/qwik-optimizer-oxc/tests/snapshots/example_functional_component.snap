@@ -14,15 +14,15 @@ const Header = component$(() => {
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_Qw9nV3mG0KQ = () => import("./test.tsx_Header_component_Qw9nV3mG0KQ");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_XXXXXXXXXXXX");
 import { useStore } from "@qwik.dev/core";
 const Header = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_Qw9nV3mG0KQ, "Header_component_Qw9nV3mG0KQ"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Header_component_Qw9nV3mG0KQ.tsx === (ENTRY)
+=== test.tsx_Header_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { useStore } from "@qwik.dev/core";
-export const Header_component_Qw9nV3mG0KQ = () => {
+export const Header_component_XXXXXXXXXXXX = () => {
   const thing = useStore();
   const { foo, bar } = foo();
   return <div>{thing}</div>;
@@ -31,11 +31,11 @@ export const Header_component_Qw9nV3mG0KQ = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Header_component_Qw9nV3mG0KQ",
+  "name": "Header_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Header_component",
-  "hash": "Qw9nV3mG0KQ",
-  "canonicalFilename": "test.tsx_Header_component_Qw9nV3mG0KQ",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Header_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,

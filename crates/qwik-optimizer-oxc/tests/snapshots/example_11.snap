@@ -24,29 +24,29 @@ export const App = component$(() => {
 === project/test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_sHTSaq0AU4w = () => import("./project/test.tsx_Header_component_sHTSaq0AU4w");
-const i_kRS1L5K0500 = () => import("./project/test.tsx_Header_component___q_e_click_kRS1L5K0500");
-const i_36z8l5vFtdk = () => import("./project/test.tsx_App_component_36z8l5vFtdk");
+const i_XXXXXXXXXXXX = () => import("./project/test.tsx_Header_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./project/test.tsx_Header_component___q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./project/test.tsx_App_component_XXXXXXXXXXXX");
 import { foo, bar as bbar } from "../state";
 import * as dep2 from "dep2";
 import dep3 from "dep3/something";
 export const Header = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_sHTSaq0AU4w, "Header_component_sHTSaq0AU4w"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
 );
 export const App = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_36z8l5vFtdk, "App_component_36z8l5vFtdk"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 
-=== project/test.tsx_Header_component_sHTSaq0AU4w.tsx === (ENTRY)
+=== project/test.tsx_Header_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_kRS1L5K0500 = () => import("./project/test.tsx_Header_component___q_e_click_kRS1L5K0500");
+const i_XXXXXXXXXXXX = () => import("./project/test.tsx_Header_component___q_e_click_XXXXXXXXXXXX");
 import * as dep2 from "dep2";
 import { bar as bbar } from "../state";
 import { Header } from "./test";
-export const Header_component_sHTSaq0AU4w = () => {
+export const Header_component_XXXXXXXXXXXX = () => {
   return (
     <Header
-      onClick={/* @__PURE__ */ qrl(i_kRS1L5K0500, "Header_component___q_e_click_kRS1L5K0500")}
+      onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component___q_e_click_XXXXXXXXXXXX")}
     >
       {dep2.stuff()}
       {bbar()}
@@ -57,11 +57,11 @@ export const Header_component_sHTSaq0AU4w = () => {
 /*
 {
   "origin": "project/test.tsx",
-  "name": "Header_component_sHTSaq0AU4w",
+  "name": "Header_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "project/test.tsx_Header_component",
-  "hash": "sHTSaq0AU4w",
-  "canonicalFilename": "project/test.tsx_Header_component_sHTSaq0AU4w",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "project/test.tsx_Header_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -71,18 +71,18 @@ export const Header_component_sHTSaq0AU4w = () => {
 }
 */
 
-=== project/test.tsx_Header_component___q_e_click_kRS1L5K0500.tsx === (ENTRY)
+=== project/test.tsx_Header_component___q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 import dep3 from "dep3/something";
-export const Header_component___q_e_click_kRS1L5K0500 = (ev) => dep3(ev);
+export const Header_component___q_e_click_XXXXXXXXXXXX = (ev) => dep3(ev);
 
 /*
 {
   "origin": "project/test.tsx",
-  "name": "Header_component___q_e_click_kRS1L5K0500",
+  "name": "Header_component___q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "project/test.tsx_Header_component___q_e_click",
-  "hash": "kRS1L5K0500",
-  "canonicalFilename": "project/test.tsx_Header_component___q_e_click_kRS1L5K0500",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "project/test.tsx_Header_component___q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": "project/test.tsx_Header_component",
@@ -92,21 +92,21 @@ export const Header_component___q_e_click_kRS1L5K0500 = (ev) => dep3(ev);
 }
 */
 
-=== project/test.tsx_App_component_36z8l5vFtdk.tsx === (ENTRY)
+=== project/test.tsx_App_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { foo } from "../state";
 import { Header } from "./test";
-export const App_component_36z8l5vFtdk = () => {
+export const App_component_XXXXXXXXXXXX = () => {
   return <Header>{foo()}</Header>;
 };
 
 /*
 {
   "origin": "project/test.tsx",
-  "name": "App_component_36z8l5vFtdk",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "project/test.tsx_App_component",
-  "hash": "36z8l5vFtdk",
-  "canonicalFilename": "project/test.tsx_App_component_36z8l5vFtdk",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "project/test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,

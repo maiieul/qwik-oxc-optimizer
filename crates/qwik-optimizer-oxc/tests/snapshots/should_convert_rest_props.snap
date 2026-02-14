@@ -17,31 +17,31 @@ export default component$<any>(({ ...props }) => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _restProps } from "@qwik.dev/core";
-const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
-const i_cu78f7005P4 = () => import("./test.tsx_default_useTask_cu78f7005P4");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_default_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_default_useTask_XXXXXXXXXXXX");
 export default /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "default_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)
+=== test.tsx_default_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_cu78f7005P4 = () => import("./test.tsx_default_useTask_cu78f7005P4");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_default_useTask_XXXXXXXXXXXX");
 import { useTaskQrl } from "@qwik.dev/core";
 import { _restProps } from "@qwik.dev/core";
-export const default_component_jN9ZUuuADmk = (_rawProps) => {
+export const default_component_XXXXXXXXXXXX = (_rawProps) => {
   const props = _restProps(_rawProps);
-  useTaskQrl(/* @__PURE__ */ qrl(i_cu78f7005P4, "default_useTask_cu78f7005P4", [props]));
+  useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "default_useTask_XXXXXXXXXXXX", [props]));
   return "hi";
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "default_component_jN9ZUuuADmk",
+  "name": "default_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_default_component",
-  "hash": "jN9ZUuuADmk",
-  "canonicalFilename": "test.tsx_default_component_jN9ZUuuADmk",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_default_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -54,9 +54,9 @@ export const default_component_jN9ZUuuADmk = (_rawProps) => {
 }
 */
 
-=== test.tsx_default_useTask_cu78f7005P4.js === (ENTRY)
+=== test.tsx_default_useTask_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const default_useTask_cu78f7005P4 = () => {
+export const default_useTask_XXXXXXXXXXXX = () => {
   const props = _captures[0];
   props.checked;
 };
@@ -64,11 +64,11 @@ export const default_useTask_cu78f7005P4 = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "default_useTask_cu78f7005P4",
+  "name": "default_useTask_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_default_useTask",
-  "hash": "cu78f7005P4",
-  "canonicalFilename": "test.tsx_default_useTask_cu78f7005P4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_default_useTask_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_default_component",

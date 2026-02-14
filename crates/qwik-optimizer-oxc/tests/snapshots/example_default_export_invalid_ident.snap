@@ -12,21 +12,21 @@ export default component$(() => {
 === src/components/mongo/404.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_PS0fTRVnPOE = () => import("./src/components/mongo/404.tsx_default_component_PS0fTRVnPOE");
-const i_41GceC3v3n8 = () =>
-  import("./src/components/mongo/404.tsx_default_component_div_q_e_click_41GceC3v3n8");
+const i_XXXXXXXXXXXX = () => import("./src/components/mongo/404.tsx_default_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./src/components/mongo/404.tsx_default_component_div_q_e_click_XXXXXXXXXXXX");
 export default /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_PS0fTRVnPOE, "default_component_PS0fTRVnPOE"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "default_component_XXXXXXXXXXXX"),
 );
 
-=== src/components/mongo/404.tsx_default_component_PS0fTRVnPOE.tsx === (ENTRY)
+=== src/components/mongo/404.tsx_default_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_41GceC3v3n8 = () =>
-  import("./src/components/mongo/404.tsx_default_component_div_q_e_click_41GceC3v3n8");
-export const default_component_PS0fTRVnPOE = () => {
+const i_XXXXXXXXXXXX = () =>
+  import("./src/components/mongo/404.tsx_default_component_div_q_e_click_XXXXXXXXXXXX");
+export const default_component_XXXXXXXXXXXX = () => {
   return (
     <div
-      onClick$={/* @__PURE__ */ qrl(i_41GceC3v3n8, "default_component_div_q_e_click_41GceC3v3n8")}
+      onClick$={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "default_component_div_q_e_click_XXXXXXXXXXXX")}
     ></div>
   );
 };
@@ -34,11 +34,11 @@ export const default_component_PS0fTRVnPOE = () => {
 /*
 {
   "origin": "src/components/mongo/404.tsx",
-  "name": "default_component_PS0fTRVnPOE",
+  "name": "default_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "src/components/mongo/404.tsx_default_component",
-  "hash": "PS0fTRVnPOE",
-  "canonicalFilename": "src/components/mongo/404.tsx_default_component_PS0fTRVnPOE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "src/components/mongo/404.tsx_default_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -48,17 +48,17 @@ export const default_component_PS0fTRVnPOE = () => {
 }
 */
 
-=== src/components/mongo/404.tsx_default_component_div_q_e_click_41GceC3v3n8.tsx === (ENTRY)
-export const default_component_div_q_e_click_41GceC3v3n8 = () => console.log(mongodb);
+=== src/components/mongo/404.tsx_default_component_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
+export const default_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(mongodb);
 
 /*
 {
   "origin": "src/components/mongo/404.tsx",
-  "name": "default_component_div_q_e_click_41GceC3v3n8",
+  "name": "default_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "src/components/mongo/404.tsx_default_component_div_q_e_click",
-  "hash": "41GceC3v3n8",
-  "canonicalFilename": "src/components/mongo/404.tsx_default_component_div_q_e_click_41GceC3v3n8",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "src/components/mongo/404.tsx_default_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": "src/components/mongo/404.tsx_default_component",

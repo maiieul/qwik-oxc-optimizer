@@ -38,37 +38,37 @@ export const Child = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_fxETLug1yE4 = () => import("./test.tsx_Parent_component_fxETLug1yE4");
-const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
-const i_N8VjxooYvus = () => import("./test.tsx_Parent_component_div_q_e_click_N8VjxooYvus");
-const i_80js9RUUsfM = () => import("./test.tsx_Child_component_80js9RUUsfM");
-const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
-const i_atbV2f006AU = () => import("./test.tsx_Child_component_div_q_e_click_atbV2f006AU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_useTask_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_useTask_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_div_q_e_click_XXXXXXXXXXXX");
 import { useStore } from "@qwik.dev/core";
 import mongo from "mongodb";
 import redis from "redis";
 export const Parent = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_fxETLug1yE4, "Parent_component_fxETLug1yE4"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Parent_component_XXXXXXXXXXXX"),
 );
 export const Child = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_80js9RUUsfM, "Child_component_80js9RUUsfM"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Parent_component_fxETLug1yE4.js === (ENTRY)
+=== test.tsx_Parent_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
-const i_N8VjxooYvus = () => import("./test.tsx_Parent_component_div_q_e_click_N8VjxooYvus");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_useTask_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX");
 import { useTaskQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
-export const Parent_component_fxETLug1yE4 = () => {
+export const Parent_component_XXXXXXXXXXXX = () => {
   const state = useStore({ text: "" });
-  useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
+  useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "useTask_XXXXXXXXXXXX", [state]));
   return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /* @__PURE__ */ qrl(i_N8VjxooYvus, "Parent_component_div_q_e_click_N8VjxooYvus"),
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Parent_component_div_q_e_click_XXXXXXXXXXXX"),
     },
     state.text,
     3,
@@ -79,11 +79,11 @@ export const Parent_component_fxETLug1yE4 = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_fxETLug1yE4",
+  "name": "Parent_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component",
-  "hash": "fxETLug1yE4",
-  "canonicalFilename": "test.tsx_Parent_component_fxETLug1yE4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -93,11 +93,11 @@ export const Parent_component_fxETLug1yE4 = () => {
 }
 */
 
-=== test.tsx_useTask_ZxfKmWQYEwc.js === (ENTRY)
+=== test.tsx_useTask_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import mongo from "mongodb";
 import redis from "redis";
-export const useTask_ZxfKmWQYEwc = async () => {
+export const useTask_XXXXXXXXXXXX = async () => {
   const state = _captures[0];
   state.text = await mongo.users();
   redis.set(state.text);
@@ -106,11 +106,11 @@ export const useTask_ZxfKmWQYEwc = async () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "useTask_ZxfKmWQYEwc",
+  "name": "useTask_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_useTask",
-  "hash": "ZxfKmWQYEwc",
-  "canonicalFilename": "test.tsx_useTask_ZxfKmWQYEwc",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_useTask_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Parent_component",
@@ -123,17 +123,17 @@ export const useTask_ZxfKmWQYEwc = async () => {
 }
 */
 
-=== test.tsx_Parent_component_div_q_e_click_N8VjxooYvus.js === (ENTRY)
-export const Parent_component_div_q_e_click_N8VjxooYvus = () => console.log("parent");
+=== test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+export const Parent_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("parent");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_div_q_e_click_N8VjxooYvus",
+  "name": "Parent_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_div_q_e_click",
-  "hash": "N8VjxooYvus",
-  "canonicalFilename": "test.tsx_Parent_component_div_q_e_click_N8VjxooYvus",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Parent_component",
@@ -143,21 +143,21 @@ export const Parent_component_div_q_e_click_N8VjxooYvus = () => console.log("par
 }
 */
 
-=== test.tsx_Child_component_80js9RUUsfM.js === (ENTRY)
+=== test.tsx_Child_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_ZxfKmWQYEwc = () => import("./test.tsx_useTask_ZxfKmWQYEwc");
-const i_atbV2f006AU = () => import("./test.tsx_Child_component_div_q_e_click_atbV2f006AU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_useTask_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_div_q_e_click_XXXXXXXXXXXX");
 import { useTaskQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
-export const Child_component_80js9RUUsfM = () => {
+export const Child_component_XXXXXXXXXXXX = () => {
   const state = useStore({ text: "" });
-  useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
+  useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "useTask_XXXXXXXXXXXX", [state]));
   return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /* @__PURE__ */ qrl(i_atbV2f006AU, "Child_component_div_q_e_click_atbV2f006AU"),
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_div_q_e_click_XXXXXXXXXXXX"),
     },
     state.text,
     3,
@@ -168,11 +168,11 @@ export const Child_component_80js9RUUsfM = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Child_component_80js9RUUsfM",
+  "name": "Child_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Child_component",
-  "hash": "80js9RUUsfM",
-  "canonicalFilename": "test.tsx_Child_component_80js9RUUsfM",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Child_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -182,10 +182,10 @@ export const Child_component_80js9RUUsfM = () => {
 }
 */
 
-=== test.tsx_useTask_ZxfKmWQYEwc.js === (ENTRY)
+=== test.tsx_useTask_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import mongo from "mongodb";
-export const useTask_ZxfKmWQYEwc = async () => {
+export const useTask_XXXXXXXXXXXX = async () => {
   const state = _captures[0];
   state.text = await mongo.users();
 };
@@ -193,11 +193,11 @@ export const useTask_ZxfKmWQYEwc = async () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "useTask_ZxfKmWQYEwc",
+  "name": "useTask_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_useTask",
-  "hash": "ZxfKmWQYEwc",
-  "canonicalFilename": "test.tsx_useTask_ZxfKmWQYEwc",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_useTask_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Child_component",
@@ -210,17 +210,17 @@ export const useTask_ZxfKmWQYEwc = async () => {
 }
 */
 
-=== test.tsx_Child_component_div_q_e_click_atbV2f006AU.js === (ENTRY)
-export const Child_component_div_q_e_click_atbV2f006AU = () => console.log("child");
+=== test.tsx_Child_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+export const Child_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("child");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Child_component_div_q_e_click_atbV2f006AU",
+  "name": "Child_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Child_component_div_q_e_click",
-  "hash": "atbV2f006AU",
-  "canonicalFilename": "test.tsx_Child_component_div_q_e_click_atbV2f006AU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Child_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Child_component",

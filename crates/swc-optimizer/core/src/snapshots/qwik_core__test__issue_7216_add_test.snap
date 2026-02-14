@@ -21,31 +21,31 @@ export default component$((props) => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_LUXeXe0DQrg = () => import("./test.tsx_test_component_LUXeXe0DQrg");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
 export default /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AACA,6BAAe,6EAYZ"}',
 );
-============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
+============================= test.tsx_test_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSplit } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_e6TYnIxnPLY = () => import("./test.tsx_test_component_p_q_e_const_e6TYnIxnPLY");
-const i_ttOKZbY46GA = () => import("./test.tsx_test_component_p_q_e_hi_ttOKZbY46GA");
-export const test_component_LUXeXe0DQrg = (props) => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_p_q_e_const_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_p_q_e_hi_XXXXXXXXXXXX");
+export const test_component_XXXXXXXXXXXX = (props) => {
   return /*#__PURE__*/ _jsxSplit(
     "p",
     {
-      "q-e:hi": /*#__PURE__*/ qrl(i_ttOKZbY46GA, "test_component_p_q_e_hi_ttOKZbY46GA"),
+      "q-e:hi": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_p_q_e_hi_XXXXXXXXXXXX"),
       ...props.foo,
       "q-e:hello": props.helloHandler$,
       ...props.rest,
       "q-e:var": props.onVarHandler$,
     },
     {
-      "q-e:const": /*#__PURE__*/ qrl(i_e6TYnIxnPLY, "test_component_p_q_e_const_e6TYnIxnPLY"),
+      "q-e:const": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_p_q_e_const_XXXXXXXXXXXX"),
       asd: "1",
     },
     null,
@@ -60,11 +60,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "test_component_LUXeXe0DQrg",
+  "name": "test_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_test_component",
-  "hash": "LUXeXe0DQrg",
-  "canonicalFilename": "test.tsx_test_component_LUXeXe0DQrg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_test_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -80,21 +80,21 @@ Some(
   ]
 }
 */
-============================= test.tsx_test_component_p_q_e_hi_ttOKZbY46GA.js (ENTRY POINT)==
-export const test_component_p_q_e_hi_ttOKZbY46GA = () => "hi";
+============================= test.tsx_test_component_p_q_e_hi_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const test_component_p_q_e_hi_XXXXXXXXXXXX = () => "hi";
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"mDAIa,IAAM"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "test_component_p_q_e_hi_ttOKZbY46GA",
+  "name": "test_component_p_q_e_hi_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_test_component_p_q_e_hi",
-  "hash": "ttOKZbY46GA",
-  "canonicalFilename": "test.tsx_test_component_p_q_e_hi_ttOKZbY46GA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_test_component_p_q_e_hi_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test_component_LUXeXe0DQrg",
+  "parent": "test_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onHi$",
   "captures": false,
@@ -104,21 +104,21 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
   ]
 }
 */
-============================= test.tsx_test_component_p_q_e_const_e6TYnIxnPLY.js (ENTRY POINT)==
-export const test_component_p_q_e_const_e6TYnIxnPLY = () => "const";
+============================= test.tsx_test_component_p_q_e_const_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const test_component_p_q_e_const_XXXXXXXXXXXX = () => "const";
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"sDASgB,IAAM"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "test_component_p_q_e_const_e6TYnIxnPLY",
+  "name": "test_component_p_q_e_const_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_test_component_p_q_e_const",
-  "hash": "e6TYnIxnPLY",
-  "canonicalFilename": "test.tsx_test_component_p_q_e_const_e6TYnIxnPLY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_test_component_p_q_e_const_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test_component_LUXeXe0DQrg",
+  "parent": "test_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onConst$",
   "captures": false,

@@ -38,16 +38,16 @@ export const App = component$(() => {
 ============================= test.tsx ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_ckEPmXZlub0 = () => import("./test.tsx_App_component_ckEPmXZlub0");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const functionThatNeedsWindow = () => {};
-export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "s_ckEPmXZlub0"));
+export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"));
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAOA,OAAO,MAAM,0BAA0B,KAMvC,EAAE;AAEF,OAAO,MAAM,oBAAM,gEAehB"}',
 );
-============================= test.tsx_App_component_ckEPmXZlub0.tsx (ENTRY POINT)==
+============================= test.tsx_App_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { mongodb } from "mondodb";
-export const s_ckEPmXZlub0 = () => {
+export const s_XXXXXXXXXXXX = () => {
   useMount$(() => {
     console.log("server", mongodb());
   });
@@ -65,11 +65,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "s_ckEPmXZlub0",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component",
-  "hash": "ckEPmXZlub0",
-  "canonicalFilename": "test.tsx_App_component_ckEPmXZlub0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,

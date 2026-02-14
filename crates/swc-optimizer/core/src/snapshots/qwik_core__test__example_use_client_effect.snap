@@ -26,28 +26,28 @@ export const Child = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_9GyF01GDKqw = () => import("./test.tsx_Child_component_9GyF01GDKqw");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_XXXXXXXXXXXX");
 export const Child = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_9GyF01GDKqw, "Child_component_9GyF01GDKqw"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,sBAAQ,8EAgBlB"}',
 );
-============================= test.tsx_Child_component_9GyF01GDKqw.js (ENTRY POINT)==
+============================= test.tsx_Child_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useBrowserVisibleTaskQrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
-const i_0IGFPOyJmQA = () => import("./test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA");
-export const Child_component_9GyF01GDKqw = () => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_useBrowserVisibleTask_XXXXXXXXXXXX");
+export const Child_component_XXXXXXXXXXXX = () => {
   const state = useStore({
     count: 0,
   });
   // Double count watch
   useBrowserVisibleTaskQrl(
-    /*#__PURE__*/ qrl(i_0IGFPOyJmQA, "Child_component_useBrowserVisibleTask_0IGFPOyJmQA", [state]),
+    /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Child_component_useBrowserVisibleTask_XXXXXXXXXXXX", [state]),
   );
   return /*#__PURE__*/ _jsxSorted("div", null, null, _wrapProp(state, "count"), 3, "u6_0");
 };
@@ -58,11 +58,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Child_component_9GyF01GDKqw",
+  "name": "Child_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Child_component",
-  "hash": "9GyF01GDKqw",
-  "canonicalFilename": "test.tsx_Child_component_9GyF01GDKqw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Child_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -75,9 +75,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA.js (ENTRY POINT)==
+============================= test.tsx_Child_component_useBrowserVisibleTask_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const Child_component_useBrowserVisibleTask_0IGFPOyJmQA = () => {
+export const Child_component_useBrowserVisibleTask_XXXXXXXXXXXX = () => {
   const state = _captures[0];
   const timer = setInterval(() => {
     state.count++;
@@ -93,14 +93,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Child_component_useBrowserVisibleTask_0IGFPOyJmQA",
+  "name": "Child_component_useBrowserVisibleTask_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Child_component_useBrowserVisibleTask",
-  "hash": "0IGFPOyJmQA",
-  "canonicalFilename": "test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Child_component_useBrowserVisibleTask_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Child_component_9GyF01GDKqw",
+  "parent": "Child_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useBrowserVisibleTask$",
   "captures": true,

@@ -31,7 +31,7 @@ export const App = component$(({ count }) => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_ckEPmXZlub0 = () => import("./test.tsx_App_component_ckEPmXZlub0");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 const I1 = 12;
 const [
   I2,
@@ -47,7 +47,7 @@ const [
 function I9() {}
 class I10 {}
 export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 export { I1 as _auto_I1 };
 export { I10 as _auto_I10 };
@@ -63,7 +63,7 @@ export { I9 as _auto_I9 };
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,MAAM,KAAK;AACX,MAAM,CACJ,IACA,EACE,EAAE,EACF,IAAI,CAAC,GAAG,EACR,KAAK,EAAE,EACP,GAAG,IACJ,EACD,KAAK,EAAE,EACP,GAAG,GACJ,GAAG;AACJ,SAAS,MAAM;AACf,MAAM;AAAK;AAEX,OAAO,MAAM,oBAAM,4EAMhB"}',
 );
-============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
+============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _auto_I1 as I1 } from "./test";
 import { _auto_I2 as I2 } from "./test";
 import { _auto_I3 as I3 } from "./test";
@@ -74,11 +74,11 @@ import { _auto_I7 as I7 } from "./test";
 import { _auto_I8 as I8 } from "./test";
 import { _auto_I9 as I9 } from "./test";
 import { qrl } from "@qwik.dev/core";
-const i_w0t0o3QMovU = () => import("./test.tsx_App_component_1_w0t0o3QMovU");
-export const App_component_ckEPmXZlub0 = (_rawProps) => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_1_XXXXXXXXXXXX");
+export const App_component_XXXXXXXXXXXX = (_rawProps) => {
   console.log(I1, I2, I3, I4, I5, I6, I7, I8, I9);
   console.log(itsok, v1, v2, v3, obj);
-  return /*#__PURE__*/ qrl(i_w0t0o3QMovU, "App_component_1_w0t0o3QMovU");
+  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX");
 };
 
 Some(
@@ -87,11 +87,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_ckEPmXZlub0",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component",
-  "hash": "ckEPmXZlub0",
-  "canonicalFilename": "test.tsx_App_component_ckEPmXZlub0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -107,10 +107,10 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_1_w0t0o3QMovU.js (ENTRY POINT)==
+============================= test.tsx_App_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _auto_I10 as I10 } from "./test";
 import { _jsxSorted } from "@qwik.dev/core";
-export const App_component_1_w0t0o3QMovU = () => {
+export const App_component_1_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ _jsxSorted(I10, null, null, null, 3, "u6_0");
 };
 
@@ -120,14 +120,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_1_w0t0o3QMovU",
+  "name": "App_component_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_1",
-  "hash": "w0t0o3QMovU",
-  "canonicalFilename": "test.tsx_App_component_1_w0t0o3QMovU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,

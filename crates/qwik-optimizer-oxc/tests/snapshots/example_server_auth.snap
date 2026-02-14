@@ -46,20 +46,20 @@ export const { onRequest, logout, getSession, signup } = auth$({
 import { serverAuthQrl } from "@qwik.dev/core";
 import { authQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_7qRdElk79Fw = () => import("./test.tsx_s_0_7qRdElk79Fw");
-const i_axfrT8CMT4s = () => import("./test.tsx_s_1_axfrT8CMT4s");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_s_0_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_s_1_XXXXXXXXXXXX");
 import GitHub from "@auth/core/providers/github";
 import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
 import { serverAuth$, auth$ } from "@auth/qwik";
-export const { onRequest, logout, getSession, signup } = serverAuthQrl(/* @__PURE__ */ qrl(i_7qRdElk79Fw, "s_0_7qRdElk79Fw"));
-export const { onRequest, logout, getSession, signup } = authQrl(/* @__PURE__ */ qrl(i_axfrT8CMT4s, "s_1_axfrT8CMT4s"));
+export const { onRequest, logout, getSession, signup } = serverAuthQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s_0_XXXXXXXXXXXX"));
+export const { onRequest, logout, getSession, signup } = authQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s_1_XXXXXXXXXXXX"));
 
-=== test.tsx_s_0_7qRdElk79Fw.js === (ENTRY)
+=== test.tsx_s_0_XXXXXXXXXXXX.js === (ENTRY)
 import GitHub from "@auth/core/providers/github";
 import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
-export const s_0_7qRdElk79Fw = {
+export const s_0_XXXXXXXXXXXX = {
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID,
@@ -79,11 +79,11 @@ export const s_0_7qRdElk79Fw = {
 /*
 {
   "origin": "test.tsx",
-  "name": "s_0_7qRdElk79Fw",
+  "name": "s_0_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_s_0",
-  "hash": "7qRdElk79Fw",
-  "canonicalFilename": "test.tsx_s_0_7qRdElk79Fw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_s_0_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -93,11 +93,11 @@ export const s_0_7qRdElk79Fw = {
 }
 */
 
-=== test.tsx_s_1_axfrT8CMT4s.js === (ENTRY)
+=== test.tsx_s_1_XXXXXXXXXXXX.js === (ENTRY)
 import GitHub from "@auth/core/providers/github";
 import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
-export const s_1_axfrT8CMT4s = {
+export const s_1_XXXXXXXXXXXX = {
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID,
@@ -117,11 +117,11 @@ export const s_1_axfrT8CMT4s = {
 /*
 {
   "origin": "test.tsx",
-  "name": "s_1_axfrT8CMT4s",
+  "name": "s_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_s_1",
-  "hash": "axfrT8CMT4s",
-  "canonicalFilename": "test.tsx_s_1_axfrT8CMT4s",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_s_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,

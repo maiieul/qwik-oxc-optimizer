@@ -24,22 +24,22 @@ export const FieldInput = component$((props) => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_V4XAtJSTRKg = () => import("./test.tsx_FieldInput_component_V4XAtJSTRKg");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_XXXXXXXXXXXX");
 export const FieldInput = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_V4XAtJSTRKg, "FieldInput_component_V4XAtJSTRKg"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "FieldInput_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAGA,OAAO,MAAM,2BAAa,mFAavB"}',
 );
-============================= test.tsx_FieldInput_component_V4XAtJSTRKg.js (ENTRY POINT)==
+============================= test.tsx_FieldInput_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _getConstProps } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 import { destructureBindings } from "./destructure-bindings";
 import { qrl } from "@qwik.dev/core";
-const i_fZgZHYZXt60 = () => import("./test.tsx_FieldInput_component_input_q_e_click_fZgZHYZXt60");
-export const FieldInput_component_V4XAtJSTRKg = (props) => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_input_q_e_click_XXXXXXXXXXXX");
+export const FieldInput_component_XXXXXXXXXXXX = (props) => {
   const initialValues = {
     value: undefined,
   };
@@ -53,8 +53,8 @@ export const FieldInput_component_V4XAtJSTRKg = (props) => {
     },
     {
       "q-e:click": /*#__PURE__*/ qrl(
-        i_fZgZHYZXt60,
-        "FieldInput_component_input_q_e_click_fZgZHYZXt60",
+        i_XXXXXXXXXXXX,
+        "FieldInput_component_input_q_e_click_XXXXXXXXXXXX",
       ),
     },
     null,
@@ -69,11 +69,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "FieldInput_component_V4XAtJSTRKg",
+  "name": "FieldInput_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_FieldInput_component",
-  "hash": "V4XAtJSTRKg",
-  "canonicalFilename": "test.tsx_FieldInput_component_V4XAtJSTRKg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_FieldInput_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -89,8 +89,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_FieldInput_component_input_q_e_click_fZgZHYZXt60.js (ENTRY POINT)==
-export const FieldInput_component_input_q_e_click_fZgZHYZXt60 = () => {
+============================= test.tsx_FieldInput_component_input_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const FieldInput_component_input_q_e_click_XXXXXXXXXXXX = () => {
   console.log("clicked");
 };
 
@@ -100,14 +100,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "FieldInput_component_input_q_e_click_fZgZHYZXt60",
+  "name": "FieldInput_component_input_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_FieldInput_component_input_q_e_click",
-  "hash": "fZgZHYZXt60",
-  "canonicalFilename": "test.tsx_FieldInput_component_input_q_e_click_fZgZHYZXt60",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_FieldInput_component_input_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "FieldInput_component_V4XAtJSTRKg",
+  "parent": "FieldInput_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,

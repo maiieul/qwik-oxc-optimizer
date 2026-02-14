@@ -36,9 +36,9 @@ export const Foo = component$(
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_HTDRsvUbLiE = () => import("./test.tsx_Foo_component_HTDRsvUbLiE");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 export const Foo = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
@@ -47,11 +47,11 @@ export const Foo = /*#__PURE__*/ componentQrl(
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAuBjB;IACE,SAAS;AACX,GACA"}',
 );
-============================= test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)==
+============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
-const i_DvU6FitWglY = () => import("./test.tsx_Foo_component_1_DvU6FitWglY");
-export const Foo_component_HTDRsvUbLiE = () => {
-  return /*#__PURE__*/ qrl(i_DvU6FitWglY, "Foo_component_1_DvU6FitWglY");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
+export const Foo_component_XXXXXXXXXXXX = () => {
+  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX");
 };
 
 Some(
@@ -60,11 +60,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_HTDRsvUbLiE",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "HTDRsvUbLiE",
-  "canonicalFilename": "test.tsx_Foo_component_HTDRsvUbLiE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -77,63 +77,63 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_1_DvU6FitWglY.js (ENTRY POINT)==
+============================= test.tsx_Foo_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_0FSbGzUROso = () => import("./test.tsx_Foo_component_div_q_e_documentscroll_0FSbGzUROso");
-const i_6qyBttefepU = () => import("./test.tsx_Foo_component_div_q_e_document_scroll_6qyBttefepU");
-const i_Em1LspK7JVg = () =>
-  import("./test.tsx_Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg");
-const i_H10xZtD0e7w = () => import("./test.tsx_Foo_component_handler_H10xZtD0e7w");
-const i_YEa2A5ADUOg = () => import("./test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg");
-const i_Zip7mifsjRY = () =>
-  import("./test.tsx_Foo_component_div_host_onDocumentScroll_Zip7mifsjRY");
-const i_cPEH970JbEY = () => import("./test.tsx_Foo_component_div_host_onClick_cPEH970JbEY");
-const i_d0Zn04qNgs0 = () => import("./test.tsx_Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0");
-const i_kX5SiYdz650 = () => import("./test.tsx_Foo_component_div_q_e_c_lick_kX5SiYdz650");
-const i_pyHnxab17ms = () => import("./test.tsx_Foo_component_div_custom_pyHnxab17ms");
-const i_wphyTkeintI = () =>
-  import("./test.tsx_Foo_component_div_q_e_document_scroll_1_wphyTkeintI");
-export const Foo_component_1_DvU6FitWglY = () => {
-  const handler = /*#__PURE__*/ qrl(i_H10xZtD0e7w, "Foo_component_handler_H10xZtD0e7w");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_handler_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_custom_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX");
+export const Foo_component_1_XXXXXXXXXXXX = () => {
+  const handler = /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_handler_XXXXXXXXXXXX");
   return /*#__PURE__*/ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_YEa2A5ADUOg, "Foo_component_div_q_e_click_YEa2A5ADUOg"),
+      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_click_XXXXXXXXXXXX"),
       "q-e:documentscroll": /*#__PURE__*/ qrl(
-        i_0FSbGzUROso,
-        "Foo_component_div_q_e_documentscroll_0FSbGzUROso",
+        i_XXXXXXXXXXXX,
+        "Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX",
       ),
       "q-e:documentscroll": /*#__PURE__*/ qrl(
-        i_d0Zn04qNgs0,
-        "Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0",
+        i_XXXXXXXXXXXX,
+        "Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX",
       ),
-      "q-e:c-lick": /*#__PURE__*/ qrl(i_kX5SiYdz650, "Foo_component_div_q_e_c_lick_kX5SiYdz650"),
+      "q-e:c-lick": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_c_lick_XXXXXXXXXXXX"),
       "q-e:document--scroll": /*#__PURE__*/ qrl(
-        i_6qyBttefepU,
-        "Foo_component_div_q_e_document_scroll_6qyBttefepU",
+        i_XXXXXXXXXXXX,
+        "Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX",
       ),
       "q-e:document--scroll": /*#__PURE__*/ qrl(
-        i_wphyTkeintI,
-        "Foo_component_div_q_e_document_scroll_1_wphyTkeintI",
+        i_XXXXXXXXXXXX,
+        "Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX",
       ),
       "host:onClick$": /*#__PURE__*/ qrl(
-        i_cPEH970JbEY,
-        "Foo_component_div_host_onClick_cPEH970JbEY",
+        i_XXXXXXXXXXXX,
+        "Foo_component_div_host_onClick_XXXXXXXXXXXX",
       ),
       "host:onDocumentScroll$": /*#__PURE__*/ qrl(
-        i_Zip7mifsjRY,
-        "Foo_component_div_host_onDocumentScroll_Zip7mifsjRY",
+        i_XXXXXXXXXXXX,
+        "Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX",
       ),
       "host:onDocumentScroll$": /*#__PURE__*/ qrl(
-        i_Em1LspK7JVg,
-        "Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg",
+        i_XXXXXXXXXXXX,
+        "Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX",
       ),
       "q-e:keyup": handler,
       "q-e:document:keyup": handler,
       "q-e:window:keyup": handler,
-      custom$: /*#__PURE__*/ qrl(i_pyHnxab17ms, "Foo_component_div_custom_pyHnxab17ms"),
+      custom$: /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_div_custom_XXXXXXXXXXXX"),
     },
     null,
     3,
@@ -147,14 +147,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_1_DvU6FitWglY",
+  "name": "Foo_component_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_1",
-  "hash": "DvU6FitWglY",
-  "canonicalFilename": "test.tsx_Foo_component_1_DvU6FitWglY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_HTDRsvUbLiE",
+  "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,
@@ -164,8 +164,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_handler_H10xZtD0e7w.js (ENTRY POINT)==
-export const Foo_component_handler_H10xZtD0e7w = () => console.log("reused");
+============================= test.tsx_Foo_component_handler_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_handler_XXXXXXXXXXXX = () => console.log("reused");
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"iDAKwB,IAAM,QAAQ,GAAG,CAAC"}',
@@ -173,14 +173,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_handler_H10xZtD0e7w",
+  "name": "Foo_component_handler_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_handler",
-  "hash": "H10xZtD0e7w",
-  "canonicalFilename": "test.tsx_Foo_component_handler_H10xZtD0e7w",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_handler_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,
@@ -190,8 +190,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg.js (ENTRY POINT)==
-export const Foo_component_div_q_e_click_YEa2A5ADUOg = () => console.log("onClick$");
+============================= test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("onClick$");
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"uDAQoB,IAAM,QAAQ,GAAG,CAAC"}',
@@ -199,14 +199,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_click_YEa2A5ADUOg",
+  "name": "Foo_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_q_e_click",
-  "hash": "YEa2A5ADUOg",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,
@@ -216,8 +216,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_q_e_documentscroll_0FSbGzUROso.js (ENTRY POINT)==
-export const Foo_component_div_q_e_documentscroll_0FSbGzUROso = () =>
+============================= test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX = () =>
   console.log("onDocumentScroll");
 
 Some(
@@ -226,14 +226,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_documentscroll_0FSbGzUROso",
+  "name": "Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_q_e_documentscroll",
-  "hash": "0FSbGzUROso",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_documentscroll_0FSbGzUROso",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocumentScroll$",
   "captures": false,
@@ -243,8 +243,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0.js (ENTRY POINT)==
-export const Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0 = () =>
+============================= test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX = () =>
   console.log("onWindowScroll");
 
 Some(
@@ -253,14 +253,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0",
+  "name": "Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_q_e_documentscroll_1",
-  "hash": "d0Zn04qNgs0",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_documentscroll_1_d0Zn04qNgs0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocumentScroll$",
   "captures": false,
@@ -270,8 +270,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_q_e_c_lick_kX5SiYdz650.js (ENTRY POINT)==
-export const Foo_component_div_q_e_c_lick_kX5SiYdz650 = () => console.log("on-cLick$");
+============================= test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_q_e_c_lick_XXXXXXXXXXXX = () => console.log("on-cLick$");
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"wDAWqB,IAAM,QAAQ,GAAG,CAAC"}',
@@ -279,14 +279,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_c_lick_kX5SiYdz650",
+  "name": "Foo_component_div_q_e_c_lick_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_q_e_c_lick",
-  "hash": "kX5SiYdz650",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_c_lick_kX5SiYdz650",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "on-cLick$",
   "captures": false,
@@ -296,8 +296,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_q_e_document_scroll_6qyBttefepU.js (ENTRY POINT)==
-export const Foo_component_div_q_e_document_scroll_6qyBttefepU = () =>
+============================= test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX = () =>
   console.log("onDocument-sCroll");
 
 Some(
@@ -306,14 +306,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_document_scroll_6qyBttefepU",
+  "name": "Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_q_e_document_scroll",
-  "hash": "6qyBttefepU",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_document_scroll_6qyBttefepU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocument-sCroll$",
   "captures": false,
@@ -323,8 +323,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_q_e_document_scroll_1_wphyTkeintI.js (ENTRY POINT)==
-export const Foo_component_div_q_e_document_scroll_1_wphyTkeintI = () =>
+============================= test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX = () =>
   console.log("onDocument-scroLL");
 
 Some(
@@ -333,14 +333,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_document_scroll_1_wphyTkeintI",
+  "name": "Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_q_e_document_scroll_1",
-  "hash": "wphyTkeintI",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_document_scroll_1_wphyTkeintI",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocument-scroLL$",
   "captures": false,
@@ -350,8 +350,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_host_onClick_cPEH970JbEY.js (ENTRY POINT)==
-export const Foo_component_div_host_onClick_cPEH970JbEY = () => console.log("host:onClick$");
+============================= test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_host_onClick_XXXXXXXXXXXX = () => console.log("host:onClick$");
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"0DAcyB,IAAM,QAAQ,GAAG,CAAC"}',
@@ -359,14 +359,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_host_onClick_cPEH970JbEY",
+  "name": "Foo_component_div_host_onClick_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_host_onClick",
-  "hash": "cPEH970JbEY",
-  "canonicalFilename": "test.tsx_Foo_component_div_host_onClick_cPEH970JbEY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "host:onClick$",
   "captures": false,
@@ -376,8 +376,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_host_onDocumentScroll_Zip7mifsjRY.js (ENTRY POINT)==
-export const Foo_component_div_host_onDocumentScroll_Zip7mifsjRY = () =>
+============================= test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX = () =>
   console.log("host:onDocument:scroll");
 
 Some(
@@ -386,14 +386,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_host_onDocumentScroll_Zip7mifsjRY",
+  "name": "Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_host_onDocumentScroll",
-  "hash": "Zip7mifsjRY",
-  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_Zip7mifsjRY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "host:onDocumentScroll$",
   "captures": false,
@@ -403,8 +403,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg.js (ENTRY POINT)==
-export const Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg = () =>
+============================= test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX = () =>
   console.log("host:onWindow:scroll");
 
 Some(
@@ -413,14 +413,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg",
+  "name": "Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_host_onDocumentScroll_1",
-  "hash": "Em1LspK7JVg",
-  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "host:onDocumentScroll$",
   "captures": false,
@@ -430,8 +430,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_div_custom_pyHnxab17ms.js (ENTRY POINT)==
-export const Foo_component_div_custom_pyHnxab17ms = () => console.log("custom");
+============================= test.tsx_Foo_component_div_custom_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_div_custom_XXXXXXXXXXXX = () => console.log("custom");
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"oDAoBmB,IAAM,QAAQ,GAAG,CAAC"}',
@@ -439,14 +439,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_custom_pyHnxab17ms",
+  "name": "Foo_component_div_custom_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_div_custom",
-  "hash": "pyHnxab17ms",
-  "canonicalFilename": "test.tsx_Foo_component_div_custom_pyHnxab17ms",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_custom_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "custom$",
   "captures": false,

@@ -17,27 +17,27 @@ export const Header = component$(() => {
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_Qw9nV3mG0KQ = () => import("./test.tsx_Header_component_Qw9nV3mG0KQ");
-const i_QrzcmFeRo0o = () => import("./test.tsx_Header_QrzcmFeRo0o");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_XXXXXXXXXXXX");
 export const Header = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_Qw9nV3mG0KQ, "Header_component_Qw9nV3mG0KQ"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Header_component_Qw9nV3mG0KQ.tsx === (ENTRY)
+=== test.tsx_Header_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_QrzcmFeRo0o = () => import("./test.tsx_Header_QrzcmFeRo0o");
-export const Header_component_Qw9nV3mG0KQ = () => {
-  return /* @__PURE__ */ qrl(i_QrzcmFeRo0o, "Header_QrzcmFeRo0o");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_XXXXXXXXXXXX");
+export const Header_component_XXXXXXXXXXXX = () => {
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_XXXXXXXXXXXX");
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Header_component_Qw9nV3mG0KQ",
+  "name": "Header_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Header_component",
-  "hash": "Qw9nV3mG0KQ",
-  "canonicalFilename": "test.tsx_Header_component_Qw9nV3mG0KQ",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Header_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -47,9 +47,9 @@ export const Header_component_Qw9nV3mG0KQ = () => {
 }
 */
 
-=== test.tsx_Header_QrzcmFeRo0o.tsx === (ENTRY)
+=== test.tsx_Header_XXXXXXXXXXXX.tsx === (ENTRY)
 import { Header } from "./test";
-export const Header_QrzcmFeRo0o = (hola) => {
+export const Header_XXXXXXXXXXXX = (hola) => {
   const hola = this;
   const { something, styff } = hola;
   const hello = hola.nothere.stuff[global];
@@ -59,11 +59,11 @@ export const Header_QrzcmFeRo0o = (hola) => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Header_QrzcmFeRo0o",
+  "name": "Header_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Header",
-  "hash": "QrzcmFeRo0o",
-  "canonicalFilename": "test.tsx_Header_QrzcmFeRo0o",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Header_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": "test.tsx_Header_component",

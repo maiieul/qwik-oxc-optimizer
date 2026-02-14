@@ -26,19 +26,19 @@ export const App2 = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_3yveMqbQ3Fs = () => import("./test.tsx_App2_component_3yveMqbQ3Fs.js");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App2_component_XXXXXXXXXXXX.js");
 export const App2 = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_3yveMqbQ3Fs, "App2_component_3yveMqbQ3Fs"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App2_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,qBAAO,6EAgBjB"}',
 );
-============================= test.tsx_App2_component_3yveMqbQ3Fs.js (ENTRY POINT)==
+============================= test.tsx_App2_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
-export const App2_component_3yveMqbQ3Fs = () => {
+export const App2_component_XXXXXXXXXXXX = () => {
   const signal = useSignal();
   const computed = signal.value + "foo";
   return /*#__PURE__*/ _jsxSorted(
@@ -138,11 +138,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App2_component_3yveMqbQ3Fs",
+  "name": "App2_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App2_component",
-  "hash": "3yveMqbQ3Fs",
-  "canonicalFilename": "test.tsx_App2_component_3yveMqbQ3Fs",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App2_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,

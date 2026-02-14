@@ -104,15 +104,15 @@ export const App = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_ckEPmXZlub0 = () => import("./test.tsx_App_component_ckEPmXZlub0");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AACA,OAAO,MAAM,oBAAM,4EA+FhB"}',
 );
-============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
+============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _fnSignal } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -120,32 +120,32 @@ import { useSignal } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 const _hf0 = (p0, p1) => p1[p0];
 const _hf0_str = "p1[p0]";
-const i_05kCMrZVn5E = () => import("./test.tsx_App_component_loopWhile_span_q_e_click_05kCMrZVn5E");
-const i_PbCYbPM6etI = () => import("./test.tsx_App_component_loopForI_span_q_e_click_PbCYbPM6etI");
-const i_UB6Fs5a3bd8 = () => import("./test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8");
-const i_Wau7C836nf0 = () =>
-  import("./test.tsx_App_component_loopArrowFn_span_q_e_click_Wau7C836nf0");
-const i_adzBGickx1U = () => import("./test.tsx_App_component_loopForIn_span_q_e_click_adzBGickx1U");
-const i_zlNGHYu926I = () => import("./test.tsx_App_component_loopForOf_span_q_e_click_zlNGHYu926I");
-export const App_component_ckEPmXZlub0 = () => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_loopForI_span_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_div_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX");
+export const App_component_XXXXXXXXXXXX = () => {
   const cart = useStore([]);
   const results = useSignal(["foo"]);
-  const App_component_div_button_q_e_click_UB6Fs5a3bd8 = /*#__PURE__*/ qrl(
-    i_UB6Fs5a3bd8,
-    "App_component_div_button_q_e_click_UB6Fs5a3bd8",
+  const App_component_div_button_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+    i_XXXXXXXXXXXX,
+    "App_component_div_button_q_e_click_XXXXXXXXXXXX",
     [cart],
   );
   function loopArrowFn(results) {
-    const App_component_loopArrowFn_span_q_e_click_Wau7C836nf0 = /*#__PURE__*/ qrl(
-      i_Wau7C836nf0,
-      "App_component_loopArrowFn_span_q_e_click_Wau7C836nf0",
+    const App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+      i_XXXXXXXXXXXX,
+      "App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX",
       [cart],
     );
     return results.map((item) =>
       /*#__PURE__*/ _jsxSorted(
         "span",
         {
-          "q-e:click": App_component_loopArrowFn_span_q_e_click_Wau7C836nf0,
+          "q-e:click": App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX,
           "q:p": item,
         },
         null,
@@ -157,9 +157,9 @@ export const App_component_ckEPmXZlub0 = () => {
   }
   function loopForI(results) {
     const items = [];
-    const App_component_loopForI_span_q_e_click_PbCYbPM6etI = /*#__PURE__*/ qrl(
-      i_PbCYbPM6etI,
-      "App_component_loopForI_span_q_e_click_PbCYbPM6etI",
+    const App_component_loopForI_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+      i_XXXXXXXXXXXX,
+      "App_component_loopForI_span_q_e_click_XXXXXXXXXXXX",
       [cart, results],
     );
     for (let i = 0; i < results.length; i++)
@@ -167,7 +167,7 @@ export const App_component_ckEPmXZlub0 = () => {
         /*#__PURE__*/ _jsxSorted(
           "span",
           {
-            "q-e:click": App_component_loopForI_span_q_e_click_PbCYbPM6etI,
+            "q-e:click": App_component_loopForI_span_q_e_click_XXXXXXXXXXXX,
             "q:p": i,
           },
           null,
@@ -180,9 +180,9 @@ export const App_component_ckEPmXZlub0 = () => {
   }
   function loopForOf(results) {
     const items = [];
-    const App_component_loopForOf_span_q_e_click_zlNGHYu926I = /*#__PURE__*/ qrl(
-      i_zlNGHYu926I,
-      "App_component_loopForOf_span_q_e_click_zlNGHYu926I",
+    const App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+      i_XXXXXXXXXXXX,
+      "App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX",
       [cart],
     );
     for (const item of results)
@@ -190,7 +190,7 @@ export const App_component_ckEPmXZlub0 = () => {
         /*#__PURE__*/ _jsxSorted(
           "span",
           {
-            "q-e:click": App_component_loopForOf_span_q_e_click_zlNGHYu926I,
+            "q-e:click": App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX,
             "q:p": item,
           },
           null,
@@ -203,9 +203,9 @@ export const App_component_ckEPmXZlub0 = () => {
   }
   function loopForIn(results) {
     const items = [];
-    const App_component_loopForIn_span_q_e_click_adzBGickx1U = /*#__PURE__*/ qrl(
-      i_adzBGickx1U,
-      "App_component_loopForIn_span_q_e_click_adzBGickx1U",
+    const App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+      i_XXXXXXXXXXXX,
+      "App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX",
       [cart, results],
     );
     for (const key in results)
@@ -213,7 +213,7 @@ export const App_component_ckEPmXZlub0 = () => {
         /*#__PURE__*/ _jsxSorted(
           "span",
           {
-            "q-e:click": App_component_loopForIn_span_q_e_click_adzBGickx1U,
+            "q-e:click": App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX,
             "q:p": key,
           },
           null,
@@ -227,9 +227,9 @@ export const App_component_ckEPmXZlub0 = () => {
   function loopWhile(results) {
     const items = [];
     let i = 0;
-    const App_component_loopWhile_span_q_e_click_05kCMrZVn5E = /*#__PURE__*/ qrl(
-      i_05kCMrZVn5E,
-      "App_component_loopWhile_span_q_e_click_05kCMrZVn5E",
+    const App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+      i_XXXXXXXXXXXX,
+      "App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX",
       [cart, results],
     );
     while (i < results.length) {
@@ -237,7 +237,7 @@ export const App_component_ckEPmXZlub0 = () => {
         /*#__PURE__*/ _jsxSorted(
           "span",
           {
-            "q-e:click": App_component_loopWhile_span_q_e_click_05kCMrZVn5E,
+            "q-e:click": App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX,
             "q:p": i,
           },
           null,
@@ -259,7 +259,7 @@ export const App_component_ckEPmXZlub0 = () => {
         /*#__PURE__*/ _jsxSorted(
           "button",
           {
-            "q-e:click": App_component_div_button_q_e_click_UB6Fs5a3bd8,
+            "q-e:click": App_component_div_button_q_e_click_XXXXXXXXXXXX,
             "q:p": item,
           },
           {
@@ -287,11 +287,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_ckEPmXZlub0",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component",
-  "hash": "ckEPmXZlub0",
-  "canonicalFilename": "test.tsx_App_component_ckEPmXZlub0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -304,9 +304,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_loopArrowFn_span_q_e_click_Wau7C836nf0.js (ENTRY POINT)==
+============================= test.tsx_App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const App_component_loopArrowFn_span_q_e_click_Wau7C836nf0 = (_, _1, item) => {
+export const App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX = (_, _1, item) => {
   const cart = _captures[0];
   cart.push(item);
 };
@@ -317,14 +317,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_loopArrowFn_span_q_e_click_Wau7C836nf0",
+  "name": "App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_loopArrowFn_span_q_e_click",
-  "hash": "Wau7C836nf0",
-  "canonicalFilename": "test.tsx_App_component_loopArrowFn_span_q_e_click_Wau7C836nf0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
@@ -342,9 +342,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_loopForI_span_q_e_click_PbCYbPM6etI.js (ENTRY POINT)==
+============================= test.tsx_App_component_loopForI_span_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const App_component_loopForI_span_q_e_click_PbCYbPM6etI = (_, _1, i) => {
+export const App_component_loopForI_span_q_e_click_XXXXXXXXXXXX = (_, _1, i) => {
   const cart = _captures[0],
     results = _captures[1];
   cart.push(results[i]);
@@ -356,14 +356,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_loopForI_span_q_e_click_PbCYbPM6etI",
+  "name": "App_component_loopForI_span_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_loopForI_span_q_e_click",
-  "hash": "PbCYbPM6etI",
-  "canonicalFilename": "test.tsx_App_component_loopForI_span_q_e_click_PbCYbPM6etI",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_loopForI_span_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
@@ -382,9 +382,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_loopForOf_span_q_e_click_zlNGHYu926I.js (ENTRY POINT)==
+============================= test.tsx_App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const App_component_loopForOf_span_q_e_click_zlNGHYu926I = (_, _1, item) => {
+export const App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX = (_, _1, item) => {
   const cart = _captures[0];
   cart.push(item);
 };
@@ -395,14 +395,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_loopForOf_span_q_e_click_zlNGHYu926I",
+  "name": "App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_loopForOf_span_q_e_click",
-  "hash": "zlNGHYu926I",
-  "canonicalFilename": "test.tsx_App_component_loopForOf_span_q_e_click_zlNGHYu926I",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
@@ -420,9 +420,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_loopForIn_span_q_e_click_adzBGickx1U.js (ENTRY POINT)==
+============================= test.tsx_App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const App_component_loopForIn_span_q_e_click_adzBGickx1U = (_, _1, key) => {
+export const App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX = (_, _1, key) => {
   const cart = _captures[0],
     results = _captures[1];
   cart.push(results[key]);
@@ -434,14 +434,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_loopForIn_span_q_e_click_adzBGickx1U",
+  "name": "App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_loopForIn_span_q_e_click",
-  "hash": "adzBGickx1U",
-  "canonicalFilename": "test.tsx_App_component_loopForIn_span_q_e_click_adzBGickx1U",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
@@ -460,9 +460,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_loopWhile_span_q_e_click_05kCMrZVn5E.js (ENTRY POINT)==
+============================= test.tsx_App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const App_component_loopWhile_span_q_e_click_05kCMrZVn5E = (_, _1, i) => {
+export const App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX = (_, _1, i) => {
   const cart = _captures[0],
     results = _captures[1];
   cart.push(results[i]);
@@ -474,14 +474,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_loopWhile_span_q_e_click_05kCMrZVn5E",
+  "name": "App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_loopWhile_span_q_e_click",
-  "hash": "05kCMrZVn5E",
-  "canonicalFilename": "test.tsx_App_component_loopWhile_span_q_e_click_05kCMrZVn5E",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
@@ -500,9 +500,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8.js (ENTRY POINT)==
+============================= test.tsx_App_component_div_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const App_component_div_button_q_e_click_UB6Fs5a3bd8 = (_, _1, item) => {
+export const App_component_div_button_q_e_click_XXXXXXXXXXXX = (_, _1, item) => {
   const cart = _captures[0];
   cart.push(item);
 };
@@ -513,14 +513,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_div_button_q_e_click_UB6Fs5a3bd8",
+  "name": "App_component_div_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_div_button_q_e_click",
-  "hash": "UB6Fs5a3bd8",
-  "canonicalFilename": "test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_div_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,

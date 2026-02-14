@@ -22,19 +22,19 @@ export const App = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_ckEPmXZlub0 = () => import("./test.tsx_App_component_ckEPmXZlub0");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAYhB"}',
 );
-============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
+============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
-const i_w0t0o3QMovU = () => import("./test.tsx_App_component_1_w0t0o3QMovU");
-export const App_component_ckEPmXZlub0 = () => {
-  return /*#__PURE__*/ qrl(i_w0t0o3QMovU, "App_component_1_w0t0o3QMovU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_1_XXXXXXXXXXXX");
+export const App_component_XXXXXXXXXXXX = () => {
+  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX");
 };
 
 Some(
@@ -43,11 +43,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_ckEPmXZlub0",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component",
-  "hash": "ckEPmXZlub0",
-  "canonicalFilename": "test.tsx_App_component_ckEPmXZlub0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -60,9 +60,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_1_w0t0o3QMovU.js (ENTRY POINT)==
+============================= test.tsx_App_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
-export const App_component_1_w0t0o3QMovU = () => {
+export const App_component_1_XXXXXXXXXXXX = () => {
   hola();
   new Thing();
   return /*#__PURE__*/ _jsxSorted("div", null, null, null, 3, "u6_0");
@@ -74,14 +74,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_1_w0t0o3QMovU",
+  "name": "App_component_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_1",
-  "hash": "w0t0o3QMovU",
-  "canonicalFilename": "test.tsx_App_component_1_w0t0o3QMovU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false,

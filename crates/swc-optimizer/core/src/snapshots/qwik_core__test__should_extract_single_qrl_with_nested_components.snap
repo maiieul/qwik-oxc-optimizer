@@ -22,20 +22,20 @@ const Foo = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_HTDRsvUbLiE = () => import("./test.tsx_Foo_component_HTDRsvUbLiE");
-/*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"));
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
+/*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"));
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;cACY"}');
-============================= test.tsx_Foo_component_HTDRsvUbLiE.js (ENTRY POINT)==
+============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
-const i_AuJ9mTBx5YA = () => import("./test.tsx_Foo_component_Inner_component_AuJ9mTBx5YA");
-export const Foo_component_HTDRsvUbLiE = () => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_Inner_component_XXXXXXXXXXXX");
+export const Foo_component_XXXXXXXXXXXX = () => {
   const data = useSignal([]);
   const Inner = /*#__PURE__*/ componentQrl(
-    /*#__PURE__*/ qrl(i_AuJ9mTBx5YA, "Foo_component_Inner_component_AuJ9mTBx5YA"),
+    /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_Inner_component_XXXXXXXXXXXX"),
   );
   return /*#__PURE__*/ _jsxSorted(
     Inner,
@@ -55,11 +55,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_HTDRsvUbLiE",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "HTDRsvUbLiE",
-  "canonicalFilename": "test.tsx_Foo_component_HTDRsvUbLiE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -72,19 +72,19 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_Inner_component_AuJ9mTBx5YA.js (ENTRY POINT)==
+============================= test.tsx_Foo_component_Inner_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _fnSignal } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const _hf0 = (p0) => p0.value.id;
 const _hf0_str = "p0.value.id";
-const i_7oFgEhSmgvY = () =>
-  import("./test.tsx_Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY");
-export const Foo_component_Inner_component_AuJ9mTBx5YA = (props) => {
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX");
+export const Foo_component_Inner_component_XXXXXXXXXXXX = (props) => {
   const data = props.data;
-  const Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY = /*#__PURE__*/ qrl(
-    i_7oFgEhSmgvY,
-    "Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY",
+  const Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+    i_XXXXXXXXXXXX,
+    "Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX",
   );
   return /*#__PURE__*/ _jsxSorted(
     "div",
@@ -94,7 +94,7 @@ export const Foo_component_Inner_component_AuJ9mTBx5YA = (props) => {
       /*#__PURE__*/ _jsxSorted(
         "p",
         {
-          "q-e:click": Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY,
+          "q-e:click": Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX,
           "q:p": item,
         },
         null,
@@ -114,14 +114,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_Inner_component_AuJ9mTBx5YA",
+  "name": "Foo_component_Inner_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_Inner_component",
-  "hash": "AuJ9mTBx5YA",
-  "canonicalFilename": "test.tsx_Foo_component_Inner_component_AuJ9mTBx5YA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_Inner_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_HTDRsvUbLiE",
+  "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "component$",
   "captures": false,
@@ -134,8 +134,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY.js (ENTRY POINT)==
-export const Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY = (_, _1, item) =>
+============================= test.tsx_Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX = (_, _1, item) =>
   console.log(item.value.id);
 
 Some(
@@ -144,14 +144,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY",
+  "name": "Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component_Inner_component_div_p_q_e_click",
-  "hash": "7oFgEhSmgvY",
-  "canonicalFilename": "test.tsx_Foo_component_Inner_component_div_p_q_e_click_7oFgEhSmgvY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Foo_component_Inner_component_AuJ9mTBx5YA",
+  "parent": "Foo_component_Inner_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,

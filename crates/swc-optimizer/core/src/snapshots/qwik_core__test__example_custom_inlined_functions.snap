@@ -28,35 +28,35 @@ export const Lightweight = (props) => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_UIcxVTQF1a8 = () => import("./test.tsx_Lightweight_useMemo_UIcxVTQF1a8");
-const i_ckEPmXZlub0 = () => import("./test.tsx_App_component_ckEPmXZlub0");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Lightweight_useMemo_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 import { wrap, useEffect } from "@qwik.dev/core";
 export const useMemoQrl = (qrt) => {
   useEffect(qrt);
 };
 export const useMemo$ = wrap(useMemoQrl);
 export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 export const Lightweight = (props) => {
-  useMemoQrl(/*#__PURE__*/ qrl(i_UIcxVTQF1a8, "Lightweight_useMemo_UIcxVTQF1a8"));
+  useMemoQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Lightweight_useMemo_XXXXXXXXXXXX"));
 };
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAAA,SAAkC,IAAI,EAAE,SAAS,QAAQ,iBAAiB;AAE1E,OAAO,MAAM,aAAa,CAAC;IACzB,UAAU;AACZ,EAAE;AAEF,OAAO,MAAM,WAAW,KAAK,YAAY;AAEzC,OAAO,MAAM,oBAAM,4EAMhB;AAEH,OAAO,MAAM,cAAc,CAAC;IAC1B;AAGF,EAAE"}',
 );
-============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
+============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 import { useMemoQrl } from "./test";
 import { useStore } from "@qwik.dev/core";
-const i_6Sc9KVki3Y0 = () => import("./test.tsx_App_component_useMemo_6Sc9KVki3Y0");
-const i_w0t0o3QMovU = () => import("./test.tsx_App_component_1_w0t0o3QMovU");
-export const App_component_ckEPmXZlub0 = (props) => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_useMemo_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_1_XXXXXXXXXXXX");
+export const App_component_XXXXXXXXXXXX = (props) => {
   const state = useStore({
     count: 0,
   });
-  useMemoQrl(/*#__PURE__*/ qrl(i_6Sc9KVki3Y0, "App_component_useMemo_6Sc9KVki3Y0", [state]));
-  return /*#__PURE__*/ qrl(i_w0t0o3QMovU, "App_component_1_w0t0o3QMovU", [state]);
+  useMemoQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_useMemo_XXXXXXXXXXXX", [state]));
+  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX", [state]);
 };
 
 Some(
@@ -65,11 +65,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_ckEPmXZlub0",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component",
-  "hash": "ckEPmXZlub0",
-  "canonicalFilename": "test.tsx_App_component_ckEPmXZlub0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -85,9 +85,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_useMemo_6Sc9KVki3Y0.js (ENTRY POINT)==
+============================= test.tsx_App_component_useMemo_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const App_component_useMemo_6Sc9KVki3Y0 = () => {
+export const App_component_useMemo_XXXXXXXXXXXX = () => {
   const state = _captures[0];
   console.log(state.count);
 };
@@ -98,14 +98,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_useMemo_6Sc9KVki3Y0",
+  "name": "App_component_useMemo_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_useMemo",
-  "hash": "6Sc9KVki3Y0",
-  "canonicalFilename": "test.tsx_App_component_useMemo_6Sc9KVki3Y0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_useMemo_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useMemo$",
   "captures": true,
@@ -118,11 +118,11 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_1_w0t0o3QMovU.js (ENTRY POINT)==
+============================= test.tsx_App_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
-export const App_component_1_w0t0o3QMovU = () => {
+export const App_component_1_XXXXXXXXXXXX = () => {
   const state = _captures[0];
   return /*#__PURE__*/ _jsxSorted("div", null, null, _wrapProp(state, "count"), 3, "u6_0");
 };
@@ -133,14 +133,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_1_w0t0o3QMovU",
+  "name": "App_component_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_1",
-  "hash": "w0t0o3QMovU",
-  "canonicalFilename": "test.tsx_App_component_1_w0t0o3QMovU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
@@ -153,8 +153,8 @@ Some(
   ]
 }
 */
-============================= test.tsx_Lightweight_useMemo_UIcxVTQF1a8.js (ENTRY POINT)==
-export const Lightweight_useMemo_UIcxVTQF1a8 = () => {
+============================= test.tsx_Lightweight_useMemo_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const Lightweight_useMemo_XXXXXXXXXXXX = () => {
   console.log(state.count);
 };
 
@@ -164,11 +164,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Lightweight_useMemo_UIcxVTQF1a8",
+  "name": "Lightweight_useMemo_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Lightweight_useMemo",
-  "hash": "UIcxVTQF1a8",
-  "canonicalFilename": "test.tsx_Lightweight_useMemo_UIcxVTQF1a8",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Lightweight_useMemo_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,

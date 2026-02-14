@@ -47,18 +47,18 @@ export const { onRequest, logout, getSession, signup } = auth$({
 import { serverAuthQrl } from "@auth/qwik";
 import { qrl } from "@qwik.dev/core";
 import { authQrl } from "@auth/qwik";
-const i_GU0aY5QCETY = ()=>import("./test.tsx_auth_GU0aY5QCETY");
-const i_qVqpX2a0p9Y = ()=>import("./test.tsx_serverAuth_qVqpX2a0p9Y");
-export const { onRequest, logout, getSession, signup } = serverAuthQrl(/*#__PURE__*/ qrl(i_qVqpX2a0p9Y, "serverAuth_qVqpX2a0p9Y"));
-export const { onRequest, logout, getSession, signup } = authQrl(/*#__PURE__*/ qrl(i_GU0aY5QCETY, "auth_GU0aY5QCETY"));
+const i_XXXXXXXXXXXX = ()=>import("./test.tsx_auth_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = ()=>import("./test.tsx_serverAuth_XXXXXXXXXXXX");
+export const { onRequest, logout, getSession, signup } = serverAuthQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "serverAuth_XXXXXXXXXXXX"));
+export const { onRequest, logout, getSession, signup } = authQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "auth_XXXXXXXXXXXX"));
 
 
 Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;AAKA,OAAO,MAAM,EAAE,SAAS,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM,EAAE,GAAG,0EAetD;AAEH,OAAO,MAAM,EAAE,SAAS,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM,EAAE,GAAG,8DAetD\"}")
-============================= test.tsx_serverAuth_qVqpX2a0p9Y.js (ENTRY POINT)==
+============================= test.tsx_serverAuth_XXXXXXXXXXXX.js (ENTRY POINT)==
 import Facebook from "next-auth/providers/facebook";
 import GitHub from "@auth/core/providers/github";
 import Google from "next-auth/providers/google";
-export const serverAuth_qVqpX2a0p9Y = {
+export const serverAuth_XXXXXXXXXXXX = {
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID,
@@ -81,11 +81,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "serverAuth_qVqpX2a0p9Y",
+  "name": "serverAuth_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_serverAuth",
-  "hash": "qVqpX2a0p9Y",
-  "canonicalFilename": "test.tsx_serverAuth_qVqpX2a0p9Y",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_serverAuth_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -98,11 +98,11 @@ Some(
   ]
 }
 */
-============================= test.tsx_auth_GU0aY5QCETY.js (ENTRY POINT)==
+============================= test.tsx_auth_XXXXXXXXXXXX.js (ENTRY POINT)==
 import Facebook from "next-auth/providers/facebook";
 import GitHub from "@auth/core/providers/github";
 import Google from "next-auth/providers/google";
-export const auth_GU0aY5QCETY = {
+export const auth_XXXXXXXXXXXX = {
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID,
@@ -125,11 +125,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "auth_GU0aY5QCETY",
+  "name": "auth_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_auth",
-  "hash": "GU0aY5QCETY",
-  "canonicalFilename": "test.tsx_auth_GU0aY5QCETY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_auth_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,

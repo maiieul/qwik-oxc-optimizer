@@ -13,24 +13,24 @@ export default component$(() => {
 ============================= src/routes/_repl/[id]/[[...slug]].js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_0AM8HPnkNs4 = () => import("./[[...slug]].tsx_slug_component_0AM8HPnkNs4.js");
+const i_XXXXXXXXXXXX = () => import("./[[...slug]].tsx_slug_component_XXXXXXXXXXXX.js");
 export default /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_0AM8HPnkNs4, "slug_component_0AM8HPnkNs4"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "slug_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx"],"names":[],"mappings":";;;AAGA,6BAAe,6EAEZ"}',
 );
-============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_0AM8HPnkNs4.js ==
+============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_XXXXXXXXXXXX.js ==
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_bCwVPYSTQ0w = () => import("./[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w.js");
-export const slug_component_0AM8HPnkNs4 = () => {
+const i_XXXXXXXXXXXX = () => import("./[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX.js");
+export const slug_component_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_bCwVPYSTQ0w, "slug_component_div_q_e_click_bCwVPYSTQ0w"),
+      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "slug_component_div_q_e_click_XXXXXXXXXXXX"),
     },
     null,
     3,
@@ -44,11 +44,11 @@ Some(
 /*
 {
   "origin": "src/routes/_repl/[id]/[[...slug]].tsx",
-  "name": "slug_component_0AM8HPnkNs4",
+  "name": "slug_component_XXXXXXXXXXXX",
   "entry": "src/routes/_repl/[id]/[[...slug]].tsx_entry_[[...slug]]",
   "displayName": "[[...slug]].tsx_slug_component",
-  "hash": "0AM8HPnkNs4",
-  "canonicalFilename": "[[...slug]].tsx_slug_component_0AM8HPnkNs4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "[[...slug]].tsx_slug_component_XXXXXXXXXXXX",
   "path": "src/routes/_repl/[id]",
   "extension": "js",
   "parent": null,
@@ -61,9 +61,9 @@ Some(
   ]
 }
 */
-============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w.js (ENTRY POINT)==
+============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { sibling } from "./sibling";
-export const slug_component_div_q_e_click_bCwVPYSTQ0w = () => console.log(mongodb, sibling);
+export const slug_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(mongodb, sibling);
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx"],"names":[],"mappings":";wDAIwB,IAAM,QAAQ,GAAG,CAAC,SAAS"}',
@@ -71,14 +71,14 @@ Some(
 /*
 {
   "origin": "src/routes/_repl/[id]/[[...slug]].tsx",
-  "name": "slug_component_div_q_e_click_bCwVPYSTQ0w",
+  "name": "slug_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "[[...slug]].tsx_slug_component_div_q_e_click",
-  "hash": "bCwVPYSTQ0w",
-  "canonicalFilename": "[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "src/routes/_repl/[id]",
   "extension": "js",
-  "parent": "slug_component_0AM8HPnkNs4",
+  "parent": "slug_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,

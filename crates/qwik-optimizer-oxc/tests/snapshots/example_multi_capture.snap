@@ -28,33 +28,33 @@ export const Bar = component$(({ bar }) => {
 === test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
-const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
-const i_GnvJdXy0KPg = () => import("./test.tsx_Bar_component_GnvJdXy0KPg");
-const i_MSAJNhrvHtQ = () => import("./test.tsx_Bar_MSAJNhrvHtQ");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_s__XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Bar_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Bar_XXXXXXXXXXXX");
 export const Foo = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
 );
 export const Bar = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_GnvJdXy0KPg, "Bar_component_GnvJdXy0KPg"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Bar_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Foo_component_gZqPatVoDqw.jsx === (ENTRY)
+=== test.tsx_Foo_component_XXXXXXXXXXXX.jsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
-export const Foo_component_gZqPatVoDqw = (_rawProps) => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_s__XXXXXXXXXXXX");
+export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
   const arg0 = 20;
-  return /* @__PURE__ */ qrl(i_Ma8uJBKLX2o, "s__Ma8uJBKLX2o", [aaa, foo, arg0]);
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s__XXXXXXXXXXXX", [aaa, foo, arg0]);
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_gZqPatVoDqw",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "gZqPatVoDqw",
-  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "jsx",
   "parent": null,
@@ -67,9 +67,9 @@ export const Foo_component_gZqPatVoDqw = (_rawProps) => {
 }
 */
 
-=== test.tsx_s__Ma8uJBKLX2o.jsx === (ENTRY)
+=== test.tsx_s__XXXXXXXXXXXX.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const s__Ma8uJBKLX2o = () => {
+export const s__XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
   const aaa = _captures[1];
   const arg0 = _captures[2];
@@ -87,11 +87,11 @@ export const s__Ma8uJBKLX2o = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "s__Ma8uJBKLX2o",
+  "name": "s__XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_s_",
-  "hash": "Ma8uJBKLX2o",
-  "canonicalFilename": "test.tsx_s__Ma8uJBKLX2o",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_s__XXXXXXXXXXXX",
   "path": "",
   "extension": "jsx",
   "parent": "test.tsx_Foo_component",
@@ -106,21 +106,21 @@ export const s__Ma8uJBKLX2o = () => {
 }
 */
 
-=== test.tsx_Bar_component_GnvJdXy0KPg.jsx === (ENTRY)
+=== test.tsx_Bar_component_XXXXXXXXXXXX.jsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_MSAJNhrvHtQ = () => import("./test.tsx_Bar_MSAJNhrvHtQ");
-export const Bar_component_GnvJdXy0KPg = (_rawProps) => {
-  return /* @__PURE__ */ qrl(i_MSAJNhrvHtQ, "Bar_MSAJNhrvHtQ", [bar]);
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Bar_XXXXXXXXXXXX");
+export const Bar_component_XXXXXXXXXXXX = (_rawProps) => {
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Bar_XXXXXXXXXXXX", [bar]);
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Bar_component_GnvJdXy0KPg",
+  "name": "Bar_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Bar_component",
-  "hash": "GnvJdXy0KPg",
-  "canonicalFilename": "test.tsx_Bar_component_GnvJdXy0KPg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Bar_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "jsx",
   "parent": null,
@@ -133,9 +133,9 @@ export const Bar_component_GnvJdXy0KPg = (_rawProps) => {
 }
 */
 
-=== test.tsx_Bar_MSAJNhrvHtQ.jsx === (ENTRY)
+=== test.tsx_Bar_XXXXXXXXXXXX.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const Bar_MSAJNhrvHtQ = () => {
+export const Bar_XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
 
   return <div>{bar}</div>;
@@ -144,11 +144,11 @@ export const Bar_MSAJNhrvHtQ = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Bar_MSAJNhrvHtQ",
+  "name": "Bar_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Bar",
-  "hash": "MSAJNhrvHtQ",
-  "canonicalFilename": "test.tsx_Bar_MSAJNhrvHtQ",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Bar_XXXXXXXXXXXX",
   "path": "",
   "extension": "jsx",
   "parent": "test.tsx_Bar_component",

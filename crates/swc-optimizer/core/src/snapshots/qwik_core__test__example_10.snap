@@ -22,12 +22,12 @@ const Header = $((decl1, { decl2 }, [decl3]) => {
 
 ============================= project/test.tsx ==
 import { qrl } from "@qwik.dev/core";
-const i_WlR3xnI6u38 = () => import("./test.tsx_Header_WlR3xnI6u38");
-/*#__PURE__*/ qrl(i_WlR3xnI6u38, "Header_WlR3xnI6u38");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_XXXXXXXXXXXX");
+/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Header_XXXXXXXXXXXX");
 
 Some('{"version":3,"sources":[],"names":[],"mappings":""}');
-============================= project/test.tsx_Header_WlR3xnI6u38.tsx (ENTRY POINT)==
-export const Header_WlR3xnI6u38 = (decl1, { decl2 }, [decl3]) => {
+============================= project/test.tsx_Header_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+export const Header_XXXXXXXXXXXX = (decl1, { decl2 }, [decl3]) => {
   ident1.no;
   ident2;
   (ident1, ident3);
@@ -57,11 +57,11 @@ Some(
 /*
 {
   "origin": "project/test.tsx",
-  "name": "Header_WlR3xnI6u38",
+  "name": "Header_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Header",
-  "hash": "WlR3xnI6u38",
-  "canonicalFilename": "test.tsx_Header_WlR3xnI6u38",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Header_XXXXXXXXXXXX",
   "path": "project",
   "extension": "tsx",
   "parent": null,

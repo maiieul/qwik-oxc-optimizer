@@ -27,30 +27,30 @@ const ManyEventsComponent = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_ndbrzxiyG3g = () => import("./test.tsx_ManyEventsComponent_component_ndbrzxiyG3g");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_ManyEventsComponent_component_XXXXXXXXXXXX");
 /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_ndbrzxiyG3g, "ManyEventsComponent_component_ndbrzxiyG3g"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "ManyEventsComponent_component_XXXXXXXXXXXX"),
 );
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;cAE4B"}');
-============================= test.tsx_ManyEventsComponent_component_ndbrzxiyG3g.js (ENTRY POINT)==
+============================= test.tsx_ManyEventsComponent_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_BOulU3QpiyA = () =>
-  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA");
-const i_DjpgJ0bcgJs = () =>
-  import("./test.tsx_ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs");
-const i_LVmlrV6TsTY = () =>
-  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY");
-const i_VZGqMEVFles = () =>
-  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles");
-const i_ZC5Gt2v0qH0 = () =>
-  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0");
-const i_fR03UCeyKSs = () =>
-  import("./test.tsx_ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs");
-const i_z0X12CPQocg = () =>
-  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg");
-export const ManyEventsComponent_component_ndbrzxiyG3g = () => {
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_click_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_div_button_q_w_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_blur_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_dblclick_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_another_custom_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_div_button_q_d_focus_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ManyEventsComponent_component_div_button_q_e_click_XXXXXXXXXXXX");
+export const ManyEventsComponent_component_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ _jsxSorted(
     "div",
     null,
@@ -61,12 +61,12 @@ export const ManyEventsComponent_component_ndbrzxiyG3g = () => {
         null,
         {
           "q-e:click": /*#__PURE__*/ qrl(
-            i_z0X12CPQocg,
-            "ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_div_button_q_e_click_XXXXXXXXXXXX",
           ),
           "q-e:dblclick": /*#__PURE__*/ qrl(
-            i_VZGqMEVFles,
-            "ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_div_button_q_e_dblclick_XXXXXXXXXXXX",
           ),
         },
         "click",
@@ -78,24 +78,24 @@ export const ManyEventsComponent_component_ndbrzxiyG3g = () => {
         null,
         {
           "q-e:click": /*#__PURE__*/ qrl(
-            i_BOulU3QpiyA,
-            "ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_div_button_q_e_click_1_XXXXXXXXXXXX",
           ),
           "q-e:blur": /*#__PURE__*/ qrl(
-            i_LVmlrV6TsTY,
-            "ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_div_button_q_e_blur_XXXXXXXXXXXX",
           ),
           "q-e:another-custom": /*#__PURE__*/ qrl(
-            i_ZC5Gt2v0qH0,
-            "ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_div_button_q_e_another_custom_XXXXXXXXXXXX",
           ),
           "q-d:focus": /*#__PURE__*/ qrl(
-            i_fR03UCeyKSs,
-            "ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_div_button_q_d_focus_XXXXXXXXXXXX",
           ),
           "q-w:click": /*#__PURE__*/ qrl(
-            i_DjpgJ0bcgJs,
-            "ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs",
+            i_XXXXXXXXXXXX,
+            "ManyEventsComponent_component_div_button_q_w_click_XXXXXXXXXXXX",
           ),
         },
         "click",
@@ -114,11 +114,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_ndbrzxiyG3g",
+  "name": "ManyEventsComponent_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component",
-  "hash": "ndbrzxiyG3g",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_ndbrzxiyG3g",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -131,21 +131,21 @@ Some(
   ]
 }
 */
-============================= test.tsx_ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg.js (ENTRY POINT)==
-export const ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg = () => {};
+============================= test.tsx_ManyEventsComponent_component_div_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const ManyEventsComponent_component_div_button_q_e_click_XXXXXXXXXXXX = () => {};
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"8EAKwB,KAAO"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg",
+  "name": "ManyEventsComponent_component_div_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_div_button_q_e_click",
-  "hash": "z0X12CPQocg",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_click_z0X12CPQocg",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "ManyEventsComponent_component_ndbrzxiyG3g",
+  "parent": "ManyEventsComponent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,
@@ -155,21 +155,21 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
   ]
 }
 */
-============================= test.tsx_ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles.js (ENTRY POINT)==
-export const ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles = () => {};
+============================= test.tsx_ManyEventsComponent_component_div_button_q_e_dblclick_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const ManyEventsComponent_component_div_button_q_e_dblclick_XXXXXXXXXXXX = () => {};
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"iFAK+C,KAAO"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles",
+  "name": "ManyEventsComponent_component_div_button_q_e_dblclick_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_div_button_q_e_dblclick",
-  "hash": "VZGqMEVFles",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_dblclick_VZGqMEVFles",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_dblclick_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "ManyEventsComponent_component_ndbrzxiyG3g",
+  "parent": "ManyEventsComponent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDblClick$",
   "captures": false,
@@ -179,21 +179,21 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
   ]
 }
 */
-============================= test.tsx_ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA.js (ENTRY POINT)==
-export const ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA = () => {};
+============================= test.tsx_ManyEventsComponent_component_div_button_q_e_click_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const ManyEventsComponent_component_div_button_q_e_click_1_XXXXXXXXXXXX = () => {};
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"gFASkB,KAAO"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA",
+  "name": "ManyEventsComponent_component_div_button_q_e_click_1_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_div_button_q_e_click_1",
-  "hash": "BOulU3QpiyA",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_click_1_BOulU3QpiyA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_click_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "ManyEventsComponent_component_ndbrzxiyG3g",
+  "parent": "ManyEventsComponent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false,
@@ -203,21 +203,21 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
   ]
 }
 */
-============================= test.tsx_ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY.js (ENTRY POINT)==
-export const ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY = () => {};
+============================= test.tsx_ManyEventsComponent_component_div_button_q_e_blur_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const ManyEventsComponent_component_div_button_q_e_blur_XXXXXXXXXXXX = () => {};
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6EAUiB,KAAO"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY",
+  "name": "ManyEventsComponent_component_div_button_q_e_blur_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_div_button_q_e_blur",
-  "hash": "LVmlrV6TsTY",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_blur_LVmlrV6TsTY",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_blur_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "ManyEventsComponent_component_ndbrzxiyG3g",
+  "parent": "ManyEventsComponent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onBlur$",
   "captures": false,
@@ -227,21 +227,21 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
   ]
 }
 */
-============================= test.tsx_ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0.js (ENTRY POINT)==
-export const ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0 = () => {};
+============================= test.tsx_ManyEventsComponent_component_div_button_q_e_another_custom_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const ManyEventsComponent_component_div_button_q_e_another_custom_XXXXXXXXXXXX = () => {};
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"uFAW2B,KAAO"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0",
+  "name": "ManyEventsComponent_component_div_button_q_e_another_custom_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_div_button_q_e_another_custom",
-  "hash": "ZC5Gt2v0qH0",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_another_custom_ZC5Gt2v0qH0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_e_another_custom_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "ManyEventsComponent_component_ndbrzxiyG3g",
+  "parent": "ManyEventsComponent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "on-anotherCustom$",
   "captures": false,
@@ -251,21 +251,21 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
   ]
 }
 */
-============================= test.tsx_ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs.js (ENTRY POINT)==
-export const ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs = () => {};
+============================= test.tsx_ManyEventsComponent_component_div_button_q_d_focus_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const ManyEventsComponent_component_div_button_q_d_focus_XXXXXXXXXXXX = () => {};
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"8EAY2B,KAAO"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs",
+  "name": "ManyEventsComponent_component_div_button_q_d_focus_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_div_button_q_d_focus",
-  "hash": "fR03UCeyKSs",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_d_focus_fR03UCeyKSs",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_d_focus_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "ManyEventsComponent_component_ndbrzxiyG3g",
+  "parent": "ManyEventsComponent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "document:onFocus$",
   "captures": false,
@@ -275,21 +275,21 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
   ]
 }
 */
-============================= test.tsx_ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs.js (ENTRY POINT)==
-export const ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs = () => {};
+============================= test.tsx_ManyEventsComponent_component_div_button_q_w_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+export const ManyEventsComponent_component_div_button_q_w_click_XXXXXXXXXXXX = () => {};
 
 Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"8EAayB,KAAO"}');
 /*
 {
   "origin": "test.tsx",
-  "name": "ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs",
+  "name": "ManyEventsComponent_component_div_button_q_w_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ManyEventsComponent_component_div_button_q_w_click",
-  "hash": "DjpgJ0bcgJs",
-  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_w_click_DjpgJ0bcgJs",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ManyEventsComponent_component_div_button_q_w_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "ManyEventsComponent_component_ndbrzxiyG3g",
+  "parent": "ManyEventsComponent_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "window:onClick$",
   "captures": false,

@@ -40,22 +40,22 @@ export const ModelImg = component$<ModelProps>((props) => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_CS20HgBlRYI = () => import("./test.tsx_Image_component_CS20HgBlRYI");
-const i_iJe6ICWVnyA = () => import("./test.tsx_ModelImg_component_iJe6ICWVnyA");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Image_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_ModelImg_component_XXXXXXXXXXXX");
 export const Image = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_CS20HgBlRYI, "Image_component_CS20HgBlRYI"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Image_component_XXXXXXXXXXXX"),
 );
 export const ModelImg = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_iJe6ICWVnyA, "ModelImg_component_iJe6ICWVnyA"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "ModelImg_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAIA,OAAO,MAAM,sBAAQ,8EAMlB;AAEH,OAAO,MAAM,yBAAW,iFAoBrB"}',
 );
-============================= test.tsx_Image_component_CS20HgBlRYI.js (ENTRY POINT)==
+============================= test.tsx_Image_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
-export const Image_component_CS20HgBlRYI = (props) => {
+export const Image_component_XXXXXXXXXXXX = (props) => {
   return /*#__PURE__*/ _jsxSorted(
     _Fragment,
     null,
@@ -81,11 +81,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Image_component_CS20HgBlRYI",
+  "name": "Image_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Image_component",
-  "hash": "CS20HgBlRYI",
-  "canonicalFilename": "test.tsx_Image_component_CS20HgBlRYI",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Image_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -101,17 +101,17 @@ Some(
   ]
 }
 */
-============================= test.tsx_ModelImg_component_iJe6ICWVnyA.js (ENTRY POINT)==
+============================= test.tsx_ModelImg_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Image } from "./test";
 import { Resource } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useResourceQrl } from "@qwik.dev/core";
-const i_Ogi9hEJvtmI = () => import("./test.tsx_ModelImg_component_imgLoc_useResource_Ogi9hEJvtmI");
-export const ModelImg_component_iJe6ICWVnyA = (props) => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX");
+export const ModelImg_component_XXXXXXXXXXXX = (props) => {
   const imgLoc = useResourceQrl(
-    /*#__PURE__*/ qrl(i_Ogi9hEJvtmI, "ModelImg_component_imgLoc_useResource_Ogi9hEJvtmI", [props]),
+    /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX", [props]),
   );
   return /*#__PURE__*/ _jsxSorted(
     _Fragment,
@@ -158,11 +158,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "ModelImg_component_iJe6ICWVnyA",
+  "name": "ModelImg_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ModelImg_component",
-  "hash": "iJe6ICWVnyA",
-  "canonicalFilename": "test.tsx_ModelImg_component_iJe6ICWVnyA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ModelImg_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -178,10 +178,10 @@ Some(
   ]
 }
 */
-============================= test.tsx_ModelImg_component_imgLoc_useResource_Ogi9hEJvtmI.js (ENTRY POINT)==
+============================= test.tsx_ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
 import { serverImg } from "~/routes/(authenticated)/layout";
-export const ModelImg_component_imgLoc_useResource_Ogi9hEJvtmI = async (_rawProps) => {
+export const ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX = async (_rawProps) => {
   const props = _captures[0];
   _rawProps.track(() => props.store.model);
   return await serverImg("some.png");
@@ -193,14 +193,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "ModelImg_component_imgLoc_useResource_Ogi9hEJvtmI",
+  "name": "ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_ModelImg_component_imgLoc_useResource",
-  "hash": "Ogi9hEJvtmI",
-  "canonicalFilename": "test.tsx_ModelImg_component_imgLoc_useResource_Ogi9hEJvtmI",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "ModelImg_component_iJe6ICWVnyA",
+  "parent": "ModelImg_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useResource$",
   "captures": true,

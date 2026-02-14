@@ -31,7 +31,7 @@ export const App = component$((props) => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_ckEPmXZlub0 = () => import("./test.tsx_App_component_ckEPmXZlub0");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 import { useStore } from "@qwik.dev/core";
 export const useCounter = () => {
   return useStore({
@@ -40,35 +40,35 @@ export const useCounter = () => {
 };
 export const STEP = 1;
 export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAAA,SAAwB,QAAQ,QAAQ,iBAAiB;AACzD,OAAO,MAAM,aAAa;IACxB,OAAO,SAAS;QAAE,OAAO;IAAE;AAC7B,EAAE;AAEF,OAAO,MAAM,OAAO,EAAE;AAEtB,OAAO,MAAM,oBAAM,4EAgBhB"}',
 );
-============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
+============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useCounter } from "./test";
 import { useStore } from "@qwik.dev/core";
-const i_UB6Fs5a3bd8 = () => import("./test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8");
-const i_mi4E1piTWe8 = () => import("./test.tsx_App_component_div_q_e_click_mi4E1piTWe8");
-export const App_component_ckEPmXZlub0 = (props) => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_div_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_div_q_e_click_XXXXXXXXXXXX");
+export const App_component_XXXXXXXXXXXX = (props) => {
   const state = useCounter();
   const thing = useStore({
     thing: 0,
   });
   const count2 = state.count * 2;
-  const App_component_div_button_q_e_click_UB6Fs5a3bd8 = /*#__PURE__*/ qrl(
-    i_UB6Fs5a3bd8,
-    "App_component_div_button_q_e_click_UB6Fs5a3bd8",
+  const App_component_div_button_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+    i_XXXXXXXXXXXX,
+    "App_component_div_button_q_e_click_XXXXXXXXXXXX",
     [props, state, thing],
   );
   return /*#__PURE__*/ _jsxSorted(
     "div",
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_mi4E1piTWe8, "App_component_div_q_e_click_mi4E1piTWe8", [
+      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_div_q_e_click_XXXXXXXXXXXX", [
         count2,
         state,
       ]),
@@ -80,7 +80,7 @@ export const App_component_ckEPmXZlub0 = (props) => {
         /*#__PURE__*/ _jsxSorted(
           "button",
           {
-            "q-e:click": App_component_div_button_q_e_click_UB6Fs5a3bd8,
+            "q-e:click": App_component_div_button_q_e_click_XXXXXXXXXXXX,
             "q:p": btn,
           },
           null,
@@ -101,11 +101,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_ckEPmXZlub0",
+  "name": "App_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component",
-  "hash": "ckEPmXZlub0",
-  "canonicalFilename": "test.tsx_App_component_ckEPmXZlub0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -121,9 +121,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_div_q_e_click_mi4E1piTWe8.js (ENTRY POINT)==
+============================= test.tsx_App_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const App_component_div_q_e_click_mi4E1piTWe8 = () => {
+export const App_component_div_q_e_click_XXXXXXXXXXXX = () => {
   const count2 = _captures[0],
     state = _captures[1];
   return (state.count += count2);
@@ -135,14 +135,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_div_q_e_click_mi4E1piTWe8",
+  "name": "App_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_div_q_e_click",
-  "hash": "mi4E1piTWe8",
-  "canonicalFilename": "test.tsx_App_component_div_q_e_click_mi4E1piTWe8",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
@@ -156,10 +156,10 @@ Some(
   ]
 }
 */
-============================= test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8.js (ENTRY POINT)==
+============================= test.tsx_App_component_div_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
 import { STEP } from "./test";
-export const App_component_div_button_q_e_click_UB6Fs5a3bd8 = (_, _1, btn) => {
+export const App_component_div_button_q_e_click_XXXXXXXXXXXX = (_, _1, btn) => {
   const props = _captures[0],
     state = _captures[1],
     thing = _captures[2];
@@ -172,14 +172,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_div_button_q_e_click_UB6Fs5a3bd8",
+  "name": "App_component_div_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_component_div_button_q_e_click",
-  "hash": "UB6Fs5a3bd8",
-  "canonicalFilename": "test.tsx_App_component_div_button_q_e_click_UB6Fs5a3bd8",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_div_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "App_component_ckEPmXZlub0",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,

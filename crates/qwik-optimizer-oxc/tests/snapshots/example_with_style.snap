@@ -18,29 +18,29 @@ export const Foo = component$(
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
-const i_0cZU0P2qlwk = () => import("./test.tsx_Foo_useStyles_0cZU0P2qlwk");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_useStyles_XXXXXXXXXXXX");
 export const Foo = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Foo_component_gZqPatVoDqw.tsx === (ENTRY)
+=== test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_0cZU0P2qlwk = () => import("./test.tsx_Foo_useStyles_0cZU0P2qlwk");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_useStyles_XXXXXXXXXXXX");
 import { useStylesQrl } from "@qwik.dev/core";
-export const Foo_component_gZqPatVoDqw = () => {
-  useStylesQrl(/* @__PURE__ */ qrl(i_0cZU0P2qlwk, "Foo_useStyles_0cZU0P2qlwk"));
+export const Foo_component_XXXXXXXXXXXX = () => {
+  useStylesQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_useStyles_XXXXXXXXXXXX"));
   return <div class="class" />;
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_gZqPatVoDqw",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "gZqPatVoDqw",
-  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -50,17 +50,17 @@ export const Foo_component_gZqPatVoDqw = () => {
 }
 */
 
-=== test.tsx_Foo_useStyles_0cZU0P2qlwk.tsx === (ENTRY)
-export const Foo_useStyles_0cZU0P2qlwk = ".class {}";
+=== test.tsx_Foo_useStyles_XXXXXXXXXXXX.tsx === (ENTRY)
+export const Foo_useStyles_XXXXXXXXXXXX = ".class {}";
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_useStyles_0cZU0P2qlwk",
+  "name": "Foo_useStyles_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_useStyles",
-  "hash": "0cZU0P2qlwk",
-  "canonicalFilename": "test.tsx_Foo_useStyles_0cZU0P2qlwk",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_useStyles_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": "test.tsx_Foo_component",

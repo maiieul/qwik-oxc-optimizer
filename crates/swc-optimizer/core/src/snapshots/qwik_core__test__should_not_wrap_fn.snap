@@ -25,23 +25,23 @@ export const Cmp = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_4ryKJTOKjWE = () => import("./test.tsx_Cmp_component_4ryKJTOKjWE");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Cmp_component_XXXXXXXXXXXX");
 export const Cmp = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_4ryKJTOKjWE, "Cmp_component_4ryKJTOKjWE"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Cmp_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAGA,OAAO,MAAM,oBAAM,4EAchB"}',
 );
-============================= test.tsx_Cmp_component_4ryKJTOKjWE.js (ENTRY POINT)==
+============================= test.tsx_Cmp_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { A } from "./componentA";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
-const i_veAZ2ow0cnM = () =>
-  import("./test.tsx_Cmp_component_Fragment_button_q_e_click_veAZ2ow0cnM");
-export const Cmp_component_4ryKJTOKjWE = () => {
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Cmp_component_Fragment_button_q_e_click_XXXXXXXXXXXX");
+export const Cmp_component_XXXXXXXXXXXX = () => {
   const currentStep = useSignal("STEP_1");
   const currentType = useSignal("PREVIOUS");
   const getStep = (step, type) => {
@@ -57,8 +57,8 @@ export const Cmp_component_4ryKJTOKjWE = () => {
         null,
         {
           "q-e:click": /*#__PURE__*/ qrl(
-            i_veAZ2ow0cnM,
-            "Cmp_component_Fragment_button_q_e_click_veAZ2ow0cnM",
+            i_XXXXXXXXXXXX,
+            "Cmp_component_Fragment_button_q_e_click_XXXXXXXXXXXX",
             [currentType],
           ),
         },
@@ -88,11 +88,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Cmp_component_4ryKJTOKjWE",
+  "name": "Cmp_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Cmp_component",
-  "hash": "4ryKJTOKjWE",
-  "canonicalFilename": "test.tsx_Cmp_component_4ryKJTOKjWE",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Cmp_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -105,9 +105,9 @@ Some(
   ]
 }
 */
-============================= test.tsx_Cmp_component_Fragment_button_q_e_click_veAZ2ow0cnM.js (ENTRY POINT)==
+============================= test.tsx_Cmp_component_Fragment_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
-export const Cmp_component_Fragment_button_q_e_click_veAZ2ow0cnM = () => {
+export const Cmp_component_Fragment_button_q_e_click_XXXXXXXXXXXX = () => {
   const currentType = _captures[0];
   return (currentType.value = "NEXT");
 };
@@ -118,14 +118,14 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "Cmp_component_Fragment_button_q_e_click_veAZ2ow0cnM",
+  "name": "Cmp_component_Fragment_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Cmp_component_Fragment_button_q_e_click",
-  "hash": "veAZ2ow0cnM",
-  "canonicalFilename": "test.tsx_Cmp_component_Fragment_button_q_e_click_veAZ2ow0cnM",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Cmp_component_Fragment_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "Cmp_component_4ryKJTOKjWE",
+  "parent": "Cmp_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,

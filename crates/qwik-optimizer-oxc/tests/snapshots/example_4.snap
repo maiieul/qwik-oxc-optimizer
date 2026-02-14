@@ -15,23 +15,23 @@ export function App() {
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_qy3PjUYD8N4 = () => import("./test.tsx_App_Header_component_qy3PjUYD8N4");
-const i_DjnCNf0Grco = () => import("./test.tsx_App_Header_component_div_q_e_click_DjnCNf0Grco");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_Header_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_Header_component_div_q_e_click_XXXXXXXXXXXX");
 export function App() {
   const Header = /* @__PURE__ */ componentQrl(
-    /* @__PURE__ */ qrl(i_qy3PjUYD8N4, "App_Header_component_qy3PjUYD8N4"),
+    /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_Header_component_XXXXXXXXXXXX"),
   );
   return Header;
 }
 
-=== test.tsx_App_Header_component_qy3PjUYD8N4.tsx === (ENTRY)
+=== test.tsx_App_Header_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_DjnCNf0Grco = () => import("./test.tsx_App_Header_component_div_q_e_click_DjnCNf0Grco");
-export const App_Header_component_qy3PjUYD8N4 = () => {
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_Header_component_div_q_e_click_XXXXXXXXXXXX");
+export const App_Header_component_XXXXXXXXXXXX = () => {
   console.log("mount");
   return (
     <div
-      onClick={/* @__PURE__ */ qrl(i_DjnCNf0Grco, "App_Header_component_div_q_e_click_DjnCNf0Grco")}
+      onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_Header_component_div_q_e_click_XXXXXXXXXXXX")}
     />
   );
 };
@@ -39,11 +39,11 @@ export const App_Header_component_qy3PjUYD8N4 = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "App_Header_component_qy3PjUYD8N4",
+  "name": "App_Header_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_Header_component",
-  "hash": "qy3PjUYD8N4",
-  "canonicalFilename": "test.tsx_App_Header_component_qy3PjUYD8N4",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_Header_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -53,17 +53,17 @@ export const App_Header_component_qy3PjUYD8N4 = () => {
 }
 */
 
-=== test.tsx_App_Header_component_div_q_e_click_DjnCNf0Grco.tsx === (ENTRY)
-export const App_Header_component_div_q_e_click_DjnCNf0Grco = (ctx) => console.log(ctx);
+=== test.tsx_App_Header_component_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
+export const App_Header_component_div_q_e_click_XXXXXXXXXXXX = (ctx) => console.log(ctx);
 
 /*
 {
   "origin": "test.tsx",
-  "name": "App_Header_component_div_q_e_click_DjnCNf0Grco",
+  "name": "App_Header_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_App_Header_component_div_q_e_click",
-  "hash": "DjnCNf0Grco",
-  "canonicalFilename": "test.tsx_App_Header_component_div_q_e_click_DjnCNf0Grco",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_Header_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": "test.tsx_App_Header_component",

@@ -39,17 +39,17 @@ export const RouterHead = component$(() => {
 ============================= test.js ==
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_DPA76mgIou0 = () => import("./test.tsx_RouterHead_component_DPA76mgIou0");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_RouterHead_component_XXXXXXXXXXXX");
 /**
  * The RouterHead component is placed inside of the document `<head>` element.
  */ export const RouterHead = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_DPA76mgIou0, "RouterHead_component_DPA76mgIou0"),
+  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "RouterHead_component_XXXXXXXXXXXX"),
 );
 
 Some(
   '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAGA;;CAEC,GACD,OAAO,MAAM,2BAAa,mFAyBvB"}',
 );
-============================= test.tsx_RouterHead_component_DPA76mgIou0.js (ENTRY POINT)==
+============================= test.tsx_RouterHead_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { createElement as _createElement } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
@@ -59,7 +59,7 @@ import { _jsxSplit } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { useDocumentHead } from "@qwik.dev/router";
 import { useLocation } from "@qwik.dev/router";
-export const RouterHead_component_DPA76mgIou0 = () => {
+export const RouterHead_component_XXXXXXXXXXXX = () => {
   const head = useDocumentHead();
   const loc = useLocation();
   return /*#__PURE__*/ _jsxSorted(
@@ -139,11 +139,11 @@ Some(
 /*
 {
   "origin": "test.tsx",
-  "name": "RouterHead_component_DPA76mgIou0",
+  "name": "RouterHead_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_RouterHead_component",
-  "hash": "DPA76mgIou0",
-  "canonicalFilename": "test.tsx_RouterHead_component_DPA76mgIou0",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_RouterHead_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,

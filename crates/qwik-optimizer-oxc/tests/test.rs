@@ -260,6 +260,28 @@ fn render_snapshot_output(output: &SnapshotOutput) -> String {
     s
 }
 
+/// Collect segment hashes from a rendered snapshot and replace every occurrence
+/// with a fixed XXXXXXXXXXXX placeholder. This keeps snapshots comparable across
+/// hash algorithm changes and different segment ordering between optimizers.
+fn replace_hashes(snapshot: &str) -> String {
+    let hash_re = regex_lite::Regex::new(r#""hash":\s*"([A-Za-z0-9_-]+)""#).unwrap();
+    let mut hashes: Vec<String> = Vec::new();
+    let mut seen = std::collections::HashSet::new();
+
+    for cap in hash_re.captures_iter(snapshot) {
+        let hash = cap[1].to_string();
+        if seen.insert(hash.clone()) {
+            hashes.push(hash);
+        }
+    }
+
+    let mut result = snapshot.to_string();
+    for hash in &hashes {
+        result = result.replace(hash.as_str(), "XXXXXXXXXXXX");
+    }
+    result
+}
+
 #[derive(Debug)]
 enum OxfmtRunner {
     Local(PathBuf),
@@ -543,7 +565,7 @@ fn snapshot_all_transforms() {
 
     for case in cases {
         let output = match &case.data {
-            SnapshotCaseData::Output(output) => render_snapshot_output(output),
+            SnapshotCaseData::Output(output) => replace_hashes(&render_snapshot_output(output)),
             SnapshotCaseData::Error(error) => error.clone(),
         };
         insta::with_settings!({prepend_module_to_snapshot => false}, {

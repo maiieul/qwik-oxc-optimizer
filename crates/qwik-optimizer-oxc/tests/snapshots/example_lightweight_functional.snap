@@ -38,17 +38,17 @@ export const ButtonArrow = ({ text, color }) => {
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
-const i_ODPc00H0FSA = () => import("./test.tsx_button_q_e_click_ODPc00H0FSA");
-const i_ODPc00H0FSA = () => import("./test.tsx_button_q_e_click_ODPc00H0FSA");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_button_q_e_click_XXXXXXXXXXXX");
 export const Foo = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
 );
 export function Button({ text, color }) {
   return (
     <button
       onColor$={color}
-      onClick$={/* @__PURE__ */ qrl(i_ODPc00H0FSA, "button_q_e_click_ODPc00H0FSA", [text, color])}
+      onClick$={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "button_q_e_click_XXXXXXXXXXXX", [text, color])}
     >
       {text}
     </button>
@@ -58,17 +58,17 @@ export const ButtonArrow = ({ text, color }) => {
   return (
     <button
       onColor$={color}
-      onClick$={/* @__PURE__ */ qrl(i_ODPc00H0FSA, "button_q_e_click_ODPc00H0FSA", [text, color])}
+      onClick$={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "button_q_e_click_XXXXXXXXXXXX", [text, color])}
     >
       {text}
     </button>
   );
 };
 
-=== test.tsx_Foo_component_gZqPatVoDqw.tsx === (ENTRY)
+=== test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { Button } from "./test";
 import { ButtonArrow } from "./test";
-export const Foo_component_gZqPatVoDqw = (props) => {
+export const Foo_component_XXXXXXXXXXXX = (props) => {
   return (
     <div>
       <Button {...props} />
@@ -80,11 +80,11 @@ export const Foo_component_gZqPatVoDqw = (props) => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_gZqPatVoDqw",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "gZqPatVoDqw",
-  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -94,9 +94,9 @@ export const Foo_component_gZqPatVoDqw = (props) => {
 }
 */
 
-=== test.tsx_button_q_e_click_ODPc00H0FSA.tsx === (ENTRY)
+=== test.tsx_button_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const button_q_e_click_ODPc00H0FSA = () => {
+export const button_q_e_click_XXXXXXXXXXXX = () => {
   const text = _captures[0];
   const color = _captures[1];
   return console.log(text, color);
@@ -105,11 +105,11 @@ export const button_q_e_click_ODPc00H0FSA = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "button_q_e_click_ODPc00H0FSA",
+  "name": "button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_button_q_e_click",
-  "hash": "ODPc00H0FSA",
-  "canonicalFilename": "test.tsx_button_q_e_click_ODPc00H0FSA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -123,9 +123,9 @@ export const button_q_e_click_ODPc00H0FSA = () => {
 }
 */
 
-=== test.tsx_button_q_e_click_ODPc00H0FSA.tsx === (ENTRY)
+=== test.tsx_button_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const button_q_e_click_ODPc00H0FSA = () => {
+export const button_q_e_click_XXXXXXXXXXXX = () => {
   const text = _captures[0];
   const color = _captures[1];
   return console.log(text, color);
@@ -134,11 +134,11 @@ export const button_q_e_click_ODPc00H0FSA = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "button_q_e_click_ODPc00H0FSA",
+  "name": "button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_button_q_e_click",
-  "hash": "ODPc00H0FSA",
-  "canonicalFilename": "test.tsx_button_q_e_click_ODPc00H0FSA",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,

@@ -51,8 +51,8 @@ import { _jsxSorted } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
-const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
-const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_XXXXXXXXXXXX");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { h } from "@qwik.dev/core";
 import { Fragment } from "@qwik.dev/core";
@@ -84,24 +84,24 @@ export const Lightweight = (props) => {
   );
 };
 export const Foo = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_Foo_component_gZqPatVoDqw.js === (ENTRY)
+=== test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_T0dY5k6mBgU = () => import("./test.tsx_Foo_T0dY5k6mBgU");
-export const Foo_component_gZqPatVoDqw = (props) => {
-  return /* @__PURE__ */ qrl(i_T0dY5k6mBgU, "Foo_T0dY5k6mBgU", [props, children]);
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_XXXXXXXXXXXX");
+export const Foo_component_XXXXXXXXXXXX = (props) => {
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_XXXXXXXXXXXX", [props, children]);
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_gZqPatVoDqw",
+  "name": "Foo_component_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo_component",
-  "hash": "gZqPatVoDqw",
-  "canonicalFilename": "test.tsx_Foo_component_gZqPatVoDqw",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": null,
@@ -111,7 +111,7 @@ export const Foo_component_gZqPatVoDqw = (props) => {
 }
 */
 
-=== test.tsx_Foo_T0dY5k6mBgU.js === (ENTRY)
+=== test.tsx_Foo_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
@@ -119,7 +119,7 @@ import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { Lightweight } from "./test";
-export const Foo_T0dY5k6mBgU = () => {
+export const Foo_XXXXXXXXXXXX = () => {
   const props = _captures[0];
   const children = _captures[1];
   return /* @__PURE__ */ _jsxSorted(
@@ -176,11 +176,11 @@ export const Foo_T0dY5k6mBgU = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_T0dY5k6mBgU",
+  "name": "Foo_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Foo",
-  "hash": "T0dY5k6mBgU",
-  "canonicalFilename": "test.tsx_Foo_T0dY5k6mBgU",
+  "hash": "XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
   "parent": "test.tsx_Foo_component",
