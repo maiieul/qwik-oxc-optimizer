@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { sync$, component$ } from "@qwik.dev/core";
 
 export default component$(() => {
@@ -26,40 +25,73 @@ export default component$(() => {
 });
 
 ============================= test.js ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
-export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
+const i_LUXeXe0DQrg = () => import("./test.tsx_test_component_LUXeXe0DQrg");
+export default /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,6BAAe,6EAiBZ\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,6BAAe,6EAiBZ"}',
+);
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
-
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _qrlSync } from "@qwik.dev/core";
-export const test_component_LUXeXe0DQrg = ()=>{
-    return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, [
-        /*#__PURE__*/ _jsxSorted("input", {
-            "q-e:click": _qrlSync(function(event, target) {
-                // comment should be removed
-                event.preventDefault();
-            }, "function(event,target){event.preventDefault();}")
-        }, null, null, 2, null),
-        /*#__PURE__*/ _jsxSorted("input", {
-            "q-e:click": _qrlSync((event, target)=>{
-                event.preventDefault();
-            }, "(event,target)=>{event.preventDefault();}")
-        }, null, null, 2, null),
-        /*#__PURE__*/ _jsxSorted("input", {
-            "q-e:click": _qrlSync((event, target)=>event.preventDefault(), "(event,target)=>event.preventDefault()")
-        }, null, null, 2, null)
-    ], 1, "u6_0");
+export const test_component_LUXeXe0DQrg = () => {
+  return /*#__PURE__*/ _jsxSorted(
+    _Fragment,
+    null,
+    null,
+    [
+      /*#__PURE__*/ _jsxSorted(
+        "input",
+        {
+          "q-e:click": _qrlSync(function (event, target) {
+            // comment should be removed
+            event.preventDefault();
+          }, "function(event,target){event.preventDefault();}"),
+        },
+        null,
+        null,
+        2,
+        null,
+      ),
+      /*#__PURE__*/ _jsxSorted(
+        "input",
+        {
+          "q-e:click": _qrlSync((event, target) => {
+            event.preventDefault();
+          }, "(event,target)=>{event.preventDefault();}"),
+        },
+        null,
+        null,
+        2,
+        null,
+      ),
+      /*#__PURE__*/ _jsxSorted(
+        "input",
+        {
+          "q-e:click": _qrlSync(
+            (event, target) => event.preventDefault(),
+            "(event,target)=>event.preventDefault()",
+          ),
+        },
+        null,
+        null,
+        2,
+        null,
+      ),
+    ],
+    1,
+    "u6_0",
+  );
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;0CAE0B;IACxB,qBACE;sBACE,WAAC;YACC,WAAQ,WAAQ,SAAU,KAAK,EAAE,MAAM;gBACrC,4BAA4B;gBAC5B,MAAM,cAAc;YACtB;;sBAEF,WAAC;YACC,WAAQ,WAAQ,CAAC,OAAO;gBACtB,MAAM,cAAc;YACtB;;sBAEF,WAAC;YAAM,WAAQ,WAAQ,CAAC,OAAO,SAAW,MAAM,cAAc;;;AAGpE\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;0CAE0B;IACxB,qBACE;sBACE,WAAC;YACC,WAAQ,WAAQ,SAAU,KAAK,EAAE,MAAM;gBACrC,4BAA4B;gBAC5B,MAAM,cAAc;YACtB;;sBAEF,WAAC;YACC,WAAQ,WAAQ,CAAC,OAAO;gBACtB,MAAM,cAAc;YACtB;;sBAEF,WAAC;YAAM,WAAQ,WAAQ,CAAC,OAAO,SAAW,MAAM,cAAc;;;AAGpE"}',
+);
 /*
 {
   "origin": "test.tsx",

@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$ } from "@qwik.dev/core";
 import { useDocumentHead, useLocation } from "@qwik.dev/router";
 
@@ -38,18 +37,19 @@ export const RouterHead = component$(() => {
 });
 
 ============================= test.js ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_DPA76mgIou0 = ()=>import("./test.tsx_RouterHead_component_DPA76mgIou0");
+const i_DPA76mgIou0 = () => import("./test.tsx_RouterHead_component_DPA76mgIou0");
 /**
  * The RouterHead component is placed inside of the document `<head>` element.
- */ export const RouterHead = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_DPA76mgIou0, "RouterHead_component_DPA76mgIou0"));
+ */ export const RouterHead = /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ qrl(i_DPA76mgIou0, "RouterHead_component_DPA76mgIou0"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAGA;;CAEC,GACD,OAAO,MAAM,2BAAa,mFAyBvB\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAGA;;CAEC,GACD,OAAO,MAAM,2BAAa,mFAyBvB"}',
+);
 ============================= test.tsx_RouterHead_component_DPA76mgIou0.js (ENTRY POINT)==
-
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { createElement as _createElement } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
@@ -59,41 +59,83 @@ import { _jsxSplit } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { useDocumentHead } from "@qwik.dev/router";
 import { useLocation } from "@qwik.dev/router";
-export const RouterHead_component_DPA76mgIou0 = ()=>{
-    const head = useDocumentHead();
-    const loc = useLocation();
-    return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, [
-        /*#__PURE__*/ _jsxSorted("title", null, null, head.title, 1, null),
-        /*#__PURE__*/ _jsxSorted("link", null, {
-            rel: "canonical",
-            href: _wrapProp(loc, "href")
-        }, null, 3, null),
-        /*#__PURE__*/ _jsxSorted("meta", null, {
-            name: "viewport",
-            content: "width=device-width, initial-scale=1.0"
-        }, null, 3, null),
-        /*#__PURE__*/ _jsxSorted("link", null, {
-            rel: "icon",
-            type: "image/svg+xml",
-            href: "/favicon.svg"
-        }, null, 3, null),
-        head.meta.map((m)=>/*#__PURE__*/ _jsxSplit("meta", {
-                ..._getVarProps(m)
-            }, _getConstProps(m), null, 0, "u6_0")),
-        head.links.map((l)=>/*#__PURE__*/ _createElement("link", {
-                ...l,
-                key: l.key
-            })),
-        head.styles.map((s)=>/*#__PURE__*/ _createElement("style", {
-                ...s.props,
-                dangerouslySetInnerHTML: s.style,
-                key: s.key
-            }))
-    ], 1, "u6_1");
+export const RouterHead_component_DPA76mgIou0 = () => {
+  const head = useDocumentHead();
+  const loc = useLocation();
+  return /*#__PURE__*/ _jsxSorted(
+    _Fragment,
+    null,
+    null,
+    [
+      /*#__PURE__*/ _jsxSorted("title", null, null, head.title, 1, null),
+      /*#__PURE__*/ _jsxSorted(
+        "link",
+        null,
+        {
+          rel: "canonical",
+          href: _wrapProp(loc, "href"),
+        },
+        null,
+        3,
+        null,
+      ),
+      /*#__PURE__*/ _jsxSorted(
+        "meta",
+        null,
+        {
+          name: "viewport",
+          content: "width=device-width, initial-scale=1.0",
+        },
+        null,
+        3,
+        null,
+      ),
+      /*#__PURE__*/ _jsxSorted(
+        "link",
+        null,
+        {
+          rel: "icon",
+          type: "image/svg+xml",
+          href: "/favicon.svg",
+        },
+        null,
+        3,
+        null,
+      ),
+      head.meta.map((m) =>
+        /*#__PURE__*/ _jsxSplit(
+          "meta",
+          {
+            ..._getVarProps(m),
+          },
+          _getConstProps(m),
+          null,
+          0,
+          "u6_0",
+        ),
+      ),
+      head.links.map((l) =>
+        /*#__PURE__*/ _createElement("link", {
+          ...l,
+          key: l.key,
+        }),
+      ),
+      head.styles.map((s) =>
+        /*#__PURE__*/ _createElement("style", {
+          ...s.props,
+          dangerouslySetInnerHTML: s.style,
+          key: s.key,
+        }),
+      ),
+    ],
+    1,
+    "u6_1",
+  );
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;;;gDAMqC;IACnC,MAAM,OAAO;IACb,MAAM,MAAM;IAEZ,qBACE;sBACE,WAAC,qBAAO,KAAK,KAAK;sBAElB,WAAC;YAAK,KAAI;YAAY,IAAI,YAAE;;sBAC5B,WAAC;YAAK,MAAK;YAAW,SAAQ;;sBAC9B,WAAC;YAAK,KAAI;YAAO,MAAK;YAAgB,MAAK;;QAE1C,KAAK,IAAI,CAAC,GAAG,CAAC,CAAC,kBACd,UAAC;gCAAS;8BAAA;QAGX,KAAK,KAAK,CAAC,GAAG,CAAC,CAAC,kBACf,eAAC;gBAAM,GAAG,CAAC;gBAAE,KAAK,EAAE,GAAG;;QAGxB,KAAK,MAAM,CAAC,GAAG,CAAC,CAAC,kBAChB,eAAC;gBAAO,GAAG,EAAE,KAAK;gBAAE,yBAAyB,EAAE,KAAK;gBAAE,KAAK,EAAE,GAAG;;;AAIxE\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;;;gDAMqC;IACnC,MAAM,OAAO;IACb,MAAM,MAAM;IAEZ,qBACE;sBACE,WAAC,qBAAO,KAAK,KAAK;sBAElB,WAAC;YAAK,KAAI;YAAY,IAAI,YAAE;;sBAC5B,WAAC;YAAK,MAAK;YAAW,SAAQ;;sBAC9B,WAAC;YAAK,KAAI;YAAO,MAAK;YAAgB,MAAK;;QAE1C,KAAK,IAAI,CAAC,GAAG,CAAC,CAAC,kBACd,UAAC;gCAAS;8BAAA;QAGX,KAAK,KAAK,CAAC,GAAG,CAAC,CAAC,kBACf,eAAC;gBAAM,GAAG,CAAC;gBAAE,KAAK,EAAE,GAAG;;QAGxB,KAAK,MAAM,CAAC,GAAG,CAAC,CAAC,kBAChB,eAAC;gBAAO,GAAG,EAAE,KAAK;gBAAE,yBAAyB,EAAE,KAAK;gBAAE,KAAK,EAAE,GAAG;;;AAIxE"}',
+);
 /*
 {
   "origin": "test.tsx",

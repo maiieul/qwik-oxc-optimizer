@@ -41,27 +41,41 @@ import { qrl } from "@qwik.dev/core";
 const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
 const i_ODPc00H0FSA = () => import("./test.tsx_button_q_e_click_ODPc00H0FSA");
 const i_ODPc00H0FSA = () => import("./test.tsx_button_q_e_click_ODPc00H0FSA");
-export const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
+export const Foo = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+);
 export function Button({ text, color }) {
-	return <button onColor$={color} onClick$={/* @__PURE__ */ qrl(i_ODPc00H0FSA, "button_q_e_click_ODPc00H0FSA", [text, color])}>
+  return (
+    <button
+      onColor$={color}
+      onClick$={/* @__PURE__ */ qrl(i_ODPc00H0FSA, "button_q_e_click_ODPc00H0FSA", [text, color])}
+    >
       {text}
-    </button>;
+    </button>
+  );
 }
 export const ButtonArrow = ({ text, color }) => {
-	return <button onColor$={color} onClick$={/* @__PURE__ */ qrl(i_ODPc00H0FSA, "button_q_e_click_ODPc00H0FSA", [text, color])}>
+  return (
+    <button
+      onColor$={color}
+      onClick$={/* @__PURE__ */ qrl(i_ODPc00H0FSA, "button_q_e_click_ODPc00H0FSA", [text, color])}
+    >
       {text}
-    </button>;
+    </button>
+  );
 };
 
 === test.tsx_Foo_component_gZqPatVoDqw.tsx === (ENTRY)
 import { Button } from "./test";
 import { ButtonArrow } from "./test";
 export const Foo_component_gZqPatVoDqw = (props) => {
-	return <div>
-        <Button {...props} />
-        <ButtonArrow {...props} />
-      </div>;
-}
+  return (
+    <div>
+      <Button {...props} />
+      <ButtonArrow {...props} />
+    </div>
+  );
+};
 
 /*
 {
@@ -83,9 +97,9 @@ export const Foo_component_gZqPatVoDqw = (props) => {
 === test.tsx_button_q_e_click_ODPc00H0FSA.tsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const button_q_e_click_ODPc00H0FSA = () => {
-	const text = _captures[0];
-	const color = _captures[1];
-	return console.log(text, color);
+  const text = _captures[0];
+  const color = _captures[1];
+  return console.log(text, color);
 };
 
 /*
@@ -112,9 +126,9 @@ export const button_q_e_click_ODPc00H0FSA = () => {
 === test.tsx_button_q_e_click_ODPc00H0FSA.tsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const button_q_e_click_ODPc00H0FSA = () => {
-	const text = _captures[0];
-	const color = _captures[1];
-	return console.log(text, color);
+  const text = _captures[0];
+  const color = _captures[1];
+  return console.log(text, color);
 };
 
 /*

@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { $, component$ } from "@qwik.dev/core";
 
 export const Foo = component$(
@@ -18,26 +17,29 @@ export const Foo = component$(
 );
 
 ============================= test.tsx ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_HTDRsvUbLiE = ()=>import("./test.tsx_Foo_component_HTDRsvUbLiE");
-export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"), {
-    tagName: "my-foo"
-});
+const i_HTDRsvUbLiE = () => import("./test.tsx_Foo_component_HTDRsvUbLiE");
+export const Foo = /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ qrl(i_HTDRsvUbLiE, "Foo_component_HTDRsvUbLiE"),
+  {
+    tagName: "my-foo",
+  },
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,oBAAM,4EAMjB;IACE,SAAS;AACX,GACA\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAMjB;IACE,SAAS;AACX,GACA"}',
+);
 ============================= test.tsx_Foo_component_HTDRsvUbLiE.tsx (ENTRY POINT)==
-
 import { qrl } from "@qwik.dev/core";
-const i_DvU6FitWglY = ()=>import("./test.tsx_Foo_component_1_DvU6FitWglY");
-export const Foo_component_HTDRsvUbLiE = ()=>{
-    return /*#__PURE__*/ qrl(i_DvU6FitWglY, "Foo_component_1_DvU6FitWglY");
+const i_DvU6FitWglY = () => import("./test.tsx_Foo_component_1_DvU6FitWglY");
+export const Foo_component_HTDRsvUbLiE = () => {
+  return /*#__PURE__*/ qrl(i_DvU6FitWglY, "Foo_component_1_DvU6FitWglY");
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;yCAGE;IACE;AAGF\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;yCAGE;IACE;AAGF"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -59,13 +61,13 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_Foo_component_1_DvU6FitWglY.tsx (ENTRY POINT)==
-
-export const Foo_component_1_DvU6FitWglY = ()=>{
-    return <div></div>;
+export const Foo_component_1_DvU6FitWglY = () => {
+  return <div></div>;
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"2CAIa;IACP,QAAQ,MAAM;AAChB\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"2CAIa;IACP,QAAQ,MAAM;AAChB"}',
+);
 /*
 {
   "origin": "test.tsx",

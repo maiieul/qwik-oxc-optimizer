@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { $, component$, useTask$ } from "@qwik.dev/core";
 import { CONST } from "const";
 export const Works = component$((props) => {
@@ -17,20 +16,22 @@ export const Works = component$((props) => {
 });
 
 ============================= test.jsx ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
-export const Works = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((props)=>{
+export const Works = /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ inlinedQrl((props) => {
     const store = useStore({
-        value: {
-            count: 0
-        }
+      value: {
+        count: 0,
+      },
     });
     return <div ciao={store.value.countNested.hello.bye.italian.ciao}>{foo}</div>;
-}, "Works_component_t45qL4vNGv0"));
+  }, "Works_component_t45qL4vNGv0"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;AAEA,OAAO,MAAM,sBAAQ,sCAAW,CAAC;IAC/B,MAAM,QAAkB,SAAS;QAAE,OAAO;YAAE,OAAO;QAAE;IAAE;IAMvD,QAAQ,IAAI,MAFK,AADL,MAH8C,MAAlD,YAEA,MACU,GAAG,CACA,OAAO,CAApB,OAEiB,MAAM;AACjC,mCAAG\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;AAEA,OAAO,MAAM,sBAAQ,sCAAW,CAAC;IAC/B,MAAM,QAAkB,SAAS;QAAE,OAAO;YAAE,OAAO;QAAE;IAAE;IAMvD,QAAQ,IAAI,MAFK,AADL,MAH8C,MAAlD,YAEA,MACU,GAAG,CACA,OAAO,CAApB,OAEiB,MAAM;AACjC,mCAAG"}',
+);
 == DIAGNOSTICS ==
 
 []

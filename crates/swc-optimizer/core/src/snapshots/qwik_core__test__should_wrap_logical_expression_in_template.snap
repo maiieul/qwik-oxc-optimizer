@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$, useSignal } from "@qwik.dev/core";
 
 export default component$(() => {
@@ -13,32 +12,38 @@ export default component$(() => {
 });
 
 ============================= test.js ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
-export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
+const i_LUXeXe0DQrg = () => import("./test.tsx_test_component_LUXeXe0DQrg");
+export default /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,6BAAe,6EAIZ\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,6BAAe,6EAIZ"}',
+);
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
-
 import { _fnSignal } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
-const _hf0 = (p0, p1)=>(p0 || p1).value;
+const _hf0 = (p0, p1) => (p0 || p1).value;
 const _hf0_str = "(p0||p1).value";
-export const test_component_LUXeXe0DQrg = ()=>{
-    const count = useSignal(0);
-    const count2 = useSignal(0);
-    return /*#__PURE__*/ _jsxSorted("div", null, null, _fnSignal(_hf0, [
-        count,
-        count2
-    ], _hf0_str), 3, "u6_0");
+export const test_component_LUXeXe0DQrg = () => {
+  const count = useSignal(0);
+  const count2 = useSignal(0);
+  return /*#__PURE__*/ _jsxSorted(
+    "div",
+    null,
+    null,
+    _fnSignal(_hf0, [count, count2], _hf0_str),
+    3,
+    "u6_0",
+  );
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;uBAKe,CAAC,QAAe,EAAE,KAAK;;0CAHZ;IACxB,MAAM,QAAQ,UAAU;IACxB,MAAM,SAAS,UAAU;IACzB,qBAAO,WAAC;;;;AACV\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;uBAKe,CAAC,QAAe,EAAE,KAAK;;0CAHZ;IACxB,MAAM,QAAQ,UAAU;IACxB,MAAM,SAAS,UAAU;IACzB,qBAAO,WAAC;;;;AACV"}',
+);
 /*
 {
   "origin": "test.tsx",

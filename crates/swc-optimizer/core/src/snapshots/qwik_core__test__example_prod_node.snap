@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$ } from "@qwik.dev/core";
 
 export const Foo = component$(() => {
@@ -17,30 +16,32 @@ export const Foo = component$(() => {
 });
 
 ============================= test.tsx ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_HTDRsvUbLiE = ()=>import("./test.tsx_Foo_component_HTDRsvUbLiE");
+const i_HTDRsvUbLiE = () => import("./test.tsx_Foo_component_HTDRsvUbLiE");
 export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_HTDRsvUbLiE, "s_HTDRsvUbLiE"));
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,oBAAM,gEAQhB\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,gEAQhB"}',
+);
 ============================= test.tsx_Foo_component_HTDRsvUbLiE.tsx (ENTRY POINT)==
-
 import { qrl } from "@qwik.dev/core";
-const i_VSoqbTjzr4w = ()=>import("./test.tsx_Foo_component_div_div_q_e_click_1_VSoqbTjzr4w");
-const i_n19LdlqL6To = ()=>import("./test.tsx_Foo_component_div_div_q_e_click_2_n19LdlqL6To");
-const i_vKrX4PmH2aM = ()=>import("./test.tsx_Foo_component_div_div_q_e_click_vKrX4PmH2aM");
-export const s_HTDRsvUbLiE = ()=>{
-    return <div>
-      <div q-e:click={/*#__PURE__*/ qrl(i_vKrX4PmH2aM, "s_vKrX4PmH2aM")}/>
-      <div q-e:click={/*#__PURE__*/ qrl(i_VSoqbTjzr4w, "s_VSoqbTjzr4w")}/>
-      <div q-e:click={/*#__PURE__*/ qrl(i_n19LdlqL6To, "s_n19LdlqL6To")}/>
-    </div>;
+const i_VSoqbTjzr4w = () => import("./test.tsx_Foo_component_div_div_q_e_click_1_VSoqbTjzr4w");
+const i_n19LdlqL6To = () => import("./test.tsx_Foo_component_div_div_q_e_click_2_n19LdlqL6To");
+const i_vKrX4PmH2aM = () => import("./test.tsx_Foo_component_div_div_q_e_click_vKrX4PmH2aM");
+export const s_HTDRsvUbLiE = () => {
+  return (
+    <div>
+      <div q-e:click={/*#__PURE__*/ qrl(i_vKrX4PmH2aM, "s_vKrX4PmH2aM")} />
+      <div q-e:click={/*#__PURE__*/ qrl(i_VSoqbTjzr4w, "s_VSoqbTjzr4w")} />
+      <div q-e:click={/*#__PURE__*/ qrl(i_n19LdlqL6To, "s_n19LdlqL6To")} />
+    </div>
+  );
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;6BAE8B;IAC5B,QACG,IAAI;MACH,CAAC,IAAI,+DAAwC;MAC7C,CAAC,IAAI,+DAAyC;MAC9C,CAAC,IAAI,+DAAwC;IAC/C,EAAE;AAEN\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;6BAE8B;IAC5B,QACG,IAAI;MACH,CAAC,IAAI,+DAAwC;MAC7C,CAAC,IAAI,+DAAyC;MAC9C,CAAC,IAAI,+DAAwC;IAC/C,EAAE;AAEN"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -62,11 +63,11 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_vKrX4PmH2aM.tsx (ENTRY POINT)==
+export const s_vKrX4PmH2aM = () => console.log("first");
 
-export const s_vKrX4PmH2aM = ()=>console.log("first");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6BAKqB,IAAM,QAAQ,GAAG,CAAC\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAKqB,IAAM,QAAQ,GAAG,CAAC"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -88,11 +89,11 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_1_VSoqbTjzr4w.tsx (ENTRY POINT)==
+export const s_VSoqbTjzr4w = () => console.log("second");
 
-export const s_VSoqbTjzr4w = ()=>console.log("second");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6BAMqB,IAAM,QAAQ,GAAG,CAAC\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAMqB,IAAM,QAAQ,GAAG,CAAC"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -114,11 +115,11 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_2_n19LdlqL6To.tsx (ENTRY POINT)==
+export const s_n19LdlqL6To = () => console.log("third");
 
-export const s_n19LdlqL6To = ()=>console.log("third");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6BAOqB,IAAM,QAAQ,GAAG,CAAC\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAOqB,IAAM,QAAQ,GAAG,CAAC"}',
+);
 /*
 {
   "origin": "test.tsx",

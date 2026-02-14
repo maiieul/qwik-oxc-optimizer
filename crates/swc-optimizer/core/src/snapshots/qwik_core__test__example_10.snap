@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { $, component$ } from "@qwik.dev/core";
 const Header = $((decl1, { decl2 }, [decl3]) => {
   const hola = ident1.no;
@@ -22,38 +21,39 @@ const Header = $((decl1, { decl2 }, [decl3]) => {
 });
 
 ============================= project/test.tsx ==
-
 import { qrl } from "@qwik.dev/core";
-const i_WlR3xnI6u38 = ()=>import("./test.tsx_Header_WlR3xnI6u38");
+const i_WlR3xnI6u38 = () => import("./test.tsx_Header_WlR3xnI6u38");
 /*#__PURE__*/ qrl(i_WlR3xnI6u38, "Header_WlR3xnI6u38");
 
-
-Some("{\"version\":3,\"sources\":[],\"names\":[],\"mappings\":\"\"}")
+Some('{"version":3,"sources":[],"names":[],"mappings":""}');
 ============================= project/test.tsx_Header_WlR3xnI6u38.tsx (ENTRY POINT)==
-
-export const Header_WlR3xnI6u38 = (decl1, { decl2 }, [decl3])=>{
-    ident1.no;
-    ident2;
-    ident1, ident3;
-    ident1, ident3;
-    ident4(ident5, [
-        ident6
-    ], {
-        ident7
-    }, {
-        key: ident8
-    });
-    class Some {
-        prop = ident9;
-        method() {
-            return ident10;
-        }
+export const Header_WlR3xnI6u38 = (decl1, { decl2 }, [decl3]) => {
+  ident1.no;
+  ident2;
+  (ident1, ident3);
+  (ident1, ident3);
+  ident4(
+    ident5,
+    [ident6],
+    {
+      ident7,
+    },
+    {
+      key: ident8,
+    },
+  );
+  class Some {
+    prop = ident9;
+    method() {
+      return ident10;
     }
-    return <div onClick={(ident11)=>ident11 + ident12} required={false}/>;
+  }
+  return <div onClick={(ident11) => ident11 + ident12} required={false} />;
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/test.tsx\"],\"names\":[],\"mappings\":\"kCACiB,CAAC,OAAO,EAAE,KAAK,EAAE,EAAE,CAAC,MAAM;IAC5B,OAAO,EAAE;IACtB;IACU,QAAS;IACT,QAAS;IACnB,OAAO,QAAQ;QAAC;KAAO,EAAE;QAAE;IAAO,GAAG;QAAE,KAAK;IAAO;IACnD,MAAM;QACJ,OAAO,OAAO;QACd,SAAS;YACP,OAAO;QACT;IACF;IAEA,QAAQ,IAAI,SAAS,CAAC,UAAY,UAAU,SAAS,UAAU;AACjE\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/project/test.tsx"],"names":[],"mappings":"kCACiB,CAAC,OAAO,EAAE,KAAK,EAAE,EAAE,CAAC,MAAM;IAC5B,OAAO,EAAE;IACtB;IACU,QAAS;IACT,QAAS;IACnB,OAAO,QAAQ;QAAC;KAAO,EAAE;QAAE;IAAO,GAAG;QAAE,KAAK;IAAO;IACnD,MAAM;QACJ,OAAO,OAAO;QACd,SAAS;YACP,OAAO;QACT;IACF;IAEA,QAAQ,IAAI,SAAS,CAAC,UAAY,UAAU,SAAS,UAAU;AACjE"}',
+);
 /*
 {
   "origin": "project/test.tsx",

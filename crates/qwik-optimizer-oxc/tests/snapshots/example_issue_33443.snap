@@ -24,7 +24,37 @@ import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
-export const Issue3742 = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl((_rawProps) => {
-	const counter = useSignal(0);
-	return /* @__PURE__ */ _jsxSorted("div", { title: description && "description" in _rawProps.other ? `Hello ${counter.value}` : `Bye ${counter.value}` }, null, ["Issue3742", /* @__PURE__ */ _jsxSorted("button", null, { "q-e:click": /* @__PURE__ */ inlinedQrl(() => counter.value++, "Issue3742_component_button_q_e_click_vztKnX7Oc1w", [counter]) }, "Increment", 3, "u6_0")], 1, "u6_1");
-}, "Issue3742_component_vbWbSy4bqVY"));
+export const Issue3742 = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl((_rawProps) => {
+    const counter = useSignal(0);
+    return /* @__PURE__ */ _jsxSorted(
+      "div",
+      {
+        title:
+          description && "description" in _rawProps.other
+            ? `Hello ${counter.value}`
+            : `Bye ${counter.value}`,
+      },
+      null,
+      [
+        "Issue3742",
+        /* @__PURE__ */ _jsxSorted(
+          "button",
+          null,
+          {
+            "q-e:click": /* @__PURE__ */ inlinedQrl(
+              () => counter.value++,
+              "Issue3742_component_button_q_e_click_vztKnX7Oc1w",
+              [counter],
+            ),
+          },
+          "Increment",
+          3,
+          "u6_0",
+        ),
+      ],
+      1,
+      "u6_1",
+    );
+  }, "Issue3742_component_vbWbSy4bqVY"),
+);

@@ -25,14 +25,16 @@ import { qrl } from "@qwik.dev/core";
 const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
 import mongodb from "mongodb";
 export const onGet = () => {
-	throw "Symbol removed by Qwik Optimizer, it can not be called from current platform";
+  throw "Symbol removed by Qwik Optimizer, it can not be called from current platform";
 };
-export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
+export default /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"),
+);
 
 === test.tsx_default_component_jN9ZUuuADmk.tsx === (ENTRY)
 export const default_component_jN9ZUuuADmk = () => {
-	return <div>cmp</div>;
-}
+  return <div>cmp</div>;
+};
 
 /*
 {

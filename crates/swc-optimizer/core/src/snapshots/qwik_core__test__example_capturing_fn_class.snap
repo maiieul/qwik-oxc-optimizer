@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { $, component$ } from "@qwik.dev/core";
 
 export const App = component$(() => {
@@ -21,24 +20,26 @@ export const App = component$(() => {
 });
 
 ============================= test.js ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0");
-export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
+const i_ckEPmXZlub0 = () => import("./test.tsx_App_component_ckEPmXZlub0");
+export const App = /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,oBAAM,4EAYhB\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAYhB"}',
+);
 ============================= test.tsx_App_component_ckEPmXZlub0.js (ENTRY POINT)==
-
 import { qrl } from "@qwik.dev/core";
-const i_w0t0o3QMovU = ()=>import("./test.tsx_App_component_1_w0t0o3QMovU");
-export const App_component_ckEPmXZlub0 = ()=>{
-    return /*#__PURE__*/ qrl(i_w0t0o3QMovU, "App_component_1_w0t0o3QMovU");
+const i_w0t0o3QMovU = () => import("./test.tsx_App_component_1_w0t0o3QMovU");
+export const App_component_ckEPmXZlub0 = () => {
+  return /*#__PURE__*/ qrl(i_w0t0o3QMovU, "App_component_1_w0t0o3QMovU");
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;yCAE8B;IAO5B;AAKF\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;yCAE8B;IAO5B;AAKF"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -60,16 +61,16 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_App_component_1_w0t0o3QMovU.js (ENTRY POINT)==
-
 import { _jsxSorted } from "@qwik.dev/core";
-export const App_component_1_w0t0o3QMovU = ()=>{
-    hola();
-    new Thing();
-    return /*#__PURE__*/ _jsxSorted("div", null, null, null, 3, "u6_0");
+export const App_component_1_w0t0o3QMovU = () => {
+  hola();
+  new Thing();
+  return /*#__PURE__*/ _jsxSorted("div", null, null, null, 3, "u6_0");
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";2CASW;IACP;IACA,IAAI;IACJ,qBAAO,WAAC;AACV\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";2CASW;IACP;IACA,IAAI;IACJ,qBAAO,WAAC;AACV"}',
+);
 /*
 {
   "origin": "test.tsx",

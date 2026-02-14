@@ -17,7 +17,9 @@ import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
 const i_jN9ZUuuADmk = () => import("./test.tsx_default_component_jN9ZUuuADmk");
 const i_zo9wkw0NBzs = () => import("./test.tsx_default_component_button_q_e_click_zo9wkw0NBzs");
-export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"));
+export default /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_jN9ZUuuADmk, "default_component_jN9ZUuuADmk"),
+);
 
 === test.tsx_default_component_jN9ZUuuADmk.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -49,8 +51,8 @@ export const default_component_jN9ZUuuADmk = (props: any) => {
 === test.tsx_default_component_button_q_e_click_zo9wkw0NBzs.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const default_component_button_q_e_click_zo9wkw0NBzs = () => {
-	const props = _captures[0];
-	return props.onClick$();
+  const props = _captures[0];
+  return props.onClick$();
 };
 
 /*

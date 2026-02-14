@@ -44,19 +44,26 @@ import { _jsxSorted } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 import { PANELS } from "./test";
 export const default_component_jN9ZUuuADmk = () => {
-	const panelStore = useStore(() => ({
-		active: "Input",
-		list: PANELS
-	}));
-	return /* @__PURE__ */ _jsxSorted("div", {
-		stuff: panelStore.active ? "yes" : "no",
-		class: {
-			"too-long-to-wrap": true,
-			"examples-panel-input": panelStore.active === "Input",
-			"examples-panel-output": panelStore.active === "Output",
-			"examples-panel-console": panelStore.active === "Console"
-		}
-	}, null, null, 3, "u6_0");
+  const panelStore = useStore(() => ({
+    active: "Input",
+    list: PANELS,
+  }));
+  return /* @__PURE__ */ _jsxSorted(
+    "div",
+    {
+      stuff: panelStore.active ? "yes" : "no",
+      class: {
+        "too-long-to-wrap": true,
+        "examples-panel-input": panelStore.active === "Input",
+        "examples-panel-output": panelStore.active === "Output",
+        "examples-panel-console": panelStore.active === "Console",
+      },
+    },
+    null,
+    null,
+    3,
+    "u6_0",
+  );
 };
 
 /*

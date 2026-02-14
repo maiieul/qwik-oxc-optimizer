@@ -64,7 +64,9 @@ import { useStore } from "@qwik.dev/core";
 import mongo from "mongodb";
 import redis from "redis";
 import { handler } from "serverless";
-export const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_fxETLug1yE4, "Parent_component_fxETLug1yE4"));
+export const Parent = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_fxETLug1yE4, "Parent_component_fxETLug1yE4"),
+);
 
 === test.tsx_Parent_component_fxETLug1yE4.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -78,12 +80,21 @@ import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 export const Parent_component_fxETLug1yE4 = () => {
-	const state = useStore({ text: "" });
-	useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
-	serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw"));
-	serverLoaderQrl(/* @__PURE__ */ _noopQrl("serverLoader_kkNmag62Eb0"));
-	useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc"));
-	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_N8VjxooYvus, "Parent_component_div_q_e_click_N8VjxooYvus") }, state.text, 3, "u6_0");
+  const state = useStore({ text: "" });
+  useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc", [state]));
+  serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw"));
+  serverLoaderQrl(/* @__PURE__ */ _noopQrl("serverLoader_kkNmag62Eb0"));
+  useTaskQrl(/* @__PURE__ */ qrl(i_ZxfKmWQYEwc, "useTask_ZxfKmWQYEwc"));
+  return /* @__PURE__ */ _jsxSorted(
+    "div",
+    null,
+    {
+      "q-e:click": /* @__PURE__ */ qrl(i_N8VjxooYvus, "Parent_component_div_q_e_click_N8VjxooYvus"),
+    },
+    state.text,
+    3,
+    "u6_0",
+  );
 };
 
 /*
@@ -108,10 +119,10 @@ import { _captures } from "@qwik.dev/core";
 import mongo from "mongodb";
 import redis from "redis";
 export const useTask_ZxfKmWQYEwc = async () => {
-	const state = _captures[0];
-	return;
-	state.text = await mongo.users();
-	redis.set(state.text);
+  const state = _captures[0];
+  return;
+  state.text = await mongo.users();
+  redis.set(state.text);
 };
 
 /*

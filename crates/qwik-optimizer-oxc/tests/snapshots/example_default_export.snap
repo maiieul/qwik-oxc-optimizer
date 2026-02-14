@@ -14,18 +14,35 @@ export default component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_rMtkV4ZNQIA = () => import("./src/routes/_repl/[id]/[[...slug]].tsx_default_component_rMtkV4ZNQIA.js");
-const i_DIVjyCI2VsA = () => import("./src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA.js");
+const i_rMtkV4ZNQIA = () =>
+  import("./src/routes/_repl/[id]/[[...slug]].tsx_default_component_rMtkV4ZNQIA.js");
+const i_DIVjyCI2VsA = () =>
+  import("./src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA.js");
 import { sibling } from "./sibling";
-export default /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_rMtkV4ZNQIA, "default_component_rMtkV4ZNQIA"));
+export default /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_rMtkV4ZNQIA, "default_component_rMtkV4ZNQIA"),
+);
 
 === src/routes/_repl/[id]/[[...slug]].tsx_default_component_rMtkV4ZNQIA.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_DIVjyCI2VsA = () => import("./src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA.js");
+const i_DIVjyCI2VsA = () =>
+  import("./src/routes/_repl/[id]/[[...slug]].tsx_default_component_div_q_e_click_DIVjyCI2VsA.js");
 import { _jsxSorted } from "@qwik.dev/core";
 import { sibling } from "./sibling";
 export const default_component_rMtkV4ZNQIA = () => {
-	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_DIVjyCI2VsA, "default_component_div_q_e_click_DIVjyCI2VsA") }, null, 3, "u6_0");
+  return /* @__PURE__ */ _jsxSorted(
+    "div",
+    null,
+    {
+      "q-e:click": /* @__PURE__ */ qrl(
+        i_DIVjyCI2VsA,
+        "default_component_div_q_e_click_DIVjyCI2VsA",
+      ),
+    },
+    null,
+    3,
+    "u6_0",
+  );
 };
 
 /*

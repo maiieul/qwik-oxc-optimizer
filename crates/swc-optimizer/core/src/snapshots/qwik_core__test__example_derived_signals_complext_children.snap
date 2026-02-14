@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$, useStore, mutable } from "@qwik.dev/core";
 
 import { dep } from "./file";
@@ -25,27 +24,41 @@ export const App = component$(() => {
 });
 
 ============================= test.js ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { useStore } from "@qwik.dev/core";
-const App_component_ckEPmXZlub0 = ()=>{
-    useSignal(0);
-    const store = useStore({});
-    return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, /*#__PURE__*/ _jsxSorted("ul", null, {
-        id: "issue-2800-result"
-    }, Object.entries(store).map(([key, value])=>/*#__PURE__*/ _jsxSorted("li", null, null, [
-            key,
-            " - ",
-            value
-        ], 1, "u6_0")), 1, null), 1, "u6_1");
+const App_component_ckEPmXZlub0 = () => {
+  useSignal(0);
+  const store = useStore({});
+  return /*#__PURE__*/ _jsxSorted(
+    _Fragment,
+    null,
+    null,
+    /*#__PURE__*/ _jsxSorted(
+      "ul",
+      null,
+      {
+        id: "issue-2800-result",
+      },
+      Object.entries(store).map(([key, value]) =>
+        /*#__PURE__*/ _jsxSorted("li", null, null, [key, " - ", value], 1, "u6_0"),
+      ),
+      1,
+      null,
+    ),
+    1,
+    "u6_1",
+  );
 };
-export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
+export const App = /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AAAA,SAAqB,QAAQ,QAAiB,iBAAiB;kCAIjC;IACb,UAAU;IACzB,MAAM,QAAQ,SAAS,CAAC;IACxB,qBACE,gDACE,WAAC;QAAG,IAAG;OACJ,OAAO,OAAO,CAAC,OAAO,GAAG,CAAC,CAAC,CAAC,KAAK,MAAM,iBACtC,WAAC;YACE;YAAI;YAAI;;AAMrB;AAdA,OAAO,MAAM,oBAAM,+FAchB\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAAA,SAAqB,QAAQ,QAAiB,iBAAiB;kCAIjC;IACb,UAAU;IACzB,MAAM,QAAQ,SAAS,CAAC;IACxB,qBACE,gDACE,WAAC;QAAG,IAAG;OACJ,OAAO,OAAO,CAAC,OAAO,GAAG,CAAC,CAAC,CAAC,KAAK,MAAM,iBACtC,WAAC;YACE;YAAI;YAAI;;AAMrB;AAdA,OAAO,MAAM,oBAAM,+FAchB"}',
+);
 == DIAGNOSTICS ==
 
 []

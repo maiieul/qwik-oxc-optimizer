@@ -40,7 +40,9 @@ import { useSignal } from "@qwik.dev/core";
 import { TestComponent } from "./testComponent";
 const _hf0 = (p0) => p0.attributeInArray.counter;
 const _hf0_str = "p0.attributeInArray.counter";
-export const Child = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_80js9RUUsfM, "Child_component_80js9RUUsfM"));
+export const Child = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_80js9RUUsfM, "Child_component_80js9RUUsfM"),
+);
 
 === test.tsx_Child_component_80js9RUUsfM.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
@@ -50,15 +52,34 @@ import { TestComponent } from "./testComponent";
 const _hf0 = (p0) => p0.attributeInArray.counter;
 const _hf0_str = "p0.attributeInArray.counter";
 export const Child_component_80js9RUUsfM = () => {
-	const propCounterWithNested = useSignal(() => {
-		return { data: [{ attributeInArray: { counter: globalThis.propsCounter++ } }, { attributeInArray: { counter: globalThis.propsCounter } }] };
-	});
-	return /* @__PURE__ */ _jsxSorted("div", null, null, propCounterWithNested.value.data.map((item, index) => {
-		return /* @__PURE__ */ _jsxSorted(TestComponent, null, {
-			counter: _fnSignal(_hf0, [item], _hf0_str),
-			logString: "Nested read through array"
-		}, null, 3, index);
-	}), 3, "u6_0");
+  const propCounterWithNested = useSignal(() => {
+    return {
+      data: [
+        { attributeInArray: { counter: globalThis.propsCounter++ } },
+        { attributeInArray: { counter: globalThis.propsCounter } },
+      ],
+    };
+  });
+  return /* @__PURE__ */ _jsxSorted(
+    "div",
+    null,
+    null,
+    propCounterWithNested.value.data.map((item, index) => {
+      return /* @__PURE__ */ _jsxSorted(
+        TestComponent,
+        null,
+        {
+          counter: _fnSignal(_hf0, [item], _hf0_str),
+          logString: "Nested read through array",
+        },
+        null,
+        3,
+        index,
+      );
+    }),
+    3,
+    "u6_0",
+  );
 };
 
 /*

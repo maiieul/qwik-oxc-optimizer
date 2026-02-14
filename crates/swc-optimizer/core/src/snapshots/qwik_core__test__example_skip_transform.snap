@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$ as Component, $ as onRender } from "@qwik.dev/core";
 
 export const handler = $(() => console.log("hola"));
@@ -14,16 +13,16 @@ export const App = component$((props) => {
 });
 
 ============================= test.js ==
-
 import { _jsxSorted } from "@qwik.dev/core";
-export const handler = $(()=>console.log("hola"));
-export const App = component$((props)=>{
-    useStyles$("hola");
-    return $(()=>/*#__PURE__*/ _jsxSorted("div", null, null, state.thing, 1, "u6_0"));
+export const handler = $(() => console.log("hola"));
+export const App = component$((props) => {
+  useStyles$("hola");
+  return $(() => /*#__PURE__*/ _jsxSorted("div", null, null, state.thing, 1, "u6_0"));
 });
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";AAEA,OAAO,MAAM,UAAU,EAAE,IAAM,QAAQ,GAAG,CAAC,SAAS;AAEpD,OAAO,MAAM,MAAM,WAAW,CAAC;IAC7B,WAAW;IACX,OAAO,EAAE,kBAAM,WAAC,mBAAK,MAAM,KAAK;AAClC,GAAG\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";AAEA,OAAO,MAAM,UAAU,EAAE,IAAM,QAAQ,GAAG,CAAC,SAAS;AAEpD,OAAO,MAAM,MAAM,WAAW,CAAC;IAC7B,WAAW;IACX,OAAO,EAAE,kBAAM,WAAC,mBAAK,MAAM,KAAK;AAClC,GAAG"}',
+);
 == DIAGNOSTICS ==
 
 []

@@ -26,7 +26,9 @@ const i_dWH0ComNdBo = () => import("./test.tsx_Greeter_component___q_e_click_dWH
 const i_dWH0ComNdBo = () => import("./test.tsx_Greeter_component___q_e_click_dWH0ComNdBo");
 import { CustomComponent } from "./custom-component";
 import { AnotherComponent } from "./another-component";
-export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"));
+export const Greeter = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"),
+);
 
 === test.tsx_Greeter_component_l5Al0251s9w.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -35,11 +37,19 @@ const i_dWH0ComNdBo = () => import("./test.tsx_Greeter_component___q_e_click_dWH
 import { CustomComponent } from "./custom-component";
 import { AnotherComponent } from "./another-component";
 export const Greeter_component_l5Al0251s9w = () => {
-	return <div>
-      <CustomComponent onClick$={/* @__PURE__ */ qrl(i_dWH0ComNdBo, "Greeter_component___q_e_click_dWH0ComNdBo")} />
-      {array.map((item) => <AnotherComponent onClick$={/* @__PURE__ */ qrl(i_dWH0ComNdBo, "Greeter_component___q_e_click_dWH0ComNdBo")} />)}
-    </div>;
-}
+  return (
+    <div>
+      <CustomComponent
+        onClick$={/* @__PURE__ */ qrl(i_dWH0ComNdBo, "Greeter_component___q_e_click_dWH0ComNdBo")}
+      />
+      {array.map((item) => (
+        <AnotherComponent
+          onClick$={/* @__PURE__ */ qrl(i_dWH0ComNdBo, "Greeter_component___q_e_click_dWH0ComNdBo")}
+        />
+      ))}
+    </div>
+  );
+};
 
 /*
 {

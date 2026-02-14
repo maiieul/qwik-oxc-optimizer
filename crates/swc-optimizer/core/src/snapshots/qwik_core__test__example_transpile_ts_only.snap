@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$, useStore } from "@qwik.dev/core";
 
 export const App = component$((props: Stuff) => {
@@ -17,19 +16,31 @@ export const App = component$((props: Stuff) => {
 });
 
 ============================= test.jsx ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
-export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl((props)=>{
-    return <Cmp>
-      <p class="stuff" q-e:click={/*#__PURE__*/ inlinedQrl(()=>console.log("warn"), "App_component_Cmp_p_q_e_click_Yl4ybrJWrt4")}>
-        Hello Qwik
-      </p>
-    </Cmp>;
-}, "App_component_ckEPmXZlub0"));
+export const App = /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ inlinedQrl((props) => {
+    return (
+      <Cmp>
+        <p
+          class="stuff"
+          q-e:click={
+            /*#__PURE__*/ inlinedQrl(
+              () => console.log("warn"),
+              "App_component_Cmp_p_q_e_click_Yl4ybrJWrt4",
+            )
+          }
+        >
+          Hello Qwik
+        </p>
+      </Cmp>
+    );
+  }, "App_component_ckEPmXZlub0"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;AAEA,OAAO,MAAM,oBAAM,sCAAW,CAAC;IAC7B,QACG,IAAI;MACH,CAAC,EAAE,MAAM,QAAQ,oCAAU,IAAM,QAAQ,GAAG,CAAC,uDAAS;;MAEtD,EAAE,EAAE;IACN,EAAE;AAEN,iCAAG\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;AAEA,OAAO,MAAM,oBAAM,sCAAW,CAAC;IAC7B,QACG,IAAI;MACH,CAAC,EAAE,MAAM,QAAQ,oCAAU,IAAM,QAAQ,GAAG,CAAC,uDAAS;;MAEtD,EAAE,EAAE;IACN,EAAE;AAEN,iCAAG"}',
+);
 == DIAGNOSTICS ==
 
 []

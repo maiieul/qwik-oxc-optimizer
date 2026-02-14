@@ -30,7 +30,9 @@ import { _val } from "@qwik.dev/core";
 const i_O84bGdeej0g = () => import("./test.tsx_FieldInput_component_O84bGdeej0g");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { useSignal } from "@qwik.dev/core";
-export const FieldInput = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_O84bGdeej0g, "FieldInput_component_O84bGdeej0g"));
+export const FieldInput = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_O84bGdeej0g, "FieldInput_component_O84bGdeej0g"),
+);
 
 === test.tsx_FieldInput_component_O84bGdeej0g.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
@@ -40,8 +42,32 @@ import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 export const FieldInput_component_O84bGdeej0g = (props) => {
-	const input = useSignal("");
-	return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, [/* @__PURE__ */ _jsxSplit("input", { ..._getVarProps(props) }, _getConstProps(props), null, 0, "u6_0"), /* @__PURE__ */ _jsxSplit("input", { ..._getVarProps(props) }, _getConstProps(props), null, 0, "u6_1")], 1, "u6_2");
+  const input = useSignal("");
+  return /* @__PURE__ */ _jsxSorted(
+    _Fragment,
+    null,
+    null,
+    [
+      /* @__PURE__ */ _jsxSplit(
+        "input",
+        { ..._getVarProps(props) },
+        _getConstProps(props),
+        null,
+        0,
+        "u6_0",
+      ),
+      /* @__PURE__ */ _jsxSplit(
+        "input",
+        { ..._getVarProps(props) },
+        _getConstProps(props),
+        null,
+        0,
+        "u6_1",
+      ),
+    ],
+    1,
+    "u6_2",
+  );
 };
 
 /*

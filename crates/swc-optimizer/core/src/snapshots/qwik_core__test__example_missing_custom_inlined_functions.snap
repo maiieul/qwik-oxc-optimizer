@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$ as Component, $ as onRender, useStore, wrap, useEffect } from "@qwik.dev/core";
 
 export const useMemo$ = (qrt) => {
@@ -19,25 +18,25 @@ export const App = component$((props) => {
 });
 
 ============================= test.js ==
-
 import { _wrapProp } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { useStore, useEffect } from "@qwik.dev/core";
-export const useMemo$ = (qrt)=>{
-    useEffect(qrt);
+export const useMemo$ = (qrt) => {
+  useEffect(qrt);
 };
-export const App = component$((props)=>{
-    const state = useStore({
-        count: 0
-    });
-    useMemo$(()=>{
-        console.log(state.count);
-    });
-    return $(()=>/*#__PURE__*/ _jsxSorted("div", null, null, _wrapProp(state, "count"), 3, "u6_0"));
+export const App = component$((props) => {
+  const state = useStore({
+    count: 0,
+  });
+  useMemo$(() => {
+    console.log(state.count);
+  });
+  return $(() => /*#__PURE__*/ _jsxSorted("div", null, null, _wrapProp(state, "count"), 3, "u6_0"));
 });
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;AAAA,SAAiD,QAAQ,EAAQ,SAAS,QAAQ,iBAAiB;AAEnG,OAAO,MAAM,WAAW,CAAC;IACvB,UAAU;AACZ,EAAE;AAEF,OAAO,MAAM,MAAM,WAAW,CAAC;IAC7B,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAClC,SAAS;QACP,QAAQ,GAAG,CAAC,MAAM,KAAK;IACzB;IACA,OAAO,EAAE,kBAAM,WAAC,6BAAK;AACvB,GAAG\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;AAAA,SAAiD,QAAQ,EAAQ,SAAS,QAAQ,iBAAiB;AAEnG,OAAO,MAAM,WAAW,CAAC;IACvB,UAAU;AACZ,EAAE;AAEF,OAAO,MAAM,MAAM,WAAW,CAAC;IAC7B,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAClC,SAAS;QACP,QAAQ,GAAG,CAAC,MAAM,KAAK;IACzB;IACA,OAAO,EAAE,kBAAM,WAAC,6BAAK;AACvB,GAAG"}',
+);
 == DIAGNOSTICS ==
 
 [

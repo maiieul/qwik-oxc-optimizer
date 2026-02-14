@@ -24,8 +24,12 @@ import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 const i_XumqEURaLxI = () => import("./test.tsx_App_component_XumqEURaLxI");
 const i_YvjM3SoLvrM = () => import("./test.tsx_Root_component_YvjM3SoLvrM");
-const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
-export const Root = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_YvjM3SoLvrM, "Root_component_YvjM3SoLvrM"));
+const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"),
+);
+export const Root = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_YvjM3SoLvrM, "Root_component_YvjM3SoLvrM"),
+);
 const Other = 12;
 export { Other as App };
 export default App;
@@ -33,7 +37,7 @@ export default App;
 === test.tsx_App_component_XumqEURaLxI.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const App_component_XumqEURaLxI = () => {
-	return /* @__PURE__ */ _jsxSorted("div", null, null, "hola", 3, "u6_0");
+  return /* @__PURE__ */ _jsxSorted("div", null, null, "hola", 3, "u6_0");
 };
 
 /*

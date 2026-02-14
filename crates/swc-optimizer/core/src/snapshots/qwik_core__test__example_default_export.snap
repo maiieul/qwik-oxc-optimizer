@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$ } from "@qwik.dev/core";
 import { sibling } from "./sibling";
 
@@ -12,27 +11,36 @@ export default component$(() => {
 });
 
 ============================= src/routes/_repl/[id]/[[...slug]].js ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_0AM8HPnkNs4 = ()=>import("./[[...slug]].tsx_slug_component_0AM8HPnkNs4.js");
-export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_0AM8HPnkNs4, "slug_component_0AM8HPnkNs4"));
+const i_0AM8HPnkNs4 = () => import("./[[...slug]].tsx_slug_component_0AM8HPnkNs4.js");
+export default /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ qrl(i_0AM8HPnkNs4, "slug_component_0AM8HPnkNs4"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx\"],\"names\":[],\"mappings\":\";;;AAGA,6BAAe,6EAEZ\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx"],"names":[],"mappings":";;;AAGA,6BAAe,6EAEZ"}',
+);
 ============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_0AM8HPnkNs4.js ==
-
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_bCwVPYSTQ0w = ()=>import("./[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w.js");
-export const slug_component_0AM8HPnkNs4 = ()=>{
-    return /*#__PURE__*/ _jsxSorted("div", null, {
-        "q-e:click": /*#__PURE__*/ qrl(i_bCwVPYSTQ0w, "slug_component_div_q_e_click_bCwVPYSTQ0w")
-    }, null, 3, "W4_0");
+const i_bCwVPYSTQ0w = () => import("./[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w.js");
+export const slug_component_0AM8HPnkNs4 = () => {
+  return /*#__PURE__*/ _jsxSorted(
+    "div",
+    null,
+    {
+      "q-e:click": /*#__PURE__*/ qrl(i_bCwVPYSTQ0w, "slug_component_div_q_e_click_bCwVPYSTQ0w"),
+    },
+    null,
+    3,
+    "W4_0",
+  );
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx\"],\"names\":[],\"mappings\":\";;;0CAG0B;IACxB,qBAAO,WAAC;QAAI,WAAQ;;AACtB\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx"],"names":[],"mappings":";;;0CAG0B;IACxB,qBAAO,WAAC;QAAI,WAAQ;;AACtB"}',
+);
 /*
 {
   "origin": "src/routes/_repl/[id]/[[...slug]].tsx",
@@ -54,12 +62,12 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/routes/_repl/[id]/[[...sl
 }
 */
 ============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w.js (ENTRY POINT)==
-
 import { sibling } from "./sibling";
-export const slug_component_div_q_e_click_bCwVPYSTQ0w = ()=>console.log(mongodb, sibling);
+export const slug_component_div_q_e_click_bCwVPYSTQ0w = () => console.log(mongodb, sibling);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx\"],\"names\":[],\"mappings\":\";wDAIwB,IAAM,QAAQ,GAAG,CAAC,SAAS\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx"],"names":[],"mappings":";wDAIwB,IAAM,QAAQ,GAAG,CAAC,SAAS"}',
+);
 /*
 {
   "origin": "src/routes/_repl/[id]/[[...slug]].tsx",

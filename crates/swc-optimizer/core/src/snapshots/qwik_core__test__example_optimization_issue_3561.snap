@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$ } from "@qwik.dev/core";
 
 export const Issue3561 = component$(() => {
@@ -24,26 +23,28 @@ export const Issue3561 = component$(() => {
 });
 
 ============================= test.jsx ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
-export const Issue3561 = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(()=>{
+export const Issue3561 = /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ inlinedQrl(() => {
     const props = useStore({
-        product: {
-            currentVariant: {
-                variantImage: "image",
-                variantNumber: "number",
-                setContents: "contents"
-            }
-        }
+      product: {
+        currentVariant: {
+          variantImage: "image",
+          variantNumber: "number",
+          setContents: "contents",
+        },
+      },
     });
     const { currentVariant: { variantImage, variantNumber, setContents } = {} } = props.product;
     console.log(variantImage, variantNumber, setContents);
     return <p></p>;
-}, "Issue3561_component_hHTw654BZB8"));
+  }, "Issue3561_component_hHTw654BZB8"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;AAEA,OAAO,MAAM,0BAAY,sCAAW;IAClC,MAAM,QAAQ,SAAS;QACrB,SAAS;YACP,gBAAgB;gBACd,cAAc;gBACd,eAAe;gBACf,aAAa;YACf;QACF;IACF;IACA,MAAM,EAAE,gBAAgB,EAAE,YAAY,EAAE,aAAa,EAAE,WAAW,EAAE,GAAG,CAAC,CAAC,EAAE,GAAG,MAAM,OAAO;IAE3F,QAAQ,GAAG,CAAC,cAAc,eAAe;IAEzC,QAAQ,IAAI;AACd,uCAAG\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;AAEA,OAAO,MAAM,0BAAY,sCAAW;IAClC,MAAM,QAAQ,SAAS;QACrB,SAAS;YACP,gBAAgB;gBACd,cAAc;gBACd,eAAe;gBACf,aAAa;YACf;QACF;IACF;IACA,MAAM,EAAE,gBAAgB,EAAE,YAAY,EAAE,aAAa,EAAE,WAAW,EAAE,GAAG,CAAC,CAAC,EAAE,GAAG,MAAM,OAAO;IAE3F,QAAQ,GAAG,CAAC,cAAc,eAAe;IAEzC,QAAQ,IAAI;AACd,uCAAG"}',
+);
 == DIAGNOSTICS ==
 
 []

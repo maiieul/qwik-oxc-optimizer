@@ -20,16 +20,18 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
 const i_0cZU0P2qlwk = () => import("./test.tsx_Foo_useStyles_0cZU0P2qlwk");
-export const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
+export const Foo = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+);
 
 === test.tsx_Foo_component_gZqPatVoDqw.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_0cZU0P2qlwk = () => import("./test.tsx_Foo_useStyles_0cZU0P2qlwk");
 import { useStylesQrl } from "@qwik.dev/core";
 export const Foo_component_gZqPatVoDqw = () => {
-	useStylesQrl(/* @__PURE__ */ qrl(i_0cZU0P2qlwk, "Foo_useStyles_0cZU0P2qlwk"));
-	return <div class="class" />;
-}
+  useStylesQrl(/* @__PURE__ */ qrl(i_0cZU0P2qlwk, "Foo_useStyles_0cZU0P2qlwk"));
+  return <div class="class" />;
+};
 
 /*
 {

@@ -24,7 +24,9 @@ import { _jsxSorted } from "@qwik.dev/core";
 const i_M1CbC3Yh9lM = () => import("./project/index.tsx_App_component_M1CbC3Yh9lM.js");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { useStore } from "@qwik.dev/core";
-export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_M1CbC3Yh9lM, "App_component_M1CbC3Yh9lM"));
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_M1CbC3Yh9lM, "App_component_M1CbC3Yh9lM"),
+);
 
 === project/index.tsx_App_component_M1CbC3Yh9lM.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";

@@ -250,7 +250,22 @@ function processSnapshot(filePath, formatterCmd) {
       formatted = formatted.slice(0, -1);
     }
 
+    // Preserve trailing blank lines from the original code block
+    let trailingBlanks = 0;
+    for (let j = codeLines.length - 1; j >= 0; j--) {
+      if (codeLines[j].trim() === "") {
+        trailingBlanks++;
+      } else {
+        break;
+      }
+    }
+
     const formattedLines = formatted.length > 0 ? formatted.split("\n") : [];
+
+    // Re-append trailing blank lines that the formatter may have stripped
+    for (let j = 0; j < trailingBlanks; j++) {
+      formattedLines.push("");
+    }
     const changed =
       formattedLines.length !== codeLines.length ||
       formattedLines.some((value, idx) => value !== codeLines[idx]);

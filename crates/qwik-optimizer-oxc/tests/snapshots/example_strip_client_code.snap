@@ -48,21 +48,48 @@ import threejs from "threejs";
 import { a } from "./keep";
 import { b } from "../keep2";
 import { c } from "../../remove";
-export const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ inlinedQrl(() => {
-	const state = useStore({ text: "" });
-	// Double count watch
-	useClientMountQrl(/* @__PURE__ */ inlinedQrl(async () => {
-		state.text = await mongo.users();
-		redis.set(state.text, a, b, c);
-	}, "useClientMount_HL0udnF1YjQ", [state]));
-	useTaskQrl(/* @__PURE__ */ inlinedQrl(() => {
-		// Code
-	}, "useTask_Vmh2TI9KAKU"));
-	return /* @__PURE__ */ _jsxSorted("div", null, {
-		"shouldRemove$": () => state.text,
-		"q-e:click": () => console.log("parent", state, threejs)
-	}, [/* @__PURE__ */ _jsxSorted(Div, null, {
-		"q-e:click": () => console.log("keep"),
-		"render$": () => state.text
-	}, null, 3, "u6_0"), state.text], 1, "u6_1");
-}, "Parent_component_Pr9NkHIe6q8"));
+export const Parent = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(() => {
+    const state = useStore({ text: "" });
+    // Double count watch
+    useClientMountQrl(
+      /* @__PURE__ */ inlinedQrl(
+        async () => {
+          state.text = await mongo.users();
+          redis.set(state.text, a, b, c);
+        },
+        "useClientMount_HL0udnF1YjQ",
+        [state],
+      ),
+    );
+    useTaskQrl(
+      /* @__PURE__ */ inlinedQrl(() => {
+        // Code
+      }, "useTask_Vmh2TI9KAKU"),
+    );
+    return /* @__PURE__ */ _jsxSorted(
+      "div",
+      null,
+      {
+        shouldRemove$: () => state.text,
+        "q-e:click": () => console.log("parent", state, threejs),
+      },
+      [
+        /* @__PURE__ */ _jsxSorted(
+          Div,
+          null,
+          {
+            "q-e:click": () => console.log("keep"),
+            render$: () => state.text,
+          },
+          null,
+          3,
+          "u6_0",
+        ),
+        state.text,
+      ],
+      1,
+      "u6_1",
+    );
+  }, "Parent_component_Pr9NkHIe6q8"),
+);

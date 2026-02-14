@@ -10,12 +10,16 @@ export const Greeter = component$(() => <div />);
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-const i_nlrDHFFtOtc = () => import("./components\\\\apps\\\\apps.tsx_Greeter_component_nlrDHFFtOtc");
-export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_nlrDHFFtOtc, "Greeter_component_nlrDHFFtOtc"));
+const i_nlrDHFFtOtc = () =>
+  import("./components\\\\apps\\\\apps.tsx_Greeter_component_nlrDHFFtOtc");
+export const Greeter = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_nlrDHFFtOtc, "Greeter_component_nlrDHFFtOtc"),
+);
 
 === components\\apps\\apps.tsx_Greeter_component_nlrDHFFtOtc.ts === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
-export const Greeter_component_nlrDHFFtOtc = () => /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
+export const Greeter_component_nlrDHFFtOtc = () =>
+  /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
 
 /*
 {

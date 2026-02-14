@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from "@qwik.dev/core";
 import { thing } from "./sibling";
 import mongodb from "mongodb";
@@ -23,7 +22,6 @@ export const Child = component$(() => {
 });
 
 ============================= test.tsx ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
@@ -32,23 +30,39 @@ import { _captures } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 import { thing } from "./sibling";
 import mongodb from "mongodb";
-export const Child = /*#__PURE__*/ componentQrl(/*#__PURE__*/ inlinedQrl(()=>{
+export const Child = /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ inlinedQrl(() => {
     useStylesQrl(/*#__PURE__*/ inlinedQrl("somestring", "Child_component_useStyles_qBZTuFM0160"));
     const state = useStore({
-        count: 0
+      count: 0,
     });
     // Double count watch
-    useBrowserVisibleTaskQrl(/*#__PURE__*/ inlinedQrl(()=>{
-        const state = _captures[0];
-        state.count = thing.doStuff() + import("./sibling");
-    }, "Child_component_useBrowserVisibleTask_0IGFPOyJmQA", [
-        state
-    ]));
-    return <div q-e:click={/*#__PURE__*/ inlinedQrl(()=>console.log(mongodb), "Child_component_div_q_e_click_cROa4sult1s")}></div>;
-}, "Child_component_9GyF01GDKqw"));
+    useBrowserVisibleTaskQrl(
+      /*#__PURE__*/ inlinedQrl(
+        () => {
+          const state = _captures[0];
+          state.count = thing.doStuff() + import("./sibling");
+        },
+        "Child_component_useBrowserVisibleTask_0IGFPOyJmQA",
+        [state],
+      ),
+    );
+    return (
+      <div
+        q-e:click={
+          /*#__PURE__*/ inlinedQrl(
+            () => console.log(mongodb),
+            "Child_component_div_q_e_click_cROa4sult1s",
+          )
+        }
+      ></div>
+    );
+  }, "Child_component_9GyF01GDKqw"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;AAAA,SAA6C,QAAQ,QAAoB,iBAAiB;AAC1F,SAAS,KAAK,QAAQ,YAAY;AAClC,OAAO,aAAa,UAAU;AAE9B,OAAO,MAAM,sBAAQ,sCAAW;IAC9B,sCAAW;IACX,MAAM,QAAQ,SAAS;QACrB,OAAO;IACT;IAEA,qBAAqB;IACrB,kDAAuB;;QACrB,MAAM,KAAK,GAAG,MAAM,OAAO,KAAK,MAAM,CAAC;;;;IAGzC,QAAQ,IAAI,oCAAU,IAAM,QAAQ,GAAG,CAAC,0DAAY;AACtD,mCAAG\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;AAAA,SAA6C,QAAQ,QAAoB,iBAAiB;AAC1F,SAAS,KAAK,QAAQ,YAAY;AAClC,OAAO,aAAa,UAAU;AAE9B,OAAO,MAAM,sBAAQ,sCAAW;IAC9B,sCAAW;IACX,MAAM,QAAQ,SAAS;QACrB,OAAO;IACT;IAEA,qBAAqB;IACrB,kDAAuB;;QACrB,MAAM,KAAK,GAAG,MAAM,OAAO,KAAK,MAAM,CAAC;;;;IAGzC,QAAQ,IAAI,oCAAU,IAAM,QAAQ,GAAG,CAAC,0DAAY;AACtD,mCAAG"}',
+);
 == DIAGNOSTICS ==
 
 []

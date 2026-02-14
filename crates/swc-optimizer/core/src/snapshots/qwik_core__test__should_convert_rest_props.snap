@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$, useTask$ } from "@qwik.dev/core";
 
 export default component$<any>(({ ...props }) => {
@@ -15,30 +14,30 @@ export default component$<any>(({ ...props }) => {
 });
 
 ============================= test.js ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
-export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
+const i_LUXeXe0DQrg = () => import("./test.tsx_test_component_LUXeXe0DQrg");
+export default /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,6BAAe,6EAMZ\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,6BAAe,6EAMZ"}',
+);
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
-
 import { _restProps } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useTaskQrl } from "@qwik.dev/core";
-const i_jewzFYh3XmQ = ()=>import("./test.tsx_test_component_useTask_jewzFYh3XmQ");
-export const test_component_LUXeXe0DQrg = (_rawProps)=>{
-    const props = _restProps(_rawProps);
-    useTaskQrl(/*#__PURE__*/ qrl(i_jewzFYh3XmQ, "test_component_useTask_jewzFYh3XmQ", [
-        props
-    ]));
-    return "hi";
+const i_jewzFYh3XmQ = () => import("./test.tsx_test_component_useTask_jewzFYh3XmQ");
+export const test_component_LUXeXe0DQrg = (_rawProps) => {
+  const props = _restProps(_rawProps);
+  useTaskQrl(/*#__PURE__*/ qrl(i_jewzFYh3XmQ, "test_component_useTask_jewzFYh3XmQ", [props]));
+  return "hi";
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;0CAE+B;;IAC7B;;;IAIA,OAAO;AACT\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;0CAE+B;;IAC7B;;;IAIA,OAAO;AACT"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -63,15 +62,15 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_test_component_useTask_jewzFYh3XmQ.js (ENTRY POINT)==
-
 import { _captures } from "@qwik.dev/core";
-export const test_component_useTask_jewzFYh3XmQ = ()=>{
-    const props = _captures[0];
-    props.checked;
+export const test_component_useTask_jewzFYh3XmQ = () => {
+  const props = _captures[0];
+  props.checked;
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";kDAGW;;IACP,MAAM,OAAO\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";kDAGW;;IACP,MAAM,OAAO"}',
+);
 /*
 {
   "origin": "test.tsx",

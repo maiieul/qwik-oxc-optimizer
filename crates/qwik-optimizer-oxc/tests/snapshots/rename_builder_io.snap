@@ -37,7 +37,9 @@ import { isDev } from "@builder.io/qwik/build";
 import sdk from "@builder.io/sdk";
 export const Foo = qwikifyQrl(/* @__PURE__ */ qrl(i_WtIyP0H0lSk, "Foo_qwikify_WtIyP0H0lSk"));
 export const Bar = /* @__PURE__ */ qrl(i_MSAJNhrvHtQ, "Bar_MSAJNhrvHtQ");
-export const App = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"));
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XumqEURaLxI, "App_component_XumqEURaLxI"),
+);
 
 === test.tsx_Foo_qwikify_WtIyP0H0lSk.ts === (ENTRY)
 export const Foo_qwikify_WtIyP0H0lSk = MyReactComponent;
@@ -85,13 +87,13 @@ import { isDev } from "@builder.io/qwik/build";
 import { stuff } from "@builder.io/qwik-city";
 import { moreStuff } from "@builder.io/qwik-city/more/here";
 export const App_component_XumqEURaLxI = () => {
-	sdk.hello();
-	if (isDev) {
-		stuff();
-	} else {
-		moreStuff();
-	}
-	return "hi";
+  sdk.hello();
+  if (isDev) {
+    stuff();
+  } else {
+    moreStuff();
+  }
+  return "hi";
 };
 
 /*

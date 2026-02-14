@@ -52,8 +52,12 @@ export const hW = 12;
 export const handleWatch = 42;
 const componentQrl = () => console.log("not this", qrl());
 componentQrl();
-export const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
-export const Root = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_YvjM3SoLvrM, "Root_component_YvjM3SoLvrM"));
+export const Foo = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+);
+export const Root = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_YvjM3SoLvrM, "Root_component_YvjM3SoLvrM"),
+);
 
 === test.tsx_Foo_component_gZqPatVoDqw.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -62,11 +66,18 @@ import { _jsxSorted } from "@qwik.dev/core";
 import { hW } from "./test";
 import { handleWatch } from "./test";
 export const Foo_component_gZqPatVoDqw = () => {
-	useStyles$("thing");
-	const qwik = hW + handleWatch;
-	console.log(qwik);
-	const qrl = 23;
-	return /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA") }, null, 3, "u6_0");
+  useStyles$("thing");
+  const qwik = hW + handleWatch;
+  console.log(qwik);
+  const qrl = 23;
+  return /* @__PURE__ */ _jsxSorted(
+    "div",
+    null,
+    { "q-e:click": /* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA") },
+    null,
+    3,
+    "u6_0",
+  );
 };
 
 /*
@@ -113,8 +124,8 @@ const i_b1oI4QMvfDY = () => import("./test.tsx_Root_useStyles_b1oI4QMvfDY");
 const i_JSvK9zVuQxw = () => import("./test.tsx_Root_JSvK9zVuQxw");
 import { useStyles } from "@qwik.dev/core";
 export const Root_component_YvjM3SoLvrM = () => {
-	useStyles(/* @__PURE__ */ qrl(i_b1oI4QMvfDY, "Root_useStyles_b1oI4QMvfDY"));
-	return /* @__PURE__ */ qrl(i_JSvK9zVuQxw, "Root_JSvK9zVuQxw");
+  useStyles(/* @__PURE__ */ qrl(i_b1oI4QMvfDY, "Root_useStyles_b1oI4QMvfDY"));
+  return /* @__PURE__ */ qrl(i_JSvK9zVuQxw, "Root_JSvK9zVuQxw");
 };
 
 /*
@@ -157,7 +168,7 @@ export const Root_useStyles_b1oI4QMvfDY = "thing";
 === test.tsx_Root_JSvK9zVuQxw.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const Root_JSvK9zVuQxw = () => {
-	return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
+  return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
 };
 
 /*

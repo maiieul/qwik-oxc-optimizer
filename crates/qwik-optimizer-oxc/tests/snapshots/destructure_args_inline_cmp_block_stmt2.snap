@@ -29,8 +29,8 @@ export default (props: {
 === test.tsx_div_q_e_click_Lo4b850Oi8I.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const div_q_e_click_Lo4b850Oi8I = () => {
-	const data = _captures[0];
-	data.selectedOutputDetail = "options";
+  const data = _captures[0];
+  data.selectedOutputDetail = "options";
 };
 
 /*

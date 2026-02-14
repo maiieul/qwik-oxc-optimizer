@@ -28,7 +28,9 @@ const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_R
 const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
 const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
 import mongo from "mongodb";
-export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"));
+export const Greeter = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"),
+);
 
 === test.tsx_Greeter_component_l5Al0251s9w.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -37,15 +39,23 @@ const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_R
 const i_Rxdt6XL5GRU = () => import("./test.tsx_Greeter_component_div_q_e_click_Rxdt6XL5GRU");
 import mongo from "mongodb";
 export const Greeter_component_l5Al0251s9w = () => {
-	useTask$(async () => {
-		await mongo.users();
-	});
-	return <div>
-      <div onClick$={/* @__PURE__ */ qrl(i_Rxdt6XL5GRU, "Greeter_component_div_q_e_click_Rxdt6XL5GRU")} />
-      <div onClick$={/* @__PURE__ */ qrl(i_Rxdt6XL5GRU, "Greeter_component_div_q_e_click_Rxdt6XL5GRU")} />
-      <div onClick$={/* @__PURE__ */ qrl(i_Rxdt6XL5GRU, "Greeter_component_div_q_e_click_Rxdt6XL5GRU")} />
-    </div>;
-}
+  useTask$(async () => {
+    await mongo.users();
+  });
+  return (
+    <div>
+      <div
+        onClick$={/* @__PURE__ */ qrl(i_Rxdt6XL5GRU, "Greeter_component_div_q_e_click_Rxdt6XL5GRU")}
+      />
+      <div
+        onClick$={/* @__PURE__ */ qrl(i_Rxdt6XL5GRU, "Greeter_component_div_q_e_click_Rxdt6XL5GRU")}
+      />
+      <div
+        onClick$={/* @__PURE__ */ qrl(i_Rxdt6XL5GRU, "Greeter_component_div_q_e_click_Rxdt6XL5GRU")}
+      />
+    </div>
+  );
+};
 
 /*
 {

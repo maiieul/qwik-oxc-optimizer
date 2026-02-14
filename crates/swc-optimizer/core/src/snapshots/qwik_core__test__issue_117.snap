@@ -3,15 +3,14 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 export const cache = patternCache[cacheKey] || (patternCache[cacheKey] = {});
 
 ============================= project/test.tsx ==
-
 export const cache = patternCache[cacheKey] || (patternCache[cacheKey] = {});
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/test.tsx\"],\"names\":[],\"mappings\":\"AAAA,OAAO,MAAM,QAAQ,YAAY,CAAC,SAAS,IAAI,CAAC,YAAY,CAAC,SAAS,GAAG,CAAC,CAAC,EAAE\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/project/test.tsx"],"names":[],"mappings":"AAAA,OAAO,MAAM,QAAQ,YAAY,CAAC,SAAS,IAAI,CAAC,YAAY,CAAC,SAAS,GAAG,CAAC,CAAC,EAAE"}',
+);
 == DIAGNOSTICS ==
 
 []

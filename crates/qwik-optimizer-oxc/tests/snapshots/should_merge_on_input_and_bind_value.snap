@@ -27,7 +27,9 @@ import { _val } from "@qwik.dev/core";
 const i_O84bGdeej0g = () => import("./test.tsx_FieldInput_component_O84bGdeej0g");
 const i_0pI6Lozv5Ow = () => import("./test.tsx_FieldInput_component_input_q_e_input_0pI6Lozv5Ow");
 import { useSignal } from "@qwik.dev/core";
-export const FieldInput = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_O84bGdeej0g, "FieldInput_component_O84bGdeej0g"));
+export const FieldInput = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_O84bGdeej0g, "FieldInput_component_O84bGdeej0g"),
+);
 
 === test.tsx_FieldInput_component_O84bGdeej0g.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -37,12 +39,22 @@ import { inlinedQrl } from "@qwik.dev/core";
 import { _val } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 export const FieldInput_component_O84bGdeej0g = () => {
-	const localValue = useSignal("");
-	return /* @__PURE__ */ _jsxSorted("input", null, {
-		value: localValue,
-		"q-e:input": inlinedQrl(_val, "_val", [localValue]),
-		"q-e:input": /* @__PURE__ */ qrl(i_0pI6Lozv5Ow, "FieldInput_component_input_q_e_input_0pI6Lozv5Ow")
-	}, null, 3, "u6_0");
+  const localValue = useSignal("");
+  return /* @__PURE__ */ _jsxSorted(
+    "input",
+    null,
+    {
+      value: localValue,
+      "q-e:input": inlinedQrl(_val, "_val", [localValue]),
+      "q-e:input": /* @__PURE__ */ qrl(
+        i_0pI6Lozv5Ow,
+        "FieldInput_component_input_q_e_input_0pI6Lozv5Ow",
+      ),
+    },
+    null,
+    3,
+    "u6_0",
+  );
 };
 
 /*
@@ -64,7 +76,7 @@ export const FieldInput_component_O84bGdeej0g = () => {
 
 === test.tsx_FieldInput_component_input_q_e_input_0pI6Lozv5Ow.js === (ENTRY)
 export const FieldInput_component_input_q_e_input_0pI6Lozv5Ow = () => {
-	console.log("test");
+  console.log("test");
 };
 
 /*

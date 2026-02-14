@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$, useStore } from "@qwik.dev/core";
 
 export default component$(() => {
@@ -22,49 +21,71 @@ export default component$(() => {
 });
 
 ============================= test.js ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_LUXeXe0DQrg = ()=>import("./test.tsx_test_component_LUXeXe0DQrg");
-export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"));
+const i_LUXeXe0DQrg = () => import("./test.tsx_test_component_LUXeXe0DQrg");
+export default /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,6BAAe,6EAaZ\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,6BAAe,6EAaZ"}',
+);
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
-
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
-const i_7MTd2pAiliw = ()=>import("./test.tsx_test_component_Fragment_button_q_e_click_7MTd2pAiliw");
-export const test_component_LUXeXe0DQrg = ()=>{
-    const store = useStore([
+const i_7MTd2pAiliw = () =>
+  import("./test.tsx_test_component_Fragment_button_q_e_click_7MTd2pAiliw");
+export const test_component_LUXeXe0DQrg = () => {
+  const store = useStore([
+    {
+      value: 0,
+    },
+  ]);
+  return /*#__PURE__*/ _jsxSorted(
+    _Fragment,
+    null,
+    null,
+    [
+      /*#__PURE__*/ _jsxSorted(
+        "button",
+        null,
         {
-            value: 0
-        }
-    ]);
-    return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, [
-        /*#__PURE__*/ _jsxSorted("button", null, {
-            "q-e:click": /*#__PURE__*/ qrl(i_7MTd2pAiliw, "test_component_Fragment_button_q_e_click_7MTd2pAiliw", [
-                store
-            ])
-        }, "+1", 3, null),
-        store.map(function(v, idx) {
-            return /*#__PURE__*/ _jsxSorted("div", null, null, [
-                "Function: ",
-                _wrapProp(v)
-            ], 1, "fn_" + idx);
-        }),
-        store.map((v, idx)=>/*#__PURE__*/ _jsxSorted("div", null, null, [
-                "Arrow: ",
-                _wrapProp(v)
-            ], 1, "arrow_" + idx))
-    ], 1, "u6_0");
+          "q-e:click": /*#__PURE__*/ qrl(
+            i_7MTd2pAiliw,
+            "test_component_Fragment_button_q_e_click_7MTd2pAiliw",
+            [store],
+          ),
+        },
+        "+1",
+        3,
+        null,
+      ),
+      store.map(function (v, idx) {
+        return /*#__PURE__*/ _jsxSorted(
+          "div",
+          null,
+          null,
+          ["Function: ", _wrapProp(v)],
+          1,
+          "fn_" + idx,
+        );
+      }),
+      store.map((v, idx) =>
+        /*#__PURE__*/ _jsxSorted("div", null, null, ["Arrow: ", _wrapProp(v)], 1, "arrow_" + idx),
+      ),
+    ],
+    1,
+    "u6_0",
+  );
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;0CAE0B;IACxB,MAAM,QAAQ,SAAS;QAAC;YAAE,OAAO;QAAE;KAAE;IACrC,qBACE;sBACE,WAAC;YAAO,WAAQ;;;WAA0B;QACzC,MAAM,GAAG,CAAC,SAAU,CAAC,EAAE,GAAG;YACzB,qBAAO,WAAC;gBAAsB;0BAAW;kBAAxB,QAAQ;QAC3B;QACC,MAAM,GAAG,CAAC,CAAC,GAAG,oBACb,WAAC;gBAAyB;0BAAQ;kBAAxB,WAAW;;AAI7B\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;0CAE0B;IACxB,MAAM,QAAQ,SAAS;QAAC;YAAE,OAAO;QAAE;KAAE;IACrC,qBACE;sBACE,WAAC;YAAO,WAAQ;;;WAA0B;QACzC,MAAM,GAAG,CAAC,SAAU,CAAC,EAAE,GAAG;YACzB,qBAAO,WAAC;gBAAsB;0BAAW;kBAAxB,QAAQ;QAC3B;QACC,MAAM,GAAG,CAAC,CAAC,GAAG,oBACb,WAAC;gBAAyB;0BAAQ;kBAAxB,WAAW;;AAI7B"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -86,15 +107,15 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_test_component_Fragment_button_q_e_click_7MTd2pAiliw.js (ENTRY POINT)==
-
 import { _captures } from "@qwik.dev/core";
-export const test_component_Fragment_button_q_e_click_7MTd2pAiliw = ()=>{
-    const store = _captures[0];
-    return store[0].value++;
+export const test_component_Fragment_button_q_e_click_7MTd2pAiliw = () => {
+  const store = _captures[0];
+  return store[0].value++;
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";oEAMwB;;WAAM,KAAK,CAAC,EAAE,CAAC,KAAK\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";oEAMwB;;WAAM,KAAK,CAAC,EAAE,CAAC,KAAK"}',
+);
 /*
 {
   "origin": "test.tsx",

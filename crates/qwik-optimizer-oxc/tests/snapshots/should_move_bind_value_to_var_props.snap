@@ -33,7 +33,9 @@ const i_O84bGdeej0g = () => import("./test.tsx_FieldInput_component_O84bGdeej0g"
 const i_jlpYRk03eHk = () => import("./test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk");
 import { useSignal } from "@qwik.dev/core";
 import { destructureBindings } from "./destructure-bindings";
-export const FieldInput = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_O84bGdeej0g, "FieldInput_component_O84bGdeej0g"));
+export const FieldInput = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_O84bGdeej0g, "FieldInput_component_O84bGdeej0g"),
+);
 
 === test.tsx_FieldInput_component_O84bGdeej0g.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -67,7 +69,7 @@ export const FieldInput_component_O84bGdeej0g = (props) => {
 
 === test.tsx_FieldInput_component_input_q_e_click_jlpYRk03eHk.js === (ENTRY)
 export const FieldInput_component_input_q_e_click_jlpYRk03eHk = () => {
-	console.log("clicked");
+  console.log("clicked");
 };
 
 /*

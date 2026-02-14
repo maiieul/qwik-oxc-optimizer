@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import { component$, useStore } from "@qwik.dev/core";
 
 export enum Thing {
@@ -21,30 +20,34 @@ export const App = component$(() => {
 });
 
 ============================= test.tsx ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0");
+const i_ckEPmXZlub0 = () => import("./test.tsx_App_component_ckEPmXZlub0");
 export enum Thing {
-    A,
-    B
+  A,
+  B,
 }
-export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
+export const App = /*#__PURE__*/ componentQrl(
+  /*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+);
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,YAAY;IACV;IACA;;AAGF,OAAO,MAAM,oBAAM,4EAOhB\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,YAAY;IACV;IACA;;AAGF,OAAO,MAAM,oBAAM,4EAOhB"}',
+);
 ============================= test.tsx_App_component_ckEPmXZlub0.tsx (ENTRY POINT)==
-
 import { Thing } from "./test";
-export const App_component_ckEPmXZlub0 = ()=>{
-    console.log(Thing.A);
-    return <>
+export const App_component_ckEPmXZlub0 = () => {
+  console.log(Thing.A);
+  return (
+    <>
       <p class="stuff">Hello Qwik</p>
-    </>;
+    </>
+  );
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";yCAO8B;IAC5B,QAAQ,GAAG,CAAC,MAAM,CAAC;IACnB,SACI;MACA,CAAC,EAAE,MAAM,QAAQ,UAAU,EAAE,EAAE;IACjC;AAEJ\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";yCAO8B;IAC5B,QAAQ,GAAG,CAAC,MAAM,CAAC;IACnB,SACI;MACA,CAAC,EAAE,MAAM,QAAQ,UAAU,EAAE,EAAE;IACjC;AAEJ"}',
+);
 /*
 {
   "origin": "test.tsx",

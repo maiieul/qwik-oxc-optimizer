@@ -15,12 +15,14 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_l5Al0251s9w = () => import("./test.tsx_Greeter_component_l5Al0251s9w");
 import json from "./foo.json" assert { type: "json" };
-export const Greeter = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"));
+export const Greeter = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_l5Al0251s9w, "Greeter_component_l5Al0251s9w"),
+);
 
 === test.tsx_Greeter_component_l5Al0251s9w.js === (ENTRY)
 import json from "./foo.json";
 export const Greeter_component_l5Al0251s9w = () => {
-	return json;
+  return json;
 };
 
 /*

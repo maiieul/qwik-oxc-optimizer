@@ -31,7 +31,9 @@ const i_MWp7oW4SJcQ = () => import("./test.tsx_Foo_component_p_q_e_click_MWp7oW4
 const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboCLusyIA");
 import { useSignal } from "@qwik.dev/core";
 import { Signal } from "@qwik.dev/core";
-const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
+const Foo = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+);
 
 === test.tsx_Foo_component_gZqPatVoDqw.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -40,15 +42,46 @@ const i_OJboCLusyIA = () => import("./test.tsx_Foo_component_div_q_e_click_OJboC
 import { _jsxSorted } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 import { Signal } from "@qwik.dev/core";
-export const Foo_component_gZqPatVoDqw = (function() {
-	const data = useSignal < Signal < any > [] > [];
-	const data2 = useSignal < Signal < any > [] > [];
-	return /* @__PURE__ */ _jsxSorted("div", null, null, data.value.map((row) => /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": /* @__PURE__ */ qrl(i_OJboCLusyIA, "Foo_component_div_q_e_click_OJboCLusyIA") }, data2.value.map((item) => /* @__PURE__ */ _jsxSorted("p", null, { "q-e:click": /* @__PURE__ */ qrl(i_MWp7oW4SJcQ, "Foo_component_p_q_e_click_MWp7oW4SJcQ") }, [
-		row.value.id,
-		"-",
-		item.value.id
-	], 1, "u6_0")), 3, "u6_1")), 3, "u6_2");
-});
+export const Foo_component_gZqPatVoDqw = function () {
+  const data = useSignal < Signal < any > [] > [];
+  const data2 = useSignal < Signal < any > [] > [];
+  return /* @__PURE__ */ _jsxSorted(
+    "div",
+    null,
+    null,
+    data.value.map((row) =>
+      /* @__PURE__ */ _jsxSorted(
+        "div",
+        null,
+        {
+          "q-e:click": /* @__PURE__ */ qrl(
+            i_OJboCLusyIA,
+            "Foo_component_div_q_e_click_OJboCLusyIA",
+          ),
+        },
+        data2.value.map((item) =>
+          /* @__PURE__ */ _jsxSorted(
+            "p",
+            null,
+            {
+              "q-e:click": /* @__PURE__ */ qrl(
+                i_MWp7oW4SJcQ,
+                "Foo_component_p_q_e_click_MWp7oW4SJcQ",
+              ),
+            },
+            [row.value.id, "-", item.value.id],
+            1,
+            "u6_0",
+          ),
+        ),
+        3,
+        "u6_1",
+      ),
+    ),
+    3,
+    "u6_2",
+  );
+};
 
 /*
 {

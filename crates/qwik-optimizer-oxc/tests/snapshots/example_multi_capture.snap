@@ -32,19 +32,19 @@ const i_gZqPatVoDqw = () => import("./test.tsx_Foo_component_gZqPatVoDqw");
 const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
 const i_GnvJdXy0KPg = () => import("./test.tsx_Bar_component_GnvJdXy0KPg");
 const i_MSAJNhrvHtQ = () => import("./test.tsx_Bar_MSAJNhrvHtQ");
-export const Foo = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"));
-export const Bar = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_GnvJdXy0KPg, "Bar_component_GnvJdXy0KPg"));
+export const Foo = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_gZqPatVoDqw, "Foo_component_gZqPatVoDqw"),
+);
+export const Bar = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_GnvJdXy0KPg, "Bar_component_GnvJdXy0KPg"),
+);
 
 === test.tsx_Foo_component_gZqPatVoDqw.jsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_Ma8uJBKLX2o = () => import("./test.tsx_s__Ma8uJBKLX2o");
 export const Foo_component_gZqPatVoDqw = (_rawProps) => {
-	const arg0 = 20;
-	return /* @__PURE__ */ qrl(i_Ma8uJBKLX2o, "s__Ma8uJBKLX2o", [
-		aaa,
-		foo,
-		arg0
-	]);
+  const arg0 = 20;
+  return /* @__PURE__ */ qrl(i_Ma8uJBKLX2o, "s__Ma8uJBKLX2o", [aaa, foo, arg0]);
 };
 
 /*
@@ -70,17 +70,19 @@ export const Foo_component_gZqPatVoDqw = (_rawProps) => {
 === test.tsx_s__Ma8uJBKLX2o.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const s__Ma8uJBKLX2o = () => {
-const _rawProps = _captures[0];
-const aaa = _captures[1];
-const arg0 = _captures[2];
+  const _rawProps = _captures[0];
+  const aaa = _captures[1];
+  const arg0 = _captures[2];
 
-	const fn = ({ aaa }) => aaa;
-	return <div>
-        {foo}
-        {fn()}
-        {arg0}
-      </div>;
-}
+  const fn = ({ aaa }) => aaa;
+  return (
+    <div>
+      {foo}
+      {fn()}
+      {arg0}
+    </div>
+  );
+};
 
 /*
 {
@@ -108,7 +110,7 @@ const arg0 = _captures[2];
 import { qrl } from "@qwik.dev/core";
 const i_MSAJNhrvHtQ = () => import("./test.tsx_Bar_MSAJNhrvHtQ");
 export const Bar_component_GnvJdXy0KPg = (_rawProps) => {
-	return /* @__PURE__ */ qrl(i_MSAJNhrvHtQ, "Bar_MSAJNhrvHtQ", [bar]);
+  return /* @__PURE__ */ qrl(i_MSAJNhrvHtQ, "Bar_MSAJNhrvHtQ", [bar]);
 };
 
 /*
@@ -134,10 +136,10 @@ export const Bar_component_GnvJdXy0KPg = (_rawProps) => {
 === test.tsx_Bar_MSAJNhrvHtQ.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Bar_MSAJNhrvHtQ = () => {
-const _rawProps = _captures[0];
+  const _rawProps = _captures[0];
 
-	return <div>{bar}</div>;
-}
+  return <div>{bar}</div>;
+};
 
 /*
 {

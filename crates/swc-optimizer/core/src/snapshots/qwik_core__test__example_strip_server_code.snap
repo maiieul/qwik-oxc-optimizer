@@ -3,7 +3,6 @@ source: src/test.rs
 expression: output
 ---
 ==INPUT==
-
 import {
   component$,
   serverLoader$,
@@ -51,16 +50,15 @@ export const Parent = component$(() => {
 });
 
 ============================= test.js ==
-
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_0TaiDayHrlo = ()=>import("./test.tsx_Parent_component_0TaiDayHrlo");
+const i_0TaiDayHrlo = () => import("./test.tsx_Parent_component_0TaiDayHrlo");
 export const Parent = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_0TaiDayHrlo, "s_0TaiDayHrlo"));
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAcA,OAAO,MAAM,uBAAS,gEA8BnB\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAcA,OAAO,MAAM,uBAAS,gEA8BnB"}',
+);
 ============================= test.tsx_Parent_component_0TaiDayHrlo.js (ENTRY POINT)==
-
 import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrl } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
@@ -69,27 +67,33 @@ import { serverLoaderQrl } from "@qwik.dev/core";
 import { serverStuffQrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 import { useTaskQrl } from "@qwik.dev/core";
-const i_P8oRQhHsurk = ()=>import("./test.tsx_Parent_component_useTask_1_P8oRQhHsurk");
-const i_gDH1EtUWqBU = ()=>import("./test.tsx_Parent_component_useTask_gDH1EtUWqBU");
-const i_zM9okM0TYrA = ()=>import("./test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA");
-export const s_0TaiDayHrlo = ()=>{
-    const state = useStore({
-        text: ""
-    });
-    // Double count watch
-    useTaskQrl(/*#__PURE__*/ qrl(i_gDH1EtUWqBU, "s_gDH1EtUWqBU", [
-        state
-    ]));
-    serverStuffQrl(/*#__PURE__*/ _noopQrl("s_r1qAHX7Opp0"));
-    serverLoaderQrl(/*#__PURE__*/ _noopQrl("s_k1L0DiPQV1I"));
-    useTaskQrl(/*#__PURE__*/ qrl(i_P8oRQhHsurk, "s_P8oRQhHsurk"));
-    return /*#__PURE__*/ _jsxSorted("div", null, {
-        "q-e:click": /*#__PURE__*/ qrl(i_zM9okM0TYrA, "s_zM9okM0TYrA")
-    }, _wrapProp(state, "text"), 3, "u6_0");
+const i_P8oRQhHsurk = () => import("./test.tsx_Parent_component_useTask_1_P8oRQhHsurk");
+const i_gDH1EtUWqBU = () => import("./test.tsx_Parent_component_useTask_gDH1EtUWqBU");
+const i_zM9okM0TYrA = () => import("./test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA");
+export const s_0TaiDayHrlo = () => {
+  const state = useStore({
+    text: "",
+  });
+  // Double count watch
+  useTaskQrl(/*#__PURE__*/ qrl(i_gDH1EtUWqBU, "s_gDH1EtUWqBU", [state]));
+  serverStuffQrl(/*#__PURE__*/ _noopQrl("s_r1qAHX7Opp0"));
+  serverLoaderQrl(/*#__PURE__*/ _noopQrl("s_k1L0DiPQV1I"));
+  useTaskQrl(/*#__PURE__*/ qrl(i_P8oRQhHsurk, "s_P8oRQhHsurk"));
+  return /*#__PURE__*/ _jsxSorted(
+    "div",
+    null,
+    {
+      "q-e:click": /*#__PURE__*/ qrl(i_zM9okM0TYrA, "s_zM9okM0TYrA"),
+    },
+    _wrapProp(state, "text"),
+    3,
+    "u6_0",
+  );
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;;;;;6BAciC;IAC/B,MAAM,QAAQ,SAAS;QACrB,MAAM;IACR;IAEA,qBAAqB;IACrB;;;IAMA;IAWA;IAEA;IAIA,qBAAO,WAAC;QAAI,WAAQ;iBAAgC;AACtD\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;;;;;6BAciC;IAC/B,MAAM,QAAQ,SAAS;QACrB,MAAM;IACR;IAEA,qBAAqB;IACrB;;;IAMA;IAWA;IAEA;IAIA,qBAAO,WAAC;QAAI,WAAQ;iBAAgC;AACtD"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -111,18 +115,18 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_Parent_component_useTask_gDH1EtUWqBU.js (ENTRY POINT)==
-
 import { _captures } from "@qwik.dev/core";
 import mongo from "mongodb";
 import redis from "redis";
-export const s_gDH1EtUWqBU = async ()=>{
-    const state = _captures[0];
-    state.text = await mongo.users();
-    redis.set(state.text);
+export const s_gDH1EtUWqBU = async () => {
+  const state = _captures[0];
+  state.text = await mongo.users();
+  redis.set(state.text);
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;6BAoBW;;IAEP,MAAM,IAAI,GAAG,MAAM,MAAM,KAAK;IAC9B,MAAM,GAAG,CAAC,MAAM,IAAI\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;6BAoBW;;IAEP,MAAM,IAAI,GAAG,MAAM,MAAM,KAAK;IAC9B,MAAM,GAAG,CAAC,MAAM,IAAI"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -147,13 +151,13 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_Parent_component_serverStuff_a_2ca3HLDC7yc.js (ENTRY POINT)==
-
-export const s_2ca3HLDC7yc = ()=>{
-// from $(), should not be removed
+export const s_2ca3HLDC7yc = () => {
+  // from $(), should not be removed
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6BA4BgB;AACV,kCAAkC;AACpC\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BA4BgB;AACV,kCAAkC;AACpC"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -175,13 +179,13 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_Parent_component_serverStuff_b_client_v9qawr2Inkk.js (ENTRY POINT)==
-
-export const s_v9qawr2Inkk = ()=>{
-// from clien$(), should not be removed
+export const s_v9qawr2Inkk = () => {
+  // from clien$(), should not be removed
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6BA+BsB;AAChB,uCAAuC;AACzC\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BA+BsB;AAChB,uCAAuC;AACzC"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -203,13 +207,13 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_Parent_component_useTask_1_P8oRQhHsurk.js (ENTRY POINT)==
-
-export const s_P8oRQhHsurk = ()=>{
-// Code
+export const s_P8oRQhHsurk = () => {
+  // Code
 };
 
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6BAuCW;AACP,OAAO;AACT\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAuCW;AACP,OAAO;AACT"}',
+);
 /*
 {
   "origin": "test.tsx",
@@ -231,11 +235,11 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
 }
 */
 ============================= test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA.js (ENTRY POINT)==
+export const s_zM9okM0TYrA = () => console.log("parent");
 
-export const s_zM9okM0TYrA = ()=>console.log("parent");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6BA2CwB,IAAM,QAAQ,GAAG,CAAC\"}")
+Some(
+  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BA2CwB,IAAM,QAAQ,GAAG,CAAC"}',
+);
 /*
 {
   "origin": "test.tsx",
