@@ -1,3 +1,4 @@
+
 import { $, component$, useStore } from '@qwik.dev/core';
 
 export const App = component$(({count, rest: [I2, {I3, v1: [I4], I5=v2, ...I6}, I7=v3, ...I8]}) => {

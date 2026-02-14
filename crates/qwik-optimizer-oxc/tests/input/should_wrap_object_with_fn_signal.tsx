@@ -1,3 +1,4 @@
+
 import { component$ } from '@qwik.dev/core';
 export default component$((props) => {
 	// not destructure it so it is a var prop

@@ -1,3 +1,4 @@
+
 import { component$, $ } from '@qwik.dev/core';
 import mongo from 'mongodb';
 
@@ -14,3 +15,4 @@ export const Greeter = component$(() => {
 		</div>
 	)
 });
+

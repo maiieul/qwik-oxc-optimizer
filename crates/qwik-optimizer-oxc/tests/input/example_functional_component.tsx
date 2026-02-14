@@ -1,3 +1,4 @@
+
 import { $, component$, useStore } from '@qwik.dev/core';
 const Header = component$(() => {
 	const thing = useStore();

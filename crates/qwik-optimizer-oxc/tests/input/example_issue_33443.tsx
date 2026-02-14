@@ -1,3 +1,4 @@
+
 import { component$, useSignal } from '@qwik.dev/core';
 
 export const Issue3742 = component$(({description = '', other}: any) => {
@@ -13,3 +14,4 @@ export const Issue3742 = component$(({description = '', other}: any) => {
 		</div>
 	)
 	});
+	

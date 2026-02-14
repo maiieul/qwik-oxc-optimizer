@@ -1,11 +1,13 @@
-import { component$, useComputed$, useTask$ } from '@qwik.dev/core'
 
-export default component$(({ color, ...props }) => {
-	useComputed$(() => color)
+		import { component$, useComputed$, useTask$ } from '@qwik.dev/core'
 
-	useTask$(() => {
-		props.checked
-	})
+		export default component$(({ color, ...props }) => {
+		useComputed$(() => color)
 
-	return 'hi'
-})
+		useTask$(() => {
+			props.checked
+		})
+
+		return 'hi'
+		})
+		

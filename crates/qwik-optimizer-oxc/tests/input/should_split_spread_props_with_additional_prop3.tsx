@@ -1,4 +1,5 @@
-import { component$ } from '@qwik.dev/core';
+
+		import { component$ } from '@qwik.dev/core';
 		import { Foo } from './foo';
 
 		export default component$((props) => {
@@ -6,3 +7,4 @@ import { component$ } from '@qwik.dev/core';
 				<Foo s={Math.random()} {...props} hello {...globalThis.nothing} />
 			);
 		});
+		

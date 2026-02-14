@@ -1,3 +1,4 @@
+
 import { component$ as Component, $ as onRender } from '@qwik.dev/core';
 
 export const handler = $(()=>console.log('hola'));

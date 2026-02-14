@@ -1,3 +1,4 @@
+
 import { component$ } from '@qwik.dev/core';
 
 export const App = component$(() => {
@@ -6,7 +7,7 @@ export const App = component$(() => {
     { value: { id: 2, selected: { value: false } } },
     { value: { id: 3, selected: { value: true } } }
   ]};
-
+  
   return (
     <table>
       {data.value.map((row) => {

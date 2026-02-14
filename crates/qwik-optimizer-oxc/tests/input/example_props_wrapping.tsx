@@ -1,3 +1,4 @@
+
 import { $, component$, useSignal } from '@qwik.dev/core';
 export const Works = component$(({fromProps}) => {
 	let fromLocal = useSignal(0);
@@ -8,7 +9,7 @@ export const Works = component$(({fromProps}) => {
 			props-wrap={fromProps}
 			props-only={{props: fromProps}}
 			props={{props: fromProps, local: fromLocal}}
-		>
+				>
 		</div>
 	);
 });

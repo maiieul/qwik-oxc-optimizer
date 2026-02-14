@@ -1,3 +1,4 @@
+
 import { component$, useResource$, Resource } from "@qwik.dev/core";
 import { type ModelProps } from "./modelMenu";
 import { serverImg } from "~/routes/(authenticated)/layout";
@@ -23,7 +24,9 @@ export const ModelImg = component$<ModelProps>((props) => {
         onResolved={(res) =>
           res && (
             <>
-              <Image src={res} />
+              <Image
+                src={res}
+              />
             </>
           )
         }

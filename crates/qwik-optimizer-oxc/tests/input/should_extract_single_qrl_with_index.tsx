@@ -1,3 +1,4 @@
+
 import { $, component$, useSignal, Signal } from '@qwik.dev/core';
 export const App = component$(() => {
 	const data = useSignal<Signal<any>[]>([]);

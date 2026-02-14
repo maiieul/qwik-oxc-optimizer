@@ -1,3 +1,4 @@
+
 import { $, component$ } from '@qwik.dev/core';
 import {foo, bar as bbar} from "../state";
 import * as dep2 from "dep2";

@@ -1,16 +1,18 @@
-import { component$, useComputed$ } from '@qwik.dev/core';
-import { inlineTranslate } from 'translate-lib';
 
-export default component$(() => {
-	const t = inlineTranslate();
+		import { component$, useComputed$ } from '@qwik.dev/core';
+		import { inlineTranslate } from 'translate-lib';
 
-	const productTitle = useComputed$(() => {
-		return 'Test title';
-	});
+		export default component$(() => {
+			const t = inlineTranslate();
 
-	return (
-		<img
-			attr={t('home.imageAlt.founded-product:')}
-			alt={`${t('home.imageAlt.founded-product:')} ${productTitle.value}`} />
-	);
-});
+			const productTitle = useComputed$(() => {
+				return 'Test title';
+			});
+
+			return (
+				<img 
+					attr={t('home.imageAlt.founded-product:')}
+					alt={`${t('home.imageAlt.founded-product:')} ${productTitle.value}`} />
+			);
+		});
+		

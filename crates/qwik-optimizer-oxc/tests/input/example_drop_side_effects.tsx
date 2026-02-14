@@ -1,3 +1,4 @@
+
 import { component$ } from '@qwik.dev/core';
 import { server$ } from '@qwik.dev/router';
 import { clientSupabase } from 'supabase';

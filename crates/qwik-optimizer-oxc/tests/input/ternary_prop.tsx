@@ -1,4 +1,5 @@
-import { component$, $, useSignal } from '@qwik.dev/core';
+
+		import { component$, $, useSignal } from '@qwik.dev/core';
 		export const Cmp = component$(() => {
 			const toggleSig = useSignal(false);
 
@@ -12,3 +13,4 @@ import { component$, $, useSignal } from '@qwik.dev/core';
 				</button>
 			);
 		});
+		

@@ -1,3 +1,4 @@
+
 import { $, component$, useStyles$ } from '@qwik.dev/core';
 
 export const Foo = component$(() => {

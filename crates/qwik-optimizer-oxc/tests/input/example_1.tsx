@@ -1,3 +1,4 @@
+
 import { $, component, onRender } from '@qwik.dev/core';
 
 export const renderHeader = $(() => {

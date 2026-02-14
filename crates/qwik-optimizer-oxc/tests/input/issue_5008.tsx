@@ -1,4 +1,5 @@
-import { component$, useStore } from "@qwik.dev/core";
+
+		import { component$, useStore } from "@qwik.dev/core";
 
 		export default component$(() => {
 		const store = useStore([{ value: 0 }]);
@@ -14,3 +15,4 @@ import { component$, useStore } from "@qwik.dev/core";
 			</>
 		);
 		});
+		

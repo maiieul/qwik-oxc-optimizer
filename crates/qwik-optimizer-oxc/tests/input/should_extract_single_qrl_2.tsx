@@ -1,4 +1,5 @@
-import { component$, useStore, useSignal } from '@qwik.dev/core';
+
+	  import { component$, useStore, useSignal } from '@qwik.dev/core';
       const Parent = component$(() => {
       const cart = useStore<Cart>([]);
       const results = useSignal(['foo', 'bar']);

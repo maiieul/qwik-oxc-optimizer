@@ -1,7 +1,9 @@
-import { component$ } from '@qwik.dev/core';
+
+		import { component$ } from '@qwik.dev/core';
 
 		export default component$((props) => {
 			return (
 				<div test="test" {...props}></div>
 			);
 		});
+		

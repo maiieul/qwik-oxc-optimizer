@@ -1,4 +1,5 @@
-import { component$ } from "@qwik.dev/core";
+
+		import { component$ } from "@qwik.dev/core";
 		const Cmp = component$(() => {
 			const htmlSignal = useSignal("<h2><span>I'm a signal value!</span></h2>");
 			return (
@@ -20,3 +21,4 @@ import { component$ } from "@qwik.dev/core";
 				</div>
 			);
 		});
+		

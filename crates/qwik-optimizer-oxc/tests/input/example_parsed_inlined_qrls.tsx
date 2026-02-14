@@ -1,3 +1,4 @@
+
 import { componentQrl, inlinedQrl, useStore, jsxs, jsx, useLexicalScope } from '@qwik.dev/core';
 
 export const App = /*#__PURE__*/ componentQrl(inlinedQrl(()=>{
@@ -31,3 +32,4 @@ export const App = /*#__PURE__*/ componentQrl(inlinedQrl(()=>{
 }, "App_component_Fh88JClhbC0"));
 
 export const STYLES = ".red { color: red; }";
+

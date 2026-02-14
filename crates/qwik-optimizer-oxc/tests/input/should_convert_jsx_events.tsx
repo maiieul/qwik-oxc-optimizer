@@ -1,4 +1,5 @@
-import { component$ } from '@qwik.dev/core';
+
+		import { component$ } from '@qwik.dev/core';
 
 		const ManyEventsComponent = component$(() => {
 			return (
@@ -21,3 +22,4 @@ import { component$ } from '@qwik.dev/core';
 				</div>
 			);
 		});
+		

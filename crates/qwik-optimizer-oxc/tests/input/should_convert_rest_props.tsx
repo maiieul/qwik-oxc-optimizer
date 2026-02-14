@@ -1,9 +1,11 @@
-import { component$, useTask$ } from '@qwik.dev/core'
 
-export default component$<any>(({ ...props }) => {
-	useTask$(() => {
-		props.checked
-	})
+		import { component$, useTask$ } from '@qwik.dev/core'
 
-	return 'hi'
-})
+		export default component$<any>(({ ...props }) => {
+		useTask$(() => {
+			props.checked
+		})
+
+		return 'hi'
+		})
+		

@@ -1,3 +1,4 @@
+
 import { $, component$, useStore } from '@qwik.dev/core';
 export const useCounter = () => {
 	return useStore({count: 0});

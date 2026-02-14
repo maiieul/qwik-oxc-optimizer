@@ -1,4 +1,5 @@
-import { component$ } from '@qwik.dev/core';
+
+		import { component$ } from '@qwik.dev/core';
 
 		function Hola(props: any) {
 			return <div {...props}></div>;
@@ -10,3 +11,4 @@ import { component$ } from '@qwik.dev/core';
 			<div>2</div>
 		</Hola>;
 		});
+		

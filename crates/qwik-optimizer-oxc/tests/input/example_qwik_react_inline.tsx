@@ -1,16 +1,17 @@
+
 import { componentQrl, inlinedQrl, useLexicalScope, useHostElement, useStore, useTaskQrl, noSerialize, SkipRerender, implicit$FirstArg } from '@qwik.dev/core';
 import { jsx, Fragment } from '@qwik.dev/core/jsx-runtime';
 import { isBrowser, isServer } from '@qwik.dev/core';
 
 function qwikifyQrl(reactCmpQrl) {
-	return /* @__PURE__ */ componentQrl(inlinedQrl((props) => {
+	return /*#__PURE__*/ componentQrl(inlinedQrl((props)=>{
 		const [reactCmpQrl] = useLexicalScope();
 		const hostElement = useHostElement();
 		const store = useStore({});
 		let run;
 		if (props['client:visible']) run = 'visible';
 		else if (props['client:load'] || props['client:only']) run = 'load';
-		useTaskQrl(inlinedQrl(async (track) => {
+		useTaskQrl(inlinedQrl(async (track)=>{
 			const [hostElement, props, reactCmpQrl, store] = useLexicalScope();
 			track(props);
 			if (isBrowser) {
@@ -45,21 +46,21 @@ function qwikifyQrl(reactCmpQrl) {
 			const jsx$1 = Promise.all([
 				reactCmpQrl.resolve(),
 				import('./server-9ac6caad.js')
-			]).then(([Cmp, server]) => {
+			]).then(([Cmp, server])=>{
 				const html = server.render(Cmp, filterProps(props));
-				return /* @__PURE__ */ jsx(Host, {
+				return /*#__PURE__*/ jsx(Host, {
 					dangerouslySetInnerHTML: html,
 					[_IMMUTABLE]: [
 						"dangerouslySetInnerHTML"
 					]
 				});
 			});
-			return /* @__PURE__ */ jsx(Fragment, {
+			return /*#__PURE__*/ jsx(Fragment, {
 				children: jsx$1
 			});
 		}
-		return /* @__PURE__ */ jsx(Host, {
-			children: /* @__PURE__ */ jsx(SkipRerender, {})
+		return /*#__PURE__*/ jsx(Host, {
+			children: /*#__PURE__*/ jsx(SkipRerender, {})
 		});
 	}, "qwikifyQrl_component_zH94hIe0Ick", [
 		reactCmpQrl
@@ -67,12 +68,14 @@ function qwikifyQrl(reactCmpQrl) {
 		tagName: 'qwik-wrap'
 	});
 }
-const filterProps = (props) => {
-	const obj = {};	Object.keys(props).forEach((key) => {
+const filterProps = (props)=>{
+	const obj = {};
+	Object.keys(props).forEach((key)=>{
 		if (!key.startsWith('client:')) obj[key] = props[key];
 	});
 	return obj;
-};const qwikify$ = implicit$FirstArg(qwikifyQrl);
+};
+const qwikify$ = implicit$FirstArg(qwikifyQrl);
 
 async function renderToString(rootNode, opts) {
 	const mod = await import('./server-9ac6caad.js');
@@ -82,6 +85,8 @@ async function renderToString(rootNode, opts) {
 	return {
 		...result,
 		html: finalHtml
-	};}
+	};
+}
 
-export { qwikify$, qwikifyQrl, renderToString };		
+export { qwikify$, qwikifyQrl, renderToString };
+		

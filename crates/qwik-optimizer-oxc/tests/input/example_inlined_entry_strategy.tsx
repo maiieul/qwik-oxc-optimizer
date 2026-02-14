@@ -1,3 +1,4 @@
+
 import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from '@qwik.dev/core';
 import { thing } from './sibling';
 import mongodb from 'mongodb';
@@ -19,3 +20,4 @@ export const Child = component$(() => {
 		</div>
 	);
 });
+

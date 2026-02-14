@@ -1,3 +1,4 @@
+
 import { component$ } from '@qwik.dev/core';
 
 export default component$(() => {
@@ -6,3 +7,4 @@ export default component$(() => {
 		</div>
 	);
 });
+

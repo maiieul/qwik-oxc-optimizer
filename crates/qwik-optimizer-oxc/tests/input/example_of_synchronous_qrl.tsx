@@ -1,4 +1,5 @@
-import { sync$, component$ } from "@qwik.dev/core";
+
+		import { sync$, component$ } from "@qwik.dev/core";
 
 		export default component$(() => {
 		return (
@@ -14,3 +15,4 @@ import { sync$, component$ } from "@qwik.dev/core";
 			</>
 		);
 		});
+		

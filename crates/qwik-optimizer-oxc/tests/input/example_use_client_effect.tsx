@@ -1,3 +1,4 @@
+
 import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from '@qwik.dev/core';
 
 export const Child = component$(() => {
@@ -21,3 +22,4 @@ export const Child = component$(() => {
 	</div>
 	);
 });
+

@@ -1,7 +1,10 @@
+
 import { $, component$, useStore, useSignal } from '@qwik.dev/core';
 export default component$((props: { id: number }) => {
       const renders = useStore(
-        { count: 0 },
+        {
+          count: 0,
+        },
         { reactive: false }
       );
       renders.count++;
