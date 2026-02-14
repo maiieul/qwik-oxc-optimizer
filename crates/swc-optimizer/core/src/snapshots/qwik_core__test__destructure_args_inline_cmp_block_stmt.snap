@@ -34,20 +34,12 @@ export default (_rawProps) => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;mBAGsB,GAHJ,KAGS,oBAAoB,KAAK;;;AAHpD,eAAe,CAAA;IACb,qBACE,WAAC;QACC,gBAAc;;;QACd,WAAQ;;;;AAKd,CAAA,EAAE"}',
-);
 ============================= test.tsx_test_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _captures } from "@qwik.dev/core";
 export const test_div_q_e_click_XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
   _rawProps.data.selectedOutputDetail = "options";
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";8CAIgB;;IACR,UALU,KAKL,oBAAoB,GAAG"}',
-);
 /*
 {
   "origin": "test.tsx",

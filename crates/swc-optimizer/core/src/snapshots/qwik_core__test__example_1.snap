@@ -24,20 +24,12 @@ export const renderHeader = /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "renderHeader_XXXX
 const renderHeader = component(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "renderHeader_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAAA,SAAY,SAAS,QAAkB,iBAAiB;AAExD,OAAO,MAAM,4EAEV;AACH,MAAM,eAAe"}',
-);
 ============================= test.tsx_renderHeader_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_renderHeader_div_onClick_XXXXXXXXXXXX");
 export const renderHeader_XXXXXXXXXXXX = () => {
   return <div onClick={/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "renderHeader_div_onClick_XXXXXXXXXXXX")} />;
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;wCAE8B;IAC5B,QAAQ,IAAI;AACd"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -60,10 +52,6 @@ Some(
 */
 ============================= test.tsx_renderHeader_div_onClick_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 export const renderHeader_div_onClick_XXXXXXXXXXXX = (ctx) => console.log(ctx);
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"oDAGyB,CAAC,MAAQ,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -92,10 +80,6 @@ export const renderHeader_component_XXXXXXXXXXXX = () => {
   console.log("mount");
   return render;
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"kDAMI;IACA,QAAQ,GAAG,CAAC;IACZ,OAAO;AACT"}',
-);
 /*
 {
   "origin": "test.tsx",

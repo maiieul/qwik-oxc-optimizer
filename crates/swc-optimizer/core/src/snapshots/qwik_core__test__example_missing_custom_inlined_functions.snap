@@ -33,10 +33,6 @@ export const App = component$((props) => {
   });
   return $(() => /*#__PURE__*/ _jsxSorted("div", null, null, _wrapProp(state, "count"), 3, "u6_0"));
 });
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;AAAA,SAAiD,QAAQ,EAAQ,SAAS,QAAQ,iBAAiB;AAEnG,OAAO,MAAM,WAAW,CAAC;IACvB,UAAU;AACZ,EAAE;AAEF,OAAO,MAAM,MAAM,WAAW,CAAC;IAC7B,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAClC,SAAS;QACP,QAAQ,GAAG,CAAC,MAAM,KAAK;IACzB;IACA,OAAO,EAAE,kBAAM,WAAC,6BAAK;AACvB,GAAG"}',
-);
 == DIAGNOSTICS ==
 
 [

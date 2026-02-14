@@ -79,20 +79,12 @@ export const Header = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
 );
 export const Footer = /*#__PURE__*/ componentQrl();
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/project/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,CACX,GACA,EACE,CAAC,EACD,IAAI,CAAC,EAAE,EACP,IAAI,EAAE,EACN,GAAG,GACJ,EACD,IAAI,EAAE,EACN,GAAG,EACJ,GAAG,IAAI;AAER,MAAM,OAAO;AACb,MAAM,WAAW;AACjB,SAAS,IAAI,EAAE,YAAY,KAAK,GAAG;AAEnC,OAAO,SAAS,OAAO;AACvB,OAAO,MAAM;AAAK;AAElB,eAAe,SAAS,aAAa;AAErC,OAAO,MAAM,uBAAS,+EAwBnB;AAEH,OAAO,MAAM,uBAAS,eAAa"}',
-);
 ============================= project/test.tsx_Header_component_XXXXXXXXXXXX.jsx (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_1_XXXXXXXXXXXX");
 export const Header_component_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Header_component_1_XXXXXXXXXXXX");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/project/test.tsx"],"names":[],"mappings":";;4CAuBiC;IAC/B;AAuBF"}',
-);
 /*
 {
   "origin": "project/test.tsx",
@@ -148,10 +140,6 @@ export const Header_component_1_XXXXXXXXXXXX = () => (
       {obj}
     </div>
   </Footer>
-);
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/project/test.tsx"],"names":[],"mappings":";;;;;;;;;;;;8CAwBW,KACN,OAAO;MACN,CAAC,IAAI;QACH,CAAC,EAAE;QACH,CAAC,EAAE;QACH,CAAC,EAAE;QACH,CAAC,EAAE;QACH,CAAC,EAAE;QACH,CAAC,EAAE;QACH,CAAC,KAAK;QACN,CAAC,SAAS;QACV,CAAC,IAAI;QACL,CAAC,IAAI;QACL,CAAC,UAAU;MACb,EAAE,IAAI;MACN,CAAC,IAAI;QACH,CAAC,GAAG;QACJ,CAAC,GAAG;QACJ,CAAC,GAAG;QACJ,CAAC,IAAI;MACP,EAAE,IAAI;IACR,EAAE"}',
 );
 /*
 {

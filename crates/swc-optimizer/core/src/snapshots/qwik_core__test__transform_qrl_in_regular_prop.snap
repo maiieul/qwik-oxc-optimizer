@@ -13,10 +13,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Cmp_component_XXXXXXXXXXXX");
 export const Cmp = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Cmp_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AACA,OAAO,MAAM,oBAAM,4EAA+E"}',
-);
 ============================= test.tsx_Cmp_component_XXXXXXXXXXXX.ts (ENTRY POINT)==
 import { Cmp } from "./test";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -33,10 +29,6 @@ export const Cmp_component_XXXXXXXXXXXX = () =>
     3,
     "u6_0",
   );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;yCAC8B,kBAAM,WAAC;QAAI,GAAG;aAAoC"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -59,10 +51,6 @@ Some(
 */
 ============================= test.tsx_Cmp_component_Cmp_foo_XXXXXXXXXXXX.ts (ENTRY POINT)==
 export const Cmp_component_Cmp_foo_XXXXXXXXXXXX = () => console.log("hi there");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"iDACgD,IAAM,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",

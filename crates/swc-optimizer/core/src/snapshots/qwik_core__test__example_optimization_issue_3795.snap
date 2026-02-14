@@ -39,10 +39,6 @@ export const Issue3795 = /*#__PURE__*/ componentQrl(
     );
   }, "Issue3795_component_wsE8beycatI"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,0BAAY,sCAAW;IAClC,IAAI,OAAO;IACX,MAAM,kBAAkB;IACxB,QAAQ;IACR,MAAM,mBAAmB;IACzB,qBACE,WAAC;QAAI,IAAG;;QACL;QAAgB;QAAE;;AAGzB,uCAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

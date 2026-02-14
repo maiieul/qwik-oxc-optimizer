@@ -31,10 +31,6 @@ const App_component_ckEPmXZlub0 = (props) => {
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAAA,SAA+B,IAAI,QAAQ,iBAAiB;kCAE9B,CAAC;IAC7B,qBACE,WAAC,iCACC,WAAC;AAGP;AANA,OAAO,MAAM,oBAAM,+FAMhB"}',
-);
 == DIAGNOSTICS ==
 
 []

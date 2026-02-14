@@ -48,10 +48,6 @@ export const Image = /*#__PURE__*/ componentQrl(
 export const ModelImg = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "ModelImg_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAIA,OAAO,MAAM,sBAAQ,8EAMlB;AAEH,OAAO,MAAM,yBAAW,iFAoBrB"}',
-);
 ============================= test.tsx_Image_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -74,10 +70,6 @@ export const Image_component_XXXXXXXXXXXX = (props) => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;2CAIgC,CAAC;IAC/B,qBACE,gDACE,WAAC;QAAI,KAAK,GAAG,MAAM,GAAG,EAAE;;AAG9B"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -151,10 +143,6 @@ export const ModelImg_component_XXXXXXXXXXXX = (props) => {
     "u6_5",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;8CAY+C,CAAC;IAC9C,MAAM,SAAS;;;IAIf,qBACE,gDACE,WAAC;QACC,OAAO;QACP,YAAY,kBAAM,WAAC,iBAAE;QACrB,YAAY,CAAC,MACX,qBACE,gDACE,WAAC;gBAAM,KAAK;;;AAO1B"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -186,10 +174,6 @@ export const ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX = async (_rawPro
   _rawProps.track(() => props.store.model);
   return await serverImg("some.png");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;iEAa8B;;IAC1B,UADmC,MAC7B,IAAM,MAAM,KAAK,CAAC,KAAK;IAC7B,OAAO,MAAM,UAAU"}',
-);
 /*
 {
   "origin": "test.tsx",

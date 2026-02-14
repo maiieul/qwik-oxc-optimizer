@@ -39,10 +39,6 @@ export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
 export { useFoo as _auto_useFoo };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AACA,MAAM,SAAS,CAAC;IACd,MAAM,MAAM,CAAC;QACX,MAAM,QAAQ,OAAO,MAAM,WAAW,IAAI,CAAC,CAAC,EAAE;QAC9C,OAAO,GAAG,MAAM,CAAC,EAAE,MAAM,KAAK,EAAE;IAClC;IACA,OAAO;AACT;AAEA,6BAAe,6EAUZ"}',
-);
 ============================= test.tsx_test_component_XXXXXXXXXXXX.ts (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -80,10 +76,6 @@ export const test_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;0CAS0B;IACxB,MAAM,QAAQ,UAAU;IACxB,MAAM,MAAM,OAAO;IACnB,qBACE;sBACE,WAAC,iBAAG,IAAI;sBACR,WAAC,iBAAG,GAAG,CAAC,IAAI,CAAC;sBACb,WAAC;YAAO,WAAQ;;;WAAuB;;AAG7C"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -110,10 +102,6 @@ export const test_component_Fragment_button_q_e_click_XXXXXXXXXXXX = () => {
   const count = _captures[0];
   return count.value++;
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";oEAgBwB;;WAAM,MAAM,KAAK"}',
-);
 /*
 {
   "origin": "test.tsx",

@@ -60,10 +60,6 @@ export const Input = /*#__PURE__*/ componentQrl(
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAGA,OAAO,MAAM,sBAAQ,8EAQlB;AAEH,6BAAe,6EA+BZ"}',
-);
 ============================= test.tsx_Input_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -74,10 +70,6 @@ export const Input_component_XXXXXXXXXXXX = (props) => {
   useTaskQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Input_component_useTask_XXXXXXXXXXXX", [props]));
   return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, null, 3, "u6_0");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;2CAGmF,CAAC;IAClF;;;IAMA,qBAAO;AACT"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -109,10 +101,6 @@ export const Input_component_useTask_XXXXXXXXXXXX = ({ track }) => {
   track(() => props.error2);
   track(() => props.error3);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";mDAIW,CAAC,EAAE,KAAK,EAAE;;IACjB,MAAM,IAAM,MAAM,KAAK;IACvB,MAAM,IAAM,MAAM,MAAM;IACxB,MAAM,IAAM,MAAM,MAAM"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -221,10 +209,6 @@ export const test_component_XXXXXXXXXXXX = () => {
     "u6_2",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;mBAgCe,GAAM,MAAM,CAAC,IAAI;;mBAIhB,GAhBN,OAgBa,MAAM,CAAC,IAAI;;;0CAvBR;IACxB,MAAM,CAAC,OAAO,KAAK,GAAG;QAAC,SAAS;YAAE,QAAQ,CAAC;QAAE;QAAI,KAAK,MAAM;KAAG;IAC/D,MAAM,CAAC,CAAC,OAAO,CAAC,GAAG;QAAC;YAAC,SAAS;gBAAE,QAAQ,CAAC;YAAE;SAAG;KAAC;IAC/C,MAAM,EAAE,MAAM,EAAE,KAAK,EAAE,GAAG;QAAE,QAAQ,SAAS;YAAE,QAAQ,CAAC;QAAE;QAAI,OAAO,KAAK,MAAM;IAAG;IACnF,MAAM,QAAQ;QAAC,KAAK,MAAM;KAAG;IAC7B,MAAM,EAAE,KAAK,EAAE,GAAG;QAAE,OAAO,KAAK,MAAM;IAAG;IACzC,MAAM,CAAC,OAAO,GAAG;IACjB,MAAM,QAAa;IAEnB,qBACE,WAAC;sBACC,WAAC;YACC,WAAQ;;;WAGT;sBAGD,WAAC;YAMC,MAAM;YACN,OAAO;YACP,OAAO;YACP,OAAO;;YARP,KAAK;;;YACL,MAAM;;;YACN,MAAM;;;YACN,MAAM;;;YACN,MAAM;;;;;AAQd"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -251,10 +235,6 @@ export const test_component_div_button_q_e_click_XXXXXXXXXXXX = () => {
   const store = _captures[0];
   store.errors.test = store.errors.test ? undefined : "ERROR TEST";
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";+DAyBkB;;IACR,MAAM,MAAM,CAAC,IAAI,GAAG,MAAM,MAAM,CAAC,IAAI,GAAG,YAAY"}',
-);
 /*
 {
   "origin": "test.tsx",

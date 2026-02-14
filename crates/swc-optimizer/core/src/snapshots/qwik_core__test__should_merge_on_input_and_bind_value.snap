@@ -25,10 +25,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_XXXXXXXXXXX
 export const FieldInput = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "FieldInput_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,2BAAa,mFAWvB"}',
-);
 ============================= test.tsx_FieldInput_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _val } from "@qwik.dev/core";
@@ -53,10 +49,6 @@ export const FieldInput_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;gDAEqC;IACnC,MAAM,aAAa,UAAU;IAE7B,qBACE,WAAC;iBACa;;;gBAAA;;;;;AAMlB"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -81,10 +73,6 @@ Some(
 export const FieldInput_component_input_q_e_input_XXXXXXXXXXXX = () => {
   console.log("test");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"gEAQgB;IACR,QAAQ,GAAG,CAAC;AACd"}',
-);
 /*
 {
   "origin": "test.tsx",

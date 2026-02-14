@@ -33,10 +33,6 @@ export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
 export const PANELS = ["Examples", "Input", "Output", "Console"];
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,6BAAe,6EAiBZ;AACH,OAAO,MAAM,SAAwB;IAAC;IAAY;IAAS;IAAU;CAAU,CAAC"}',
-);
 ============================= test.tsx_test_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { PANELS } from "./test";
 import { _fnSignal } from "@qwik.dev/core";
@@ -67,10 +63,6 @@ export const test_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;mBAUa,GAAW,MAAM,GAAG,QAAQ;;0CARf;IACxB,MAAM,aAAa,SAAS,IAAM,CAAC;YACjC,QAAQ;YACR,MAAM;QACR,CAAC;IAED,qBACE,WAAC;QAEC,OAAO;YACL,oBAAoB;YACpB,wBAAwB,WAAW,MAAM,KAAK;YAC9C,yBAAyB,WAAW,MAAM,KAAK;YAC/C,0BAA0B,WAAW,MAAM,KAAK;QAClD;;QANA,KAAK;;;;AASX"}',
-);
 /*
 {
   "origin": "test.tsx",

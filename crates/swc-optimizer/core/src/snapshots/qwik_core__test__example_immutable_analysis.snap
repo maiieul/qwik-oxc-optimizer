@@ -64,10 +64,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAIA,OAAO,MAAM,oBAAM,4EAgDhB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _fnSignal } from "@qwik.dev/core";
@@ -162,10 +158,6 @@ export const App_component_XXXXXXXXXXXX = (props) => {
     "u6_2",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;mBA0CoB,CAAA;QACR,KAAK;QACL,KAAK,GAAM,KAAK,GAAG,OAAO;IAC5B,CAAA;;;;;;yCAzCoB,CAAC;IAE7B,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAClC,MAAM;;;IAON,qBACE;sBACE,WAAC;YAAgB,aAAU,MAAM,QAAQ;;YAAtC,OAAM;WAAkC;sBAG3C,WAAC;YAEC,UAAU,OAAO,QAAQ;YACzB,UAAU,MAAM,QAAQ;;YAFxB,OAAO,OAAO,GAAG;YAGjB,QAAQ;YACR,YAAY;YAGZ,YAAW;YACX,YAAY;gBACV,KAAK;gBACL,KAAK,gBAAgB,OAAO;YAC9B;YACA,YAAY;YACZ,WAAW;;;YACX,YAAY;gBAAC;gBAAG;gBAAG;gBAAe;gBAAM,CAAC;aAAE;yBAE3C,WAAC,iBAAE;QAEJ,EAAE,CAAC,GAAG,CAAC,kBACN,WAlCY,MAAV;gBAyCA,UAAU,CAAC,IAAM,QAAQ,GAAG,CAAC,MAAM,KAAK,CAAC;;gBANzC,OAAO;gBACP,SAAS;gBACT,QAAQ;;;gBAKR,UAAU;oBAAC;oBAAG;oBAAG;oBAAO;oBAAM,CAAC;iBAAE;;;AAK3C"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -199,10 +191,6 @@ export const App_component_remove_XXXXXXXXXXXX = (id) => {
     1,
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";gDAOmB,CAAC;;IAChB,MAAM,IAAI,MAAM,IAAI;IACpB,EAAE,MAAM,CACN,EAAE,SAAS,CAAC,CAAC,IAAM,EAAE,EAAE,KAAK,KAC5B"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -231,10 +219,6 @@ Some(
 */
 ============================= test.tsx_App_component_Fragment_Div_onEvent_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const App_component_Fragment_Div_onEvent_XXXXXXXXXXXX = () => console.log("stuff");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"8DAuBkB,IAAM,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -259,10 +243,6 @@ Some(
 export const App_component_Fragment_Div_transparent_XXXXXXXXXXXX = () => {
   console.log("stuff");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"kEAwBsB;IACZ,QAAQ,GAAG,CAAC;AACd"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -289,10 +269,6 @@ export const App_component_Fragment_Div_immutable4_XXXXXXXXXXXX = (ev) => {
   const state = _captures[0];
   return console.log(state.count);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";iEAiCqB,CAAC;;WAAO,QAAQ,GAAG,CAAC,MAAM,KAAK"}',
-);
 /*
 {
   "origin": "test.tsx",

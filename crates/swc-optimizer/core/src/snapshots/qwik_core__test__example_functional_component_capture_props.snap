@@ -67,10 +67,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAqDjB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
@@ -124,10 +120,6 @@ export const App_component_XXXXXXXXXXXX = ({
     state,
   ]);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;yCAGE,CAAC,EACC,KAAK,EACL,MAAM,CACJ,IACA,EACE,EAAE,EACF,IAAI,CAAC,GAAG,EACR,KAAK,EAAE,EACP,GAAG,IACJ,EACD,KAAK,EAAE,EACP,GAAG,GACJ,EACF;IACC,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAClC,MAAM,EACJ,MAAM,CACJ,IACA,EACE,EAAE,EACF,IAAI,CAAC,GAAG,EACR,KAAK,EAAE,EACP,GAAG,IACJ,EACD,KAAK,EAAE,EACP,GAAG,GACJ,EACF,GAAG;IACJ;;;;;;;;;;;;;;;;;;AAuBF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -187,10 +179,6 @@ export const App_component_1_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;2CA+Ba;;IACP,qBACE,WAAC;QAAI,WAAQ;;;;;QACV;QACA;QACA;QACA;QACA;QACA;QACA;QACA;QACA;QACA;QACA;QACA;QACA;QACA;QACA;QACA;QACA"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -236,10 +224,6 @@ export const App_component_div_q_e_click_XXXXXXXXXXXX = () => {
     state = _captures[1];
   return (state.count += count + total);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";uDAiCuB;;WAAO,MAAM,KAAK,IAAI,QAAQ"}',
-);
 /*
 {
   "origin": "test.tsx",

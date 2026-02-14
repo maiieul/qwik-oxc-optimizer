@@ -18,10 +18,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,6BAAe,6EAIZ"}',
-);
 ============================= test.tsx_test_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _fnSignal } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -40,10 +36,6 @@ export const test_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;uBAKe,CAAC,QAAe,EAAE,KAAK;;0CAHZ;IACxB,MAAM,QAAQ,UAAU;IACxB,MAAM,SAAS,UAAU;IACzB,qBAAO,WAAC;;;;AACV"}',
-);
 /*
 {
   "origin": "test.tsx",

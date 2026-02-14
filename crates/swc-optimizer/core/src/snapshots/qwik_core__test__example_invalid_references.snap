@@ -59,10 +59,6 @@ export { I6 as _auto_I6 };
 export { I7 as _auto_I7 };
 export { I8 as _auto_I8 };
 export { I9 as _auto_I9 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,MAAM,KAAK;AACX,MAAM,CACJ,IACA,EACE,EAAE,EACF,IAAI,CAAC,GAAG,EACR,KAAK,EAAE,EACP,GAAG,IACJ,EACD,KAAK,EAAE,EACP,GAAG,GACJ,GAAG;AACJ,SAAS,MAAM;AACf,MAAM;AAAK;AAEX,OAAO,MAAM,oBAAM,4EAMhB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _auto_I1 as I1 } from "./test";
 import { _auto_I2 as I2 } from "./test";
@@ -80,10 +76,6 @@ export const App_component_XXXXXXXXXXXX = (_rawProps) => {
   console.log(itsok, v1, v2, v3, obj);
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;;;;;yCAiB8B;IAC5B,QAAQ,GAAG,CAAC,IAAI,IAAI,IAAI,IAAI,IAAI,IAAI,IAAI,IAAI;IAC5C,QAAQ,GAAG,CAAC,OAAO,IAAI,IAAI,IAAI;IAC/B;AAGF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -113,10 +105,6 @@ import { _jsxSorted } from "@qwik.dev/core";
 export const App_component_1_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ _jsxSorted(I10, null, null, null, 3, "u6_0");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;2CAoBW;IACP,qBAAO,WAAC;AACV"}',
-);
 /*
 {
   "origin": "test.tsx",

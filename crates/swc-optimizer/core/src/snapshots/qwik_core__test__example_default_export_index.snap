@@ -26,10 +26,6 @@ export default /*#__PURE__*/ componentQrl(
     );
   }, "mongo_component_ouWLj4jA2oI"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/src/components/mongo/index.tsx"],"names":[],"mappings":";;AAEA,6BAAe,sCAAW;IACxB,QAAQ,IAAI,oCAAU,IAAM,QAAQ,GAAG,CAAC,0DAAY;AACtD,mCAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

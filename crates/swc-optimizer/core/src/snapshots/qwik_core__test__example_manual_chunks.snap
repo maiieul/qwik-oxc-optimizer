@@ -45,10 +45,6 @@ export const Parent = /*#__PURE__*/ componentQrl(
 export const Child = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAIA,OAAO,MAAM,uBAAS,+EAYnB;AAEH,OAAO,MAAM,sBAAQ,8EAWlB"}',
-);
 ============================= test.tsx_Parent_component_XXXXXXXXXXXX.js ==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
@@ -74,10 +70,6 @@ export const Parent_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;4CAIiC;IAC/B,MAAM,QAAQ,SAAS;QACrB,MAAM;IACR;IAEA,qBAAqB;IACrB;;;IAKA,qBAAO,WAAC;QAAI,WAAQ;iBAAgC;AACtD"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -107,10 +99,6 @@ export const Parent_component_useTask_XXXXXXXXXXXX = async () => {
   state.text = await mongo.users();
   redis.set(state.text);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;oDAUW;;IACP,MAAM,IAAI,GAAG,MAAM,MAAM,KAAK;IAC9B,MAAM,GAAG,CAAC,MAAM,IAAI"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -136,10 +124,6 @@ Some(
 */
 ============================= test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const Parent_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("parent");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"0DAewB,IAAM,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -185,10 +169,6 @@ export const Child_component_XXXXXXXXXXXX = () => {
     "u6_1",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;2CAkBgC;IAC9B,MAAM,QAAQ,SAAS;QACrB,MAAM;IACR;IAEA,qBAAqB;IACrB;;;IAIA,qBAAO,WAAC;QAAI,WAAQ;iBAA+B;AACrD"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -216,10 +196,6 @@ export const Child_component_useTask_XXXXXXXXXXXX = async () => {
   const state = _captures[0];
   state.text = await mongo.users();
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;mDAwBW;;IACP,MAAM,IAAI,GAAG,MAAM,MAAM,KAAK"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -245,10 +221,6 @@ Some(
 */
 ============================= test.tsx_Child_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const Child_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("child");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"yDA4BwB,IAAM,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",

@@ -25,10 +25,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_XXXXXXXXXXX
 export const FieldInput = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "FieldInput_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,2BAAa,mFAWvB"}',
-);
 ============================= test.tsx_FieldInput_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _getConstProps } from "@qwik.dev/core";
@@ -70,10 +66,6 @@ export const FieldInput_component_XXXXXXXXXXXX = (props) => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;gDAEqC,CAAC;IACpC,MAAM,QAAQ,UAAU;IAExB,qBACE;sBAEE,UAAC;YAAD,cAAmB;4BAAW;0BAAA;sBAE9B,UAAC;4BAAU;YAAX,cAA8B;0BAAnB;;AAGjB"}',
-);
 /*
 {
   "origin": "test.tsx",

@@ -59,10 +59,6 @@ export const Root = /*#__PURE__*/ componentQrl(
     tagName: "my-foo",
   },
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AACA,SAAS,OAAA,IAAG,QAAQ,sBAAsB;AAE1C,OAAO,MAAM,KAAK,GAAG;AACrB,OAAO,MAAM,cAAc,GAAG;AAE9B,MAAM,gBAAe,IAAM,QAAQ,GAAG,CAAC,YAAY;AAEnD;AACA,OAAO,MAAM,oBAAM,4EAQjB;IACE,SAAS;AACX,GACA;AAEF,OAAO,MAAM,qBAAO,6EAOlB;IACE,SAAS;AACX,GACA"}',
-);
 ============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { hW } from "./test";
@@ -84,10 +80,6 @@ export const Foo_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;yCAUE;IACE,WAAW;IACX,MAAM,OAAO,KAAK;IAClB,QAAQ,GAAG,CAAC;IAEZ,qBAAO,WAAC;QAAI,WAAQ;;AACtB"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -110,10 +102,6 @@ Some(
 */
 ============================= test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(23);
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"uDAe0B,IAAM,QAAQ,GAAG,CAD3B"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -143,10 +131,6 @@ export const Root_component_XXXXXXXXXXXX = () => {
   useStyles(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Root_component_useStyles_XXXXXXXXXXXX"));
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Root_component_1_XXXXXXXXXXXX");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;0CAuBE;IACE;IACA;AAGF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -169,8 +153,6 @@ Some(
 */
 ============================= test.tsx_Root_component_useStyles_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const Root_component_useStyles_XXXXXXXXXXXX = "thing";
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"oDAwBgB"}');
 /*
 {
   "origin": "test.tsx",
@@ -196,10 +178,6 @@ import { _jsxSorted } from "@qwik.dev/core";
 export const Root_component_1_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ _jsxSorted("div", null, null, null, 3, "u6_1");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";4CAyBa;IACP,qBAAO,WAAC;AACV"}',
-);
 /*
 {
   "origin": "test.tsx",

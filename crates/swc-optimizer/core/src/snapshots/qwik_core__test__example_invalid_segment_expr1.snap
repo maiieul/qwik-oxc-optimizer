@@ -23,10 +23,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAIA,OAAO,MAAM,oBAAM,4EAOhB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import css1 from "./global.css";
 import css2 from "./style.css";
@@ -38,10 +34,6 @@ export const App_component_XXXXXXXXXXXX = () => {
   useStylesQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_useStyles_XXXXXXXXXXXX"));
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;yCAI8B;IAE5B;IAIA;AACF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -64,8 +56,6 @@ Some(
 */
 ============================= test.tsx_App_component_useStyles_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const App_component_useStyles_XXXXXXXXXXXX = style;
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"mDAMa"}');
 /*
 {
   "origin": "test.tsx",
@@ -88,8 +78,6 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
 */
 ============================= test.tsx_App_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const App_component_1_XXXXXXXXXXXX = render;
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"2CAUW"}');
 /*
 {
   "origin": "test.tsx",

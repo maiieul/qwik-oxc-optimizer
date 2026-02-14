@@ -88,20 +88,12 @@ export const Foo = /*#__PURE__*/ componentQrl(
     tagName: "my-foo",
   },
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;;AAEA,OAAO,MAAM,cAAc,CAAC;IAC1B,qBACE,WAAC,iCACC;sBACE,WAAC;sBACD,UAAC;4BAAW;0BAAA;;AAIpB,EAAE;AAEF,OAAO,MAAM,oBAAM,4EAuBjB;IACE,SAAS;AACX,GACA"}',
-);
 ============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = (props) => {
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX", [props]);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;yCAcE,CAAC;IACC;;;AAoBF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -227,10 +219,6 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
     "u6_4",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;2CAea;;IACP,qBACE,WAAC;sBACC;0BACE,WAAC;gBAAI,OAAM;;0BACX,WAAC;gBAAI,OAAM;;0BACX,WAAC;gBAAI,OAAM;eAAQ;;sBAErB,WAAC;YAAI,OAAM;yBACT,UAAC;4BAAgB;0BAAA;sBAEnB,WAAC;YAAI,OAAM;;0BACT,WAAC;0BACD,WAAC;0BACD,WAAC;;sBAEH,WAAC;YAAI,OAAM;WAAS"}',
-);
 /*
 {
   "origin": "test.tsx",

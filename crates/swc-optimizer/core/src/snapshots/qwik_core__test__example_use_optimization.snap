@@ -28,10 +28,6 @@ export const Works = /*#__PURE__*/ componentQrl(
     return <div ciao={store.value.countNested.hello.bye.italian.ciao}>{foo}</div>;
   }, "Works_component_t45qL4vNGv0"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;AAEA,OAAO,MAAM,sBAAQ,sCAAW,CAAC;IAC/B,MAAM,QAAkB,SAAS;QAAE,OAAO;YAAE,OAAO;QAAE;IAAE;IAMvD,QAAQ,IAAI,MAFK,AADL,MAH8C,MAAlD,YAEA,MACU,GAAG,CACA,OAAO,CAApB,OAEiB,MAAM;AACjC,mCAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

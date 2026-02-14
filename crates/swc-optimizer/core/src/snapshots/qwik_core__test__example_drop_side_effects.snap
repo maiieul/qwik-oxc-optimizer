@@ -60,10 +60,6 @@ export default /*#__PURE__*/ componentQrl(
     displayName: "test.tsx_test_component",
   }),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;AAKA,SAAS,UAAU,QAAQ,WAAW;AAKtC,CAAC;IACC,QAAQ,GAAG,CAAC;AACd,CAAC;AACD,CAAC;IACC,QAAQ,GAAG,CAAC;AACd,CAAC;AAED;AAEA,OAAO,MAAM,MAAM;;;;;IAEhB;AAEH,6BAAe;;;;;IAEZ"}',
-);
 ============================= test.tsx_test_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrlDEV } from "@qwik.dev/core";
@@ -94,10 +90,6 @@ export const test_component_XXXXXXXXXXXX = () => {
     },
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;0CAuB0B;IACxB,qBAAO,WAAC;QAAO,WAAQ;;;;;;;;;;;AACzB"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -121,10 +113,6 @@ Some(
 ============================= test.tsx_test_component_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { api } from "./test";
 export const test_component_button_q_e_click_XXXXXXXXXXXX = async () => await api();
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";2DAwB2B,UAAY,MAAM"}',
-);
 /*
 {
   "origin": "test.tsx",

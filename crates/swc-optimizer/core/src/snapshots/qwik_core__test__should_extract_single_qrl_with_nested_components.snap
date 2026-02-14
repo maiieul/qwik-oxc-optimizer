@@ -24,8 +24,6 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"));
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;cACY"}');
 ============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { componentQrl } from "@qwik.dev/core";
@@ -48,10 +46,6 @@ export const Foo_component_XXXXXXXXXXXX = () => {
     "u6_2",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;yCACuB;IACrB,MAAM,OAAO,UAAyB,EAAE;IACxC,MAAM,sBAAQ;IAUd,qBAAO,WAAC;QAAM,MAAM;;AACtB"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -107,10 +101,6 @@ export const Foo_component_Inner_component_XXXXXXXXXXXX = (props) => {
     "u6_1",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;mBAQ0D,GAAK,KAAK,CAAC,EAAE;;;yDAL5C,CAAC;IACxB,MAAM,OAAO,MAAM,IAAI;;IACvB,qBACE,WAAC,mBACE,KAAK,KAAK,CAAC,GAAG,CAAC,CAAC,qBACf,WAAC;YAAE,WAAQ;mBADI;;;;AAKvB"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -137,10 +127,6 @@ Some(
 ============================= test.tsx_Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX = (_, _1, item) =>
   console.log(item.value.id);
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"yEAQuB,QADE,OACI,QAAQ,GAAG,CAAC,KAAK,KAAK,CAAC,EAAE"}',
-);
 /*
 {
   "origin": "test.tsx",

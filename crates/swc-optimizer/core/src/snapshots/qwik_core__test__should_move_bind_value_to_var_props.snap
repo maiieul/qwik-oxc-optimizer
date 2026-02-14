@@ -28,10 +28,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_XXXXXXXXXXX
 export const FieldInput = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "FieldInput_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAGA,OAAO,MAAM,2BAAa,mFAavB"}',
-);
 ============================= test.tsx_FieldInput_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _getConstProps } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
@@ -62,10 +58,6 @@ export const FieldInput_component_XXXXXXXXXXXX = (props) => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;gDAGqC,CAAC;IACpC,MAAM,gBAAgB;QAAE,OAAO;IAAgC;IAC/D,MAAM,OAAO,oBAAoB,OAAO;IAExC,qBACE,UAAC;wBACK;0BAAA;QADN,cAEc;;QACZ,WAAQ;;AAKd"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -93,10 +85,6 @@ Some(
 export const FieldInput_component_input_q_e_click_XXXXXXXXXXXX = () => {
   console.log("clicked");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"gEAWgB;IACR,QAAQ,GAAG,CAAC;AACd"}',
-);
 /*
 {
   "origin": "test.tsx",

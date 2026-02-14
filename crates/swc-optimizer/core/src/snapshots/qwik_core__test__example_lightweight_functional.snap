@@ -71,10 +71,6 @@ export const ButtonArrow = (_rawProps) => {
     </button>
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;AAEA,OAAO,MAAM,oBAAM,4EASjB;IACE,SAAS;AACX,GACA;AAEF,OAAO,SAAS,OAAO,EAAE,IAAI,EAAE,KAAK,EAAE;IACpC,QACG,OAAO,WAAU,OAAO;;;QAA0C;MACjE,CAAC,KAAK;IACR,EAAE;AAEN;AAEA,OAAO,MAAM,cAAc;IACzB,QACG,OAAO,qBAFwB,OAEP;;QAA0C;MACjE,WAHwB,KAGlB;IACR,EAAE;AAEN,EAAE"}',
-);
 ============================= test.tsx_Foo_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { Button } from "./test";
 import { ButtonArrow } from "./test";
@@ -86,10 +82,6 @@ export const Foo_component_XXXXXXXXXXXX = (props) => {
     </div>
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;yCAGE,CAAC;IACC,QACG,IAAI;QACH,CAAC,QAAQ,GAAG,KAAK,GAAI;QACrB,CAAC,aAAa,GAAG,KAAK,GAAI;MAC5B,EAAE;AAEN"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -120,10 +112,6 @@ export const Button_button_q_e_click_XXXXXXXXXXXX = () => {
     text = _captures[1];
   return console.log(text, color);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";mDAkBuC;;WAAM,QAAQ,GAAG,CAAC,MAAM"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -154,10 +142,6 @@ export const ButtonArrow_button_q_e_click_XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
   return console.log(_rawProps.text, _rawProps.color);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";wDA0BuC;;WAAM,QAAQ,GAAG,WAF1B,gBAAM"}',
-);
 /*
 {
   "origin": "test.tsx",

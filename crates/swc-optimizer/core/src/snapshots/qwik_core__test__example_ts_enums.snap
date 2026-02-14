@@ -31,10 +31,6 @@ export var Thing = /*#__PURE__*/ (function (Thing) {
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,IAAA,AAAK,+BAAA;;;WAAA;MAGX;AAED,OAAO,MAAM,oBAAM,4EAOhB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -58,10 +54,6 @@ export const App_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;yCAO8B;IAC5B,QAAQ,GAAG;IACX,qBACE,gDACE,WAAC;QAAE,OAAM;OAAQ;AAGvB"}',
-);
 /*
 {
   "origin": "test.tsx",

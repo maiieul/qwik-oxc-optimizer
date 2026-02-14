@@ -49,10 +49,6 @@ export const App = /*#__PURE__*/ componentQrl(
 export const Cmp = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Cmp_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAEA,OAAO,MAAM,oBAAM,4EAmBhB;AAEH,OAAO,MAAM,oBAAM,4EAUhB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Cmp } from "./test";
 import { _fnSignal } from "@qwik.dev/core";
@@ -90,10 +86,6 @@ export const App_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;mBAec,GAAM,MAAM,CAAC,KAAK;;mBAEnB,GAAM,KAAK,GAAG;;mBACd,GAAO,QAAQ,EAAE,IAAI;;yCAhBJ;IAC5B,MAAM,QAAQ,SAAS;QACrB,OAAO;QACP,OAAO;QACP,QAAQ;YACN,OAAO;QACT;IACF;IACA,MAAM,SAAS,UAAU;IACzB,qBACE,WAAC;QACC,MAAmB;QACnB,KAAK,YAAE;QACP,MAAM;;;QACN,QAAQ;QACR,KAAK;;;QACL,KAAK;;;;AAGX"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -154,10 +146,6 @@ export const Cmp_component_XXXXXXXXXXXX = (props) => {
     "u6_1",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;mBAec,GAAM,MAAM,CAAC,KAAK;;yCAQF,CAAC;IAC7B,qBACE;sBACE,WAAC;YAAE,YAAU,YAAE;;;;sBACf,WAAC;YAAE;sBACM;0BACP,WAAC;;;AAIT"}',
-);
 /*
 {
   "origin": "test.tsx",

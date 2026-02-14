@@ -25,10 +25,6 @@ export const Foo = /*#__PURE__*/ componentQrl(
     tagName: "my-foo",
   },
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAKjB;IACE,SAAS;AACX,GACA"}',
-);
 ============================= test.tsx_Foo_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
@@ -37,10 +33,6 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   useStylesQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_useStyles_XXXXXXXXXXXX"));
   return <div class="class" />;
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;yCAGE;IACE;IACA,QAAQ,IAAI,MAAM;AACpB"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -63,8 +55,6 @@ Some(
 */
 ============================= test.tsx_Foo_component_useStyles_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 export const Foo_component_useStyles_XXXXXXXXXXXX = ".class {}";
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"mDAIe"}');
 /*
 {
   "origin": "test.tsx",

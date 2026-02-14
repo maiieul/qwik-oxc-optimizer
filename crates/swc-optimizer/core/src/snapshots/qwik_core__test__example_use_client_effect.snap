@@ -30,10 +30,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_XXXXXXXXXXXX");
 export const Child = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,sBAAQ,8EAgBlB"}',
-);
 ============================= test.tsx_Child_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
@@ -51,10 +47,6 @@ export const Child_component_XXXXXXXXXXXX = () => {
   );
   return /*#__PURE__*/ _jsxSorted("div", null, null, _wrapProp(state, "count"), 3, "u6_0");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;2CAEgC;IAC9B,MAAM,QAAQ,SAAS;QACrB,OAAO;IACT;IAEA,qBAAqB;IACrB;;;IASA,qBAAO,WAAC,6BAAK;AACf"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -86,10 +78,6 @@ export const Child_component_useBrowserVisibleTask_XXXXXXXXXXXX = () => {
     clearInterval(timer);
   };
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";iEAQyB;;IACrB,MAAM,QAAQ,YAAY;QACxB,MAAM,KAAK;IACb,GAAG;IACH,OAAO;QACL,cAAc;IAChB"}',
-);
 /*
 {
   "origin": "test.tsx",

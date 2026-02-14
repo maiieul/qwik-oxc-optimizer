@@ -30,10 +30,6 @@ export enum Thing {
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,YAAY;IACV;IACA;;AAGF,OAAO,MAAM,oBAAM,4EAOhB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { Thing } from "./test";
 export const App_component_XXXXXXXXXXXX = () => {
@@ -44,10 +40,6 @@ export const App_component_XXXXXXXXXXXX = () => {
     </>
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";yCAO8B;IAC5B,QAAQ,GAAG,CAAC,MAAM,CAAC;IACnB,SACI;MACA,CAAC,EAAE,MAAM,QAAQ,UAAU,EAAE,EAAE;IACjC;AAEJ"}',
-);
 /*
 {
   "origin": "test.tsx",

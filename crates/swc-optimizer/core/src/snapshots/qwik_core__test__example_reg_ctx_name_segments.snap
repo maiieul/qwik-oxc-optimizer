@@ -64,10 +64,6 @@ export const Works = /*#__PURE__*/ componentQrl(
     );
   }, "Works_component_t45qL4vNGv0"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;;AAEA,OAAO,MAAM,sBAAQ,sCAAW,CAAC;IAE/B,qBACE;sBACE,WAAC;YAAI,aAAU,4DAAQ,IAAM,QAAQ,GAAG,CAAC,aAHhC;;sBAIT,WAAC;YAAI,WAAQ;;;AAGnB,mCAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

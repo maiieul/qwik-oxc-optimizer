@@ -37,10 +37,6 @@ export const App = /*#__PURE__*/ componentQrl(
     );
   }, "App_component_ckEPmXZlub0"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;AAEA,OAAO,MAAM,oBAAM,sCAAW,CAAC;IAC7B,QACG,IAAI;MACH,CAAC,EAAE,MAAM,QAAQ,oCAAU,IAAM,QAAQ,GAAG,CAAC,uDAAS;;MAEtD,EAAE,EAAE;IACN,EAAE;AAEN,iCAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

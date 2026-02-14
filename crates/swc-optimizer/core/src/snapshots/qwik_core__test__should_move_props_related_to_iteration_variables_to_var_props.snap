@@ -37,10 +37,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_XXXXXXXXXXXX");
 export const Child = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAGA,OAAO,MAAM,sBAAQ,8EAsBlB"}',
-);
 ============================= test.tsx_Child_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { TestComponent } from "./testComponent";
 import { _fnSignal } from "@qwik.dev/core";
@@ -87,10 +83,6 @@ export const Child_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;mBAiBqB,GAAK,gBAAgB,CAAC,OAAO;;2CAdlB;IAC9B,MAAM,wBAAwB,UAAU;QACtC,OAAO;YACL,MAAM;gBACJ;oBAAE,kBAAkB;wBAAE,SAAS,WAAW,YAAY;oBAAG;gBAAE;gBAC3D;oBAAE,kBAAkB;wBAAE,SAAS,WAAW,YAAY;oBAAC;gBAAE;aAC1D;QACH;IACF;IACA,qBACE,WAAC,mBACE,sBAAsB,KAAK,CAAC,IAAI,CAAC,GAAG,CAAC,CAAC,MAAM;QAC3C,qBACE,WAAC;YACC,OAAO;;;;YACP,WAAU;oBACL;IAGX;AAGN"}',
-);
 /*
 {
   "origin": "test.tsx",

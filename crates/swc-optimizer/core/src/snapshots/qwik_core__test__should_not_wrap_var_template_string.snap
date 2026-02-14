@@ -28,10 +28,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAGA,6BAAe,6EAaZ"}',
-);
 ============================= test.tsx_test_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { inlineTranslate } from "translate-lib";
@@ -56,10 +52,6 @@ export const test_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;0CAG0B;IACxB,MAAM,IAAI;IAEV,MAAM,eAAe;IAIrB,qBACE,WAAC;QAEC,KAAK,GAAG,EAAE,kCAAkC,CAAC,EAAE,aAAa,KAAK,EAAE;QADnE,MAAM,EAAE;;AAId"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -84,10 +76,6 @@ Some(
 export const test_component_productTitle_useComputed_XXXXXXXXXXXX = () => {
   return "Test title";
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"mEAMoC;IAChC,OAAO;AACT"}',
-);
 /*
 {
   "origin": "test.tsx",

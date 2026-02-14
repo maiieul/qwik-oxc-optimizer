@@ -42,10 +42,6 @@ export const STEP = 1;
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAAA,SAAwB,QAAQ,QAAQ,iBAAiB;AACzD,OAAO,MAAM,aAAa;IACxB,OAAO,SAAS;QAAE,OAAO;IAAE;AAC7B,EAAE;AAEF,OAAO,MAAM,OAAO,EAAE;AAEtB,OAAO,MAAM,oBAAM,4EAgBhB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
@@ -94,10 +90,6 @@ export const App_component_XXXXXXXXXXXX = (props) => {
     "u6_1",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;yCAO8B,CAAC;IAC7B,MAAM,QAAQ;IACd,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAGlC,MAAM,SAAS,MAAM,KAAK,GAAG;;;;;;IAC7B,qBACE,WAAC;QAAI,WAAQ;;;;;sBACX,WAAC,8BAAM;QACN,QAAQ,GAAG,CAAC,CAAC,oBACZ,WAAC;gBAAO,WAAQ;uBADJ;+BAET;;AAKX"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -128,10 +120,6 @@ export const App_component_div_q_e_click_XXXXXXXXXXXX = () => {
     state = _captures[1];
   return (state.count += count2);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";uDAcmB;;WAAO,MAAM,KAAK,IAAI"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -165,10 +153,6 @@ export const App_component_div_button_q_e_click_XXXXXXXXXXXX = (_, _1, btn) => {
     thing = _captures[2];
   return (state.count += btn.offset + thing + STEP + 2 + props.step);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;8DAiB0B,QADN;;WACa,MAAM,KAAK,IAAI,IAAI,MAAM,GAAG,QAAQ,OAPpD,IAOoE,MAAM,IAAI"}',
-);
 /*
 {
   "origin": "test.tsx",

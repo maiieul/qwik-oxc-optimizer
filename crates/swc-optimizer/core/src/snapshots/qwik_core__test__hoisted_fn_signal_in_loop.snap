@@ -34,10 +34,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAoBhB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _fnSignal } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -94,10 +90,6 @@ export const App_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;mBAewC,GAAI,KAAK,CAAC,QAAQ,CAAC,KAAK,GAAG,WAAW;;mBAC7D,GAAI,KAAK,CAAC,EAAE;;yCAdC;IAC5B,MAAM,OAAO;QACX,OAAO;YACL;gBAAE,OAAO;oBAAE,IAAI;oBAAG,UAAU;wBAAE,OAAO;oBAAK;gBAAE;YAAE;YAC9C;gBAAE,OAAO;oBAAE,IAAI;oBAAG,UAAU;wBAAE,OAAO;oBAAM;gBAAE;YAAE;YAC/C;gBAAE,OAAO;oBAAE,IAAI;oBAAG,UAAU;wBAAE,OAAO;oBAAK;gBAAE;YAAE;SAC/C;IACH;IAEA,qBACE,WAAC,qBACE,KAAK,KAAK,CAAC,GAAG,CAAC,CAAC;QACf,qBACE,WAAC;YAAsB,KAAK;;;+BAC1B,WAAC;;mCADM,IAAI,KAAK,CAAC,EAAE;IAIzB;AAGN"}',
-);
 /*
 {
   "origin": "test.tsx",

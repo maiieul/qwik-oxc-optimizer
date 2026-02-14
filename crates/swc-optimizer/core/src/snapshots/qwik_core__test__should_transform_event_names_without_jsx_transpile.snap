@@ -27,10 +27,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_XXXXXXXXXXXX")
 export const Greeter = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAGA,OAAO,MAAM,wBAAU,gFAYpB"}',
-);
 ============================= test.tsx_Greeter_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import mongo from "mongodb";
 import { qrl } from "@qwik.dev/core";
@@ -62,10 +58,6 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
     </div>
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;6CAGkC;IAChC,qBAAqB;IACrB,SAAS;QACP,MAAM,MAAM,KAAK;IACnB;IACA,QACG,IAAI;MACH,CAAC,IAAI,iGAAsB;MAC3B,CAAC,IAAI,mGAAsB;MAC3B,CAAC,IAAI,mGAAsB;IAC7B,EAAE;AAEN"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -88,8 +80,6 @@ Some(
 */
 ============================= test.tsx_Greeter_component_div_div_q_e_click_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 export const Greeter_component_div_div_q_e_click_XXXXXXXXXXXX = () => {};
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"+DAUqB,KAAO"}');
 /*
 {
   "origin": "test.tsx",
@@ -112,8 +102,6 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
 */
 ============================= test.tsx_Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 export const Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX = () => {};
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"iEAWqB,KAAO"}');
 /*
 {
   "origin": "test.tsx",
@@ -136,8 +124,6 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
 */
 ============================= test.tsx_Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 export const Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX = () => {};
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"iEAYqB,KAAO"}');
 /*
 {
   "origin": "test.tsx",

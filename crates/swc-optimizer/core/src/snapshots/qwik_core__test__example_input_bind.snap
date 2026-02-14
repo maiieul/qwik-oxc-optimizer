@@ -78,10 +78,6 @@ export const Greeter = /*#__PURE__*/ componentQrl(
     );
   }, "s_n7HuG2hhU0Q"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;AAEA,OAAO,MAAM,wBAAU,sCAAW;IAChC,MAAM,QAAQ,UAAU;IACxB,MAAM,UAAU,UAAU;IAC1B,MAAM,QAAQ;IACd,qBACE;sBACE,WAAC;qBAAkB;;gBAAA;;;sBACnB,WAAC;uBAAoB;;gBAAA;;;sBACrB,WAAC;YAAD,cAAmB;;sBACnB,WAAC,mBAAK;sBACN,WAAC,6BAAK;;AAGZ,qBAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

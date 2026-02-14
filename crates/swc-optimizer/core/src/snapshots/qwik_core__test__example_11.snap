@@ -32,10 +32,6 @@ export const Header = /*#__PURE__*/ componentQrl(
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/project/test.tsx"],"names":[],"mappings":";;;;AAKA,OAAO,MAAM,uBAAS,+EAOnB;AAEH,OAAO,MAAM,oBAAM,4EAEhB"}',
-);
 ============================= project/test.tsx_Header_component_XXXXXXXXXXXX.tsx ==
 import { Header } from "./test";
 import { bar as bbar } from "../state";
@@ -52,10 +48,6 @@ export const Header_component_XXXXXXXXXXXX = () => {
     </Header>
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/project/test.tsx"],"names":[],"mappings":";;;;;4CAKiC;IAC/B,QACG,OAAO,0FAA8B;MACpC,CAAC,KAAK,KAAK,GAAG;MACd,CAAC,OAAO;IACV,EAAE;AAEN"}',
-);
 /*
 {
   "origin": "project/test.tsx",
@@ -79,10 +71,6 @@ Some(
 ============================= project/test.tsx_Header_component_Header_onClick_XXXXXXXXXXXX.tsx ==
 import dep3 from "dep3/something";
 export const Header_component_Header_onClick_XXXXXXXXXXXX = (ev) => dep3(ev);
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/project/test.tsx"],"names":[],"mappings":";2DAOuB,CAAC,KAAO,KAAK"}',
-);
 /*
 {
   "origin": "project/test.tsx",
@@ -112,10 +100,6 @@ import { foo } from "../state";
 export const App_component_XXXXXXXXXXXX = () => {
   return <Header>{foo()}</Header>;
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/project/test.tsx"],"names":[],"mappings":";;yCAc8B;IAC5B,QAAQ,QAAQ,QAAQ;AAC1B"}',
-);
 /*
 {
   "origin": "project/test.tsx",

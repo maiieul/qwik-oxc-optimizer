@@ -47,10 +47,6 @@ export const Works = /*#__PURE__*/ componentQrl(
 );
 const STYLES = ".class {}";
 export { STYLES as _auto_STYLES };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;kFAKgC,IAAM,QAAQ,GAAG,CAAC,aADnC;oCAFiB,CAAC;IAC/B,qCAAU;IAEV,qBAAO,WAAC;QAAI,aAAU;;AACxB;AAJA,OAAO,MAAM,sBAAQ,mGAIlB;AAEH,MAAM,SAAS"}',
-);
 == DIAGNOSTICS ==
 
 []

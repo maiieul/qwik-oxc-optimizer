@@ -25,8 +25,6 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"));
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;cACY"}');
 ============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -80,10 +78,6 @@ export const Foo_component_XXXXXXXXXXXX = function () {
     "u6_1",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;yCACuB;IACrB,MAAM,OAAO,UAAyB,EAAE;;;;IACxC,qBACE,WAAC,mBACE,KAAK,KAAK,CAAC,GAAG,CAAC,CAAC,oBACf,WAAC;YACC,WAAQ;YACR,eAAY;mBAHC;+BAKb,WAAC;YAAE,WAAQ;mBALE;iBAK4C,KAAK,KAAK,CAAC,EAAE;AAKhF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -107,10 +101,6 @@ Some(
 ============================= test.tsx_Foo_component_div_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const Foo_component_div_div_q_e_click_XXXXXXXXXXXX = (_, _1, row) =>
   console.log(row.value.id);
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"2DAOoB,QAFG,MAEG,QAAQ,GAAG,CAAC,IAAI,KAAK,CAAC,EAAE"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -139,10 +129,6 @@ Some(
 ============================= test.tsx_Foo_component_div_div_q_e_mouseover_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const Foo_component_div_div_q_e_mouseover_XXXXXXXXXXXX = (_, _1, row) =>
   console.log("over" + row.value.id);
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"+DAQwB,QAHD,MAGO,QAAQ,GAAG,CAAC,SAAS,IAAI,KAAK,CAAC,EAAE"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -171,10 +157,6 @@ Some(
 ============================= test.tsx_Foo_component_div_div_p_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const Foo_component_div_div_p_q_e_click_XXXXXXXXXXXX = (_, _1, row) =>
   console.log("inner" + row.value.id);
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6DAUuB,QALA,MAKM,QAAQ,GAAG,CAAC,UAAU,IAAI,KAAK,CAAC,EAAE"}',
-);
 /*
 {
   "origin": "test.tsx",

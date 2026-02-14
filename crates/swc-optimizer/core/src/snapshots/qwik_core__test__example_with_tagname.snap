@@ -26,20 +26,12 @@ export const Foo = /*#__PURE__*/ componentQrl(
     tagName: "my-foo",
   },
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAMjB;IACE,SAAS;AACX,GACA"}',
-);
 ============================= test.tsx_Foo_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;yCAGE;IACE;AAGF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -64,10 +56,6 @@ Some(
 export const Foo_component_1_XXXXXXXXXXXX = () => {
   return <div></div>;
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"2CAIa;IACP,QAAQ,MAAM;AAChB"}',
-);
 /*
 {
   "origin": "test.tsx",

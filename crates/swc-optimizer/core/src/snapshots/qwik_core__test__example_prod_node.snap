@@ -20,10 +20,6 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"));
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,gEAQhB"}',
-);
 ============================= test.tsx_Foo_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_div_q_e_click_1_XXXXXXXXXXXX");
@@ -38,10 +34,6 @@ export const s_XXXXXXXXXXXX = () => {
     </div>
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;6BAE8B;IAC5B,QACG,IAAI;MACH,CAAC,IAAI,+DAAwC;MAC7C,CAAC,IAAI,+DAAyC;MAC9C,CAAC,IAAI,+DAAwC;IAC/C,EAAE;AAEN"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -64,10 +56,6 @@ Some(
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 export const s_XXXXXXXXXXXX = () => console.log("first");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAKqB,IAAM,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -90,10 +78,6 @@ Some(
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 export const s_XXXXXXXXXXXX = () => console.log("second");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAMqB,IAAM,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -116,10 +100,6 @@ Some(
 */
 ============================= test.tsx_Foo_component_div_div_q_e_click_2_XXXXXXXXXXXX.tsx (ENTRY POINT)==
 export const s_XXXXXXXXXXXX = () => console.log("third");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAOqB,IAAM,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",

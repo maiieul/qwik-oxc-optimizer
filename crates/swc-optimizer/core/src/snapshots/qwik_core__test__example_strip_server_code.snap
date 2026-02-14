@@ -54,10 +54,6 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_XXXXXXXXXXXX");
 export const Parent = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"));
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAcA,OAAO,MAAM,uBAAS,gEA8BnB"}',
-);
 ============================= test.tsx_Parent_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrl } from "@qwik.dev/core";
@@ -90,10 +86,6 @@ export const s_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;;;;;;6BAciC;IAC/B,MAAM,QAAQ,SAAS;QACrB,MAAM;IACR;IAEA,qBAAqB;IACrB;;;IAMA;IAWA;IAEA;IAIA,qBAAO,WAAC;QAAI,WAAQ;iBAAgC;AACtD"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -123,10 +115,6 @@ export const s_XXXXXXXXXXXX = async () => {
   state.text = await mongo.users();
   redis.set(state.text);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;6BAoBW;;IAEP,MAAM,IAAI,GAAG,MAAM,MAAM,KAAK;IAC9B,MAAM,GAAG,CAAC,MAAM,IAAI"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -154,10 +142,6 @@ Some(
 export const s_XXXXXXXXXXXX = () => {
   // from $(), should not be removed
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BA4BgB;AACV,kCAAkC;AACpC"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -182,10 +166,6 @@ Some(
 export const s_XXXXXXXXXXXX = () => {
   // from clien$(), should not be removed
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BA+BsB;AAChB,uCAAuC;AACzC"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -210,10 +190,6 @@ Some(
 export const s_XXXXXXXXXXXX = () => {
   // Code
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAuCW;AACP,OAAO;AACT"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -236,10 +212,6 @@ Some(
 */
 ============================= test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const s_XXXXXXXXXXXX = () => console.log("parent");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BA2CwB,IAAM,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",

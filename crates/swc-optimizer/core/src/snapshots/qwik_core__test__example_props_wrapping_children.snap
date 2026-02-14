@@ -58,10 +58,6 @@ export const Works = /*#__PURE__*/ componentQrl(
     );
   }, "Works_component_t45qL4vNGv0"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;uBAOO,QAN4B;;mBAO5B,CAAA;QAAE,KAAK,KAPqB;IAOT,CAAA;;uBAEnB,CAAA;QAAE,KAAK,KATqB;QASR,KAAK;IAAY,CAAA;;AAV5C,SAAwB,SAAS,QAAQ,iBAAiB;AAC1D,OAAO,MAAM,sBAAQ,sCAAW;IAC9B,IAAI,YAAY,UAAU;IAC1B,qBACE,WAAC;QACE;;;;;;;;;QAIA;YAAE,OAAO;QAAU;;;;;;AAI1B,mCAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

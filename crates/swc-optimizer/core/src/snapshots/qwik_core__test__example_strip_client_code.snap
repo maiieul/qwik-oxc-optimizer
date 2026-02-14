@@ -98,10 +98,6 @@ export const Parent = /*#__PURE__*/ componentQrl(
     );
   }, "Parent_component_t6Wy3C0Q0XM"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/components/component.tsx"],"names":[],"mappings":";;;;;;;;;;AAAA,SAAsC,QAAQ,QAAkB,iBAAiB;AAQjF,OAAO,MAAM,uBAAS,sCAAW;IAC/B,MAAM,QAAQ,SAAS;QACrB,MAAM;IACR;IAEA,qBAAqB;IACrB;;;IAKA,oCAAS;IACP,OAAO;IACT;IAEA,qBACE,WAAC;QAAI,aAAa;;;QAAoB,WAAQ;;;;sBAC5C,WAAC;YAAI,QAAQ,2BAAE,IAAM,QAAQ,GAAG,CAAC;YAAS,OAAO,2BAAE;;uBAAM,MAAM,IAAI;;;;;kBAClE;;AAGP,oCAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

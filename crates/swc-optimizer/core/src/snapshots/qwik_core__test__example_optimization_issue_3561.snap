@@ -41,10 +41,6 @@ export const Issue3561 = /*#__PURE__*/ componentQrl(
     return <p></p>;
   }, "Issue3561_component_hHTw654BZB8"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;AAEA,OAAO,MAAM,0BAAY,sCAAW;IAClC,MAAM,QAAQ,SAAS;QACrB,SAAS;YACP,gBAAgB;gBACd,cAAc;gBACd,eAAe;gBACf,aAAa;YACf;QACF;IACF;IACA,MAAM,EAAE,gBAAgB,EAAE,YAAY,EAAE,aAAa,EAAE,WAAW,EAAE,GAAG,CAAC,CAAC,EAAE,GAAG,MAAM,OAAO;IAE3F,QAAQ,GAAG,CAAC,cAAc,eAAe;IAEzC,QAAQ,IAAI;AACd,uCAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

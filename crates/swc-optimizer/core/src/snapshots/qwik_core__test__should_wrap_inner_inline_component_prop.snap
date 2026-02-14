@@ -29,10 +29,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AACA,6BAAe,6EAgBZ"}',
-);
 ============================= test.tsx_test_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -72,10 +68,6 @@ export const test_component_XXXXXXXXXXXX = (props) => {
     "u6_2",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;0CAC0B,CAAC;IACzB,MAAM,UAAU,SACd;QACE,OAAO;IACT,GACA;QAAE,UAAU;IAAM;IAEpB,QAAQ,KAAK;IACb,MAAM,YAAY,QAAQ,KAAK,GAAG;IAClC,MAAM,KAAK,CAAC,sBAAe,WAAC;YAAI;sBAAK;;IACrC,qBACE;sBACE,WAAC;YAAG,EAAE,YAAE;;QACP;;AAGP"}',
-);
 /*
 {
   "origin": "test.tsx",

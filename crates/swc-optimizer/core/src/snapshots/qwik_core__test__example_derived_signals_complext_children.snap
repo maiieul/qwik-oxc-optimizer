@@ -55,10 +55,6 @@ const App_component_ckEPmXZlub0 = () => {
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAAA,SAAqB,QAAQ,QAAiB,iBAAiB;kCAIjC;IACb,UAAU;IACzB,MAAM,QAAQ,SAAS,CAAC;IACxB,qBACE,gDACE,WAAC;QAAG,IAAG;OACJ,OAAO,OAAO,CAAC,OAAO,GAAG,CAAC,CAAC,CAAC,KAAK,MAAM,iBACtC,WAAC;YACE;YAAI;YAAI;;AAMrB;AAdA,OAAO,MAAM,oBAAM,+FAchB"}',
-);
 == DIAGNOSTICS ==
 
 []

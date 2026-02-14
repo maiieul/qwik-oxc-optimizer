@@ -33,10 +33,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_XXXXXXXXXXX
 export const FieldInput = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "FieldInput_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,2BAAa,mFAmBvB"}',
-);
 ============================= test.tsx_FieldInput_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -68,10 +64,6 @@ export const FieldInput_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;gDAEqC;IACnC,MAAM,UAAU,UAAU;IAC1B,MAAM,QAAQ,UAAU;IAExB,qBACE,WAAC;qBAGG,QAAQ,KAAK;;aAIT;;QANN,IAAG;QAQH,WAAQ;;;;AAKd"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -98,10 +90,6 @@ export const FieldInput_component_input_q_e_input_XXXXXXXXXXXX = (ev, el) => {
   const input = _captures[0];
   input.value = el.value;
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";gEAWc,CAAC,IAAI;;IACL,MAAM,KAAK,GAAG,GAAG,KAAK"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -135,10 +123,6 @@ export const FieldInput_component_input_q_e_focus_XXXXXXXXXXXX = () => {
   const enabled = _captures[0];
   enabled.value = true;
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";gEAgBgB;;IACR,QAAQ,KAAK,GAAG"}',
-);
 /*
 {
   "origin": "test.tsx",

@@ -36,20 +36,12 @@ export const Foo = /*#__PURE__*/ componentQrl(
 export const Bar = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Bar_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAEA,OAAO,MAAM,oBAAM,4EAYhB;AAEH,OAAO,MAAM,oBAAM,4EAIhB"}',
-);
 ============================= test.tsx_Foo_component_XXXXXXXXXXXX.jsx (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX", [_rawProps]);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;yCAE8B;IAE5B;;;AAUF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -86,10 +78,6 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
     </div>
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";2CAIW;;IACP,MAAM,KAAK,CAAC,EAAE,GAAG,EAAE,GAAK;IACxB,QACG,IAAI;QACH,WANyB,IAMpB;QACL,CAAC,KAAK;QACN,CAPO,GAOD;MACR,EAAE"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -119,10 +107,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Bar_component_1_XXXXXXXXXXXX");
 export const Bar_component_XXXXXXXXXXXX = (_rawProps) => {
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Bar_component_1_XXXXXXXXXXXX", [_rawProps]);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;yCAgB8B;IAC5B;;;AAGF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -152,10 +136,6 @@ export const Bar_component_1_XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
   return <div>{_rawProps.bar}</div>;
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";2CAiBW;;IACP,QAAQ,eAFqB,MAEV"}',
-);
 /*
 {
   "origin": "test.tsx",

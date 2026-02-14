@@ -13,18 +13,10 @@ const i_XXXXXXXXXXXX = () => import("./apps.tsx_Greeter_component_XXXXXXXXXXXX")
 export const Greeter = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["C:\\\\users\\\\apps/components/apps/apps.tsx"],"names":[],"mappings":";;;AACA,OAAO,MAAM,wBAAU,gFAA0B"}',
-);
 ============================= components/apps/apps.tsx_Greeter_component_XXXXXXXXXXXX.ts (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 export const Greeter_component_XXXXXXXXXXXX = () =>
   /*#__PURE__*/ _jsxSorted("div", null, null, null, 3, "KD_0");
-
-Some(
-  '{"version":3,"sources":["C:\\\\users\\\\apps/components/apps/apps.tsx"],"names":[],"mappings":";6CACkC,kBAAM,WAAC"}',
-);
 /*
 {
   "origin": "components/apps/apps.tsx",

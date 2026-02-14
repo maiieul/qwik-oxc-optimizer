@@ -17,10 +17,6 @@ const i_XXXXXXXXXXXX = () => import("./[[...slug]].tsx_slug_component_XXXXXXXXXX
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "slug_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx"],"names":[],"mappings":";;;AAGA,6BAAe,6EAEZ"}',
-);
 ============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_XXXXXXXXXXXX.js ==
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -37,10 +33,6 @@ export const slug_component_XXXXXXXXXXXX = () => {
     "W4_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx"],"names":[],"mappings":";;;0CAG0B;IACxB,qBAAO,WAAC;QAAI,WAAQ;;AACtB"}',
-);
 /*
 {
   "origin": "src/routes/_repl/[id]/[[...slug]].tsx",
@@ -64,10 +56,6 @@ Some(
 ============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { sibling } from "./sibling";
 export const slug_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(mongodb, sibling);
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx"],"names":[],"mappings":";wDAIwB,IAAM,QAAQ,GAAG,CAAC,SAAS"}',
-);
 /*
 {
   "origin": "src/routes/_repl/[id]/[[...slug]].tsx",

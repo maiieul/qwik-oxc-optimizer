@@ -16,10 +16,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,6BAAe,6EAEZ"}',
-);
 ============================= test.tsx_test_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _getConstProps } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
@@ -41,10 +37,6 @@ export const test_component_XXXXXXXXXXXX = (props) => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;0CAE0B,CAAC;IACzB,qBAAO,UAAC;wBAAW;QAAO,WAAQ;;;sBAAf;AACrB"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -74,10 +66,6 @@ export const test_component_button_q_e_click_XXXXXXXXXXXX = () => {
   const props = _captures[0];
   return props.onClick$();
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";2DAGsC;;WAAM,MAAM,QAAQ"}',
-);
 /*
 {
   "origin": "test.tsx",

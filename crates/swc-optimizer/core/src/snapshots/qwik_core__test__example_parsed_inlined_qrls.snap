@@ -86,10 +86,6 @@ export const App = /*#__PURE__*/ componentQrl(
   }, "s_Fh88JClhbC0"),
 );
 export const STYLES = ".red { color: red; }";
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;AAAA,SAAS,YAAY,EAAE,UAAU,EAAE,QAAQ,EAAa,eAAe,QAAQ,iBAAiB;AAEhG,OAAO,MAAM,MAAM,WAAW,GAAG,sCACpB;IACT,oCAAsB;IACtB,oCAAsB;IAEtB,MAAM,QAAQ,SAAS;QACrB,OAAO;IACT;IACA,OAAO,WAAW,GAAG,WAAK,mBACd;QACR,WAAW,GAAG,WAAK,iBACP;YAAC;sBAAW;SAAY;QAEpC,WAAW,GAAG,WAAI,iBACN,WAAW,GAAG,WAAI;YAC1B,WAAQ,2BACN;gBACE,MAAM,CAAC,MAAM,GAAG;gBAChB,OAAO,MAAM,KAAK;YACpB;;;iBAIQ;KAGf;AAEL,qBACA;AAEF,OAAO,MAAM,SAAS,uBAAuB"}',
-);
 == DIAGNOSTICS ==
 
 []

@@ -51,10 +51,6 @@ const test_component_LUXeXe0DQrg = (_rawProps) => {
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ inlinedQrl(test_component_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;+CAGe;;qBADc;;2CAGlB;;IACP,MAAM,OAAO;;mCAJS;;;;IACxB;;;IAEA;;;IAIA,OAAO;AACT;AARA,6BAAe,iGAQZ"}',
-);
 == DIAGNOSTICS ==
 
 []

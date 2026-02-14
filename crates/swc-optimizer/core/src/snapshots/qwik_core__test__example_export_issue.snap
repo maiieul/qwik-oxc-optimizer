@@ -33,19 +33,11 @@ const Other = 12;
 export { Other as App };
 export default App;
 export { App as _auto_App };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAEA,MAAM,oBAAM;AAIZ,OAAO,MAAM,qBAAO,6EAEjB;AAEH,MAAM,QAAQ;AACd,SAAS,SAAS,GAAG,GAAG;AAExB,eAAe,IAAI"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 export const App_component_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ _jsxSorted("div", null, null, "hola", 3, "u6_0");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";yCAEuB;IACrB,qBAAO,WAAC,mBAAI;AACd"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -72,10 +64,6 @@ import { _jsxSorted } from "@qwik.dev/core";
 export const Root_component_XXXXXXXXXXXX = (props) => {
   return /*#__PURE__*/ _jsxSorted(App, null, null, null, 3, "u6_1");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;0CAM+B,CAAC;IAC9B,qBAAO,WAAC;AACV"}',
-);
 /*
 {
   "origin": "test.tsx",

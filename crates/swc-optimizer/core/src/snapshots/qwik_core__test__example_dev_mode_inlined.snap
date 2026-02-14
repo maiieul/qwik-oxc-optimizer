@@ -69,10 +69,6 @@ export const App = /*#__PURE__*/ componentQrl(
     },
   ),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,yCAAW;IAC5B,qBACE,WAAC,+BACC,WAAC;QAAE,OAAM;QAAQ,WAAQ,8BAAE,IAAM,QAAQ,GAAG,CAAC;;;;;;OAAS;;;;;;;;;AAK5D;;;;;IAAG"}',
-);
 == DIAGNOSTICS ==
 
 []

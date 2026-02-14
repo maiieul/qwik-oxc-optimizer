@@ -66,10 +66,6 @@ const Issue3742_component_svSy0PlWTAw = (_rawProps) => {
 export const Issue3742 = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ inlinedQrl(Issue3742_component_svSy0PlWTAw, "Issue3742_component_svSy0PlWTAw"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;uBAOQ,IAL+B,eAAc,OAK9B,oBALkC,QAKT,CAAC,MAAM,EAAE,GAAQ,KAAK,EAAE,GAAG,CAAC,IAAI,EAAE,GAAQ,KAAK,EAAE;;AAPjG,SAAqB,SAAS,QAAQ,iBAAiB;6DAW/B;;WAAM,QAAQ,KAAK;;wCATP;IAClC,MAAM,UAAU,UAAU;IAC1B,qBACE,WAAC;QACC,KAAK;;;;;QAGN;sBAEC,WAAC;YAAO,WAAQ;;;WAAyB;;AAG/C;AAZA,OAAO,MAAM,0BAAY,2GAYtB"}',
-);
 == DIAGNOSTICS ==
 
 []

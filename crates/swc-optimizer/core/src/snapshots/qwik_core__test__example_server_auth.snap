@@ -51,9 +51,6 @@ const i_XXXXXXXXXXXX = ()=>import("./test.tsx_auth_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = ()=>import("./test.tsx_serverAuth_XXXXXXXXXXXX");
 export const { onRequest, logout, getSession, signup } = serverAuthQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "serverAuth_XXXXXXXXXXXX"));
 export const { onRequest, logout, getSession, signup } = authQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "auth_XXXXXXXXXXXX"));
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;AAKA,OAAO,MAAM,EAAE,SAAS,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM,EAAE,GAAG,0EAetD;AAEH,OAAO,MAAM,EAAE,SAAS,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM,EAAE,GAAG,8DAetD\"}")
 ============================= test.tsx_serverAuth_XXXXXXXXXXXX.js (ENTRY POINT)==
 import Facebook from "next-auth/providers/facebook";
 import GitHub from "@auth/core/providers/github";
@@ -74,10 +71,6 @@ export const serverAuth_XXXXXXXXXXXX = {
     }),
   ],
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;sCAKqE;IACnE,WAAW;QACT,OAAO;YACL,UAAU,QAAQ,GAAG,CAAC,SAAS;YAC/B,cAAc,QAAQ,GAAG,CAAC,aAAa;QACzC;QACA,SAAS;YACP,UAAU,YAAY,GAAG,CAAC,WAAW;YACrC,cAAc,YAAY,GAAG,CAAC,eAAe;QAC/C;QACA,OAAO;YACL,UAAU,QAAQ,GAAG,CAAC,SAAS;YAC/B,cAAc,QAAQ,GAAG,CAAC,aAAa;QACzC;KACD;AACH"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -118,10 +111,6 @@ export const auth_XXXXXXXXXXXX = {
     }),
   ],
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;gCAsB+D;IAC7D,WAAW;QACT,OAAO;YACL,UAAU,QAAQ,GAAG,CAAC,SAAS;YAC/B,cAAc,QAAQ,GAAG,CAAC,aAAa;QACzC;QACA,SAAS;YACP,UAAU,QAAQ,GAAG,CAAC,WAAW;YACjC,cAAc,QAAQ,GAAG,CAAC,eAAe;QAC3C;QACA,OAAO;YACL,UAAU,QAAQ,GAAG,CAAC,SAAS;YAC/B,cAAc,QAAQ,GAAG,CAAC,aAAa;QACzC;KACD;AACH"}',
-);
 /*
 {
   "origin": "test.tsx",

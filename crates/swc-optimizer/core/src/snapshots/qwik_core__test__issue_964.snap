@@ -20,10 +20,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAMhB"}',
-);
 ============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { _jsxSorted } from "@qwik.dev/core";
 export const App_component_XXXXXXXXXXXX = () => {
@@ -32,10 +28,6 @@ export const App_component_XXXXXXXXXXXX = () => {
   });
   return /*#__PURE__*/ _jsxSorted("p", null, null, "Hello Qwik", 3, "u6_0");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";yCAE8B;IAC5B,QAAQ,GAAG,CAAC,UAAW,EAAO,EAAE,CAAM;QACpC,QAAQ,GAAG,CAAC,CAAA,MAAM,CAAC,MAAM,EAAE,EAAE,EAAE,IAAI,EAAE,IAAI,CAAC,CAAC,IAAM,EAAE,IAAI,GAAE;IAC3D;IAEA,qBAAO,WAAC,iBAAE;AACZ"}',
-);
 /*
 {
   "origin": "test.tsx",

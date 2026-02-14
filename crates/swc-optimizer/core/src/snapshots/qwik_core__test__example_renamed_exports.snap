@@ -18,10 +18,6 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_Component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_Component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;AAEA,OAAO,MAAM,oBAAM,4EAIhB"}',
-);
 ============================= test.tsx_App_Component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
@@ -32,10 +28,6 @@ export const App_Component_XXXXXXXXXXXX = (props) => {
   });
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_Component_1_XXXXXXXXXXXX", [state]);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;yCAE6B,CAAC;IAC5B,MAAM,QAAQ,SAAS;QAAE,OAAO;IAAE;IAElC;;;AACF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -67,10 +59,6 @@ export const App_Component_1_XXXXXXXXXXXX = () => {
   const state = _captures[0];
   return /*#__PURE__*/ _jsxSorted("div", null, null, _wrapProp(state, "thing"), 3, "u6_0");
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;2CAKkB;;yBAAM,WAAC,6BAAK"}',
-);
 /*
 {
   "origin": "test.tsx",

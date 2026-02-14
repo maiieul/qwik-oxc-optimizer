@@ -34,10 +34,6 @@ export const Root = () => {
     </html>
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"AAAA,SAAS,OAAO,QAAQ,gBAAgB;AAExC,OAAO,MAAM,OAAO;IAClB,QACG,KAAK;MACJ,CAAC,KAAK;QACJ,CAAC,KAAK,QAAQ,SAAU;QACxB,CAAC,MAAM,cAAc,EAAE,MAAM;MAC/B,EAAE,KAAK;MACP,CAAC,KAAK;QACJ,CAAC,QAAQ,SAAS,IAAK;MACzB,EAAE,KAAK;IACT,EAAE;AAEN,EAAE"}',
-);
 == DIAGNOSTICS ==
 
 []

@@ -32,10 +32,6 @@ export const Greeter = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
 /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "d_XXXXXXXXXXXX");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;AAGA,OAAO,MAAM,wBAAU,gFAapB"}',
-);
 ============================= test.tsx_Greeter_component_XXXXXXXXXXXX.js (ENTRY POINT)==
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_1_XXXXXXXXXXXX");
@@ -43,10 +39,6 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
   const stuff = useStore();
   return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_1_XXXXXXXXXXXX", [stuff]);
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;6CAGkC;IAChC,MAAM,QAAQ;IACd;;;AAWF"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -88,10 +80,6 @@ export const Greeter_component_1_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;+CAKW;;IACP,qBACE,WAAC;QACC,OAAO;YACL,KAAK;YACL,KAAK,MAAM,SAAS;YACpB,KAAK,OAAO,SAAS;QACvB"}',
-);
 /*
 {
   "origin": "test.tsx",
@@ -117,10 +105,6 @@ Some(
 */
 ============================= test.tsx_d_XXXXXXXXXXXX.js (ENTRY POINT)==
 export const d_XXXXXXXXXXXX = () => console.log("thing");
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"6BAkBY,IAAM,QAAQ,GAAG,CAAC"}',
-);
 /*
 {
   "origin": "test.tsx",

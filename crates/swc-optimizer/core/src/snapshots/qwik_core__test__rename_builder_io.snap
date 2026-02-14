@@ -36,14 +36,8 @@ export const Bar = /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Bar_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;;;AAOA,OAAO,MAAM,MAAM,wEAA2B;AAE9C,OAAO,MAAM,0DAAmB;AAEhC,OAAO,MAAM,oBAAM,4EAQhB"}',
-);
 ============================= test.tsx_Foo_qwikify_XXXXXXXXXXXX.ts (ENTRY POINT)==
 export const Foo_qwikify_XXXXXXXXXXXX = MyReactComponent;
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"uCAO4B"}');
 /*
 {
   "origin": "test.tsx",
@@ -66,8 +60,6 @@ Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"
 */
 ============================= test.tsx_Bar_XXXXXXXXXXXX.ts (ENTRY POINT)==
 export const Bar_XXXXXXXXXXXX = "a thing";
-
-Some('{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":"+BASqB"}');
 /*
 {
   "origin": "test.tsx",
@@ -99,10 +91,6 @@ export const App_component_XXXXXXXXXXXX = () => {
   else moreStuff();
   return "hi";
 };
-
-Some(
-  '{"version":3,"sources":["/user/qwik/src/test.tsx"],"names":[],"mappings":";;;;yCAW8B;IAC5B,IAAI,KAAK;IACT,IAAI,OACF;SAEA;IAEF,OAAO;AACT"}',
-);
 /*
 {
   "origin": "test.tsx",
