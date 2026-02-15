@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 // don't transpile jsx with non-plain-object props
 import { jsx } from "@qwik.dev/core";
 
@@ -11,13 +11,13 @@ export const App = () => {
   return jsx("div", props, "Hello Qwik");
 };
 
-============================= test.tsx ==
+=== test.tsx ===
 // don't transpile jsx with non-plain-object props
 import { jsx } from "@qwik.dev/core";
 export const App = () => {
   const props = {};
   return jsx("div", props, "Hello Qwik");
 };
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

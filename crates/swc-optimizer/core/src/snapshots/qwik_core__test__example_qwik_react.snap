@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import {
   componentQrl,
   inlinedQrl,
@@ -115,7 +115,7 @@ async function renderToString(rootNode, opts) {
 
 export { qwikify$, qwikifyQrl, renderToString };
 
-============================= ../node_modules/@qwik.dev/react/index.qwik.mjs ==
+=== ../node_modules/@qwik.dev/react/index.qwik.mjs ===
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./index.qwik.mjs_qwikifyQrl_component_XXXXXXXXXXXX.mjs");
 import { componentQrl, implicit$FirstArg } from "@qwik.dev/core";
@@ -147,7 +147,7 @@ async function renderToString(rootNode, opts) {
 }
 export { qwikify$, qwikifyQrl, renderToString };
 export { filterProps as _auto_filterProps };
-============================= ../node_modules/@qwik.dev/react/index.qwik.mjs_qwikifyQrl_component_XXXXXXXXXXXX.mjs (ENTRY POINT)==
+=== ../node_modules/@qwik.dev/react/index.qwik.mjs_qwikifyQrl_component_XXXXXXXXXXXX.mjs === (ENTRY)
 import { Fragment } from "@qwik.dev/core/jsx-runtime";
 import { SkipRerender } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -228,7 +228,7 @@ export const qwikifyQrl_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
-============================= ../node_modules/@qwik.dev/react/index.qwik.mjs_qwikifyQrl_component_useWatch_XXXXXXXXXXXX.mjs (ENTRY POINT)==
+=== ../node_modules/@qwik.dev/react/index.qwik.mjs_qwikifyQrl_component_useWatch_XXXXXXXXXXXX.mjs === (ENTRY)
 import { _auto_filterProps as filterProps } from "./index.qwik.mjs";
 import { isBrowser } from "@qwik.dev/core";
 import { noSerialize } from "@qwik.dev/core";
@@ -284,6 +284,6 @@ export const qwikifyQrl_component_useWatch_XXXXXXXXXXXX = async (track) => {
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

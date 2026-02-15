@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$ } from "@qwik.dev/core";
 import { server$ } from "@qwik.dev/router";
 import { clientSupabase } from "supabase";
@@ -30,7 +30,7 @@ export default component$(() => {
   return <button onClick$={async () => await api()}></button>;
 });
 
-============================= test.js ==
+=== test.js ===
 import { serverQrl } from "@qwik.dev/router";
 import { _noopQrlDEV } from "@qwik.dev/core";
 import { componentQrl } from "@qwik.dev/core";
@@ -60,7 +60,7 @@ export default /*#__PURE__*/ componentQrl(
     displayName: "test.tsx_test_component",
   }),
 );
-============================= test.tsx_test_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_test_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrlDEV } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_button_q_e_click_XXXXXXXXXXXX");
@@ -106,7 +106,7 @@ export const test_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= test.tsx_test_component_button_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_test_component_button_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { api } from "./test";
 export const test_component_button_q_e_click_XXXXXXXXXXXX = async () => await api();
 /*
@@ -125,6 +125,6 @@ export const test_component_button_q_e_click_XXXXXXXXXXXX = async () => await ap
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

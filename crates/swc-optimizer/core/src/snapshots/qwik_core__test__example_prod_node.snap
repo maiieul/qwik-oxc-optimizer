@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$ } from "@qwik.dev/core";
 
 export const Foo = component$(() => {
@@ -15,12 +15,12 @@ export const Foo = component$(() => {
   );
 });
 
-============================= test.tsx ==
+=== test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 export const Foo = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"));
-============================= test.tsx_Foo_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_div_q_e_click_1_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_div_q_e_click_2_XXXXXXXXXXXX");
@@ -50,7 +50,7 @@ export const s_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_div_q_e_click_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Foo_component_div_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 export const s_XXXXXXXXXXXX = () => console.log("first");
 /*
 {
@@ -68,7 +68,7 @@ export const s_XXXXXXXXXXXX = () => console.log("first");
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_div_q_e_click_1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Foo_component_div_div_q_e_click_1_XXXXXXXXXXXX.tsx === (ENTRY)
 export const s_XXXXXXXXXXXX = () => console.log("second");
 /*
 {
@@ -86,7 +86,7 @@ export const s_XXXXXXXXXXXX = () => console.log("second");
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_div_q_e_click_2_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Foo_component_div_div_q_e_click_2_XXXXXXXXXXXX.tsx === (ENTRY)
 export const s_XXXXXXXXXXXX = () => console.log("third");
 /*
 {
@@ -104,6 +104,6 @@ export const s_XXXXXXXXXXXX = () => console.log("third");
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

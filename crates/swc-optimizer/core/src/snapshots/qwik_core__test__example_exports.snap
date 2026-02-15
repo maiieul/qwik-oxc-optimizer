@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$ } from "@qwik.dev/core";
 
 export const [
@@ -54,7 +54,7 @@ export const Header = component$(() => {
 
 export const Footer = component$();
 
-============================= project/test.jsx ==
+=== project/test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_XXXXXXXXXXXX");
@@ -79,7 +79,7 @@ export const Header = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
 );
 export const Footer = /*#__PURE__*/ componentQrl();
-============================= project/test.tsx_Header_component_XXXXXXXXXXXX.jsx (ENTRY POINT)==
+=== project/test.tsx_Header_component_XXXXXXXXXXXX.jsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_1_XXXXXXXXXXXX");
 export const Header_component_XXXXXXXXXXXX = () => {
@@ -101,7 +101,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= project/test.tsx_Header_component_1_XXXXXXXXXXXX.jsx (ENTRY POINT)==
+=== project/test.tsx_Header_component_1_XXXXXXXXXXXX.jsx === (ENTRY)
 import { default as DefaultFn } from "./test";
 import { Footer } from "./test";
 import { a } from "./test";
@@ -153,6 +153,6 @@ export const Header_component_1_XXXXXXXXXXXX = () => (
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

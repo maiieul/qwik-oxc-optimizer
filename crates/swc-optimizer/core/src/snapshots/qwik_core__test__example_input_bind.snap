@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, $ } from "@qwik.dev/core";
 
 export const Greeter = component$(() => {
@@ -20,7 +20,7 @@ export const Greeter = component$(() => {
   );
 });
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { _val } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
@@ -78,6 +78,6 @@ export const Greeter = /*#__PURE__*/ componentQrl(
     );
   }, "s_n7HuG2hhU0Q"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

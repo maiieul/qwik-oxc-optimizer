@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, $ } from "@qwik.dev/core";
 import mongo from "mongodb";
 
@@ -20,14 +20,14 @@ export const Greeter = component$(() => {
   );
 });
 
-============================= test.tsx ==
+=== test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_XXXXXXXXXXXX");
 export const Greeter = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
-============================= test.tsx_Greeter_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Greeter_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import mongo from "mongodb";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX");
@@ -74,7 +74,7 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= test.tsx_Greeter_component_div_div_q_e_click_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Greeter_component_div_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Greeter_component_div_div_q_e_click_XXXXXXXXXXXX = () => {};
 /*
 {
@@ -92,7 +92,7 @@ export const Greeter_component_div_div_q_e_click_XXXXXXXXXXXX = () => {};
   "captures": false
 }
 */
-============================= test.tsx_Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX = () => {};
 /*
 {
@@ -110,7 +110,7 @@ export const Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX = () => {};
   "captures": false
 }
 */
-============================= test.tsx_Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX = () => {};
 /*
 {
@@ -128,6 +128,6 @@ export const Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX = () => {};
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

@@ -3,7 +3,7 @@ source: src/test.rs
 expression: output
 ---
 
-============================= ../../node_modules/dep/dist/lib.mjs ==
+=== ../../node_modules/dep/dist/lib.mjs ===
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./lib.mjs_App_component_XXXXXXXXXXXX.js");
 import { componentQrl, useStore } from "@qwik.dev/core";
@@ -16,14 +16,14 @@ export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 export { useData as _auto_useData };
-============================= components/main.js ==
+=== components/main.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./main.tsx_Local_component_XXXXXXXXXXXX.js");
 export const Local = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Local_component_XXXXXXXXXXXX"),
 );
-============================= components/main.tsx_Local_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== components/main.tsx_Local_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { state } from "./sibling";
 export const Local_component_XXXXXXXXXXXX = () => {
@@ -45,7 +45,7 @@ export const Local_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= ../../node_modules/dep/dist/lib.mjs_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== ../../node_modules/dep/dist/lib.mjs_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -101,7 +101,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= ../../node_modules/dep/dist/lib.mjs_App_component_div_p_button_onClick_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== ../../node_modules/dep/dist/lib.mjs_App_component_div_p_button_onClick_XXXXXXXXXXXX.js === (ENTRY)
 import { useLexicalScope } from "@qwik.dev/core";
 export const App_component_div_p_button_onClick_XXXXXXXXXXXX = () => {
   const [store] = useLexicalScope();
@@ -126,6 +126,6 @@ export const App_component_div_p_button_onClick_XXXXXXXXXXXX = () => {
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

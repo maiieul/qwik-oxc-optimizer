@@ -2,18 +2,18 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$ } from "@qwik.dev/core";
 export const Greeter = component$(() => <div />);
 
-============================= components/apps/apps.ts ==
+=== components/apps/apps.ts ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./apps.tsx_Greeter_component_XXXXXXXXXXXX");
 export const Greeter = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
-============================= components/apps/apps.tsx_Greeter_component_XXXXXXXXXXXX.ts (ENTRY POINT)==
+=== components/apps/apps.tsx_Greeter_component_XXXXXXXXXXXX.ts === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const Greeter_component_XXXXXXXXXXXX = () =>
   /*#__PURE__*/ _jsxSorted("div", null, null, null, 3, "KD_0");
@@ -33,6 +33,6 @@ export const Greeter_component_XXXXXXXXXXXX = () =>
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

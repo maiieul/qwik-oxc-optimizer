@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$ } from "@qwik.dev/core";
 import { sibling } from "./sibling";
 
@@ -10,14 +10,14 @@ export default component$(() => {
   return <div onClick$={() => console.log(mongodb, sibling)}></div>;
 });
 
-============================= src/routes/_repl/[id]/[[...slug]].js ==
+=== src/routes/_repl/[id]/[[...slug]].js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./[[...slug]].tsx_slug_component_XXXXXXXXXXXX.js");
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "slug_component_XXXXXXXXXXXX"),
 );
-============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_XXXXXXXXXXXX.js ==
+=== src/routes/_repl/[id]/[[...slug]].tsx_slug_component_XXXXXXXXXXXX.js ===
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX.js");
@@ -49,7 +49,7 @@ export const slug_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== src/routes/_repl/[id]/[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { sibling } from "./sibling";
 export const slug_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(mongodb, sibling);
 /*
@@ -68,6 +68,6 @@ export const slug_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(mongo
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

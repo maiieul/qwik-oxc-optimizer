@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import {
   componentQrl,
   inlinedQrl,
@@ -115,7 +115,7 @@ async function renderToString(rootNode, opts) {
 
 export { qwikify$, qwikifyQrl, renderToString };
 
-============================= ../node_modules/@qwik.dev/react/index.qwik.mjs ==
+=== ../node_modules/@qwik.dev/react/index.qwik.mjs ===
 import { _jsxSorted } from "@qwik.dev/core";
 import {
   componentQrl,
@@ -236,6 +236,6 @@ async function renderToString(rootNode, opts) {
 }
 export { qwikify$, qwikifyQrl, renderToString };
 export { filterProps as _auto_filterProps };
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$, h, Fragment } from "@qwik.dev/core";
 
 export const Lightweight = (props) => {
@@ -44,7 +44,7 @@ export const Foo = component$(
   },
 );
 
-============================= test.js ==
+=== test.js ===
 import { _jsxSorted } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
@@ -88,7 +88,7 @@ export const Foo = /*#__PURE__*/ componentQrl(
     tagName: "my-foo",
   },
 );
-============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = (props) => {
@@ -113,7 +113,7 @@ export const Foo_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
-============================= test.tsx_Foo_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { Lightweight } from "./test";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
@@ -234,6 +234,6 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

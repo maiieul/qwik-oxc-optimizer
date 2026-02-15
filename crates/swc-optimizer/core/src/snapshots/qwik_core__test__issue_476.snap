@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { Counter } from "./counter.tsx";
 
 export const Root = () => {
@@ -19,7 +19,7 @@ export const Root = () => {
   );
 };
 
-============================= test.tsx ==
+=== test.tsx ===
 import { Counter } from "./counter.tsx";
 export const Root = () => {
   return (
@@ -34,6 +34,6 @@ export const Root = () => {
     </html>
   );
 };
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

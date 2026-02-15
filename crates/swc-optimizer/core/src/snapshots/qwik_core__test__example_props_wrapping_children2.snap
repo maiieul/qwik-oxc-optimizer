@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$, useSignal } from "@qwik.dev/core";
 export const Works = component$((props) => {
   let fromLocal = useSignal(0);
@@ -20,7 +20,7 @@ export const Works = component$((props) => {
   );
 });
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
@@ -62,6 +62,6 @@ export const Works = /*#__PURE__*/ componentQrl(
     );
   }, "Works_component_t45qL4vNGv0"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

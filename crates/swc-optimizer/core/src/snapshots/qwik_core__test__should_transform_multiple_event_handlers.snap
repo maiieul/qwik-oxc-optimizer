@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useSignal, Signal } from "@qwik.dev/core";
 const Foo = component$(function () {
   const data = useSignal<Signal<any>[]>([]);
@@ -20,12 +20,12 @@ const Foo = component$(function () {
   );
 });
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"));
-============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
@@ -94,7 +94,7 @@ export const Foo_component_XXXXXXXXXXXX = function () {
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_div_q_e_click_XXXXXXXXXXXX = (_, _1, row) =>
   console.log(row.value.id);
 /*
@@ -118,7 +118,7 @@ export const Foo_component_div_div_q_e_click_XXXXXXXXXXXX = (_, _1, row) =>
   ]
 }
 */
-============================= test.tsx_Foo_component_div_div_q_e_mouseover_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_div_q_e_mouseover_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_div_q_e_mouseover_XXXXXXXXXXXX = (_, _1, row) =>
   console.log("over" + row.value.id);
 /*
@@ -142,7 +142,7 @@ export const Foo_component_div_div_q_e_mouseover_XXXXXXXXXXXX = (_, _1, row) =>
   ]
 }
 */
-============================= test.tsx_Foo_component_div_div_p_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_div_p_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_div_p_q_e_click_XXXXXXXXXXXX = (_, _1, row) =>
   console.log("inner" + row.value.id);
 /*
@@ -166,6 +166,6 @@ export const Foo_component_div_div_p_q_e_click_XXXXXXXXXXXX = (_, _1, row) =>
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

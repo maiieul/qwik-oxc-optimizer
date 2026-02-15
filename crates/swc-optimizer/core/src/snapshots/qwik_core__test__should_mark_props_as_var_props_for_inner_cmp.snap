@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useResource$, Resource } from "@qwik.dev/core";
 import { type ModelProps } from "./modelMenu";
 import { serverImg } from "~/routes/(authenticated)/layout";
@@ -37,7 +37,7 @@ export const ModelImg = component$<ModelProps>((props) => {
   );
 });
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Image_component_XXXXXXXXXXXX");
@@ -48,7 +48,7 @@ export const Image = /*#__PURE__*/ componentQrl(
 export const ModelImg = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "ModelImg_component_XXXXXXXXXXXX"),
 );
-============================= test.tsx_Image_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Image_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
 export const Image_component_XXXXXXXXXXXX = (props) => {
@@ -89,7 +89,7 @@ export const Image_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
-============================= test.tsx_ModelImg_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_ModelImg_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Image } from "./test";
 import { Resource } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
@@ -158,7 +158,7 @@ export const ModelImg_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
-============================= test.tsx_ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { serverImg } from "~/routes/(authenticated)/layout";
 export const ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX = async (_rawProps) => {
@@ -188,6 +188,6 @@ export const ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX = async (_rawPro
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

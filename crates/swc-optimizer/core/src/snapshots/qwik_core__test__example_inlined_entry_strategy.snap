@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useBrowserVisibleTask$, useStore, useStyles$ } from "@qwik.dev/core";
 import { thing } from "./sibling";
 import mongodb from "mongodb";
@@ -21,7 +21,7 @@ export const Child = component$(() => {
   return <div onClick$={() => console.log(mongodb)}></div>;
 });
 
-============================= test.tsx ==
+=== test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
@@ -59,6 +59,6 @@ export const Child = /*#__PURE__*/ componentQrl(
     );
   }, "Child_component_9GyF01GDKqw"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

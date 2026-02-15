@@ -2,21 +2,21 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$ } from "@qwik.dev/core";
 
 export default component$(() => {
   return <div onClick$={() => console.log(mongodb)}></div>;
 });
 
-============================= src/components/mongo/404.tsx ==
+=== src/components/mongo/404.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./404.tsx__404_component_XXXXXXXXXXXX");
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "_404_component_XXXXXXXXXXXX"),
 );
-============================= src/components/mongo/404.tsx__404_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== src/components/mongo/404.tsx__404_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./404.tsx__404_component_div_q_e_click_XXXXXXXXXXXX");
 export const _404_component_XXXXXXXXXXXX = () => {
@@ -42,7 +42,7 @@ export const _404_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= src/components/mongo/404.tsx__404_component_div_q_e_click_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== src/components/mongo/404.tsx__404_component_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 export const _404_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(mongodb);
 /*
 {
@@ -60,6 +60,6 @@ export const _404_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(mongo
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

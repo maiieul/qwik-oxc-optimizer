@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useStore, Slot, Fragment } from "@qwik.dev/core";
 import Image from "./image.jpg?jsx";
 
@@ -100,7 +100,7 @@ export const AppStatic = component$((props: Stuff) => {
   );
 });
 
-============================= test.js ==
+=== test.js ===
 import { _jsxSorted } from "@qwik.dev/core";
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
@@ -289,6 +289,6 @@ const AppStatic_component_gYRXqF3G5nE = (props) => {
 export const AppStatic = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ inlinedQrl(AppStatic_component_gYRXqF3G5nE, "AppStatic_component_gYRXqF3G5nE"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 export const $promoteToRoot$ = (ref: SeenRef) => {
   const path = $getObjectPath$(ref) as string;
   // should stay before the push
@@ -13,7 +13,7 @@ export const $promoteToRoot$ = (ref: SeenRef) => {
   return idx;
 };
 
-============================= test.js ==
+=== test.js ===
 export const $promoteToRoot$ = (ref) => {
   const path = $getObjectPath$(ref);
   // should stay before the push
@@ -23,6 +23,6 @@ export const $promoteToRoot$ = (ref) => {
   ref.$index$ = idx;
   return idx;
 };
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

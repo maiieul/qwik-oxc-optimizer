@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$, useTask$ } from "@qwik.dev/core";
 import { CONST } from "const";
 export const Works = component$(
@@ -38,7 +38,7 @@ export const NoWorks3 = component$(({ count, stuff = hola() }) => {
   return <div class={count}>{count}</div>;
 });
 
-============================= test.js ==
+=== test.js ===
 import { _restProps } from "@qwik.dev/core";
 import { componentQrl } from "@qwik.dev/core";
 import { useTaskQrl } from "@qwik.dev/core";
@@ -148,6 +148,6 @@ export const NoWorks3 = /*#__PURE__*/ componentQrl(
     );
   }, "NoWorks3_component_fc13h5yYn14"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

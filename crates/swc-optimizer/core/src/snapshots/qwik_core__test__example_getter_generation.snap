@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useStore } from "@qwik.dev/core";
 
 export const App = component$(() => {
@@ -38,7 +38,7 @@ export const Cmp = component$((props) => {
   );
 });
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Cmp_component_XXXXXXXXXXXX");
@@ -49,7 +49,7 @@ export const App = /*#__PURE__*/ componentQrl(
 export const Cmp = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Cmp_component_XXXXXXXXXXXX"),
 );
-============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Cmp } from "./test";
 import { _fnSignal } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -102,7 +102,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= test.tsx_Cmp_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Cmp_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _fnSignal } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -161,6 +161,6 @@ export const Cmp_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

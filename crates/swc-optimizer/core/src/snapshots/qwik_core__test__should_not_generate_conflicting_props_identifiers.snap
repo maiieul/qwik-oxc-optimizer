@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useComputed$, useTask$ } from "@qwik.dev/core";
 
 export default component$(({ color, ...props }) => {
@@ -15,7 +15,7 @@ export default component$(({ color, ...props }) => {
   return "hi";
 });
 
-============================= test.js ==
+=== test.js ===
 import { _restProps } from "@qwik.dev/core";
 import { componentQrl } from "@qwik.dev/core";
 import { useComputedQrl } from "@qwik.dev/core";
@@ -51,6 +51,6 @@ const test_component_LUXeXe0DQrg = (_rawProps) => {
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ inlinedQrl(test_component_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

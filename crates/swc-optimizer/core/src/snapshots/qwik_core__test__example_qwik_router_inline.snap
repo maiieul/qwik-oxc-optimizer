@@ -4,7 +4,7 @@ assertion_line: 3325
 expression: output
 snapshot_kind: text
 ---
-==INPUT==
+=== INPUT ===
 import * as qwikRouterConfig from "@qwik-router-config";
 import swRegister from "@qwik-router-sw-register";
 import {
@@ -1080,7 +1080,7 @@ export {
   zodQrl,
 };
 
-============================= ../node_modules/@qwik.dev/router/index.qwik.mjs ==
+=== ../node_modules/@qwik.dev/router/index.qwik.mjs ===
 import * as qwikRouterConfig from "@qwik-router-config";
 import swRegister from "@qwik-router-sw-register";
 import {
@@ -2155,6 +2155,6 @@ export {
   zod$,
   zodQrl,
 };
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

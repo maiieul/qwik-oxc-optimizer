@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useStore } from "@qwik.dev/core";
 
 export const App = component$((props: Stuff) => {
@@ -17,7 +17,7 @@ export const App = component$((props: Stuff) => {
   );
 });
 
-============================= project/index.js ==
+=== project/index.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrlDEV } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./index.tsx_App_component_XXXXXXXXXXXX.js");
@@ -29,7 +29,7 @@ export const App = /*#__PURE__*/ componentQrl(
     displayName: "index.tsx_App_component",
   }),
 );
-============================= project/index.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== project/index.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
 export const App_component_XXXXXXXXXXXX = (props) => {
@@ -112,6 +112,6 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

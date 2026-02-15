@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$, useStyles$ } from "@qwik.dev/core";
 
 export const Foo = component$(
@@ -15,7 +15,7 @@ export const Foo = component$(
   },
 );
 
-============================= test.tsx ==
+=== test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
@@ -25,7 +25,7 @@ export const Foo = /*#__PURE__*/ componentQrl(
     tagName: "my-foo",
   },
 );
-============================= test.tsx_Foo_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_useStyles_XXXXXXXXXXXX");
@@ -49,7 +49,7 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_useStyles_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Foo_component_useStyles_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Foo_component_useStyles_XXXXXXXXXXXX = ".class {}";
 /*
 {
@@ -67,6 +67,6 @@ export const Foo_component_useStyles_XXXXXXXXXXXX = ".class {}";
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

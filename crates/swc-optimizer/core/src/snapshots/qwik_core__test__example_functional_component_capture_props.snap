@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$, useStore } from "@qwik.dev/core";
 
 export const App = component$(
@@ -60,14 +60,14 @@ export const App = component$(
   },
 );
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
-============================= test.tsx_App_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_1_XXXXXXXXXXXX");
@@ -139,7 +139,7 @@ export const App_component_XXXXXXXXXXXX = ({
   ]
 }
 */
-============================= test.tsx_App_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_App_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -209,7 +209,7 @@ export const App_component_1_XXXXXXXXXXXX = () => {
   ]
 }
 */
-============================= test.tsx_App_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_App_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const App_component_div_q_e_click_XXXXXXXXXXXX = () => {
   const count = _captures[0],
@@ -236,6 +236,6 @@ export const App_component_div_q_e_click_XXXXXXXXXXXX = () => {
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

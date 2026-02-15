@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import GitHub from "@auth/core/providers/github";
 import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
@@ -42,7 +42,7 @@ export const { onRequest, logout, getSession, signup } = auth$({
   ],
 });
 
-============================= test.js ==
+=== test.js ===
 
 import { serverAuthQrl } from "@auth/qwik";
 import { qrl } from "@qwik.dev/core";
@@ -51,7 +51,7 @@ const i_XXXXXXXXXXXX = ()=>import("./test.tsx_auth_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = ()=>import("./test.tsx_serverAuth_XXXXXXXXXXXX");
 export const { onRequest, logout, getSession, signup } = serverAuthQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "serverAuth_XXXXXXXXXXXX"));
 export const { onRequest, logout, getSession, signup } = authQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "auth_XXXXXXXXXXXX"));
-============================= test.tsx_serverAuth_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_serverAuth_XXXXXXXXXXXX.js === (ENTRY)
 import Facebook from "next-auth/providers/facebook";
 import GitHub from "@auth/core/providers/github";
 import Google from "next-auth/providers/google";
@@ -87,7 +87,7 @@ export const serverAuth_XXXXXXXXXXXX = {
   "captures": false
 }
 */
-============================= test.tsx_auth_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_auth_XXXXXXXXXXXX.js === (ENTRY)
 import Facebook from "next-auth/providers/facebook";
 import GitHub from "@auth/core/providers/github";
 import Google from "next-auth/providers/google";
@@ -123,6 +123,6 @@ export const auth_XXXXXXXXXXXX = {
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

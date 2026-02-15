@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$ } from "@qwik.dev/core";
 
 export const AtomStatus = component$(({ ctx, atom }) => {
@@ -21,7 +21,7 @@ export const AtomStatus = component$(({ ctx, atom }) => {
   );
 });
 
-============================= test.jsx ==
+=== test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { _captures } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
@@ -49,6 +49,6 @@ export const AtomStatus = /*#__PURE__*/ componentQrl(
     );
   }, "AtomStatus_component_hdwpoUtydSA"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

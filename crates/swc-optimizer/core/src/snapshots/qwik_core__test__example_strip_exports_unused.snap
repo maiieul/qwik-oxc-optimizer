@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$ } from "@qwik.dev/core";
 import mongodb from "mongodb";
 
@@ -19,7 +19,7 @@ export default component$(() => {
   return <div>cmp</div>;
 });
 
-============================= test.tsx ==
+=== test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
@@ -29,7 +29,7 @@ export const onGet = () => {
 export default /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
-============================= test.tsx_test_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_test_component_XXXXXXXXXXXX.tsx === (ENTRY)
 export const test_component_XXXXXXXXXXXX = () => {
   return <div>cmp</div>;
 };
@@ -49,6 +49,6 @@ export const test_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useStore } from "@qwik.dev/core";
 
 export const App = component$((props: Stuff) => {
@@ -15,7 +15,7 @@ export const App = component$((props: Stuff) => {
   );
 });
 
-============================= test.jsx ==
+=== test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 export const App = /*#__PURE__*/ componentQrl(
@@ -37,6 +37,6 @@ export const App = /*#__PURE__*/ componentQrl(
     );
   }, "App_component_ckEPmXZlub0"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

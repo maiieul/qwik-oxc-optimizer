@@ -2,14 +2,14 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { inlinedQrl } from "@qwik.dev/core";
 
 const foo = inlinedQrl(null, "some_hash");
 
-============================= test.js ==
+=== test.js ===
 import { inlinedQrl } from "@qwik.dev/core";
 inlinedQrl(null, "some_hash");
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$, server$, useStyle$ } from "@qwik.dev/core";
 
 export const Works = component$((props) => {
@@ -13,7 +13,7 @@ export const Works = component$((props) => {
 
 const STYLES = ".class {}";
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { useStyleQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
@@ -47,6 +47,6 @@ export const Works = /*#__PURE__*/ componentQrl(
 );
 const STYLES = ".class {}";
 export { STYLES as _auto_STYLES };
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

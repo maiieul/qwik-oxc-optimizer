@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$ } from "@qwik.dev/core";
 
 export const Foo = component$(({ foo }) => {
@@ -25,7 +25,7 @@ export const Bar = component$(({ bar }) => {
   });
 });
 
-============================= test.jsx ==
+=== test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
@@ -36,7 +36,7 @@ export const Foo = /*#__PURE__*/ componentQrl(
 export const Bar = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Bar_component_XXXXXXXXXXXX"),
 );
-============================= test.tsx_Foo_component_XXXXXXXXXXXX.jsx (ENTRY POINT)==
+=== test.tsx_Foo_component_XXXXXXXXXXXX.jsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
@@ -61,7 +61,7 @@ export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
   ]
 }
 */
-============================= test.tsx_Foo_component_1_XXXXXXXXXXXX.jsx (ENTRY POINT)==
+=== test.tsx_Foo_component_1_XXXXXXXXXXXX.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Foo_component_1_XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
@@ -93,7 +93,7 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
   ]
 }
 */
-============================= test.tsx_Bar_component_XXXXXXXXXXXX.jsx (ENTRY POINT)==
+=== test.tsx_Bar_component_XXXXXXXXXXXX.jsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Bar_component_1_XXXXXXXXXXXX");
 export const Bar_component_XXXXXXXXXXXX = (_rawProps) => {
@@ -118,7 +118,7 @@ export const Bar_component_XXXXXXXXXXXX = (_rawProps) => {
   ]
 }
 */
-============================= test.tsx_Bar_component_1_XXXXXXXXXXXX.jsx (ENTRY POINT)==
+=== test.tsx_Bar_component_1_XXXXXXXXXXXX.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Bar_component_1_XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
@@ -143,6 +143,6 @@ export const Bar_component_1_XXXXXXXXXXXX = () => {
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

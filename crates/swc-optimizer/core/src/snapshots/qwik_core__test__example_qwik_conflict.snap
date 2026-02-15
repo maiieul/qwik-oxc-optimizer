@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$, useStyles } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core/what";
 
@@ -37,7 +37,7 @@ export const Root = component$(
   },
 );
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
@@ -59,7 +59,7 @@ export const Root = /*#__PURE__*/ componentQrl(
     tagName: "my-foo",
   },
 );
-============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { hW } from "./test";
 import { handleWatch } from "./test";
@@ -96,7 +96,7 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(23);
 /*
 {
@@ -114,7 +114,7 @@ export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log(23);
   "captures": false
 }
 */
-============================= test.tsx_Root_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Root_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 import { useStyles } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_component_1_XXXXXXXXXXXX");
@@ -139,7 +139,7 @@ export const Root_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= test.tsx_Root_component_useStyles_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Root_component_useStyles_XXXXXXXXXXXX.js === (ENTRY)
 export const Root_component_useStyles_XXXXXXXXXXXX = "thing";
 /*
 {
@@ -157,7 +157,7 @@ export const Root_component_useStyles_XXXXXXXXXXXX = "thing";
   "captures": false
 }
 */
-============================= test.tsx_Root_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Root_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const Root_component_1_XXXXXXXXXXXX = () => {
   return /*#__PURE__*/ _jsxSorted("div", null, null, null, 3, "u6_1");
@@ -178,6 +178,6 @@ export const Root_component_1_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

@@ -2,15 +2,15 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$ } from "@qwik.dev/core";
 export const sym1 = $((ctx) => console.log("1"));
 
-============================= test.tsx ==
+=== test.tsx ===
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_sym1_XXXXXXXXXXXX");
 export const sym1 = /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "sym1_XXXXXXXXXXXX");
-============================= test.tsx_sym1_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_sym1_XXXXXXXXXXXX.tsx === (ENTRY)
 export const sym1_XXXXXXXXXXXX = (ctx) => console.log("1");
 /*
 {
@@ -31,6 +31,6 @@ export const sym1_XXXXXXXXXXXX = (ctx) => console.log("1");
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

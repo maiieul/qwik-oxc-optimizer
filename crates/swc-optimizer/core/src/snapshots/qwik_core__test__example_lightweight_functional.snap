@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$ } from "@qwik.dev/core";
 
 export const Foo = component$(
@@ -35,7 +35,7 @@ export const ButtonArrow = ({ text, color }) => {
   );
 };
 
-============================= test.tsx ==
+=== test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Button_button_q_e_click_XXXXXXXXXXXX");
@@ -71,7 +71,7 @@ export const ButtonArrow = (_rawProps) => {
     </button>
   );
 };
-============================= test.tsx_Foo_component_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { Button } from "./test";
 import { ButtonArrow } from "./test";
 export const Foo_component_XXXXXXXXXXXX = (props) => {
@@ -101,7 +101,7 @@ export const Foo_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
-============================= test.tsx_Button_button_q_e_click_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_Button_button_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Button_button_q_e_click_XXXXXXXXXXXX = () => {
   const color = _captures[0],
@@ -128,7 +128,7 @@ export const Button_button_q_e_click_XXXXXXXXXXXX = () => {
   ]
 }
 */
-============================= test.tsx_ButtonArrow_button_q_e_click_XXXXXXXXXXXX.tsx (ENTRY POINT)==
+=== test.tsx_ButtonArrow_button_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const ButtonArrow_button_q_e_click_XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
@@ -153,6 +153,6 @@ export const ButtonArrow_button_q_e_click_XXXXXXXXXXXX = () => {
   ]
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

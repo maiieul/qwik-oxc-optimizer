@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useClientMount$, useStore, useTask$ } from "@qwik.dev/core";
 import mongo from "mongodb";
 import redis from "redis";
@@ -34,7 +34,7 @@ export const Parent = component$(() => {
   );
 });
 
-============================= components/component.js ==
+=== components/component.js ===
 import "./keep";
 import "../keep2";
 import { componentQrl } from "@qwik.dev/core";
@@ -98,6 +98,6 @@ export const Parent = /*#__PURE__*/ componentQrl(
     );
   }, "Parent_component_t6Wy3C0Q0XM"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useStore, Slot } from "@qwik.dev/core";
 
 export const App = component$((props: Stuff) => {
@@ -13,7 +13,7 @@ export const App = component$((props: Stuff) => {
   );
 });
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
@@ -31,6 +31,6 @@ const App_component_ckEPmXZlub0 = (props) => {
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

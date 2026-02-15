@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$, useStore, mutable } from "@qwik.dev/core";
 
 import { dep } from "./file";
@@ -48,7 +48,7 @@ export const App = component$((props) => {
   );
 });
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
@@ -110,6 +110,6 @@ const App_component_ckEPmXZlub0 = (props) => {
 export const App = /*#__PURE__*/ componentQrl(
   /*#__PURE__*/ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

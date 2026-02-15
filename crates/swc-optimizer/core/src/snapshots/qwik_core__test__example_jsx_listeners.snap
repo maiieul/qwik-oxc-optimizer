@@ -2,7 +2,7 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { $, component$ } from "@qwik.dev/core";
 
 export const Foo = component$(
@@ -33,7 +33,7 @@ export const Foo = component$(
   },
 );
 
-============================= test.js ==
+=== test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
@@ -43,7 +43,7 @@ export const Foo = /*#__PURE__*/ componentQrl(
     tagName: "my-foo",
   },
 );
-============================= test.tsx_Foo_component_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = () => {
@@ -65,7 +65,7 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX");
@@ -144,7 +144,7 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_handler_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_handler_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_handler_XXXXXXXXXXXX = () => console.log("reused");
 /*
 {
@@ -162,7 +162,7 @@ export const Foo_component_handler_XXXXXXXXXXXX = () => console.log("reused");
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("onClick$");
 /*
 {
@@ -180,7 +180,7 @@ export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("onCli
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX = () =>
   console.log("onDocumentScroll");
 /*
@@ -199,7 +199,7 @@ export const Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX = () =>
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX = () =>
   console.log("onWindowScroll");
 /*
@@ -218,7 +218,7 @@ export const Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX = () =>
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_q_e_c_lick_XXXXXXXXXXXX = () => console.log("on-cLick$");
 /*
 {
@@ -236,7 +236,7 @@ export const Foo_component_div_q_e_c_lick_XXXXXXXXXXXX = () => console.log("on-c
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX = () =>
   console.log("onDocument-sCroll");
 /*
@@ -255,7 +255,7 @@ export const Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX = () =>
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX = () =>
   console.log("onDocument-scroLL");
 /*
@@ -274,7 +274,7 @@ export const Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX = () =>
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_host_onClick_XXXXXXXXXXXX = () => console.log("host:onClick$");
 /*
 {
@@ -292,7 +292,7 @@ export const Foo_component_div_host_onClick_XXXXXXXXXXXX = () => console.log("ho
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX = () =>
   console.log("host:onDocument:scroll");
 /*
@@ -311,7 +311,7 @@ export const Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX = () =>
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX = () =>
   console.log("host:onWindow:scroll");
 /*
@@ -330,7 +330,7 @@ export const Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX = () =>
   "captures": false
 }
 */
-============================= test.tsx_Foo_component_div_custom_XXXXXXXXXXXX.js (ENTRY POINT)==
+=== test.tsx_Foo_component_div_custom_XXXXXXXXXXXX.js === (ENTRY)
 export const Foo_component_div_custom_XXXXXXXXXXXX = () => console.log("custom");
 /*
 {
@@ -348,6 +348,6 @@ export const Foo_component_div_custom_XXXXXXXXXXXX = () => console.log("custom")
   "captures": false
 }
 */
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

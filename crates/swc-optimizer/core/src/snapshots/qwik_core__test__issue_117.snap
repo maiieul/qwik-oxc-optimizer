@@ -2,11 +2,11 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 export const cache = patternCache[cacheKey] || (patternCache[cacheKey] = {});
 
-============================= project/test.tsx ==
+=== project/test.tsx ===
 export const cache = patternCache[cacheKey] || (patternCache[cacheKey] = {});
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []

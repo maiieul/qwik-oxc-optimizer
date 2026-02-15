@@ -2,14 +2,14 @@
 source: src/test.rs
 expression: output
 ---
-==INPUT==
+=== INPUT ===
 import { component$ } from "@qwik.dev/core";
 
 export default component$(() => {
   return <div onClick$={() => console.log(mongodb)}></div>;
 });
 
-============================= src/components/mongo/index.tsx ==
+=== src/components/mongo/index.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 export default /*#__PURE__*/ componentQrl(
@@ -26,6 +26,6 @@ export default /*#__PURE__*/ componentQrl(
     );
   }, "mongo_component_ouWLj4jA2oI"),
 );
-== DIAGNOSTICS ==
+== DIAGNOSTICS ===
 
 []
