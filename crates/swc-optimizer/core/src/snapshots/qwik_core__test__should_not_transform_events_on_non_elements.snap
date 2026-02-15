@@ -22,8 +22,8 @@ export const Greeter = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_XXXXXXXXXXXX");
-export const Greeter = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
+export const Greeter = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
 === test.tsx_Greeter_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { AnotherComponent } from "./another-component";
@@ -38,7 +38,7 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
     <div>
       <CustomComponent
         onClick$={
-          /*#__PURE__*/ qrl(
+          /* @__PURE__ */ qrl(
             i_XXXXXXXXXXXX,
             "Greeter_component_div_CustomComponent_onClick_XXXXXXXXXXXX",
           )
@@ -47,7 +47,7 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
       {array.map((item) => (
         <AnotherComponent
           onClick$={
-            /*#__PURE__*/ qrl(
+            /* @__PURE__ */ qrl(
               i_XXXXXXXXXXXX,
               "Greeter_component_div_AnotherComponent_onClick_XXXXXXXXXXXX",
             )

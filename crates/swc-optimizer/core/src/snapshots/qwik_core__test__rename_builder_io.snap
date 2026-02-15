@@ -31,10 +31,10 @@ import { componentQrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_qwikify_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Bar_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-export const Foo = qwikifyQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_qwikify_XXXXXXXXXXXX"));
-export const Bar = /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Bar_XXXXXXXXXXXX");
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+export const Foo = qwikifyQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_qwikify_XXXXXXXXXXXX"));
+export const Bar = /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Bar_XXXXXXXXXXXX");
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 === test.tsx_Foo_qwikify_XXXXXXXXXXXX.ts === (ENTRY)
 export const Foo_qwikify_XXXXXXXXXXXX = MyReactComponent;

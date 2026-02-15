@@ -30,15 +30,15 @@ import { _captures } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
 import { thing } from "./sibling";
 import mongodb from "mongodb";
-export const Child = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(() => {
-    useStylesQrl(/*#__PURE__*/ inlinedQrl("somestring", "Child_component_useStyles_qBZTuFM0160"));
+export const Child = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(() => {
+    useStylesQrl(/* @__PURE__ */ inlinedQrl("somestring", "Child_component_useStyles_qBZTuFM0160"));
     const state = useStore({
       count: 0,
     });
     // Double count watch
     useBrowserVisibleTaskQrl(
-      /*#__PURE__*/ inlinedQrl(
+      /* @__PURE__ */ inlinedQrl(
         () => {
           const state = _captures[0];
           state.count = thing.doStuff() + import("./sibling");
@@ -50,7 +50,7 @@ export const Child = /*#__PURE__*/ componentQrl(
     return (
       <div
         q-e:click={
-          /*#__PURE__*/ inlinedQrl(
+          /* @__PURE__ */ inlinedQrl(
             () => console.log(mongodb),
             "Child_component_div_q_e_click_cROa4sult1s",
           )

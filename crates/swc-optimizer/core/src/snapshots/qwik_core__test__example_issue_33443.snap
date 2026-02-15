@@ -36,7 +36,7 @@ const Issue3742_component_div_button_q_e_click_95Hlm8WgsYY = () => {
 };
 const Issue3742_component_svSy0PlWTAw = (_rawProps) => {
   const counter = useSignal(0);
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     {
       title: _fnSignal(_hf0, [_rawProps, counter], _hf0_str),
@@ -44,11 +44,11 @@ const Issue3742_component_svSy0PlWTAw = (_rawProps) => {
     null,
     [
       "Issue3742",
-      /*#__PURE__*/ _jsxSorted(
+      /* @__PURE__ */ _jsxSorted(
         "button",
         null,
         {
-          "q-e:click": /*#__PURE__*/ inlinedQrl(
+          "q-e:click": /* @__PURE__ */ inlinedQrl(
             Issue3742_component_div_button_q_e_click_95Hlm8WgsYY,
             "Issue3742_component_div_button_q_e_click_95Hlm8WgsYY",
             [counter],
@@ -63,8 +63,8 @@ const Issue3742_component_svSy0PlWTAw = (_rawProps) => {
     "u6_0",
   );
 };
-export const Issue3742 = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(Issue3742_component_svSy0PlWTAw, "Issue3742_component_svSy0PlWTAw"),
+export const Issue3742 = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(Issue3742_component_svSy0PlWTAw, "Issue3742_component_svSy0PlWTAw"),
 );
 == DIAGNOSTICS ===
 

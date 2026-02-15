@@ -25,8 +25,8 @@ export const Issue3561 = component$(() => {
 === test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
-export const Issue3561 = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(() => {
+export const Issue3561 = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(() => {
     const props = useStore({
       product: {
         currentVariant: {

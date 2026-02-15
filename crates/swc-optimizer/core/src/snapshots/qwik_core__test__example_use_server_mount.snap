@@ -39,11 +39,11 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_XXXXXXXXXXXX");
-export const Parent = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Parent_component_XXXXXXXXXXXX"),
+export const Parent = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Parent_component_XXXXXXXXXXXX"),
 );
-export const Child = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
+export const Child = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
 );
 === test.tsx_Parent_component_XXXXXXXXXXXX.js ===
 import { _jsxSorted } from "@qwik.dev/core";
@@ -58,12 +58,12 @@ export const Parent_component_XXXXXXXXXXXX = () => {
     text: "",
   });
   // Double count watch
-  useTaskQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Parent_component_useTask_XXXXXXXXXXXX", [state]));
-  return /*#__PURE__*/ _jsxSorted(
+  useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Parent_component_useTask_XXXXXXXXXXXX", [state]));
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Parent_component_div_q_e_click_XXXXXXXXXXXX"),
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Parent_component_div_q_e_click_XXXXXXXXXXXX"),
     },
     _wrapProp(state, "text"),
     3,
@@ -145,12 +145,12 @@ export const Child_component_XXXXXXXXXXXX = () => {
     text: "",
   });
   // Double count watch
-  useTaskQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Child_component_useTask_XXXXXXXXXXXX", [state]));
-  return /*#__PURE__*/ _jsxSorted(
+  useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_useTask_XXXXXXXXXXXX", [state]));
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Child_component_div_q_e_click_XXXXXXXXXXXX"),
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_div_q_e_click_XXXXXXXXXXXX"),
     },
     _wrapProp(state, "text"),
     3,

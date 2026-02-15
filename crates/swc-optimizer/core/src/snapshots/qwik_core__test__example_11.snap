@@ -26,11 +26,11 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-export const Header = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
+export const Header = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
 );
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 === project/test.tsx_Header_component_XXXXXXXXXXXX.tsx ===
 import { Header } from "./test";
@@ -41,7 +41,7 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_Header_onClick_
 export const Header_component_XXXXXXXXXXXX = () => {
   return (
     <Header
-      onClick={/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Header_component_Header_onClick_XXXXXXXXXXXX")}
+      onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_Header_onClick_XXXXXXXXXXXX")}
     >
       {dep2.stuff()}
       {bbar()}

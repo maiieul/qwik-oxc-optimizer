@@ -28,8 +28,8 @@ const ManyEventsComponent = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_ManyEventsComponent_component_XXXXXXXXXXXX");
-/*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "ManyEventsComponent_component_XXXXXXXXXXXX"),
+/* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "ManyEventsComponent_component_XXXXXXXXXXXX"),
 );
 === test.tsx_ManyEventsComponent_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
@@ -49,20 +49,20 @@ const i_XXXXXXXXXXXX = () =>
 const i_XXXXXXXXXXXX = () =>
   import("./test.tsx_ManyEventsComponent_component_div_button_q_e_click_XXXXXXXXXXXX");
 export const ManyEventsComponent_component_XXXXXXXXXXXX = () => {
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     null,
     [
-      /*#__PURE__*/ _jsxSorted(
+      /* @__PURE__ */ _jsxSorted(
         "button",
         null,
         {
-          "q-e:click": /*#__PURE__*/ qrl(
+          "q-e:click": /* @__PURE__ */ qrl(
             i_XXXXXXXXXXXX,
             "ManyEventsComponent_component_div_button_q_e_click_XXXXXXXXXXXX",
           ),
-          "q-e:dblclick": /*#__PURE__*/ qrl(
+          "q-e:dblclick": /* @__PURE__ */ qrl(
             i_XXXXXXXXXXXX,
             "ManyEventsComponent_component_div_button_q_e_dblclick_XXXXXXXXXXXX",
           ),
@@ -71,27 +71,27 @@ export const ManyEventsComponent_component_XXXXXXXXXXXX = () => {
         3,
         null,
       ),
-      /*#__PURE__*/ _jsxSorted(
+      /* @__PURE__ */ _jsxSorted(
         "button",
         null,
         {
-          "q-e:click": /*#__PURE__*/ qrl(
+          "q-e:click": /* @__PURE__ */ qrl(
             i_XXXXXXXXXXXX,
             "ManyEventsComponent_component_div_button_q_e_click_1_XXXXXXXXXXXX",
           ),
-          "q-e:blur": /*#__PURE__*/ qrl(
+          "q-e:blur": /* @__PURE__ */ qrl(
             i_XXXXXXXXXXXX,
             "ManyEventsComponent_component_div_button_q_e_blur_XXXXXXXXXXXX",
           ),
-          "q-e:another-custom": /*#__PURE__*/ qrl(
+          "q-e:another-custom": /* @__PURE__ */ qrl(
             i_XXXXXXXXXXXX,
             "ManyEventsComponent_component_div_button_q_e_another_custom_XXXXXXXXXXXX",
           ),
-          "q-d:focus": /*#__PURE__*/ qrl(
+          "q-d:focus": /* @__PURE__ */ qrl(
             i_XXXXXXXXXXXX,
             "ManyEventsComponent_component_div_button_q_d_focus_XXXXXXXXXXXX",
           ),
-          "q-w:click": /*#__PURE__*/ qrl(
+          "q-w:click": /* @__PURE__ */ qrl(
             i_XXXXXXXXXXXX,
             "ManyEventsComponent_component_div_button_q_w_click_XXXXXXXXXXXX",
           ),

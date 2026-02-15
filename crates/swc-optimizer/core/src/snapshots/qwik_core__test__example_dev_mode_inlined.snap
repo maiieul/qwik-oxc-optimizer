@@ -19,19 +19,19 @@ export const App = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrlDEV } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrlDEV(
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrlDEV(
     () => {
-      return /*#__PURE__*/ _jsxSorted(
+      return /* @__PURE__ */ _jsxSorted(
         Cmp,
         null,
         null,
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted(
           "p",
           null,
           {
             class: "stuff",
-            "q-e:click": /*#__PURE__*/ inlinedQrlDEV(
+            "q-e:click": /* @__PURE__ */ inlinedQrlDEV(
               () => console.log("warn"),
               "App_component_Cmp_p_q_e_click_Yl4ybrJWrt4",
               {

@@ -34,8 +34,8 @@ export const Child = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_XXXXXXXXXXXX");
-export const Child = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
+export const Child = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
 );
 === test.tsx_Child_component_XXXXXXXXXXXX.js === (ENTRY)
 import { TestComponent } from "./testComponent";
@@ -61,12 +61,12 @@ export const Child_component_XXXXXXXXXXXX = () => {
       ],
     };
   });
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     null,
     propCounterWithNested.value.data.map((item, index) => {
-      return /*#__PURE__*/ _jsxSorted(
+      return /* @__PURE__ */ _jsxSorted(
         TestComponent,
         {
           counter: _fnSignal(_hf0, [item], _hf0_str),

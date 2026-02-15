@@ -56,7 +56,7 @@ import { Cmp } from "./cmp";
 const App_component_ckEPmXZlub0 = () => {
   const signal = useSignal(0);
   const store = useStore({});
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     Cmp,
     {
       global: globalThing,
@@ -88,8 +88,8 @@ const App_component_ckEPmXZlub0 = () => {
     "u6_0",
   );
 };
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
 );
 == DIAGNOSTICS ===
 

@@ -39,8 +39,8 @@ export const useCounter = () => {
   });
 };
 export const STEP = 1;
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
@@ -56,24 +56,24 @@ export const App_component_XXXXXXXXXXXX = (props) => {
     thing: 0,
   });
   const count2 = state.count * 2;
-  const App_component_div_button_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+  const App_component_div_button_q_e_click_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
     i_XXXXXXXXXXXX,
     "App_component_div_button_q_e_click_XXXXXXXXXXXX",
     [props, state, thing],
   );
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_div_q_e_click_XXXXXXXXXXXX", [
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_div_q_e_click_XXXXXXXXXXXX", [
         count2,
         state,
       ]),
     },
     null,
     [
-      /*#__PURE__*/ _jsxSorted("span", null, null, _wrapProp(state, "count"), 3, null),
+      /* @__PURE__ */ _jsxSorted("span", null, null, _wrapProp(state, "count"), 3, null),
       buttons.map((btn) =>
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted(
           "button",
           {
             "q-e:click": App_component_div_button_q_e_click_XXXXXXXXXXXX,

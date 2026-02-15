@@ -22,8 +22,8 @@ export const FieldInput = component$((props) => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_XXXXXXXXXXXX");
-export const FieldInput = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "FieldInput_component_XXXXXXXXXXXX"),
+export const FieldInput = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "FieldInput_component_XXXXXXXXXXXX"),
 );
 === test.tsx_FieldInput_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
@@ -34,12 +34,12 @@ import { _jsxSplit } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 export const FieldInput_component_XXXXXXXXXXXX = (props) => {
   const input = useSignal("");
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     _Fragment,
     null,
     null,
     [
-      /*#__PURE__*/ _jsxSplit(
+      /* @__PURE__ */ _jsxSplit(
         "input",
         {
           "bind:value": input,
@@ -50,7 +50,7 @@ export const FieldInput_component_XXXXXXXXXXXX = (props) => {
         0,
         null,
       ),
-      /*#__PURE__*/ _jsxSplit(
+      /* @__PURE__ */ _jsxSplit(
         "input",
         {
           ..._getVarProps(props),

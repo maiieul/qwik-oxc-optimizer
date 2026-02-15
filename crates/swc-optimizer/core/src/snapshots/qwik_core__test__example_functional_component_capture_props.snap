@@ -64,8 +64,8 @@ export const App = component$(
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -101,7 +101,7 @@ export const App_component_XXXXXXXXXXXX = ({
       ...C8
     ],
   } = foo();
-  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX", [
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX", [
     C2,
     C3,
     C4,
@@ -161,10 +161,10 @@ export const App_component_1_XXXXXXXXXXXX = () => {
     I8 = _captures[13],
     count = _captures[14],
     state = _captures[15];
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_div_q_e_click_XXXXXXXXXXXX", [
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_div_q_e_click_XXXXXXXXXXXX", [
         count,
         state,
       ]),

@@ -30,17 +30,17 @@ import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Bar_component_XXXXXXXXXXXX");
-export const Foo = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
+export const Foo = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
 );
-export const Bar = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Bar_component_XXXXXXXXXXXX"),
+export const Bar = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Bar_component_XXXXXXXXXXXX"),
 );
 === test.tsx_Foo_component_XXXXXXXXXXXX.jsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
-  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX", [_rawProps]);
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX", [_rawProps]);
 };
 /*
 {
@@ -97,7 +97,7 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Bar_component_1_XXXXXXXXXXXX");
 export const Bar_component_XXXXXXXXXXXX = (_rawProps) => {
-  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Bar_component_1_XXXXXXXXXXXX", [_rawProps]);
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Bar_component_1_XXXXXXXXXXXX", [_rawProps]);
 };
 /*
 {

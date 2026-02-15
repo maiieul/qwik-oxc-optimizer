@@ -14,8 +14,8 @@ export const App = component$((props) => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX.tsx");
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 === test.tsx_App_component_XXXXXXXXXXXX.tsx ===
 import { qrl } from "@qwik.dev/core";
@@ -23,8 +23,8 @@ import { useStylesQrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_useStyles_XXXXXXXXXXXX.tsx");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_1_XXXXXXXXXXXX.tsx");
 export const App_component_XXXXXXXXXXXX = (props) => {
-  useStylesQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_useStyles_XXXXXXXXXXXX"));
-  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX");
+  useStylesQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_useStyles_XXXXXXXXXXXX"));
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX");
 };
 /*
 {

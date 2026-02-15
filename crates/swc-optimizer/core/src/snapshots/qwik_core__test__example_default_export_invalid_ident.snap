@@ -13,8 +13,8 @@ export default component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./404.tsx__404_component_XXXXXXXXXXXX");
-export default /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "_404_component_XXXXXXXXXXXX"),
+export default /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "_404_component_XXXXXXXXXXXX"),
 );
 === src/components/mongo/404.tsx__404_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
@@ -22,7 +22,7 @@ const i_XXXXXXXXXXXX = () => import("./404.tsx__404_component_div_q_e_click_XXXX
 export const _404_component_XXXXXXXXXXXX = () => {
   return (
     <div
-      q-e:click={/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "_404_component_div_q_e_click_XXXXXXXXXXXX")}
+      q-e:click={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "_404_component_div_q_e_click_XXXXXXXXXXXX")}
     ></div>
   );
 };

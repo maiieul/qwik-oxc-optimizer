@@ -29,8 +29,8 @@ export const PANELS: ActivePanel[] = ["Examples", "Input", "Output", "Console"];
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
-export default /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
+export default /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
 export const PANELS = ["Examples", "Input", "Output", "Console"];
 === test.tsx_test_component_XXXXXXXXXXXX.js === (ENTRY)
@@ -45,7 +45,7 @@ export const test_component_XXXXXXXXXXXX = () => {
     active: "Input",
     list: PANELS,
   }));
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     {
       class: {

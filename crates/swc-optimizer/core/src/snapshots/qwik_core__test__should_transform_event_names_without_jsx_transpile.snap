@@ -24,8 +24,8 @@ export const Greeter = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_XXXXXXXXXXXX");
-export const Greeter = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
+export const Greeter = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
 === test.tsx_Greeter_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import mongo from "mongodb";
@@ -42,17 +42,17 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
     <div>
       <div
         q-e:click={
-          /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_div_div_q_e_click_XXXXXXXXXXXX")
+          /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_div_div_q_e_click_XXXXXXXXXXXX")
         }
       />
       <div
         q-e:click={
-          /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX")
+          /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX")
         }
       />
       <div
         q-e:click={
-          /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX")
+          /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX")
         }
       />
     </div>

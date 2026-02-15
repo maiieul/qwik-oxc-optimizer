@@ -27,8 +27,8 @@ export enum Thing {
   A,
   B,
 }
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 === test.tsx_App_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { Thing } from "./test";

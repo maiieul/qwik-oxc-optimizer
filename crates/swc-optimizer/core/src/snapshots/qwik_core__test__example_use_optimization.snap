@@ -18,8 +18,8 @@ export const Works = component$((props) => {
 === test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
-export const Works = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl((props) => {
+export const Works = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl((props) => {
     const store = useStore({
       value: {
         count: 0,

@@ -56,12 +56,12 @@ const _hf1 = (p0) => ({
   some: p0.some ?? 3,
 });
 const _hf1_str = "{some:p0.some??1+2}";
-export const Works = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl((_rawProps) => {
+export const Works = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl((_rawProps) => {
     const rest = _restProps(_rawProps, ["count", "some", "hello", "stuff", "stuffDefault"]);
     console.log(_rawProps.stuff, _rawProps.some ?? 3);
     useTaskQrl(
-      /*#__PURE__*/ inlinedQrl(
+      /* @__PURE__ */ inlinedQrl(
         ({ track }) => {
           const _rawProps = _captures[0],
             rest = _captures[1];
@@ -78,7 +78,7 @@ export const Works = /*#__PURE__*/ componentQrl(
         [_rawProps, rest],
       ),
     );
-    return /*#__PURE__*/ _jsxSplit(
+    return /* @__PURE__ */ _jsxSplit(
       "div",
       {
         some: _fnSignal(_hf0, [_rawProps], _hf0_str),
@@ -96,11 +96,11 @@ export const Works = /*#__PURE__*/ componentQrl(
     );
   }, "Works_component_t45qL4vNGv0"),
 );
-export const NoWorks2 = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(({ count, stuff: { hey } }) => {
+export const NoWorks2 = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(({ count, stuff: { hey } }) => {
     console.log(hey);
     useTaskQrl(
-      /*#__PURE__*/ inlinedQrl(
+      /* @__PURE__ */ inlinedQrl(
         ({ track }) => {
           const count = _captures[0];
           track(() => count);
@@ -110,7 +110,7 @@ export const NoWorks2 = /*#__PURE__*/ componentQrl(
         [count],
       ),
     );
-    return /*#__PURE__*/ _jsxSorted(
+    return /* @__PURE__ */ _jsxSorted(
       "div",
       {
         class: count,
@@ -122,11 +122,11 @@ export const NoWorks2 = /*#__PURE__*/ componentQrl(
     );
   }, "NoWorks2_component_JPD9t2HyEKg"),
 );
-export const NoWorks3 = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(({ count, stuff = hola() }) => {
+export const NoWorks3 = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(({ count, stuff = hola() }) => {
     console.log(stuff);
     useTaskQrl(
-      /*#__PURE__*/ inlinedQrl(
+      /* @__PURE__ */ inlinedQrl(
         ({ track }) => {
           const count = _captures[0];
           track(() => count);
@@ -136,7 +136,7 @@ export const NoWorks3 = /*#__PURE__*/ componentQrl(
         [count],
       ),
     );
-    return /*#__PURE__*/ _jsxSorted(
+    return /* @__PURE__ */ _jsxSorted(
       "div",
       {
         class: count,

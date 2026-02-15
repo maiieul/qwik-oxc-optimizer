@@ -21,8 +21,8 @@ export const Counter = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Counter_component_XXXXXXXXXXXX");
-export const Counter = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Counter_component_XXXXXXXXXXXX"),
+export const Counter = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Counter_component_XXXXXXXXXXXX"),
 );
 === test.tsx_Counter_component_XXXXXXXXXXXX.ts === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
@@ -32,21 +32,21 @@ const i_XXXXXXXXXXXX = () =>
   import("./test.tsx_Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX");
 export const Counter_component_XXXXXXXXXXXX = () => {
   const count = useSignal(0);
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     null,
     [
-      /*#__PURE__*/ _jsxSorted("p", null, null, ["Count: ", _wrapProp(count)], 3, null),
-      /*#__PURE__*/ _jsxSorted(
+      /* @__PURE__ */ _jsxSorted("p", null, null, ["Count: ", _wrapProp(count)], 3, null),
+      /* @__PURE__ */ _jsxSorted(
         "p",
         null,
         null,
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted(
           "button",
           null,
           {
-            "q-e:click": /*#__PURE__*/ qrl(
+            "q-e:click": /* @__PURE__ */ qrl(
               i_XXXXXXXXXXXX,
               "Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX",
               [count],

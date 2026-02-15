@@ -29,15 +29,15 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
 export const onGet = () => {
   throw "Symbol removed by Qwik Optimizer, it can not be called from current platform";
 };
-export default /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
+export default /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
 === test.tsx_test_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 import { useResourceQrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_useResource_XXXXXXXXXXXX");
 export const test_component_XXXXXXXXXXXX = () => {
-  useResourceQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "test_component_useResource_XXXXXXXXXXXX"));
+  useResourceQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_useResource_XXXXXXXXXXXX"));
   return <div>cmp</div>;
 };
 /*

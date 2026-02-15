@@ -26,8 +26,8 @@ export const FOO_MAPPING = {
   B: 2,
   C: 3,
 };
-export default /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(() => {
+export default /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(() => {
     return <>{FOO_MAPPING["A"]}</>;
   }, "test_component_LUXeXe0DQrg"),
 );

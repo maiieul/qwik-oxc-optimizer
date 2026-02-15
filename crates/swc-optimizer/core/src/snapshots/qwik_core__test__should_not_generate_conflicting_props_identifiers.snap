@@ -33,14 +33,14 @@ const test_component_useTask_jewzFYh3XmQ = () => {
 const test_component_LUXeXe0DQrg = (_rawProps) => {
   const props = _restProps(_rawProps, ["color"]);
   useComputedQrl(
-    /*#__PURE__*/ inlinedQrl(
+    /* @__PURE__ */ inlinedQrl(
       test_component_useComputed_PYU291PvidQ,
       "test_component_useComputed_PYU291PvidQ",
       [_rawProps],
     ),
   );
   useTaskQrl(
-    /*#__PURE__*/ inlinedQrl(
+    /* @__PURE__ */ inlinedQrl(
       test_component_useTask_jewzFYh3XmQ,
       "test_component_useTask_jewzFYh3XmQ",
       [props],
@@ -48,8 +48,8 @@ const test_component_LUXeXe0DQrg = (_rawProps) => {
   );
   return "hi";
 };
-export default /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(test_component_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"),
+export default /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(test_component_LUXeXe0DQrg, "test_component_LUXeXe0DQrg"),
 );
 == DIAGNOSTICS ===
 

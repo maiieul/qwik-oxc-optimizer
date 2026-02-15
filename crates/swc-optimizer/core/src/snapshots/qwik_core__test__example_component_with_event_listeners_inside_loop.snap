@@ -105,8 +105,8 @@ export const App = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _fnSignal } from "@qwik.dev/core";
@@ -126,19 +126,19 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_loopForOf_span_q_e
 export const App_component_XXXXXXXXXXXX = () => {
   const cart = useStore([]);
   const results = useSignal(["foo"]);
-  const App_component_div_button_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+  const App_component_div_button_q_e_click_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
     i_XXXXXXXXXXXX,
     "App_component_div_button_q_e_click_XXXXXXXXXXXX",
     [cart],
   );
   function loopArrowFn(results) {
-    const App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+    const App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
       i_XXXXXXXXXXXX,
       "App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX",
       [cart],
     );
     return results.map((item) =>
-      /*#__PURE__*/ _jsxSorted(
+      /* @__PURE__ */ _jsxSorted(
         "span",
         {
           "q-e:click": App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX,
@@ -153,14 +153,14 @@ export const App_component_XXXXXXXXXXXX = () => {
   }
   function loopForI(results) {
     const items = [];
-    const App_component_loopForI_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+    const App_component_loopForI_span_q_e_click_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
       i_XXXXXXXXXXXX,
       "App_component_loopForI_span_q_e_click_XXXXXXXXXXXX",
       [cart, results],
     );
     for (let i = 0; i < results.length; i++)
       items.push(
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted(
           "span",
           {
             "q-e:click": App_component_loopForI_span_q_e_click_XXXXXXXXXXXX,
@@ -176,14 +176,14 @@ export const App_component_XXXXXXXXXXXX = () => {
   }
   function loopForOf(results) {
     const items = [];
-    const App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+    const App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
       i_XXXXXXXXXXXX,
       "App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX",
       [cart],
     );
     for (const item of results)
       items.push(
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted(
           "span",
           {
             "q-e:click": App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX,
@@ -199,14 +199,14 @@ export const App_component_XXXXXXXXXXXX = () => {
   }
   function loopForIn(results) {
     const items = [];
-    const App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+    const App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
       i_XXXXXXXXXXXX,
       "App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX",
       [cart, results],
     );
     for (const key in results)
       items.push(
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted(
           "span",
           {
             "q-e:click": App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX,
@@ -223,14 +223,14 @@ export const App_component_XXXXXXXXXXXX = () => {
   function loopWhile(results) {
     const items = [];
     let i = 0;
-    const App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+    const App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
       i_XXXXXXXXXXXX,
       "App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX",
       [cart, results],
     );
     while (i < results.length) {
       items.push(
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted(
           "span",
           {
             "q-e:click": App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX,
@@ -246,13 +246,13 @@ export const App_component_XXXXXXXXXXXX = () => {
     }
     return items;
   }
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     null,
     [
       results.value.map((item) =>
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted(
           "button",
           {
             "q-e:click": App_component_div_button_q_e_click_XXXXXXXXXXXX,

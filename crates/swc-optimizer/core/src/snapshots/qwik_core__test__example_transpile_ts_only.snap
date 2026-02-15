@@ -18,14 +18,14 @@ export const App = component$((props: Stuff) => {
 === test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl((props) => {
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl((props) => {
     return (
       <Cmp>
         <p
           class="stuff"
           q-e:click={
-            /*#__PURE__*/ inlinedQrl(
+            /* @__PURE__ */ inlinedQrl(
               () => console.log("warn"),
               "App_component_Cmp_p_q_e_click_Yl4ybrJWrt4",
             )

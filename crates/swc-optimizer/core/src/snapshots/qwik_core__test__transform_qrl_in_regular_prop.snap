@@ -10,8 +10,8 @@ export const Cmp = component$(() => <Cmp foo={$(() => console.log("hi there"))}>
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Cmp_component_XXXXXXXXXXXX");
-export const Cmp = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Cmp_component_XXXXXXXXXXXX"),
+export const Cmp = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Cmp_component_XXXXXXXXXXXX"),
 );
 === test.tsx_Cmp_component_XXXXXXXXXXXX.ts === (ENTRY)
 import { Cmp } from "./test";
@@ -19,10 +19,10 @@ import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Cmp_component_Cmp_foo_XXXXXXXXXXXX");
 export const Cmp_component_XXXXXXXXXXXX = () =>
-  /*#__PURE__*/ _jsxSorted(
+  /* @__PURE__ */ _jsxSorted(
     Cmp,
     {
-      foo: /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Cmp_component_Cmp_foo_XXXXXXXXXXXX"),
+      foo: /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Cmp_component_Cmp_foo_XXXXXXXXXXXX"),
     },
     null,
     "Hello Qwik",

@@ -23,7 +23,7 @@ const Foo = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
-/*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"));
+/* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"));
 === test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { componentQrl } from "@qwik.dev/core";
@@ -32,10 +32,10 @@ import { useSignal } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_Inner_component_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = () => {
   const data = useSignal([]);
-  const Inner = /*#__PURE__*/ componentQrl(
-    /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_Inner_component_XXXXXXXXXXXX"),
+  const Inner = /* @__PURE__ */ componentQrl(
+    /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_Inner_component_XXXXXXXXXXXX"),
   );
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     Inner,
     null,
     {
@@ -72,16 +72,16 @@ const i_XXXXXXXXXXXX = () =>
   import("./test.tsx_Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX");
 export const Foo_component_Inner_component_XXXXXXXXXXXX = (props) => {
   const data = props.data;
-  const Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX = /*#__PURE__*/ qrl(
+  const Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
     i_XXXXXXXXXXXX,
     "Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX",
   );
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     null,
     data.value.map((item) =>
-      /*#__PURE__*/ _jsxSorted(
+      /* @__PURE__ */ _jsxSorted(
         "p",
         {
           "q-e:click": Foo_component_Inner_component_div_p_q_e_click_XXXXXXXXXXXX,

@@ -22,8 +22,8 @@ export const foo = () => console.log("foo");
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX.js");
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 export const foo = () => console.log("foo");
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
@@ -33,16 +33,16 @@ import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_Cmp_p_q_e_click_XXXXXXXXXXXX.js");
 export const App_component_XXXXXXXXXXXX = (props) => {
   foo();
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     Cmp,
     null,
     null,
-    /*#__PURE__*/ _jsxSorted(
+    /* @__PURE__ */ _jsxSorted(
       "p",
       null,
       {
         class: "stuff",
-        "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_Cmp_p_q_e_click_XXXXXXXXXXXX"),
+        "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_Cmp_p_q_e_click_XXXXXXXXXXXX"),
       },
       "Hello Qwik",
       3,

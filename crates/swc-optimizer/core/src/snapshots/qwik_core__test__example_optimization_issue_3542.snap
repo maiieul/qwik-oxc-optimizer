@@ -25,8 +25,8 @@ export const AtomStatus = component$(({ ctx, atom }) => {
 import { componentQrl } from "@qwik.dev/core";
 import { _captures } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
-export const AtomStatus = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl((_rawProps) => {
+export const AtomStatus = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl((_rawProps) => {
     let status = _rawProps.atom.status;
     if (!_rawProps.atom.real) status = "WILL-VANISH";
     else if (JSON.stringify(_rawProps.atom.atom) == JSON.stringify(_rawProps.atom.real))
@@ -35,7 +35,7 @@ export const AtomStatus = /*#__PURE__*/ componentQrl(
       <span
         title={_rawProps.atom.ID}
         q-e:click={
-          /*#__PURE__*/ inlinedQrl(
+          /* @__PURE__ */ inlinedQrl(
             (ev) => {
               const _rawProps = _captures[0];
               return atomStatusClick(_rawProps.ctx, ev, [_rawProps.atom]);

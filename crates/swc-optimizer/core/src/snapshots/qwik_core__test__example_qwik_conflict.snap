@@ -47,14 +47,14 @@ export const hW = 12;
 export const handleWatch = 42;
 const componentQrl1 = () => console.log("not this", qrl1());
 componentQrl1();
-export const Foo = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
+export const Foo = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
 );
-export const Root = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Root_component_XXXXXXXXXXXX"),
+export const Root = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Root_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
@@ -69,11 +69,11 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   useStyles$("thing");
   const qwik = hW + handleWatch;
   console.log(qwik);
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_click_XXXXXXXXXXXX"),
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_click_XXXXXXXXXXXX"),
     },
     null,
     3,
@@ -120,8 +120,8 @@ import { useStyles } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_component_1_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Root_component_useStyles_XXXXXXXXXXXX");
 export const Root_component_XXXXXXXXXXXX = () => {
-  useStyles(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Root_component_useStyles_XXXXXXXXXXXX"));
-  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Root_component_1_XXXXXXXXXXXX");
+  useStyles(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Root_component_useStyles_XXXXXXXXXXXX"));
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Root_component_1_XXXXXXXXXXXX");
 };
 /*
 {
@@ -160,7 +160,7 @@ export const Root_component_useStyles_XXXXXXXXXXXX = "thing";
 === test.tsx_Root_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 export const Root_component_1_XXXXXXXXXXXX = () => {
-  return /*#__PURE__*/ _jsxSorted("div", null, null, null, 3, "u6_1");
+  return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, "u6_1");
 };
 /*
 {

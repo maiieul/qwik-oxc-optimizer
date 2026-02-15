@@ -5,7 +5,7 @@ expression: output
 === INPUT ===
 import { componentQrl, inlinedQrl, useStore, jsxs, jsx, useLexicalScope } from "@qwik.dev/core";
 
-export const App = /*#__PURE__*/ componentQrl(
+export const App = /* @__PURE__ */ componentQrl(
   inlinedQrl(() => {
     useStyles$(inlinedQrl(STYLES, "STYLES_odz7dfdfdM"));
     useStyles$(inlinedQrl(STYLES, "STYLES_odzdfdfdM"));
@@ -13,13 +13,13 @@ export const App = /*#__PURE__*/ componentQrl(
     const store = useStore({
       count: 0,
     });
-    return /*#__PURE__*/ jsxs("div", {
+    return /* @__PURE__ */ jsxs("div", {
       children: [
-        /*#__PURE__*/ jsxs("p", {
+        /* @__PURE__ */ jsxs("p", {
           children: ["Count: ", store.count],
         }),
-        /*#__PURE__*/ jsx("p", {
-          children: /*#__PURE__*/ jsx("button", {
+        /* @__PURE__ */ jsx("p", {
+          children: /* @__PURE__ */ jsx("button", {
             onClick$: inlinedQrl(
               () => {
                 const [store] = useLexicalScope();
@@ -42,27 +42,27 @@ export const STYLES = ".red { color: red; }";
 import { _wrapProp } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { componentQrl, inlinedQrl, useStore, useLexicalScope } from "@qwik.dev/core";
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(() => {
-    useStyles$(/*#__PURE__*/ inlinedQrl(STYLES, "s_odz7dfdfdM"));
-    useStyles$(/*#__PURE__*/ inlinedQrl(STYLES, "s_odzdfdfdM"));
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(() => {
+    useStyles$(/* @__PURE__ */ inlinedQrl(STYLES, "s_odz7dfdfdM"));
+    useStyles$(/* @__PURE__ */ inlinedQrl(STYLES, "s_odzdfdfdM"));
     const store = useStore({
       count: 0,
     });
-    return /*#__PURE__*/ _jsxSorted(
+    return /* @__PURE__ */ _jsxSorted(
       "div",
       null,
       null,
       [
-        /*#__PURE__*/ _jsxSorted("p", null, null, ["Count: ", _wrapProp(store, "count")], 3, null),
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted("p", null, null, ["Count: ", _wrapProp(store, "count")], 3, null),
+        /* @__PURE__ */ _jsxSorted(
           "p",
           null,
           null,
-          /*#__PURE__*/ _jsxSorted(
+          /* @__PURE__ */ _jsxSorted(
             "button",
             {
-              "q-e:click": /*#__PURE__*/ inlinedQrl(
+              "q-e:click": /* @__PURE__ */ inlinedQrl(
                 () => {
                   const [store] = useLexicalScope();
                   return store.count++;

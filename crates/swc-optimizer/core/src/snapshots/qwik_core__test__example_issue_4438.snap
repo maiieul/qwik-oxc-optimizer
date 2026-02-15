@@ -23,12 +23,12 @@ import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { useSignal } from "@qwik.dev/core";
 const App_component_ckEPmXZlub0 = () => {
   const toggle = useSignal(false);
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     _Fragment,
     null,
     null,
     [
-      /*#__PURE__*/ _jsxSorted(
+      /* @__PURE__ */ _jsxSorted(
         "div",
         {
           "data-nu": toggle.value ? $localize`singular` : "plural",
@@ -38,7 +38,7 @@ const App_component_ckEPmXZlub0 = () => {
         3,
         null,
       ),
-      /*#__PURE__*/ _jsxSorted(
+      /* @__PURE__ */ _jsxSorted(
         "div",
         null,
         null,
@@ -51,8 +51,8 @@ const App_component_ckEPmXZlub0 = () => {
     "u6_0",
   );
 };
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ inlinedQrl(App_component_ckEPmXZlub0, "App_component_ckEPmXZlub0"),
 );
 == DIAGNOSTICS ===
 

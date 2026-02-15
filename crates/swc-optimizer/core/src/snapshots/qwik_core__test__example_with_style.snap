@@ -19,8 +19,8 @@ export const Foo = component$(
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
-export const Foo = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
+export const Foo = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
@@ -30,7 +30,7 @@ import { qrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_useStyles_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = () => {
-  useStylesQrl(/*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_useStyles_XXXXXXXXXXXX"));
+  useStylesQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_useStyles_XXXXXXXXXXXX"));
   return <div class="class" />;
 };
 /*

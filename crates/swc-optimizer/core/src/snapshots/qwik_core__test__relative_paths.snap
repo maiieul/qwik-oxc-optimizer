@@ -12,22 +12,22 @@ const useData = () => {
     count: 0,
   });
 };
-export const App = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+export const App = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 export { useData as _auto_useData };
 === components/main.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./main.tsx_Local_component_XXXXXXXXXXXX.js");
-export const Local = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Local_component_XXXXXXXXXXXX"),
+export const Local = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Local_component_XXXXXXXXXXXX"),
 );
 === components/main.tsx_Local_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { state } from "./sibling";
 export const Local_component_XXXXXXXXXXXX = () => {
-  return /*#__PURE__*/ _jsxSorted("div", null, null, state, 3, "zp_0");
+  return /* @__PURE__ */ _jsxSorted("div", null, null, state, 3, "zp_0");
 };
 /*
 {
@@ -53,20 +53,20 @@ import { _auto_useData as useData } from "./lib.mjs";
 const i_XXXXXXXXXXXX = () => import("./lib.mjs_App_component_div_p_button_onClick_XXXXXXXXXXXX.js");
 export const App_component_XXXXXXXXXXXX = () => {
   const store = useData();
-  return /*#__PURE__*/ _jsxSorted(
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     null,
     [
-      /*#__PURE__*/ _jsxSorted("p", null, null, ["Count: ", _wrapProp(store, "count")], 3, null),
-      /*#__PURE__*/ _jsxSorted(
+      /* @__PURE__ */ _jsxSorted("p", null, null, ["Count: ", _wrapProp(store, "count")], 3, null),
+      /* @__PURE__ */ _jsxSorted(
         "p",
         null,
         null,
-        /*#__PURE__*/ _jsxSorted(
+        /* @__PURE__ */ _jsxSorted(
           "button",
           {
-            "q-e:click": /*#__PURE__*/ qrl(
+            "q-e:click": /* @__PURE__ */ qrl(
               i_XXXXXXXXXXXX,
               "App_component_div_p_button_onClick_XXXXXXXXXXXX",
               [store],

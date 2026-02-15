@@ -37,8 +37,8 @@ export const Foo = component$(
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
-export const Foo = /*#__PURE__*/ componentQrl(
-  /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
+export const Foo = /* @__PURE__ */ componentQrl(
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
   {
     tagName: "my-foo",
   },
@@ -47,7 +47,7 @@ export const Foo = /*#__PURE__*/ componentQrl(
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = () => {
-  return /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX");
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX");
 };
 /*
 {
@@ -83,45 +83,45 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_custom_XXXXXXX
 const i_XXXXXXXXXXXX = () =>
   import("./test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX");
 export const Foo_component_1_XXXXXXXXXXXX = () => {
-  const handler = /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_handler_XXXXXXXXXXXX");
-  return /*#__PURE__*/ _jsxSorted(
+  const handler = /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_handler_XXXXXXXXXXXX");
+  return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_click_XXXXXXXXXXXX"),
-      "q-e:documentscroll": /*#__PURE__*/ qrl(
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_click_XXXXXXXXXXXX"),
+      "q-e:documentscroll": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
         "Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX",
       ),
-      "q-e:documentscroll": /*#__PURE__*/ qrl(
+      "q-e:documentscroll": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
         "Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX",
       ),
-      "q-e:c-lick": /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_c_lick_XXXXXXXXXXXX"),
-      "q-e:document--scroll": /*#__PURE__*/ qrl(
+      "q-e:c-lick": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_c_lick_XXXXXXXXXXXX"),
+      "q-e:document--scroll": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
         "Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX",
       ),
-      "q-e:document--scroll": /*#__PURE__*/ qrl(
+      "q-e:document--scroll": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
         "Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX",
       ),
-      "host:onClick$": /*#__PURE__*/ qrl(
+      "host:onClick$": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
         "Foo_component_div_host_onClick_XXXXXXXXXXXX",
       ),
-      "host:onDocumentScroll$": /*#__PURE__*/ qrl(
+      "host:onDocumentScroll$": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
         "Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX",
       ),
-      "host:onDocumentScroll$": /*#__PURE__*/ qrl(
+      "host:onDocumentScroll$": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
         "Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX",
       ),
       "q-e:keyup": handler,
       "q-e:document:keyup": handler,
       "q-e:window:keyup": handler,
-      custom$: /*#__PURE__*/ qrl(i_XXXXXXXXXXXX, "Foo_component_div_custom_XXXXXXXXXXXX"),
+      custom$: /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_div_custom_XXXXXXXXXXXX"),
     },
     null,
     3,
