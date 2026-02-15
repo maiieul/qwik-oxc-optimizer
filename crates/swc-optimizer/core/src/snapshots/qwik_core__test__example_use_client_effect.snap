@@ -24,44 +24,6 @@ export const Child = component$(() => {
   return <div>{state.count}</div>;
 });
 
-============================= test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA.js (ENTRY POINT)==
-
-import { _captures } from "@qwik.dev/core";
-export const Child_component_useBrowserVisibleTask_0IGFPOyJmQA = ()=>{
-    const state = _captures[0];
-    const timer = setInterval(()=>{
-        state.count++;
-    }, 1000);
-    return ()=>{
-        clearInterval(timer);
-    };
-};
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEAQyB;;IACrB,MAAM,QAAQ,YAAY;QACxB,MAAM,KAAK;IACb,GAAG;IACH,OAAO;QACL,cAAc;IAChB\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Child_component_useBrowserVisibleTask_0IGFPOyJmQA",
-  "entry": null,
-  "displayName": "test.tsx_Child_component_useBrowserVisibleTask",
-  "hash": "0IGFPOyJmQA",
-  "canonicalFilename": "test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA",
-  "path": "",
-  "extension": "js",
-  "parent": "Child_component_9GyF01GDKqw",
-  "ctxKind": "function",
-  "ctxName": "useBrowserVisibleTask$",
-  "captures": true,
-  "loc": [
-    230,
-    368
-  ],
-  "captureNames": [
-    "state"
-  ]
-}
-*/
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -109,6 +71,44 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     125,
     408
+  ]
+}
+*/
+============================= test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA.js (ENTRY POINT)==
+
+import { _captures } from "@qwik.dev/core";
+export const Child_component_useBrowserVisibleTask_0IGFPOyJmQA = ()=>{
+    const state = _captures[0];
+    const timer = setInterval(()=>{
+        state.count++;
+    }, 1000);
+    return ()=>{
+        clearInterval(timer);
+    };
+};
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEAQyB;;IACrB,MAAM,QAAQ,YAAY;QACxB,MAAM,KAAK;IACb,GAAG;IACH,OAAO;QACL,cAAc;IAChB\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Child_component_useBrowserVisibleTask_0IGFPOyJmQA",
+  "entry": null,
+  "displayName": "test.tsx_Child_component_useBrowserVisibleTask",
+  "hash": "0IGFPOyJmQA",
+  "canonicalFilename": "test.tsx_Child_component_useBrowserVisibleTask_0IGFPOyJmQA",
+  "path": "",
+  "extension": "js",
+  "parent": "Child_component_9GyF01GDKqw",
+  "ctxKind": "function",
+  "ctxName": "useBrowserVisibleTask$",
+  "captures": true,
+  "loc": [
+    230,
+    368
+  ],
+  "captureNames": [
+    "state"
   ]
 }
 */

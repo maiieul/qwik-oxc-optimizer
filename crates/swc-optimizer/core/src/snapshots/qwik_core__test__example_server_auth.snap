@@ -55,50 +55,6 @@ export const { onRequest, logout, getSession, signup } = authQrl(/*#__PURE__*/ q
 
 
 Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;AAKA,OAAO,MAAM,EAAE,SAAS,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM,EAAE,GAAG,0EAetD;AAEH,OAAO,MAAM,EAAE,SAAS,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM,EAAE,GAAG,8DAetD\"}")
-============================= test.tsx_auth_GU0aY5QCETY.js (ENTRY POINT)==
-
-import Facebook from "next-auth/providers/facebook";
-import GitHub from "@auth/core/providers/github";
-import Google from "next-auth/providers/google";
-export const auth_GU0aY5QCETY = {
-    providers: [
-        GitHub({
-            clientId: process.env.GITHUB_ID,
-            clientSecret: process.env.GITHUB_SECRET
-        }),
-        Facebook({
-            clientId: process.env.FACEBOOK_ID,
-            clientSecret: process.env.FACEBOOK_SECRET
-        }),
-        Google({
-            clientId: process.env.GOOGLE_ID,
-            clientSecret: process.env.GOOGLE_SECRET
-        })
-    ]
-};
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;gCAsB+D;IAC7D,WAAW;QACT,OAAO;YACL,UAAU,QAAQ,GAAG,CAAC,SAAS;YAC/B,cAAc,QAAQ,GAAG,CAAC,aAAa;QACzC;QACA,SAAS;YACP,UAAU,QAAQ,GAAG,CAAC,WAAW;YACjC,cAAc,QAAQ,GAAG,CAAC,eAAe;QAC3C;QACA,OAAO;YACL,UAAU,QAAQ,GAAG,CAAC,SAAS;YAC/B,cAAc,QAAQ,GAAG,CAAC,aAAa;QACzC;KACD;AACH\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "auth_GU0aY5QCETY",
-  "entry": null,
-  "displayName": "test.tsx_auth",
-  "hash": "GU0aY5QCETY",
-  "canonicalFilename": "test.tsx_auth_GU0aY5QCETY",
-  "path": "",
-  "extension": "js",
-  "parent": null,
-  "ctxKind": "function",
-  "ctxName": "auth$",
-  "captures": false,
-  "loc": [
-    697,
-    1047
-  ]
-}
-*/
 ============================= test.tsx_serverAuth_qVqpX2a0p9Y.js (ENTRY POINT)==
 
 import Facebook from "next-auth/providers/facebook";
@@ -140,6 +96,50 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     272,
     630
+  ]
+}
+*/
+============================= test.tsx_auth_GU0aY5QCETY.js (ENTRY POINT)==
+
+import Facebook from "next-auth/providers/facebook";
+import GitHub from "@auth/core/providers/github";
+import Google from "next-auth/providers/google";
+export const auth_GU0aY5QCETY = {
+    providers: [
+        GitHub({
+            clientId: process.env.GITHUB_ID,
+            clientSecret: process.env.GITHUB_SECRET
+        }),
+        Facebook({
+            clientId: process.env.FACEBOOK_ID,
+            clientSecret: process.env.FACEBOOK_SECRET
+        }),
+        Google({
+            clientId: process.env.GOOGLE_ID,
+            clientSecret: process.env.GOOGLE_SECRET
+        })
+    ]
+};
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;gCAsB+D;IAC7D,WAAW;QACT,OAAO;YACL,UAAU,QAAQ,GAAG,CAAC,SAAS;YAC/B,cAAc,QAAQ,GAAG,CAAC,aAAa;QACzC;QACA,SAAS;YACP,UAAU,QAAQ,GAAG,CAAC,WAAW;YACjC,cAAc,QAAQ,GAAG,CAAC,eAAe;QAC3C;QACA,OAAO;YACL,UAAU,QAAQ,GAAG,CAAC,SAAS;YAC/B,cAAc,QAAQ,GAAG,CAAC,aAAa;QACzC;KACD;AACH\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "auth_GU0aY5QCETY",
+  "entry": null,
+  "displayName": "test.tsx_auth",
+  "hash": "GU0aY5QCETY",
+  "canonicalFilename": "test.tsx_auth_GU0aY5QCETY",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "auth$",
+  "captures": false,
+  "loc": [
+    697,
+    1047
   ]
 }
 */

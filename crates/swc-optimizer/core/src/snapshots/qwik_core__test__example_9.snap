@@ -20,6 +20,14 @@ const Header = $((decl1, { decl2 }, [decl3]) => {
   } catch ({ decl19 }) {}
 });
 
+============================= test.tsx ==
+
+import { qrl } from "@qwik.dev/core";
+const i_WjUaUQN7Oxg = ()=>import("./test.tsx_Header_WjUaUQN7Oxg");
+/*#__PURE__*/ qrl(i_WjUaUQN7Oxg, "Header_WjUaUQN7Oxg");
+
+
+Some("{\"version\":3,\"sources\":[],\"names\":[],\"mappings\":\"\"}")
 ============================= test.tsx_Header_WjUaUQN7Oxg.tsx (ENTRY POINT)==
 
 export const Header_WjUaUQN7Oxg = (decl1, { decl2 }, [decl3])=>{
@@ -54,14 +62,6 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ]
 }
 */
-============================= test.tsx ==
-
-import { qrl } from "@qwik.dev/core";
-const i_WjUaUQN7Oxg = ()=>import("./test.tsx_Header_WjUaUQN7Oxg");
-/*#__PURE__*/ qrl(i_WjUaUQN7Oxg, "Header_WjUaUQN7Oxg");
-
-
-Some("{\"version\":3,\"sources\":[],\"names\":[],\"mappings\":\"\"}")
 == DIAGNOSTICS ==
 
 []

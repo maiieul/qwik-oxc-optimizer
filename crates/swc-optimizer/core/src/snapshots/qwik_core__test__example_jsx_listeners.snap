@@ -34,32 +34,6 @@ export const Foo = component$(
   },
 );
 
-============================= test.tsx_Foo_component_div_host_onDocumentScroll_Zip7mifsjRY.js (ENTRY POINT)==
-
-export const Foo_component_div_host_onDocumentScroll_Zip7mifsjRY = ()=>console.log("host:onDocument:scroll");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"mEAekC,IAAM,QAAQ,GAAG,CAAC\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Foo_component_div_host_onDocumentScroll_Zip7mifsjRY",
-  "entry": null,
-  "displayName": "test.tsx_Foo_component_div_host_onDocumentScroll",
-  "hash": "Zip7mifsjRY",
-  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_Zip7mifsjRY",
-  "path": "",
-  "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
-  "ctxKind": "eventHandler",
-  "ctxName": "host:onDocumentScroll$",
-  "captures": false,
-  "loc": [
-    667,
-    710
-  ]
-}
-*/
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -98,32 +72,6 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     83,
     971
-  ]
-}
-*/
-============================= test.tsx_Foo_component_div_host_onClick_cPEH970JbEY.js (ENTRY POINT)==
-
-export const Foo_component_div_host_onClick_cPEH970JbEY = ()=>console.log("host:onClick$");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"0DAcyB,IAAM,QAAQ,GAAG,CAAC\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Foo_component_div_host_onClick_cPEH970JbEY",
-  "entry": null,
-  "displayName": "test.tsx_Foo_component_div_host_onClick",
-  "hash": "cPEH970JbEY",
-  "canonicalFilename": "test.tsx_Foo_component_div_host_onClick_cPEH970JbEY",
-  "path": "",
-  "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
-  "ctxKind": "eventHandler",
-  "ctxName": "host:onClick$",
-  "captures": false,
-  "loc": [
-    597,
-    631
   ]
 }
 */
@@ -183,110 +131,6 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ]
 }
 */
-============================= test.tsx_Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg.js (ENTRY POINT)==
-
-export const Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg = ()=>console.log("host:onWindow:scroll");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"qEAgBkC,IAAM,QAAQ,GAAG,CAAC\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg",
-  "entry": null,
-  "displayName": "test.tsx_Foo_component_div_host_onDocumentScroll_1",
-  "hash": "Em1LspK7JVg",
-  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg",
-  "path": "",
-  "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
-  "ctxKind": "eventHandler",
-  "ctxName": "host:onDocumentScroll$",
-  "captures": false,
-  "loc": [
-    746,
-    787
-  ]
-}
-*/
-============================= test.tsx_Foo_component_div_custom_pyHnxab17ms.js (ENTRY POINT)==
-
-export const Foo_component_div_custom_pyHnxab17ms = ()=>console.log("custom");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"oDAoBmB,IAAM,QAAQ,GAAG,CAAC\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Foo_component_div_custom_pyHnxab17ms",
-  "entry": null,
-  "displayName": "test.tsx_Foo_component_div_custom",
-  "hash": "pyHnxab17ms",
-  "canonicalFilename": "test.tsx_Foo_component_div_custom_pyHnxab17ms",
-  "path": "",
-  "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
-  "ctxKind": "eventHandler",
-  "ctxName": "custom$",
-  "captures": false,
-  "loc": [
-    911,
-    938
-  ]
-}
-*/
-============================= test.tsx_Foo_component_div_q_e_document_scroll_6qyBttefepU.js (ENTRY POINT)==
-
-export const Foo_component_div_q_e_document_scroll_6qyBttefepU = ()=>console.log("onDocument-sCroll");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"iEAY8B,IAAM,QAAQ,GAAG,CAAC\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_document_scroll_6qyBttefepU",
-  "entry": null,
-  "displayName": "test.tsx_Foo_component_div_q_e_document_scroll",
-  "hash": "6qyBttefepU",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_document_scroll_6qyBttefepU",
-  "path": "",
-  "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
-  "ctxKind": "eventHandler",
-  "ctxName": "onDocument-sCroll$",
-  "captures": false,
-  "loc": [
-    462,
-    500
-  ]
-}
-*/
-============================= test.tsx_Foo_component_div_q_e_c_lick_kX5SiYdz650.js (ENTRY POINT)==
-
-export const Foo_component_div_q_e_c_lick_kX5SiYdz650 = ()=>console.log("on-cLick$");
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"wDAWqB,IAAM,QAAQ,GAAG,CAAC\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_c_lick_kX5SiYdz650",
-  "entry": null,
-  "displayName": "test.tsx_Foo_component_div_q_e_c_lick",
-  "hash": "kX5SiYdz650",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_c_lick_kX5SiYdz650",
-  "path": "",
-  "extension": "js",
-  "parent": "Foo_component_1_DvU6FitWglY",
-  "ctxKind": "eventHandler",
-  "ctxName": "on-cLick$",
-  "captures": false,
-  "loc": [
-    400,
-    430
-  ]
-}
-*/
 ============================= test.tsx_Foo_component_handler_H10xZtD0e7w.js (ENTRY POINT)==
 
 export const Foo_component_handler_H10xZtD0e7w = ()=>console.log("reused");
@@ -310,6 +154,32 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     136,
     163
+  ]
+}
+*/
+============================= test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg.js (ENTRY POINT)==
+
+export const Foo_component_div_q_e_click_YEa2A5ADUOg = ()=>console.log("onClick$");
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"uDAQoB,IAAM,QAAQ,GAAG,CAAC\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_click_YEa2A5ADUOg",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_click",
+  "hash": "YEa2A5ADUOg",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg",
+  "path": "",
+  "extension": "js",
+  "parent": "Foo_component_1_DvU6FitWglY",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false,
+  "loc": [
+    214,
+    243
   ]
 }
 */
@@ -365,6 +235,58 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ]
 }
 */
+============================= test.tsx_Foo_component_div_q_e_c_lick_kX5SiYdz650.js (ENTRY POINT)==
+
+export const Foo_component_div_q_e_c_lick_kX5SiYdz650 = ()=>console.log("on-cLick$");
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"wDAWqB,IAAM,QAAQ,GAAG,CAAC\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_c_lick_kX5SiYdz650",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_c_lick",
+  "hash": "kX5SiYdz650",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_c_lick_kX5SiYdz650",
+  "path": "",
+  "extension": "js",
+  "parent": "Foo_component_1_DvU6FitWglY",
+  "ctxKind": "eventHandler",
+  "ctxName": "on-cLick$",
+  "captures": false,
+  "loc": [
+    400,
+    430
+  ]
+}
+*/
+============================= test.tsx_Foo_component_div_q_e_document_scroll_6qyBttefepU.js (ENTRY POINT)==
+
+export const Foo_component_div_q_e_document_scroll_6qyBttefepU = ()=>console.log("onDocument-sCroll");
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"iEAY8B,IAAM,QAAQ,GAAG,CAAC\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_q_e_document_scroll_6qyBttefepU",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_q_e_document_scroll",
+  "hash": "6qyBttefepU",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_document_scroll_6qyBttefepU",
+  "path": "",
+  "extension": "js",
+  "parent": "Foo_component_1_DvU6FitWglY",
+  "ctxKind": "eventHandler",
+  "ctxName": "onDocument-sCroll$",
+  "captures": false,
+  "loc": [
+    462,
+    500
+  ]
+}
+*/
 ============================= test.tsx_Foo_component_div_q_e_document_scroll_1_wphyTkeintI.js (ENTRY POINT)==
 
 export const Foo_component_div_q_e_document_scroll_1_wphyTkeintI = ()=>console.log("onDocument-scroLL");
@@ -391,29 +313,107 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ]
 }
 */
-============================= test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg.js (ENTRY POINT)==
+============================= test.tsx_Foo_component_div_host_onClick_cPEH970JbEY.js (ENTRY POINT)==
 
-export const Foo_component_div_q_e_click_YEa2A5ADUOg = ()=>console.log("onClick$");
+export const Foo_component_div_host_onClick_cPEH970JbEY = ()=>console.log("host:onClick$");
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"uDAQoB,IAAM,QAAQ,GAAG,CAAC\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"0DAcyB,IAAM,QAAQ,GAAG,CAAC\"}")
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_click_YEa2A5ADUOg",
+  "name": "Foo_component_div_host_onClick_cPEH970JbEY",
   "entry": null,
-  "displayName": "test.tsx_Foo_component_div_q_e_click",
-  "hash": "YEa2A5ADUOg",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg",
+  "displayName": "test.tsx_Foo_component_div_host_onClick",
+  "hash": "cPEH970JbEY",
+  "canonicalFilename": "test.tsx_Foo_component_div_host_onClick_cPEH970JbEY",
   "path": "",
   "extension": "js",
   "parent": "Foo_component_1_DvU6FitWglY",
   "ctxKind": "eventHandler",
-  "ctxName": "onClick$",
+  "ctxName": "host:onClick$",
   "captures": false,
   "loc": [
-    214,
-    243
+    597,
+    631
+  ]
+}
+*/
+============================= test.tsx_Foo_component_div_host_onDocumentScroll_Zip7mifsjRY.js (ENTRY POINT)==
+
+export const Foo_component_div_host_onDocumentScroll_Zip7mifsjRY = ()=>console.log("host:onDocument:scroll");
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"mEAekC,IAAM,QAAQ,GAAG,CAAC\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_host_onDocumentScroll_Zip7mifsjRY",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_host_onDocumentScroll",
+  "hash": "Zip7mifsjRY",
+  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_Zip7mifsjRY",
+  "path": "",
+  "extension": "js",
+  "parent": "Foo_component_1_DvU6FitWglY",
+  "ctxKind": "eventHandler",
+  "ctxName": "host:onDocumentScroll$",
+  "captures": false,
+  "loc": [
+    667,
+    710
+  ]
+}
+*/
+============================= test.tsx_Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg.js (ENTRY POINT)==
+
+export const Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg = ()=>console.log("host:onWindow:scroll");
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"qEAgBkC,IAAM,QAAQ,GAAG,CAAC\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_host_onDocumentScroll_1",
+  "hash": "Em1LspK7JVg",
+  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_1_Em1LspK7JVg",
+  "path": "",
+  "extension": "js",
+  "parent": "Foo_component_1_DvU6FitWglY",
+  "ctxKind": "eventHandler",
+  "ctxName": "host:onDocumentScroll$",
+  "captures": false,
+  "loc": [
+    746,
+    787
+  ]
+}
+*/
+============================= test.tsx_Foo_component_div_custom_pyHnxab17ms.js (ENTRY POINT)==
+
+export const Foo_component_div_custom_pyHnxab17ms = ()=>console.log("custom");
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"oDAoBmB,IAAM,QAAQ,GAAG,CAAC\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Foo_component_div_custom_pyHnxab17ms",
+  "entry": null,
+  "displayName": "test.tsx_Foo_component_div_custom",
+  "hash": "pyHnxab17ms",
+  "canonicalFilename": "test.tsx_Foo_component_div_custom_pyHnxab17ms",
+  "path": "",
+  "extension": "js",
+  "parent": "Foo_component_1_DvU6FitWglY",
+  "ctxKind": "eventHandler",
+  "ctxName": "custom$",
+  "captures": false,
+  "loc": [
+    911,
+    938
   ]
 }
 */

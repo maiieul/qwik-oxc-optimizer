@@ -49,6 +49,41 @@ export const ModelImg = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_iJe6ICWVn
 
 
 Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;AAIA,OAAO,MAAM,sBAAQ,8EAMlB;AAEH,OAAO,MAAM,yBAAW,iFAoBrB\"}")
+============================= test.tsx_Image_component_CS20HgBlRYI.js (ENTRY POINT)==
+
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { _jsxSorted } from "@qwik.dev/core";
+export const Image_component_CS20HgBlRYI = (props)=>{
+    return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, /*#__PURE__*/ _jsxSorted("img", {
+        src: `${props.src}`
+    }, null, null, 3, null), 1, "u6_0");
+};
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;2CAIgC,CAAC;IAC/B,qBACE,gDACE,WAAC;QAAI,KAAK,GAAG,MAAM,GAAG,EAAE;;AAG9B\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Image_component_CS20HgBlRYI",
+  "entry": null,
+  "displayName": "test.tsx_Image_component",
+  "hash": "CS20HgBlRYI",
+  "canonicalFilename": "test.tsx_Image_component_CS20HgBlRYI",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false,
+  "loc": [
+    211,
+    291
+  ],
+  "paramNames": [
+    "props"
+  ]
+}
+*/
 ============================= test.tsx_ModelImg_component_iJe6ICWVnyA.js (ENTRY POINT)==
 
 import { Image } from "./test";
@@ -130,41 +165,6 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
     "_rawProps"
   ],
   "captureNames": [
-    "props"
-  ]
-}
-*/
-============================= test.tsx_Image_component_CS20HgBlRYI.js (ENTRY POINT)==
-
-import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { _jsxSorted } from "@qwik.dev/core";
-export const Image_component_CS20HgBlRYI = (props)=>{
-    return /*#__PURE__*/ _jsxSorted(_Fragment, null, null, /*#__PURE__*/ _jsxSorted("img", {
-        src: `${props.src}`
-    }, null, null, 3, null), 1, "u6_0");
-};
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;2CAIgC,CAAC;IAC/B,qBACE,gDACE,WAAC;QAAI,KAAK,GAAG,MAAM,GAAG,EAAE;;AAG9B\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Image_component_CS20HgBlRYI",
-  "entry": null,
-  "displayName": "test.tsx_Image_component",
-  "hash": "CS20HgBlRYI",
-  "canonicalFilename": "test.tsx_Image_component_CS20HgBlRYI",
-  "path": "",
-  "extension": "js",
-  "parent": null,
-  "ctxKind": "function",
-  "ctxName": "component$",
-  "captures": false,
-  "loc": [
-    211,
-    291
-  ],
-  "paramNames": [
     "props"
   ]
 }

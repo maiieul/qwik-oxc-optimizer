@@ -23,39 +23,6 @@ export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test
 
 
 Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,6BAAe,6EAMZ\"}")
-============================= test.tsx_test_component_useTask_jewzFYh3XmQ.js (ENTRY POINT)==
-
-import { _captures } from "@qwik.dev/core";
-export const test_component_useTask_jewzFYh3XmQ = ()=>{
-    const props = _captures[0];
-    props.checked;
-};
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";kDAGW;;IACP,MAAM,OAAO\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "test_component_useTask_jewzFYh3XmQ",
-  "entry": null,
-  "displayName": "test.tsx_test_component_useTask",
-  "hash": "jewzFYh3XmQ",
-  "canonicalFilename": "test.tsx_test_component_useTask_jewzFYh3XmQ",
-  "path": "",
-  "extension": "js",
-  "parent": "test_component_LUXeXe0DQrg",
-  "ctxKind": "function",
-  "ctxName": "useTask$",
-  "captures": true,
-  "loc": [
-    119,
-    149
-  ],
-  "captureNames": [
-    "props"
-  ]
-}
-*/
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
 
 import { _restProps } from "@qwik.dev/core";
@@ -92,6 +59,39 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ],
   "paramNames": [
     "_rawProps"
+  ]
+}
+*/
+============================= test.tsx_test_component_useTask_jewzFYh3XmQ.js (ENTRY POINT)==
+
+import { _captures } from "@qwik.dev/core";
+export const test_component_useTask_jewzFYh3XmQ = ()=>{
+    const props = _captures[0];
+    props.checked;
+};
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";kDAGW;;IACP,MAAM,OAAO\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "test_component_useTask_jewzFYh3XmQ",
+  "entry": null,
+  "displayName": "test.tsx_test_component_useTask",
+  "hash": "jewzFYh3XmQ",
+  "canonicalFilename": "test.tsx_test_component_useTask_jewzFYh3XmQ",
+  "path": "",
+  "extension": "js",
+  "parent": "test_component_LUXeXe0DQrg",
+  "ctxKind": "function",
+  "ctxName": "useTask$",
+  "captures": true,
+  "loc": [
+    119,
+    149
+  ],
+  "captureNames": [
+    "props"
   ]
 }
 */

@@ -61,33 +61,6 @@ export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrlDEV(i_LUXeXe0DQrg, "t
 
 
 Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;AAKA,SAAS,UAAU,QAAQ,WAAW;AAKtC,CAAC;IACC,QAAQ,GAAG,CAAC;AACd,CAAC;AACD,CAAC;IACC,QAAQ,GAAG,CAAC;AACd,CAAC;AAED;AAEA,OAAO,MAAM,MAAM;;;;;IAEhB;AAEH,6BAAe;;;;;IAEZ\"}")
-============================= test.tsx_test_component_button_q_e_click_qwSL5gM03T4.js (ENTRY POINT)==
-
-import { api } from "./test";
-export const test_component_button_q_e_click_qwSL5gM03T4 = async ()=>await api();
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";2DAwB2B,UAAY,MAAM\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "test_component_button_q_e_click_qwSL5gM03T4",
-  "entry": null,
-  "displayName": "test.tsx_test_component_button_q_e_click",
-  "hash": "qwSL5gM03T4",
-  "canonicalFilename": "test.tsx_test_component_button_q_e_click_qwSL5gM03T4",
-  "path": "",
-  "extension": "js",
-  "parent": "test_component_LUXeXe0DQrg",
-  "ctxKind": "eventHandler",
-  "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    538,
-    561
-  ]
-}
-*/
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -127,6 +100,33 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     503,
     575
+  ]
+}
+*/
+============================= test.tsx_test_component_button_q_e_click_qwSL5gM03T4.js (ENTRY POINT)==
+
+import { api } from "./test";
+export const test_component_button_q_e_click_qwSL5gM03T4 = async ()=>await api();
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";2DAwB2B,UAAY,MAAM\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "test_component_button_q_e_click_qwSL5gM03T4",
+  "entry": null,
+  "displayName": "test.tsx_test_component_button_q_e_click",
+  "hash": "qwSL5gM03T4",
+  "canonicalFilename": "test.tsx_test_component_button_q_e_click_qwSL5gM03T4",
+  "path": "",
+  "extension": "js",
+  "parent": "test_component_LUXeXe0DQrg",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false,
+  "loc": [
+    538,
+    561
   ]
 }
 */

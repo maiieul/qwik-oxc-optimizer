@@ -10,32 +10,6 @@ export default component$(() => {
   return <div onClick$={() => console.log(mongodb)}></div>;
 });
 
-============================= src/components/mongo/404.tsx__404_component_div_q_e_click_aMLnLWtkRhc.tsx (ENTRY POINT)==
-
-export const _404_component_div_q_e_click_aMLnLWtkRhc = ()=>console.log(mongodb);
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\"],\"names\":[],\"mappings\":\"wDAGwB,IAAM,QAAQ,GAAG,CAAC\"}")
-/*
-{
-  "origin": "src/components/mongo/404.tsx",
-  "name": "_404_component_div_q_e_click_aMLnLWtkRhc",
-  "entry": null,
-  "displayName": "404.tsx__404_component_div_q_e_click",
-  "hash": "aMLnLWtkRhc",
-  "canonicalFilename": "404.tsx__404_component_div_q_e_click_aMLnLWtkRhc",
-  "path": "src/components/mongo",
-  "extension": "tsx",
-  "parent": "_404_component_zRvoWc98eqo",
-  "ctxKind": "eventHandler",
-  "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    105,
-    131
-  ]
-}
-*/
 ============================= src/components/mongo/404.tsx ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -72,6 +46,32 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\
   "loc": [
     73,
     142
+  ]
+}
+*/
+============================= src/components/mongo/404.tsx__404_component_div_q_e_click_aMLnLWtkRhc.tsx (ENTRY POINT)==
+
+export const _404_component_div_q_e_click_aMLnLWtkRhc = ()=>console.log(mongodb);
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/components/mongo/404.tsx\"],\"names\":[],\"mappings\":\"wDAGwB,IAAM,QAAQ,GAAG,CAAC\"}")
+/*
+{
+  "origin": "src/components/mongo/404.tsx",
+  "name": "_404_component_div_q_e_click_aMLnLWtkRhc",
+  "entry": null,
+  "displayName": "404.tsx__404_component_div_q_e_click",
+  "hash": "aMLnLWtkRhc",
+  "canonicalFilename": "404.tsx__404_component_div_q_e_click_aMLnLWtkRhc",
+  "path": "src/components/mongo",
+  "extension": "tsx",
+  "parent": "_404_component_zRvoWc98eqo",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false,
+  "loc": [
+    105,
+    131
   ]
 }
 */

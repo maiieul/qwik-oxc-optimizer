@@ -34,39 +34,6 @@ const i_4ryKJTOKjWE = ()=>import("./test.tsx_Cmp_component_4ryKJTOKjWE");
 
 
 Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;cACY\"}")
-============================= test.tsx_Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8.js (ENTRY POINT)==
-
-import { _captures } from "@qwik.dev/core";
-export const Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8 = ()=>{
-    const htmlSignal = _captures[0];
-    return htmlSignal.value = "<h2><span>I'm a updated signal value!</span></h2>";
-};
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";kEAcoB;;WAAO,WAAW,KAAK,GAAG\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8",
-  "entry": null,
-  "displayName": "test.tsx_Cmp_component_div_div_button_q_e_click",
-  "hash": "kOQ2BgBVVS8",
-  "canonicalFilename": "test.tsx_Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8",
-  "path": "",
-  "extension": "js",
-  "parent": "Cmp_component_4ryKJTOKjWE",
-  "ctxKind": "eventHandler",
-  "ctxName": "onClick$",
-  "captures": true,
-  "loc": [
-    519,
-    597
-  ],
-  "captureNames": [
-    "htmlSignal"
-  ]
-}
-*/
 ============================= test.tsx_Cmp_component_4ryKJTOKjWE.js (ENTRY POINT)==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -119,6 +86,39 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     69,
     648
+  ]
+}
+*/
+============================= test.tsx_Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8.js (ENTRY POINT)==
+
+import { _captures } from "@qwik.dev/core";
+export const Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8 = ()=>{
+    const htmlSignal = _captures[0];
+    return htmlSignal.value = "<h2><span>I'm a updated signal value!</span></h2>";
+};
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";kEAcoB;;WAAO,WAAW,KAAK,GAAG\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8",
+  "entry": null,
+  "displayName": "test.tsx_Cmp_component_div_div_button_q_e_click",
+  "hash": "kOQ2BgBVVS8",
+  "canonicalFilename": "test.tsx_Cmp_component_div_div_button_q_e_click_kOQ2BgBVVS8",
+  "path": "",
+  "extension": "js",
+  "parent": "Cmp_component_4ryKJTOKjWE",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "loc": [
+    519,
+    597
+  ],
+  "captureNames": [
+    "htmlSignal"
   ]
 }
 */

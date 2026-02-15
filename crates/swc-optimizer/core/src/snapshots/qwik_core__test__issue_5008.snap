@@ -30,39 +30,6 @@ export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_LUXeXe0DQrg, "test
 
 
 Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,6BAAe,6EAaZ\"}")
-============================= test.tsx_test_component_Fragment_button_q_e_click_7MTd2pAiliw.js (ENTRY POINT)==
-
-import { _captures } from "@qwik.dev/core";
-export const test_component_Fragment_button_q_e_click_7MTd2pAiliw = ()=>{
-    const store = _captures[0];
-    return store[0].value++;
-};
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";oEAMwB;;WAAM,KAAK,CAAC,EAAE,CAAC,KAAK\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "test_component_Fragment_button_q_e_click_7MTd2pAiliw",
-  "entry": null,
-  "displayName": "test.tsx_test_component_Fragment_button_q_e_click",
-  "hash": "7MTd2pAiliw",
-  "canonicalFilename": "test.tsx_test_component_Fragment_button_q_e_click_7MTd2pAiliw",
-  "path": "",
-  "extension": "js",
-  "parent": "test_component_LUXeXe0DQrg",
-  "ctxKind": "eventHandler",
-  "ctxName": "onClick$",
-  "captures": true,
-  "loc": [
-    175,
-    197
-  ],
-  "captureNames": [
-    "store"
-  ]
-}
-*/
 ============================= test.tsx_test_component_LUXeXe0DQrg.js (ENTRY POINT)==
 
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
@@ -115,6 +82,39 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     83,
     435
+  ]
+}
+*/
+============================= test.tsx_test_component_Fragment_button_q_e_click_7MTd2pAiliw.js (ENTRY POINT)==
+
+import { _captures } from "@qwik.dev/core";
+export const test_component_Fragment_button_q_e_click_7MTd2pAiliw = ()=>{
+    const store = _captures[0];
+    return store[0].value++;
+};
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";oEAMwB;;WAAM,KAAK,CAAC,EAAE,CAAC,KAAK\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "test_component_Fragment_button_q_e_click_7MTd2pAiliw",
+  "entry": null,
+  "displayName": "test.tsx_test_component_Fragment_button_q_e_click",
+  "hash": "7MTd2pAiliw",
+  "canonicalFilename": "test.tsx_test_component_Fragment_button_q_e_click_7MTd2pAiliw",
+  "path": "",
+  "extension": "js",
+  "parent": "test_component_LUXeXe0DQrg",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "loc": [
+    175,
+    197
+  ],
+  "captureNames": [
+    "store"
   ]
 }
 */

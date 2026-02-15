@@ -50,6 +50,66 @@ export const Parent = component$(() => {
   return <div onClick$={() => console.log("parent")}>{state.text}</div>;
 });
 
+============================= test.js ==
+
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_0TaiDayHrlo = ()=>import("./test.tsx_Parent_component_0TaiDayHrlo");
+export const Parent = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_0TaiDayHrlo, "s_0TaiDayHrlo"));
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAcA,OAAO,MAAM,uBAAS,gEA8BnB\"}")
+============================= test.tsx_Parent_component_0TaiDayHrlo.js (ENTRY POINT)==
+
+import { _jsxSorted } from "@qwik.dev/core";
+import { _noopQrl } from "@qwik.dev/core";
+import { _wrapProp } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { serverLoaderQrl } from "@qwik.dev/core";
+import { serverStuffQrl } from "@qwik.dev/core";
+import { useStore } from "@qwik.dev/core";
+import { useTaskQrl } from "@qwik.dev/core";
+const i_P8oRQhHsurk = ()=>import("./test.tsx_Parent_component_useTask_1_P8oRQhHsurk");
+const i_gDH1EtUWqBU = ()=>import("./test.tsx_Parent_component_useTask_gDH1EtUWqBU");
+const i_zM9okM0TYrA = ()=>import("./test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA");
+export const s_0TaiDayHrlo = ()=>{
+    const state = useStore({
+        text: ""
+    });
+    // Double count watch
+    useTaskQrl(/*#__PURE__*/ qrl(i_gDH1EtUWqBU, "s_gDH1EtUWqBU", [
+        state
+    ]));
+    serverStuffQrl(/*#__PURE__*/ _noopQrl("s_r1qAHX7Opp0"));
+    serverLoaderQrl(/*#__PURE__*/ _noopQrl("s_k1L0DiPQV1I"));
+    useTaskQrl(/*#__PURE__*/ qrl(i_P8oRQhHsurk, "s_P8oRQhHsurk"));
+    return /*#__PURE__*/ _jsxSorted("div", null, {
+        "q-e:click": /*#__PURE__*/ qrl(i_zM9okM0TYrA, "s_zM9okM0TYrA")
+    }, _wrapProp(state, "text"), 3, "u6_0");
+};
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;;;;;6BAciC;IAC/B,MAAM,QAAQ,SAAS;QACrB,MAAM;IACR;IAEA,qBAAqB;IACrB;;;IAMA;IAWA;IAEA;IAIA,qBAAO,WAAC;QAAI,WAAQ;iBAAgC;AACtD\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "s_0TaiDayHrlo",
+  "entry": null,
+  "displayName": "test.tsx_Parent_component",
+  "hash": "0TaiDayHrlo",
+  "canonicalFilename": "test.tsx_Parent_component_0TaiDayHrlo",
+  "path": "",
+  "extension": "js",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "component$",
+  "captures": false,
+  "loc": [
+    293,
+    877
+  ]
+}
+*/
 ============================= test.tsx_Parent_component_useTask_gDH1EtUWqBU.js (ENTRY POINT)==
 
 import { _captures } from "@qwik.dev/core";
@@ -86,15 +146,6 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ]
 }
 */
-============================= test.js ==
-
-import { componentQrl } from "@qwik.dev/core";
-import { qrl } from "@qwik.dev/core";
-const i_0TaiDayHrlo = ()=>import("./test.tsx_Parent_component_0TaiDayHrlo");
-export const Parent = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_0TaiDayHrlo, "s_0TaiDayHrlo"));
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;AAcA,OAAO,MAAM,uBAAS,gEA8BnB\"}")
 ============================= test.tsx_Parent_component_serverStuff_a_2ca3HLDC7yc.js (ENTRY POINT)==
 
 export const s_2ca3HLDC7yc = ()=>{
@@ -151,54 +202,31 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ]
 }
 */
-============================= test.tsx_Parent_component_0TaiDayHrlo.js (ENTRY POINT)==
+============================= test.tsx_Parent_component_useTask_1_P8oRQhHsurk.js (ENTRY POINT)==
 
-import { _jsxSorted } from "@qwik.dev/core";
-import { _noopQrl } from "@qwik.dev/core";
-import { _wrapProp } from "@qwik.dev/core";
-import { qrl } from "@qwik.dev/core";
-import { serverLoaderQrl } from "@qwik.dev/core";
-import { serverStuffQrl } from "@qwik.dev/core";
-import { useStore } from "@qwik.dev/core";
-import { useTaskQrl } from "@qwik.dev/core";
-const i_P8oRQhHsurk = ()=>import("./test.tsx_Parent_component_useTask_1_P8oRQhHsurk");
-const i_gDH1EtUWqBU = ()=>import("./test.tsx_Parent_component_useTask_gDH1EtUWqBU");
-const i_zM9okM0TYrA = ()=>import("./test.tsx_Parent_component_div_q_e_click_zM9okM0TYrA");
-export const s_0TaiDayHrlo = ()=>{
-    const state = useStore({
-        text: ""
-    });
-    // Double count watch
-    useTaskQrl(/*#__PURE__*/ qrl(i_gDH1EtUWqBU, "s_gDH1EtUWqBU", [
-        state
-    ]));
-    serverStuffQrl(/*#__PURE__*/ _noopQrl("s_r1qAHX7Opp0"));
-    serverLoaderQrl(/*#__PURE__*/ _noopQrl("s_k1L0DiPQV1I"));
-    useTaskQrl(/*#__PURE__*/ qrl(i_P8oRQhHsurk, "s_P8oRQhHsurk"));
-    return /*#__PURE__*/ _jsxSorted("div", null, {
-        "q-e:click": /*#__PURE__*/ qrl(i_zM9okM0TYrA, "s_zM9okM0TYrA")
-    }, _wrapProp(state, "text"), 3, "u6_0");
+export const s_P8oRQhHsurk = ()=>{
+// Code
 };
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;;;;;;6BAciC;IAC/B,MAAM,QAAQ,SAAS;QACrB,MAAM;IACR;IAEA,qBAAqB;IACrB;;;IAMA;IAWA;IAEA;IAIA,qBAAO,WAAC;QAAI,WAAQ;iBAAgC;AACtD\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6BAuCW;AACP,OAAO;AACT\"}")
 /*
 {
   "origin": "test.tsx",
-  "name": "s_0TaiDayHrlo",
+  "name": "s_P8oRQhHsurk",
   "entry": null,
-  "displayName": "test.tsx_Parent_component",
-  "hash": "0TaiDayHrlo",
-  "canonicalFilename": "test.tsx_Parent_component_0TaiDayHrlo",
+  "displayName": "test.tsx_Parent_component_useTask_1",
+  "hash": "P8oRQhHsurk",
+  "canonicalFilename": "test.tsx_Parent_component_useTask_1_P8oRQhHsurk",
   "path": "",
   "extension": "js",
-  "parent": null,
+  "parent": "s_0TaiDayHrlo",
   "ctxKind": "function",
-  "ctxName": "component$",
+  "ctxName": "useTask$",
   "captures": false,
   "loc": [
-    293,
-    877
+    776,
+    799
   ]
 }
 */
@@ -225,34 +253,6 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     827,
     854
-  ]
-}
-*/
-============================= test.tsx_Parent_component_useTask_1_P8oRQhHsurk.js (ENTRY POINT)==
-
-export const s_P8oRQhHsurk = ()=>{
-// Code
-};
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"6BAuCW;AACP,OAAO;AACT\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "s_P8oRQhHsurk",
-  "entry": null,
-  "displayName": "test.tsx_Parent_component_useTask_1",
-  "hash": "P8oRQhHsurk",
-  "canonicalFilename": "test.tsx_Parent_component_useTask_1_P8oRQhHsurk",
-  "path": "",
-  "extension": "js",
-  "parent": "s_0TaiDayHrlo",
-  "ctxKind": "function",
-  "ctxName": "useTask$",
-  "captures": false,
-  "loc": [
-    776,
-    799
   ]
 }
 */

@@ -55,6 +55,24 @@ export const Header = component$(() => {
 
 export const Footer = component$();
 
+============================= project/test.jsx ==
+
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_UVBJuFYfvDo = ()=>import("./test.tsx_Header_component_UVBJuFYfvDo");
+export const [a, { b, v1: [c], d = v2, ...e }, f = v3, ...g] = obj;
+const exp1 = 1;
+const internal = 2;
+export { exp1, internal as expr2 };
+export function foo() {}
+export class bar {
+}
+export default function DefaultFn() {}
+export const Header = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_UVBJuFYfvDo, "Header_component_UVBJuFYfvDo"));
+export const Footer = /*#__PURE__*/ componentQrl();
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,CACX,GACA,EACE,CAAC,EACD,IAAI,CAAC,EAAE,EACP,IAAI,EAAE,EACN,GAAG,GACJ,EACD,IAAI,EAAE,EACN,GAAG,EACJ,GAAG,IAAI;AAER,MAAM,OAAO;AACb,MAAM,WAAW;AACjB,SAAS,IAAI,EAAE,YAAY,KAAK,GAAG;AAEnC,OAAO,SAAS,OAAO;AACvB,OAAO,MAAM;AAAK;AAElB,eAAe,SAAS,aAAa;AAErC,OAAO,MAAM,uBAAS,+EAwBnB;AAEH,OAAO,MAAM,uBAAS,eAAa\"}")
 ============================= project/test.tsx_Header_component_UVBJuFYfvDo.jsx (ENTRY POINT)==
 
 import { qrl } from "@qwik.dev/core";
@@ -85,24 +103,6 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/test.tsx\"],\"names\"
   ]
 }
 */
-============================= project/test.jsx ==
-
-import { componentQrl } from "@qwik.dev/core";
-import { qrl } from "@qwik.dev/core";
-const i_UVBJuFYfvDo = ()=>import("./test.tsx_Header_component_UVBJuFYfvDo");
-export const [a, { b, v1: [c], d = v2, ...e }, f = v3, ...g] = obj;
-const exp1 = 1;
-const internal = 2;
-export { exp1, internal as expr2 };
-export function foo() {}
-export class bar {
-}
-export default function DefaultFn() {}
-export const Header = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_UVBJuFYfvDo, "Header_component_UVBJuFYfvDo"));
-export const Footer = /*#__PURE__*/ componentQrl();
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/project/test.tsx\"],\"names\":[],\"mappings\":\";;;AAEA,OAAO,MAAM,CACX,GACA,EACE,CAAC,EACD,IAAI,CAAC,EAAE,EACP,IAAI,EAAE,EACN,GAAG,GACJ,EACD,IAAI,EAAE,EACN,GAAG,EACJ,GAAG,IAAI;AAER,MAAM,OAAO;AACb,MAAM,WAAW;AACjB,SAAS,IAAI,EAAE,YAAY,KAAK,GAAG;AAEnC,OAAO,SAAS,OAAO;AACvB,OAAO,MAAM;AAAK;AAElB,eAAe,SAAS,aAAa;AAErC,OAAO,MAAM,uBAAS,+EAwBnB;AAEH,OAAO,MAAM,uBAAS,eAAa\"}")
 ============================= project/test.tsx_Header_component_1_uWM1kg0IGO0.jsx (ENTRY POINT)==
 
 import { default as DefaultFn } from "./test";

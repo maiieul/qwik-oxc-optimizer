@@ -20,33 +20,6 @@ export default /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_0AM8HPnkNs4, "slug
 
 
 Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx\"],\"names\":[],\"mappings\":\";;;AAGA,6BAAe,6EAEZ\"}")
-============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w.js (ENTRY POINT)==
-
-import { sibling } from "./sibling";
-export const slug_component_div_q_e_click_bCwVPYSTQ0w = ()=>console.log(mongodb, sibling);
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx\"],\"names\":[],\"mappings\":\";wDAIwB,IAAM,QAAQ,GAAG,CAAC,SAAS\"}")
-/*
-{
-  "origin": "src/routes/_repl/[id]/[[...slug]].tsx",
-  "name": "slug_component_div_q_e_click_bCwVPYSTQ0w",
-  "entry": null,
-  "displayName": "[[...slug]].tsx_slug_component_div_q_e_click",
-  "hash": "bCwVPYSTQ0w",
-  "canonicalFilename": "[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w",
-  "path": "src/routes/_repl/[id]",
-  "extension": "js",
-  "parent": "slug_component_0AM8HPnkNs4",
-  "ctxKind": "eventHandler",
-  "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    142,
-    177
-  ]
-}
-*/
 ============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_0AM8HPnkNs4.js ==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -77,6 +50,33 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/routes/_repl/[id]/[[...sl
   "loc": [
     110,
     188
+  ]
+}
+*/
+============================= src/routes/_repl/[id]/[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w.js (ENTRY POINT)==
+
+import { sibling } from "./sibling";
+export const slug_component_div_q_e_click_bCwVPYSTQ0w = ()=>console.log(mongodb, sibling);
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/src/routes/_repl/[id]/[[...slug]].tsx\"],\"names\":[],\"mappings\":\";wDAIwB,IAAM,QAAQ,GAAG,CAAC,SAAS\"}")
+/*
+{
+  "origin": "src/routes/_repl/[id]/[[...slug]].tsx",
+  "name": "slug_component_div_q_e_click_bCwVPYSTQ0w",
+  "entry": null,
+  "displayName": "[[...slug]].tsx_slug_component_div_q_e_click",
+  "hash": "bCwVPYSTQ0w",
+  "canonicalFilename": "[[...slug]].tsx_slug_component_div_q_e_click_bCwVPYSTQ0w",
+  "path": "src/routes/_repl/[id]",
+  "extension": "js",
+  "parent": "slug_component_0AM8HPnkNs4",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": false,
+  "loc": [
+    142,
+    177
   ]
 }
 */

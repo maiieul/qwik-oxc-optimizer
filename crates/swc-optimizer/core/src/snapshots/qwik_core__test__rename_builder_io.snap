@@ -25,32 +25,20 @@ export const App = component$(() => {
   return "hi";
 });
 
-============================= test.tsx_Bar_GXXnVUtURSw.ts (ENTRY POINT)==
+============================= test.ts ==
 
-export const Bar_GXXnVUtURSw = "a thing";
+import { qwikifyQrl } from "@qwik.dev/react";
+import { qrl } from "@qwik.dev/core";
+import { componentQrl } from "@qwik.dev/core";
+const i_0Yoy9qA0SC0 = ()=>import("./test.tsx_Foo_qwikify_0Yoy9qA0SC0");
+const i_GXXnVUtURSw = ()=>import("./test.tsx_Bar_GXXnVUtURSw");
+const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0");
+export const Foo = qwikifyQrl(/*#__PURE__*/ qrl(i_0Yoy9qA0SC0, "Foo_qwikify_0Yoy9qA0SC0"));
+export const Bar = /*#__PURE__*/ qrl(i_GXXnVUtURSw, "Bar_GXXnVUtURSw");
+export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"+BASqB\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Bar_GXXnVUtURSw",
-  "entry": null,
-  "displayName": "test.tsx_Bar",
-  "hash": "GXXnVUtURSw",
-  "canonicalFilename": "test.tsx_Bar_GXXnVUtURSw",
-  "path": "",
-  "extension": "ts",
-  "parent": null,
-  "ctxKind": "function",
-  "ctxName": "$",
-  "captures": false,
-  "loc": [
-    363,
-    372
-  ]
-}
-*/
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;AAOA,OAAO,MAAM,MAAM,wEAA2B;AAE9C,OAAO,MAAM,0DAAmB;AAEhC,OAAO,MAAM,oBAAM,4EAQhB\"}")
 ============================= test.tsx_Foo_qwikify_0Yoy9qA0SC0.ts (ENTRY POINT)==
 
 export const Foo_qwikify_0Yoy9qA0SC0 = MyReactComponent;
@@ -74,6 +62,32 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     322,
     338
+  ]
+}
+*/
+============================= test.tsx_Bar_GXXnVUtURSw.ts (ENTRY POINT)==
+
+export const Bar_GXXnVUtURSw = "a thing";
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"+BASqB\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Bar_GXXnVUtURSw",
+  "entry": null,
+  "displayName": "test.tsx_Bar",
+  "hash": "GXXnVUtURSw",
+  "canonicalFilename": "test.tsx_Bar_GXXnVUtURSw",
+  "path": "",
+  "extension": "ts",
+  "parent": null,
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false,
+  "loc": [
+    363,
+    372
   ]
 }
 */
@@ -112,20 +126,6 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ]
 }
 */
-============================= test.ts ==
-
-import { qwikifyQrl } from "@qwik.dev/react";
-import { qrl } from "@qwik.dev/core";
-import { componentQrl } from "@qwik.dev/core";
-const i_0Yoy9qA0SC0 = ()=>import("./test.tsx_Foo_qwikify_0Yoy9qA0SC0");
-const i_GXXnVUtURSw = ()=>import("./test.tsx_Bar_GXXnVUtURSw");
-const i_ckEPmXZlub0 = ()=>import("./test.tsx_App_component_ckEPmXZlub0");
-export const Foo = qwikifyQrl(/*#__PURE__*/ qrl(i_0Yoy9qA0SC0, "Foo_qwikify_0Yoy9qA0SC0"));
-export const Bar = /*#__PURE__*/ qrl(i_GXXnVUtURSw, "Bar_GXXnVUtURSw");
-export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_ckEPmXZlub0, "App_component_ckEPmXZlub0"));
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";;;;;;AAOA,OAAO,MAAM,MAAM,wEAA2B;AAE9C,OAAO,MAAM,0DAAmB;AAEhC,OAAO,MAAM,oBAAM,4EAQhB\"}")
 == DIAGNOSTICS ==
 
 []

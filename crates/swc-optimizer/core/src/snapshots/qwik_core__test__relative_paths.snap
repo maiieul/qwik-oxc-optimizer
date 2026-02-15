@@ -1,38 +1,59 @@
 ---
-source: packages/qwik/src/optimizer/core/src/test.rs
-assertion_line: 3417
+source: src/test.rs
 expression: output
 ---
-============================= ../../node_modules/dep/dist/lib.mjs_App_component_div_p_button_onClick_8dWUa0cJAr4.js (ENTRY POINT)==
 
-import { useLexicalScope } from "@qwik.dev/core";
-export const App_component_div_p_button_onClick_8dWUa0cJAr4 = ()=>{
-    const [store] = useLexicalScope();
-    return store.count++;
+============================= ../../node_modules/dep/dist/lib.mjs ==
+
+import { qrl } from "@qwik.dev/core";
+const i_AkbU84a8zes = ()=>import("./lib.mjs_App_component_AkbU84a8zes.js");
+import { componentQrl, useStore } from "@qwik.dev/core";
+const useData = ()=>{
+    return useStore({
+        count: 0
+    });
+};
+export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_AkbU84a8zes, "App_component_AkbU84a8zes"));
+export { useData as _auto_useData };
+
+
+Some("{\"version\":3,\"sources\":[\"node_modules/dep/dist/lib.mjs\"],\"sourceRoot\":\"/path/to/app/\",\"names\":[],\"mappings\":\";;AACA,SAAS,YAAY,EAAc,QAAQ,QAAyB,iBAAiB;AAIrF,MAAM,UAAU;IACf,OAAO,SAAS;QACf,OAAO;IACR;AACD;AAEA,OAAO,MAAM,MAAM,WAAW,GAAG,4EAuBA\"}")
+============================= components/main.js ==
+
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_jJ0v28bs0p8 = ()=>import("./main.tsx_Local_component_jJ0v28bs0p8.js");
+export const Local = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_jJ0v28bs0p8, "Local_component_jJ0v28bs0p8"));
+
+
+Some("{\"version\":3,\"sources\":[\"src/thing/components/main.tsx\"],\"sourceRoot\":\"/path/to/app/\",\"names\":[],\"mappings\":\";;;AAIA,OAAO,MAAM,sBAAQ,8EAIlB\"}")
+============================= components/main.tsx_Local_component_jJ0v28bs0p8.js (ENTRY POINT)==
+
+import { _jsxSorted } from "@qwik.dev/core";
+import { state } from "./sibling";
+export const Local_component_jJ0v28bs0p8 = ()=>{
+    return /*#__PURE__*/ _jsxSorted("div", null, null, state, 3, "zp_0");
 };
 
 
-Some("{\"version\":3,\"sources\":[\"node_modules/dep/dist/lib.mjs\"],\"sourceRoot\":\"/path/to/app/\",\"names\":[],\"mappings\":\";8DAuB0B;IACpB,MAAM,CAAC,MAAM,GAAG;IAChB,OAAO,MAAM,KAAK;AACnB\"}")
+Some("{\"version\":3,\"sources\":[\"src/thing/components/main.tsx\"],\"sourceRoot\":\"/path/to/app/\",\"names\":[],\"mappings\":\";;2CAIgC;IAC/B,qBACC,WAAC,mBAAK;AAER\"}")
 /*
 {
-  "origin": "../../node_modules/dep/dist/lib.mjs",
-  "name": "App_component_div_p_button_onClick_8dWUa0cJAr4",
+  "origin": "components/main.tsx",
+  "name": "Local_component_jJ0v28bs0p8",
   "entry": null,
-  "displayName": "lib.mjs_App_component_div_p_button_onClick",
-  "hash": "8dWUa0cJAr4",
-  "canonicalFilename": "lib.mjs_App_component_div_p_button_onClick_8dWUa0cJAr4",
-  "path": "../../node_modules/dep/dist",
+  "displayName": "main.tsx_Local_component",
+  "hash": "jJ0v28bs0p8",
+  "canonicalFilename": "main.tsx_Local_component_jJ0v28bs0p8",
+  "path": "components",
   "extension": "js",
-  "parent": "App_component_AkbU84a8zes",
+  "parent": null,
   "ctxKind": "function",
-  "ctxName": "q-e:click",
-  "captures": true,
+  "ctxName": "component$",
+  "captures": false,
   "loc": [
-    570,
-    651
-  ],
-  "captureNames": [
-    "store"
+    118,
+    161
   ]
 }
 */
@@ -80,60 +101,39 @@ Some("{\"version\":3,\"sources\":[\"node_modules/dep/dist/lib.mjs\"],\"sourceRoo
   ]
 }
 */
-============================= ../../node_modules/dep/dist/lib.mjs ==
+============================= ../../node_modules/dep/dist/lib.mjs_App_component_div_p_button_onClick_8dWUa0cJAr4.js (ENTRY POINT)==
 
-import { qrl } from "@qwik.dev/core";
-const i_AkbU84a8zes = ()=>import("./lib.mjs_App_component_AkbU84a8zes.js");
-import { componentQrl, useStore } from "@qwik.dev/core";
-const useData = ()=>{
-    return useStore({
-        count: 0
-    });
-};
-export const App = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_AkbU84a8zes, "App_component_AkbU84a8zes"));
-export { useData as _auto_useData };
-
-
-Some("{\"version\":3,\"sources\":[\"node_modules/dep/dist/lib.mjs\"],\"sourceRoot\":\"/path/to/app/\",\"names\":[],\"mappings\":\";;AACA,SAAS,YAAY,EAAc,QAAQ,QAAyB,iBAAiB;AAIrF,MAAM,UAAU;IACf,OAAO,SAAS;QACf,OAAO;IACR;AACD;AAEA,OAAO,MAAM,MAAM,WAAW,GAAG,4EAuBA\"}")
-============================= components/main.tsx_Local_component_jJ0v28bs0p8.js (ENTRY POINT)==
-
-import { _jsxSorted } from "@qwik.dev/core";
-import { state } from "./sibling";
-export const Local_component_jJ0v28bs0p8 = ()=>{
-    return /*#__PURE__*/ _jsxSorted("div", null, null, state, 3, "zp_0");
+import { useLexicalScope } from "@qwik.dev/core";
+export const App_component_div_p_button_onClick_8dWUa0cJAr4 = ()=>{
+    const [store] = useLexicalScope();
+    return store.count++;
 };
 
 
-Some("{\"version\":3,\"sources\":[\"src/thing/components/main.tsx\"],\"sourceRoot\":\"/path/to/app/\",\"names\":[],\"mappings\":\";;2CAIgC;IAC/B,qBACC,WAAC,mBAAK;AAER\"}")
+Some("{\"version\":3,\"sources\":[\"node_modules/dep/dist/lib.mjs\"],\"sourceRoot\":\"/path/to/app/\",\"names\":[],\"mappings\":\";8DAuB0B;IACpB,MAAM,CAAC,MAAM,GAAG;IAChB,OAAO,MAAM,KAAK;AACnB\"}")
 /*
 {
-  "origin": "components/main.tsx",
-  "name": "Local_component_jJ0v28bs0p8",
+  "origin": "../../node_modules/dep/dist/lib.mjs",
+  "name": "App_component_div_p_button_onClick_8dWUa0cJAr4",
   "entry": null,
-  "displayName": "main.tsx_Local_component",
-  "hash": "jJ0v28bs0p8",
-  "canonicalFilename": "main.tsx_Local_component_jJ0v28bs0p8",
-  "path": "components",
+  "displayName": "lib.mjs_App_component_div_p_button_onClick",
+  "hash": "8dWUa0cJAr4",
+  "canonicalFilename": "lib.mjs_App_component_div_p_button_onClick_8dWUa0cJAr4",
+  "path": "../../node_modules/dep/dist",
   "extension": "js",
-  "parent": null,
+  "parent": "App_component_AkbU84a8zes",
   "ctxKind": "function",
-  "ctxName": "component$",
-  "captures": false,
+  "ctxName": "q-e:click",
+  "captures": true,
   "loc": [
-    118,
-    161
+    570,
+    651
+  ],
+  "captureNames": [
+    "store"
   ]
 }
 */
-============================= components/main.js ==
-
-import { componentQrl } from "@qwik.dev/core";
-import { qrl } from "@qwik.dev/core";
-const i_jJ0v28bs0p8 = ()=>import("./main.tsx_Local_component_jJ0v28bs0p8.js");
-export const Local = /*#__PURE__*/ componentQrl(/*#__PURE__*/ qrl(i_jJ0v28bs0p8, "Local_component_jJ0v28bs0p8"));
-
-
-Some("{\"version\":3,\"sources\":[\"src/thing/components/main.tsx\"],\"sourceRoot\":\"/path/to/app/\",\"names\":[],\"mappings\":\";;;AAIA,OAAO,MAAM,sBAAQ,8EAIlB\"}")
 == DIAGNOSTICS ==
 
 []

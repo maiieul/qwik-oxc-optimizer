@@ -27,39 +27,6 @@ export const FieldInput = component$(() => {
   );
 });
 
-============================= test.tsx_FieldInput_component_input_q_e_focus_Sgf3MDWzexI.js (ENTRY POINT)==
-
-import { _captures } from "@qwik.dev/core";
-export const FieldInput_component_input_q_e_focus_Sgf3MDWzexI = ()=>{
-    const enabled = _captures[0];
-    enabled.value = true;
-};
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";gEAgBgB;;IACR,QAAQ,KAAK,GAAG\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "FieldInput_component_input_q_e_focus_Sgf3MDWzexI",
-  "entry": null,
-  "displayName": "test.tsx_FieldInput_component_input_q_e_focus",
-  "hash": "Sgf3MDWzexI",
-  "canonicalFilename": "test.tsx_FieldInput_component_input_q_e_focus_Sgf3MDWzexI",
-  "path": "",
-  "extension": "js",
-  "parent": "FieldInput_component_V4XAtJSTRKg",
-  "ctxKind": "eventHandler",
-  "ctxName": "onFocus$",
-  "captures": true,
-  "loc": [
-    379,
-    424
-  ],
-  "captureNames": [
-    "enabled"
-  ]
-}
-*/
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -147,6 +114,39 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ],
   "captureNames": [
     "input"
+  ]
+}
+*/
+============================= test.tsx_FieldInput_component_input_q_e_focus_Sgf3MDWzexI.js (ENTRY POINT)==
+
+import { _captures } from "@qwik.dev/core";
+export const FieldInput_component_input_q_e_focus_Sgf3MDWzexI = ()=>{
+    const enabled = _captures[0];
+    enabled.value = true;
+};
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";gEAgBgB;;IACR,QAAQ,KAAK,GAAG\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "FieldInput_component_input_q_e_focus_Sgf3MDWzexI",
+  "entry": null,
+  "displayName": "test.tsx_FieldInput_component_input_q_e_focus",
+  "hash": "Sgf3MDWzexI",
+  "canonicalFilename": "test.tsx_FieldInput_component_input_q_e_focus_Sgf3MDWzexI",
+  "path": "",
+  "extension": "js",
+  "parent": "FieldInput_component_V4XAtJSTRKg",
+  "ctxKind": "eventHandler",
+  "ctxName": "onFocus$",
+  "captures": true,
+  "loc": [
+    379,
+    424
+  ],
+  "captureNames": [
+    "enabled"
   ]
 }
 */

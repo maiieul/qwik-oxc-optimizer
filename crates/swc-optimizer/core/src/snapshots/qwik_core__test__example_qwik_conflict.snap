@@ -96,29 +96,29 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ]
 }
 */
-============================= test.tsx_Root_component_useStyles_u5DkUxGrGnU.js (ENTRY POINT)==
+============================= test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg.js (ENTRY POINT)==
 
-export const Root_component_useStyles_u5DkUxGrGnU = "thing";
+export const Foo_component_div_q_e_click_YEa2A5ADUOg = ()=>console.log(23);
 
 
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"oDAwBgB\"}")
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"uDAe0B,IAAM,QAAQ,GAAG,CAD3B\"}")
 /*
 {
   "origin": "test.tsx",
-  "name": "Root_component_useStyles_u5DkUxGrGnU",
+  "name": "Foo_component_div_q_e_click_YEa2A5ADUOg",
   "entry": null,
-  "displayName": "test.tsx_Root_component_useStyles",
-  "hash": "u5DkUxGrGnU",
-  "canonicalFilename": "test.tsx_Root_component_useStyles_u5DkUxGrGnU",
+  "displayName": "test.tsx_Foo_component_div_q_e_click",
+  "hash": "YEa2A5ADUOg",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg",
   "path": "",
   "extension": "js",
-  "parent": "Root_component_royhjYaCbYE",
-  "ctxKind": "function",
-  "ctxName": "$",
+  "parent": "Foo_component_HTDRsvUbLiE",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
   "captures": false,
   "loc": [
-    531,
-    538
+    404,
+    426
   ]
 }
 */
@@ -155,6 +155,32 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   ]
 }
 */
+============================= test.tsx_Root_component_useStyles_u5DkUxGrGnU.js (ENTRY POINT)==
+
+export const Root_component_useStyles_u5DkUxGrGnU = "thing";
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"oDAwBgB\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Root_component_useStyles_u5DkUxGrGnU",
+  "entry": null,
+  "displayName": "test.tsx_Root_component_useStyles",
+  "hash": "u5DkUxGrGnU",
+  "canonicalFilename": "test.tsx_Root_component_useStyles_u5DkUxGrGnU",
+  "path": "",
+  "extension": "js",
+  "parent": "Root_component_royhjYaCbYE",
+  "ctxKind": "function",
+  "ctxName": "$",
+  "captures": false,
+  "loc": [
+    531,
+    538
+  ]
+}
+*/
 ============================= test.tsx_Root_component_1_cBpQNYDUHI4.js (ENTRY POINT)==
 
 import { _jsxSorted } from "@qwik.dev/core";
@@ -181,32 +207,6 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     555,
     590
-  ]
-}
-*/
-============================= test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg.js (ENTRY POINT)==
-
-export const Foo_component_div_q_e_click_YEa2A5ADUOg = ()=>console.log(23);
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\"uDAe0B,IAAM,QAAQ,GAAG,CAD3B\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Foo_component_div_q_e_click_YEa2A5ADUOg",
-  "entry": null,
-  "displayName": "test.tsx_Foo_component_div_q_e_click",
-  "hash": "YEa2A5ADUOg",
-  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_YEa2A5ADUOg",
-  "path": "",
-  "extension": "js",
-  "parent": "Foo_component_HTDRsvUbLiE",
-  "ctxKind": "eventHandler",
-  "ctxName": "onClick$",
-  "captures": false,
-  "loc": [
-    404,
-    426
   ]
 }
 */

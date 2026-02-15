@@ -34,42 +34,6 @@ const Parent = component$(() => {
   );
 });
 
-============================= test.tsx_Parent_component_div_button_q_e_click_5khsVRINUws.js (ENTRY POINT)==
-
-import { _captures } from "@qwik.dev/core";
-export const Parent_component_div_button_q_e_click_5khsVRINUws = ()=>{
-    const results = _captures[0];
-    return results.value = [
-        "item1",
-        "item2"
-    ];
-};
-
-
-Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEAOmC;;WAAO,QAAQ,KAAK,GAAG;QAAC;QAAS;KAAQ\"}")
-/*
-{
-  "origin": "test.tsx",
-  "name": "Parent_component_div_button_q_e_click_5khsVRINUws",
-  "entry": null,
-  "displayName": "test.tsx_Parent_component_div_button_q_e_click",
-  "hash": "5khsVRINUws",
-  "canonicalFilename": "test.tsx_Parent_component_div_button_q_e_click_5khsVRINUws",
-  "path": "",
-  "extension": "js",
-  "parent": "Parent_component_0TaiDayHrlo",
-  "ctxKind": "eventHandler",
-  "ctxName": "onClick$",
-  "captures": true,
-  "loc": [
-    238,
-    280
-  ],
-  "captureNames": [
-    "results"
-  ]
-}
-*/
 ============================= test.js ==
 
 import { componentQrl } from "@qwik.dev/core";
@@ -131,6 +95,42 @@ Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"ma
   "loc": [
     93,
     652
+  ]
+}
+*/
+============================= test.tsx_Parent_component_div_button_q_e_click_5khsVRINUws.js (ENTRY POINT)==
+
+import { _captures } from "@qwik.dev/core";
+export const Parent_component_div_button_q_e_click_5khsVRINUws = ()=>{
+    const results = _captures[0];
+    return results.value = [
+        "item1",
+        "item2"
+    ];
+};
+
+
+Some("{\"version\":3,\"sources\":[\"/user/qwik/src/test.tsx\"],\"names\":[],\"mappings\":\";iEAOmC;;WAAO,QAAQ,KAAK,GAAG;QAAC;QAAS;KAAQ\"}")
+/*
+{
+  "origin": "test.tsx",
+  "name": "Parent_component_div_button_q_e_click_5khsVRINUws",
+  "entry": null,
+  "displayName": "test.tsx_Parent_component_div_button_q_e_click",
+  "hash": "5khsVRINUws",
+  "canonicalFilename": "test.tsx_Parent_component_div_button_q_e_click_5khsVRINUws",
+  "path": "",
+  "extension": "js",
+  "parent": "Parent_component_0TaiDayHrlo",
+  "ctxKind": "eventHandler",
+  "ctxName": "onClick$",
+  "captures": true,
+  "loc": [
+    238,
+    280
+  ],
+  "captureNames": [
+    "results"
   ]
 }
 */
