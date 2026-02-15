@@ -12,6 +12,10 @@ use serde::Serialize;
 use serde_json::to_string_pretty;
 use std::fs;
 use std::path::PathBuf;
+use std::process::{Command, Stdio};
+use std::sync::OnceLock;
+use std::thread::sleep;
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 #[derive(Debug, Clone)]
 struct TestInput {
@@ -161,19 +165,73 @@ fn format_segment_metadata(segment: &SegmentAnalysis) -> String {
     to_string_pretty(&snapshot_metadata).expect("failed to serialize segment metadata")
 }
 
-fn format_transform_output(
-    input_code: &str,
+#[derive(Debug, Clone)]
+struct SnapshotModuleOutput {
+    path: String,
+    is_entry: bool,
+    code: String,
+    segment_json: Option<String>,
+}
+
+#[derive(Debug, Clone)]
+struct SnapshotOutput {
+    input_filename: String,
+    input_code: String,
+    modules: Vec<SnapshotModuleOutput>,
+    diagnostics: Vec<String>,
+}
+
+#[derive(Debug, Clone)]
+enum SnapshotCaseData {
+    Output(SnapshotOutput),
+    Error(String),
+}
+
+#[derive(Debug, Clone)]
+struct SnapshotCase {
+    name: String,
+    data: SnapshotCaseData,
+}
+
+fn build_snapshot_output(
+    case: &TestInput,
     result: &qwik_optimizer_oxc::TransformOutput,
-) -> String {
+) -> SnapshotOutput {
+    let modules = result
+        .modules
+        .iter()
+        .map(|module| SnapshotModuleOutput {
+            path: module.path.clone(),
+            is_entry: module.is_entry,
+            code: module.code.clone(),
+            segment_json: module.segment.as_ref().map(format_segment_metadata),
+        })
+        .collect();
+
+    let diagnostics = result
+        .diagnostics
+        .iter()
+        .map(|diag| format!("[{:?}] {}", diag.category, diag.message))
+        .collect();
+
+    SnapshotOutput {
+        input_filename: case.filename.clone(),
+        input_code: case.code.clone(),
+        modules,
+        diagnostics,
+    }
+}
+
+fn render_snapshot_output(output: &SnapshotOutput) -> String {
     let mut s = String::new();
     s.push_str("=== INPUT ===\n");
-    s.push_str(input_code);
-    if !input_code.ends_with('\n') {
+    s.push_str(&output.input_code);
+    if !output.input_code.ends_with('\n') {
         s.push('\n');
     }
     s.push('\n');
 
-    for (i, module) in result.modules.iter().enumerate() {
+    for (i, module) in output.modules.iter().enumerate() {
         if i > 0 {
             s.push('\n');
         }
@@ -184,22 +242,250 @@ fn format_transform_output(
             s.push('\n');
         }
 
-        if let Some(segment) = &module.segment {
-            let segment_json = format_segment_metadata(segment);
+        if let Some(segment_json) = &module.segment_json {
             s.push_str("\n/*\n");
-            s.push_str(&segment_json);
+            s.push_str(segment_json);
             s.push_str("\n*/\n");
         }
     }
 
-    if !result.diagnostics.is_empty() {
+    if !output.diagnostics.is_empty() {
         s.push_str("\n=== DIAGNOSTICS ===\n");
-        for diag in &result.diagnostics {
-            s.push_str(&format!("[{:?}] {}\n", diag.category, diag.message));
+        for diag in &output.diagnostics {
+            s.push_str(diag);
+            s.push('\n');
         }
     }
 
     s
+}
+
+#[derive(Debug)]
+enum OxfmtRunner {
+    Local(PathBuf),
+    GlobalBinary,
+    Unavailable,
+}
+
+fn command_available(program: &str) -> bool {
+    Command::new(program)
+        .arg("--version")
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .is_ok()
+}
+
+fn detect_oxfmt_runner() -> OxfmtRunner {
+    let workspace_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .ancestors()
+        .nth(2)
+        .map(|p| p.to_path_buf())
+        .unwrap_or_else(|| PathBuf::from(env!("CARGO_MANIFEST_DIR")));
+
+    let local_oxfmt = if cfg!(windows) {
+        workspace_root
+            .join("node_modules")
+            .join(".bin")
+            .join("oxfmt.cmd")
+    } else {
+        workspace_root.join("node_modules").join(".bin").join("oxfmt")
+    };
+
+    if local_oxfmt.exists() {
+        return OxfmtRunner::Local(local_oxfmt);
+    }
+    if command_available("oxfmt") {
+        return OxfmtRunner::GlobalBinary;
+    }
+    OxfmtRunner::Unavailable
+}
+
+fn oxfmt_runner() -> &'static OxfmtRunner {
+    static RUNNER: OnceLock<OxfmtRunner> = OnceLock::new();
+    RUNNER.get_or_init(detect_oxfmt_runner)
+}
+
+fn snapshot_oxfmt_enabled() -> bool {
+    static ENABLED: OnceLock<bool> = OnceLock::new();
+    *ENABLED.get_or_init(|| match std::env::var("QWIK_SNAPSHOT_OXFMT") {
+        Ok(value) => !matches!(
+            value.to_ascii_lowercase().as_str(),
+            "0" | "false" | "no" | "off"
+        ),
+        Err(_) => true,
+    })
+}
+
+fn oxfmt_extension(path_like: &str) -> &'static str {
+    let normalized = path_like.replace('\\', "/").to_ascii_lowercase();
+    if normalized.ends_with(".ts") {
+        "ts"
+    } else if normalized.ends_with(".jsx") {
+        "jsx"
+    } else if normalized.ends_with(".js") {
+        "js"
+    } else if normalized.ends_with(".mjs") {
+        "mjs"
+    } else if normalized.ends_with(".cjs") {
+        "cjs"
+    } else if normalized.ends_with(".mts") {
+        "mts"
+    } else if normalized.ends_with(".cts") {
+        "cts"
+    } else {
+        "tsx"
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+enum SnapshotCodeTarget {
+    Input,
+    Module(usize),
+}
+
+#[derive(Debug, Clone)]
+struct SnapshotCodeRef {
+    case_index: usize,
+    target: SnapshotCodeTarget,
+    tmp_file: PathBuf,
+}
+
+fn run_oxfmt_write(target_dir: &std::path::Path) -> bool {
+    let mut cmd = match oxfmt_runner() {
+        OxfmtRunner::Local(path) => {
+            let mut c = Command::new(path);
+            c.arg("--write").arg(".");
+            c
+        }
+        OxfmtRunner::GlobalBinary => {
+            let mut c = Command::new("oxfmt");
+            c.arg("--write").arg(".");
+            c
+        }
+        OxfmtRunner::Unavailable => return false,
+    };
+
+    cmd.current_dir(target_dir)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null());
+
+    let mut child = match cmd.spawn() {
+        Ok(child) => child,
+        Err(_) => return false,
+    };
+
+    let deadline = Instant::now() + Duration::from_secs(30);
+    loop {
+        match child.try_wait() {
+            Ok(Some(_)) => return true,
+            Ok(None) => {
+                if Instant::now() >= deadline {
+                    let _ = child.kill();
+                    let _ = child.wait();
+                    return false;
+                }
+                sleep(Duration::from_millis(20));
+            }
+            Err(_) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return false;
+            }
+        }
+    }
+}
+
+fn bulk_oxfmt_snapshot_cases(cases: &mut [SnapshotCase]) {
+    if !snapshot_oxfmt_enabled() || matches!(oxfmt_runner(), OxfmtRunner::Unavailable) {
+        return;
+    }
+
+    let nonce = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_micros())
+        .unwrap_or(0);
+    let tmp_dir = std::env::temp_dir().join(format!(
+        "qwik-optimizer-oxfmt-{}-{}",
+        std::process::id(),
+        nonce
+    ));
+    if fs::create_dir_all(&tmp_dir).is_err() {
+        return;
+    }
+
+    let mut refs: Vec<SnapshotCodeRef> = Vec::new();
+    let mut block_counter: usize = 0;
+
+    for (case_index, case) in cases.iter().enumerate() {
+        let SnapshotCaseData::Output(output) = &case.data else {
+            continue;
+        };
+
+        block_counter += 1;
+        let input_file = tmp_dir.join(format!(
+            "block_{block_counter:05}.{}",
+            oxfmt_extension(&output.input_filename)
+        ));
+        if fs::write(&input_file, &output.input_code).is_ok() {
+            refs.push(SnapshotCodeRef {
+                case_index,
+                target: SnapshotCodeTarget::Input,
+                tmp_file: input_file,
+            });
+        }
+
+        for (module_index, module) in output.modules.iter().enumerate() {
+            block_counter += 1;
+            let module_file = tmp_dir.join(format!(
+                "block_{block_counter:05}.{}",
+                oxfmt_extension(&module.path)
+            ));
+            if fs::write(&module_file, &module.code).is_ok() {
+                refs.push(SnapshotCodeRef {
+                    case_index,
+                    target: SnapshotCodeTarget::Module(module_index),
+                    tmp_file: module_file,
+                });
+            }
+        }
+    }
+
+    if refs.is_empty() {
+        let _ = fs::remove_dir_all(&tmp_dir);
+        return;
+    }
+
+    if !run_oxfmt_write(&tmp_dir) {
+        let _ = fs::remove_dir_all(&tmp_dir);
+        return;
+    }
+
+    for code_ref in refs {
+        let Ok(formatted) = fs::read_to_string(&code_ref.tmp_file) else {
+            continue;
+        };
+
+        let Some(case) = cases.get_mut(code_ref.case_index) else {
+            continue;
+        };
+        let SnapshotCaseData::Output(output) = &mut case.data else {
+            continue;
+        };
+
+        match code_ref.target {
+            SnapshotCodeTarget::Input => output.input_code = formatted,
+            SnapshotCodeTarget::Module(module_index) => {
+                if let Some(module) = output.modules.get_mut(module_index) {
+                    module.code = formatted;
+                }
+            }
+        }
+    }
+
+    let _ = fs::remove_dir_all(&tmp_dir);
 }
 
 const RELATIVE_PATHS_DEP: &str = r#"import { componentQrl, inlinedQrl, useStore, useLexicalScope } from "@qwik.dev/core";
@@ -239,13 +525,27 @@ export const App = /*#__PURE__*/ componentQrl(inlinedQrl(()=>{
 
 #[test]
 fn snapshot_all_transforms() {
+    let mut cases: Vec<SnapshotCase> = Vec::with_capacity(CASE_NAMES.len());
+
     for name in CASE_NAMES {
         let case = build_case(name);
-        let output = match run_case(&case) {
-            Ok(result) => format_transform_output(&case.code, &result),
-            Err(e) => format!("TRANSFORM ERROR: {}", e),
+        let data = match run_case(&case) {
+            Ok(result) => SnapshotCaseData::Output(build_snapshot_output(&case, &result)),
+            Err(e) => SnapshotCaseData::Error(format!("TRANSFORM ERROR: {}", e)),
         };
+        cases.push(SnapshotCase {
+            name: case.name,
+            data,
+        });
+    }
 
+    bulk_oxfmt_snapshot_cases(&mut cases);
+
+    for case in cases {
+        let output = match &case.data {
+            SnapshotCaseData::Output(output) => render_snapshot_output(output),
+            SnapshotCaseData::Error(error) => error.clone(),
+        };
         insta::with_settings!({prepend_module_to_snapshot => false}, {
             insta::assert_snapshot!(case.name, output);
         });
