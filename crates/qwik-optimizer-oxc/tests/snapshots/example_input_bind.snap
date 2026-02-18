@@ -22,11 +22,11 @@ export const Greeter = component$(() => {
 
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
+import { _val } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-import { _wrapProp } from "@qwik.dev/core";
-import { _val } from "@qwik.dev/core";
 import { _chk } from "@qwik.dev/core";
+import { _wrapProp } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 export const Greeter = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ inlinedQrl(() => {
@@ -42,32 +42,41 @@ export const Greeter = /* @__PURE__ */ componentQrl(
           "input",
           null,
           {
-            value,
+            value: value,
             "q-e:input": inlinedQrl(_val, "_val", [value]),
           },
           null,
           3,
-          "u6_0",
+          null,
         ),
         /* @__PURE__ */ _jsxSorted(
           "input",
           null,
           {
-            checked,
+            checked: checked,
             "q-e:input": inlinedQrl(_chk, "_chk", [checked]),
           },
           null,
           3,
-          "u6_1",
+          null,
         ),
-        /* @__PURE__ */ _jsxSorted("input", null, { "bind:stuff": stuff }, null, 3, "u6_2"),
-        /* @__PURE__ */ _jsxSorted("div", null, null, value, 3, "u6_3"),
-        /* @__PURE__ */ _jsxSorted("div", null, null, _wrapProp(value), 3, "u6_4"),
+        /* @__PURE__ */ _jsxSorted(
+          "input",
+          null,
+          {
+            "bind:stuff": stuff,
+          },
+          null,
+          3,
+          null,
+        ),
+        /* @__PURE__ */ _jsxSorted("div", null, null, value, 3, null),
+        /* @__PURE__ */ _jsxSorted("div", null, null, _wrapProp(value), 3, null),
       ],
-      1,
-      "u6_5",
+      3,
+      "u6_0",
     );
-  }, "Greeter_component_l5Al0251s9w"),
+  }, "s_n7HuG2hhU0Q"),
 );
 
 === DIAGNOSTICS ===

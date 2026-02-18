@@ -50,33 +50,38 @@ export const App = component$(() => {
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
-import { _fnSignal } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX");
-import { useSignal } from "@qwik.dev/core";
-import { Signal } from "@qwik.dev/core";
-const _hf0 = (p0) => (p0.value.selected.value ? "danger" : "");
-const _hf0_str = 'p0.value.selected.value?"danger":""';
 export const App = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
-import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX");
-import { _jsxSorted } from "@qwik.dev/core";
 import { _fnSignal } from "@qwik.dev/core";
+import { _jsxSorted } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
-import { Signal } from "@qwik.dev/core";
 const _hf0 = (p0) => (p0.value.selected.value ? "danger" : "");
 const _hf0_str = 'p0.value.selected.value?"danger":""';
+const _hf1 = (p0) => p0.value.id;
+const _hf1_str = "p0.value.id";
+const _hf2 = (p0) => p0.value.label.value;
+const _hf2_str = "p0.value.label.value";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_div_tr_td_a_q_e_click_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX");
 export const App_component_XXXXXXXXXXXX = () => {
-  const data = useSignal < Signal < any > [] > [];
-  const selectedItem = (useSignal < any) | (null > null);
-  const clickedIndex = (useSignal < number) | (null > null);
+  const data = useSignal([]);
+  const selectedItem = useSignal(null);
+  const clickedIndex = useSignal(null);
+  const App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
+    i_XXXXXXXXXXXX,
+    "App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX",
+    [clickedIndex, selectedItem],
+  );
+  const App_component_div_tr_td_a_q_e_click_1_XXXXXXXXXXXX = /* @__PURE__ */ qrl(
+    i_XXXXXXXXXXXX,
+    "App_component_div_tr_td_a_q_e_click_1_XXXXXXXXXXXX",
+    [data],
+  );
   return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
@@ -84,60 +89,87 @@ export const App_component_XXXXXXXXXXXX = () => {
     data.value.map((row, idx) =>
       /* @__PURE__ */ _jsxSorted(
         "tr",
+        {
+          class: _fnSignal(_hf0, [row], _hf0_str),
+        },
         null,
-        { class: _fnSignal(_hf0, [row], _hf0_str) },
         [
-          /* @__PURE__ */ _jsxSorted("td", null, { class: "col-md-1" }, row.value.id, 3, "u6_0"),
           /* @__PURE__ */ _jsxSorted(
             "td",
             null,
-            { class: "col-md-4" },
-            /* @__PURE__ */ _jsxSorted(
-              "a",
-              null,
-              {
-                "q-e:click": /* @__PURE__ */ qrl(
-                  i_XXXXXXXXXXXX,
-                  "App_component_a_q_e_click_XXXXXXXXXXXX",
-                  [selectedItem, clickedIndex],
-                ),
-              },
-              row.value.label.value,
-              3,
-              "u6_1",
-            ),
-            3,
-            "u6_2",
+            {
+              class: "col-md-1",
+            },
+            _fnSignal(_hf1, [row], _hf1_str),
+            1,
+            null,
           ),
           /* @__PURE__ */ _jsxSorted(
             "td",
             null,
-            { class: "col-md-1" },
+            {
+              class: "col-md-4",
+            },
             /* @__PURE__ */ _jsxSorted(
               "a",
-              null,
               {
-                "q-e:click": /* @__PURE__ */ qrl(
-                  i_XXXXXXXXXXXX,
-                  "App_component_a_q_e_click_XXXXXXXXXXXX",
-                  [data],
-                ),
+                "q-e:click": App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX,
+                "q:ps": [row, idx],
               },
-              /* @__PURE__ */ _jsxSorted("span", null, { "aria-hidden": "true" }, "x", 3, "u6_3"),
-              3,
-              "u6_4",
+              null,
+              _fnSignal(_hf2, [row], _hf2_str),
+              0,
+              null,
             ),
-            3,
-            "u6_5",
+            1,
+            null,
           ),
-          /* @__PURE__ */ _jsxSorted("td", null, { class: "col-md-6" }, null, 3, "u6_6"),
+          /* @__PURE__ */ _jsxSorted(
+            "td",
+            null,
+            {
+              class: "col-md-1",
+            },
+            /* @__PURE__ */ _jsxSorted(
+              "a",
+              {
+                "q-e:click": App_component_div_tr_td_a_q_e_click_1_XXXXXXXXXXXX,
+                "q:p": row,
+              },
+              null,
+              /* @__PURE__ */ _jsxSorted(
+                "span",
+                null,
+                {
+                  "aria-hidden": "true",
+                },
+                "x",
+                3,
+                null,
+              ),
+              2,
+              null,
+            ),
+            1,
+            null,
+          ),
+          /* @__PURE__ */ _jsxSorted(
+            "td",
+            null,
+            {
+              class: "col-md-6",
+            },
+            null,
+            3,
+            null,
+          ),
         ],
         1,
         untrack(() => row.value.id),
       ),
     ),
-    3,
-    "u6_7",
+    1,
+    "u6_0",
   );
 };
 
@@ -158,17 +190,12 @@ export const App_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-import { _fnSignal } from "@qwik.dev/core";
-const _hf0 = (p0) => (p0.value.selected.value ? "danger" : "");
-const _hf0_str = 'p0.value.selected.value?"danger":""';
-export const App_component_a_q_e_click_XXXXXXXXXXXX = () => {
-  const selectedItem = _captures[0];
-  const clickedIndex = _captures[1];
-  if (selectedItem.value) {
-    selectedItem.value.selected.value = false;
-  }
+export const App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX = (_, _1, row, idx) => {
+  const clickedIndex = _captures[0],
+    selectedItem = _captures[1];
+  if (selectedItem.value) selectedItem.value.selected.value = false;
   selectedItem.value = row.value;
   row.value.selected.value = true;
   clickedIndex.value = idx;
@@ -177,30 +204,33 @@ export const App_component_a_q_e_click_XXXXXXXXXXXX = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_a_q_e_click_XXXXXXXXXXXX",
+  "name": "App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_App_component_a_q_e_click",
+  "displayName": "test.tsx_App_component_div_tr_td_a_q_e_click",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_div_tr_td_a_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_App_component",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
+  "paramNames": [
+    "_",
+    "_",
+    "row",
+    "idx"
+  ],
   "captureNames": [
-    "selectedItem",
-    "clickedIndex"
+    "clickedIndex",
+    "selectedItem"
   ]
 }
 */
 
-=== test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_App_component_div_tr_td_a_q_e_click_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-import { _fnSignal } from "@qwik.dev/core";
-const _hf0 = (p0) => (p0.value.selected.value ? "danger" : "");
-const _hf0_str = 'p0.value.selected.value?"danger":""';
-export const App_component_a_q_e_click_XXXXXXXXXXXX = () => {
+export const App_component_div_tr_td_a_q_e_click_1_XXXXXXXXXXXX = (_, _1, row) => {
   const data = _captures[0];
   const dataValue = untrack(() => data.value);
   data.value = dataValue.toSpliced(
@@ -212,17 +242,22 @@ export const App_component_a_q_e_click_XXXXXXXXXXXX = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_a_q_e_click_XXXXXXXXXXXX",
+  "name": "App_component_div_tr_td_a_q_e_click_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_App_component_a_q_e_click",
+  "displayName": "test.tsx_App_component_div_tr_td_a_q_e_click_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_App_component_a_q_e_click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_div_tr_td_a_q_e_click_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_App_component",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
+  "paramNames": [
+    "_",
+    "_",
+    "row"
+  ],
   "captureNames": [
     "data"
   ]

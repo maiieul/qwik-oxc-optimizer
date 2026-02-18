@@ -36,29 +36,19 @@ export const Foo = component$(
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_handler_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_click_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_-click_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_document-scroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_document-scroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_click_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_custom_XXXXXXXXXXXX");
 export const Foo = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
+  {
+    tagName: "my-foo",
+  },
 );
 
 === test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = () => {
-  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_XXXXXXXXXXXX");
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX");
 };
 
 /*
@@ -78,57 +68,63 @@ export const Foo_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_Foo_XXXXXXXXXXXX.js === (ENTRY)
-import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_handler_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_click_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_-click_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_document-scroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_document-scroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_click_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_div_custom_XXXXXXXXXXXX");
+=== test.tsx_Foo_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
-export const Foo_XXXXXXXXXXXX = () => {
-  const handler = /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "handler_XXXXXXXXXXXX");
+import { qrl } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_handler_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_custom_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX");
+export const Foo_component_1_XXXXXXXXXXXX = () => {
+  const handler = /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_handler_XXXXXXXXXXXX");
   return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_div_q_e_click_XXXXXXXXXXXX"),
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_click_XXXXXXXXXXXX"),
       "q-e:documentscroll": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
-        "Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+        "Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX",
       ),
       "q-e:documentscroll": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
-        "Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+        "Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX",
       ),
-      "q-e:-click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_div_q_e_-click_XXXXXXXXXXXX"),
-      "q-e:document-scroll": /* @__PURE__ */ qrl(
+      "q-e:c-lick": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_c_lick_XXXXXXXXXXXX"),
+      "q-e:document--scroll": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
-        "Foo_div_q_e_document-scroll_XXXXXXXXXXXX",
+        "Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX",
       ),
-      "q-e:document-scroll": /* @__PURE__ */ qrl(
+      "q-e:document--scroll": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
-        "Foo_div_q_e_document-scroll_XXXXXXXXXXXX",
+        "Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX",
       ),
-      "host:onClick$": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_div_q_e_click_XXXXXXXXXXXX"),
+      "host:onClick$": /* @__PURE__ */ qrl(
+        i_XXXXXXXXXXXX,
+        "Foo_component_div_host_onClick_XXXXXXXXXXXX",
+      ),
       "host:onDocumentScroll$": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
-        "Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+        "Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX",
       ),
       "host:onDocumentScroll$": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
-        "Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+        "Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX",
       ),
       "q-e:keyup": handler,
       "q-e:document:keyup": handler,
       "q-e:window:keyup": handler,
-      custom$: /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_div_custom_XXXXXXXXXXXX"),
+      custom$: /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_div_custom_XXXXXXXXXXXX"),
     },
     null,
     3,
@@ -139,234 +135,240 @@ export const Foo_XXXXXXXXXXXX = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_XXXXXXXXXXXX",
+  "name": "Foo_component_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo",
+  "displayName": "test.tsx_Foo_component_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo_component",
+  "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false
 }
 */
 
-=== test.tsx_handler_XXXXXXXXXXXX.js === (ENTRY)
-export const handler_XXXXXXXXXXXX = () => console.log("reused");
+=== test.tsx_Foo_component_handler_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_handler_XXXXXXXXXXXX = () => console.log("reused");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "handler_XXXXXXXXXXXX",
+  "name": "Foo_component_handler_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_handler",
+  "displayName": "test.tsx_Foo_component_handler",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_handler_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_handler_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_q_e_click_XXXXXXXXXXXX = () => console.log("onClick$");
+=== test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("onClick$");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_q_e_click_XXXXXXXXXXXX",
+  "name": "Foo_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_q_e_click",
+  "displayName": "test.tsx_Foo_component_div_q_e_click",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_q_e_click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_q_e_documentscroll_XXXXXXXXXXXX = () => console.log("onDocumentScroll");
+=== test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX = () =>
+  console.log("onDocumentScroll");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+  "name": "Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_q_e_documentscroll",
+  "displayName": "test.tsx_Foo_component_div_q_e_documentscroll",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocumentScroll$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_q_e_documentscroll_XXXXXXXXXXXX = () => console.log("onWindowScroll");
+=== test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX = () =>
+  console.log("onWindowScroll");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+  "name": "Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_q_e_documentscroll",
+  "displayName": "test.tsx_Foo_component_div_q_e_documentscroll_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocumentScroll$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_q_e_-click_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_q_e_-click_XXXXXXXXXXXX = () => console.log("on-cLick$")
+=== test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_q_e_c_lick_XXXXXXXXXXXX = () => console.log("on-cLick$");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_q_e_-click_XXXXXXXXXXXX",
+  "name": "Foo_component_div_q_e_c_lick_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_q_e_-click",
+  "displayName": "test.tsx_Foo_component_div_q_e_c_lick",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_q_e_-click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "on-cLick$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_q_e_document-scroll_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_q_e_document-scroll_XXXXXXXXXXXX = () => console.log("onDocument-sCroll")
+=== test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX = () =>
+  console.log("onDocument-sCroll");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_q_e_document-scroll_XXXXXXXXXXXX",
+  "name": "Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_q_e_document-scroll",
+  "displayName": "test.tsx_Foo_component_div_q_e_document_scroll",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_q_e_document-scroll_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocument-sCroll$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_q_e_document-scroll_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_q_e_document-scroll_XXXXXXXXXXXX = () => console.log("onDocument-scroLL")
+=== test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX = () =>
+  console.log("onDocument-scroLL");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_q_e_document-scroll_XXXXXXXXXXXX",
+  "name": "Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_q_e_document-scroll",
+  "displayName": "test.tsx_Foo_component_div_q_e_document_scroll_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_q_e_document-scroll_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_q_e_document_scroll_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onDocument-scroLL$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_q_e_click_XXXXXXXXXXXX = () => console.log("host:onClick$");
+=== test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_host_onClick_XXXXXXXXXXXX = () => console.log("host:onClick$");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_q_e_click_XXXXXXXXXXXX",
+  "name": "Foo_component_div_host_onClick_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_q_e_click",
+  "displayName": "test.tsx_Foo_component_div_host_onClick",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_q_e_click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "host:onClick$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_q_e_documentscroll_XXXXXXXXXXXX = () => console.log("host:onDocument:scroll");
+=== test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX = () =>
+  console.log("host:onDocument:scroll");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+  "name": "Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_q_e_documentscroll",
+  "displayName": "test.tsx_Foo_component_div_host_onDocumentScroll",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "host:onDocumentScroll$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_q_e_documentscroll_XXXXXXXXXXXX = () => console.log("host:onWindow:scroll");
+=== test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX = () =>
+  console.log("host:onWindow:scroll");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+  "name": "Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_q_e_documentscroll",
+  "displayName": "test.tsx_Foo_component_div_host_onDocumentScroll_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_q_e_documentscroll_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "host:onDocumentScroll$",
   "captures": false
 }
 */
 
-=== test.tsx_Foo_div_custom_XXXXXXXXXXXX.js === (ENTRY)
-export const Foo_div_custom_XXXXXXXXXXXX = () => console.log("custom");
+=== test.tsx_Foo_component_div_custom_XXXXXXXXXXXX.js === (ENTRY)
+export const Foo_component_div_custom_XXXXXXXXXXXX = () => console.log("custom");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_div_custom_XXXXXXXXXXXX",
+  "name": "Foo_component_div_custom_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_div_custom",
+  "displayName": "test.tsx_Foo_component_div_custom",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_div_custom_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_div_custom_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo",
+  "parent": "Foo_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "custom$",
   "captures": false

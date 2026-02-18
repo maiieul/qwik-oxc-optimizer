@@ -27,7 +27,10 @@ export const sym1_XXXXXXXXXXXX = (ctx) => console.log("1");
   "parent": null,
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false
+  "captures": false,
+  "paramNames": [
+    "ctx"
+  ]
 }
 */
 

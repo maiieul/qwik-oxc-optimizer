@@ -17,11 +17,9 @@ const renderHeader = component(
 
 === test.tsx ===
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_renderHeader_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_renderHeader_div_q_e_click_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_renderHeader_component_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_renderHeader_XXXXXXXXXXXX");
 import { component } from "@qwik.dev/core";
-import { onRender } from "@qwik.dev/core";
 export const renderHeader = /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "renderHeader_XXXXXXXXXXXX");
 const renderHeader = component(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "renderHeader_component_XXXXXXXXXXXX"),
@@ -29,11 +27,9 @@ const renderHeader = component(
 
 === test.tsx_renderHeader_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_renderHeader_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_renderHeader_div_onClick_XXXXXXXXXXXX");
 export const renderHeader_XXXXXXXXXXXX = () => {
-  return (
-    <div onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "renderHeader_div_q_e_click_XXXXXXXXXXXX")} />
-  );
+  return <div onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "renderHeader_div_onClick_XXXXXXXXXXXX")} />;
 };
 
 /*
@@ -53,23 +49,26 @@ export const renderHeader_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_renderHeader_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
-export const renderHeader_div_q_e_click_XXXXXXXXXXXX = (ctx) => console.log(ctx);
+=== test.tsx_renderHeader_div_onClick_XXXXXXXXXXXX.tsx === (ENTRY)
+export const renderHeader_div_onClick_XXXXXXXXXXXX = (ctx) => console.log(ctx);
 
 /*
 {
   "origin": "test.tsx",
-  "name": "renderHeader_div_q_e_click_XXXXXXXXXXXX",
+  "name": "renderHeader_div_onClick_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_renderHeader_div_q_e_click",
+  "displayName": "test.tsx_renderHeader_div_onClick",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_renderHeader_div_q_e_click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_renderHeader_div_onClick_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
-  "parent": "test.tsx_renderHeader",
+  "parent": "renderHeader_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false
+  "captures": false,
+  "paramNames": [
+    "ctx"
+  ]
 }
 */
 

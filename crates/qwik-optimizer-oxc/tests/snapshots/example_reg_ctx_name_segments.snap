@@ -16,16 +16,16 @@ export const Works = component$((props) => {
 });
 
 === test.js ===
+import "./foo";
 import { componentQrl } from "@qwik.dev/core";
 import { serverQrl } from "@qwik.dev/core";
+import { _regSymbol } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
-import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
+import { _noopQrl } from "@qwik.dev/core";
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { foo } from "./foo";
 export const Works = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ inlinedQrl((props) => {
-    const text = "hola";
     return /* @__PURE__ */ _jsxSorted(
       _Fragment,
       null,
@@ -33,26 +33,36 @@ export const Works = /* @__PURE__ */ componentQrl(
       [
         /* @__PURE__ */ _jsxSorted(
           "div",
-          null,
           {
             "q-e:click": serverQrl(
               /* @__PURE__ */ inlinedQrl(
-                () => console.log("in server", text),
-                "Works_component_div_q_e_click_RawfByrs1Jk",
-                [text],
+                /* @__PURE__ */ _regSymbol(() => console.log("in server", "hola"), "YY85RDCwwvA"),
+                "Works_component_Fragment_div_q_e_click_server_YY85RDCwwvA",
               ),
             ),
           },
           null,
-          3,
-          "u6_0",
+          null,
+          2,
+          null,
         ),
-        /* @__PURE__ */ _jsxSorted("div", null, { "q-e:click": () => foo() }, null, 3, "u6_1"),
+        /* @__PURE__ */ _jsxSorted(
+          "div",
+          null,
+          {
+            "q-e:click": /* @__PURE__ */ _noopQrl(
+              "Works_component_Fragment_div_q_e_click_0UiSo8yqgZw",
+            ),
+          },
+          null,
+          3,
+          null,
+        ),
       ],
       1,
-      "u6_2",
+      "u6_0",
     );
-  }, "Works_component_xJyUXaLUiKw"),
+  }, "Works_component_t45qL4vNGv0"),
 );
 
 === DIAGNOSTICS ===

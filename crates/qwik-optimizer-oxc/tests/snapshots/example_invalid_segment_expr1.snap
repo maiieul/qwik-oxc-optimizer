@@ -19,31 +19,21 @@ export const App = component$(() => {
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_useStyles_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s__XXXXXXXXXXXX");
-import css1 from "./global.css";
-import css2 from "./style.css";
 export const App = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
-import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_useStyles_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s__XXXXXXXXXXXX");
-import { useStylesQrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
 import css1 from "./global.css";
 import css2 from "./style.css";
+import { qrl } from "@qwik.dev/core";
+import { useStylesQrl } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_useStyles_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_1_XXXXXXXXXXXX");
 export const App_component_XXXXXXXXXXXX = () => {
-  const style = `${css1}${css2}`;
-  useStylesQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "useStyles_XXXXXXXXXXXX", [style]));
-  const render = () => {
-    return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null);
-  };
-  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s__XXXXXXXXXXXX", [render]);
+  useStylesQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_useStyles_XXXXXXXXXXXX"));
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX");
 };
 
 /*
@@ -63,54 +53,83 @@ export const App_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_useStyles_XXXXXXXXXXXX.js === (ENTRY)
-import { _captures } from "@qwik.dev/core";
-export const useStyles_XXXXXXXXXXXX = style;
+=== test.tsx_App_component_useStyles_XXXXXXXXXXXX.js === (ENTRY)
+export const App_component_useStyles_XXXXXXXXXXXX = style;
 
 /*
 {
   "origin": "test.tsx",
-  "name": "useStyles_XXXXXXXXXXXX",
+  "name": "App_component_useStyles_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_useStyles",
+  "displayName": "test.tsx_App_component_useStyles",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_useStyles_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_useStyles_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_App_component",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useStyles$",
-  "captures": true,
-  "captureNames": [
-    "style"
-  ]
+  "captures": false
 }
 */
 
-=== test.tsx_s__XXXXXXXXXXXX.js === (ENTRY)
-import { _captures } from "@qwik.dev/core";
-export const s__XXXXXXXXXXXX = render;
+=== test.tsx_App_component_1_XXXXXXXXXXXX.js === (ENTRY)
+export const App_component_1_XXXXXXXXXXXX = render;
 
 /*
 {
   "origin": "test.tsx",
-  "name": "s__XXXXXXXXXXXX",
+  "name": "App_component_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_s_",
+  "displayName": "test.tsx_App_component_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_s__XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_App_component",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": true,
-  "captureNames": [
-    "render"
-  ]
+  "captures": false
 }
 */
 
 === DIAGNOSTICS ===
 
-[]
+[
+  {
+    "category": "error",
+    "code": "C03",
+    "file": "test.tsx",
+    "message": "Qrl($) scope is not a function, but it's capturing local identifiers: style",
+    "highlights": [
+      {
+        "lo": 212,
+        "hi": 217,
+        "startLine": 7,
+        "startCol": 14,
+        "endLine": 7,
+        "endCol": 18
+      }
+    ],
+    "suggestions": null,
+    "scope": "optimizer"
+  },
+  {
+    "category": "error",
+    "code": "C03",
+    "file": "test.tsx",
+    "message": "Qrl($) scope is not a function, but it's capturing local identifiers: render",
+    "highlights": [
+      {
+        "lo": 285,
+        "hi": 291,
+        "startLine": 11,
+        "startCol": 12,
+        "endLine": 11,
+        "endCol": 17
+      }
+    ],
+    "suggestions": null,
+    "scope": "optimizer"
+  }
+]

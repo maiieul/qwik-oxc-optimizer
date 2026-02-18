@@ -29,32 +29,31 @@ export const FieldInput = component$(() => {
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s_1_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_input_q_e_focus_XXXXXXXXXXXX");
-import { useSignal } from "@qwik.dev/core";
 export const FieldInput = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "FieldInput_component_XXXXXXXXXXXX"),
 );
 
 === test.tsx_FieldInput_component_XXXXXXXXXXXX.js === (ENTRY)
-import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s_1_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_input_q_e_focus_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_input_q_e_focus_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_FieldInput_component_input_q_e_input_XXXXXXXXXXXX");
 export const FieldInput_component_XXXXXXXXXXXX = () => {
   const enabled = useSignal(false);
   const input = useSignal("");
   return /* @__PURE__ */ _jsxSorted(
     "input",
-    null,
+    {
+      "q-e:input": enabled.value
+        ? /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "FieldInput_component_input_q_e_input_XXXXXXXXXXXX", [
+            input,
+          ])
+        : undefined,
+    },
     {
       id: "input",
-      "q-e:input": enabled.value
-        ? /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s_1_XXXXXXXXXXXX", [input])
-        : undefined,
       "q-e:focus": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
         "FieldInput_component_input_q_e_focus_XXXXXXXXXXXX",
@@ -62,7 +61,7 @@ export const FieldInput_component_XXXXXXXXXXXX = () => {
       ),
     },
     null,
-    3,
+    2,
     "u6_0",
   );
 };
@@ -84,9 +83,9 @@ export const FieldInput_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_s_1_XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_FieldInput_component_input_q_e_input_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const s_1_XXXXXXXXXXXX = (ev, el) => {
+export const FieldInput_component_input_q_e_input_XXXXXXXXXXXX = (ev, el) => {
   const input = _captures[0];
   input.value = el.value;
 };
@@ -94,17 +93,21 @@ export const s_1_XXXXXXXXXXXX = (ev, el) => {
 /*
 {
   "origin": "test.tsx",
-  "name": "s_1_XXXXXXXXXXXX",
+  "name": "FieldInput_component_input_q_e_input_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_s_1",
+  "displayName": "test.tsx_FieldInput_component_input_q_e_input",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_s_1_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_FieldInput_component_input_q_e_input_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_FieldInput_component",
+  "parent": "FieldInput_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
+  "paramNames": [
+    "ev",
+    "el"
+  ],
   "captureNames": [
     "input"
   ]
@@ -128,7 +131,7 @@ export const FieldInput_component_input_q_e_focus_XXXXXXXXXXXX = () => {
   "canonicalFilename": "test.tsx_FieldInput_component_input_q_e_focus_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_FieldInput_component",
+  "parent": "FieldInput_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onFocus$",
   "captures": true,

@@ -31,9 +31,7 @@ export const App = component$(({ count }) => {
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_XXXXXXXXXXXX");
 const I1 = 12;
 const [
   I2,
@@ -51,23 +49,33 @@ class I10 {}
 export const App = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
+export { I1 as _auto_I1 };
+export { I10 as _auto_I10 };
+export { I2 as _auto_I2 };
+export { I3 as _auto_I3 };
+export { I4 as _auto_I4 };
+export { I5 as _auto_I5 };
+export { I6 as _auto_I6 };
+export { I7 as _auto_I7 };
+export { I8 as _auto_I8 };
+export { I9 as _auto_I9 };
 
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
+import { _auto_I1 as I1 } from "./test";
+import { _auto_I2 as I2 } from "./test";
+import { _auto_I3 as I3 } from "./test";
+import { _auto_I4 as I4 } from "./test";
+import { _auto_I5 as I5 } from "./test";
+import { _auto_I6 as I6 } from "./test";
+import { _auto_I7 as I7 } from "./test";
+import { _auto_I8 as I8 } from "./test";
+import { _auto_I9 as I9 } from "./test";
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_XXXXXXXXXXXX");
-import { I1 } from "./test";
-import { I2 } from "./test";
-import { I3 } from "./test";
-import { I4 } from "./test";
-import { I5 } from "./test";
-import { I6 } from "./test";
-import { I7 } from "./test";
-import { I8 } from "./test";
-import { I9 } from "./test";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_1_XXXXXXXXXXXX");
 export const App_component_XXXXXXXXXXXX = (_rawProps) => {
   console.log(I1, I2, I3, I4, I5, I6, I7, I8, I9);
   console.log(itsok, v1, v2, v3, obj);
-  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_XXXXXXXXXXXX");
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX");
 };
 
 /*
@@ -90,24 +98,24 @@ export const App_component_XXXXXXXXXXXX = (_rawProps) => {
 }
 */
 
-=== test.tsx_App_XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_App_component_1_XXXXXXXXXXXX.js === (ENTRY)
+import { _auto_I10 as I10 } from "./test";
 import { _jsxSorted } from "@qwik.dev/core";
-import { I10 } from "./test";
-export const App_XXXXXXXXXXXX = () => {
-  return /* @__PURE__ */ _jsxSorted(I10, null, null, null, 3, null);
+export const App_component_1_XXXXXXXXXXXX = () => {
+  return /* @__PURE__ */ _jsxSorted(I10, null, null, null, 3, "u6_0");
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "App_XXXXXXXXXXXX",
+  "name": "App_component_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_App",
+  "displayName": "test.tsx_App_component_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_App_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_App_component",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false

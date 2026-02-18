@@ -20,19 +20,17 @@ export const Counter = component$(() => {
 === test.ts ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
-import { _wrapProp } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Counter_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Counter_component_button_q_e_click_XXXXXXXXXXXX");
 export const Counter = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Counter_component_XXXXXXXXXXXX"),
 );
 
 === test.tsx_Counter_component_XXXXXXXXXXXX.ts === (ENTRY)
-import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Counter_component_button_q_e_click_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX");
 export const Counter_component_XXXXXXXXXXXX = () => {
   const count = useSignal(0);
   return /* @__PURE__ */ _jsxSorted(
@@ -40,7 +38,7 @@ export const Counter_component_XXXXXXXXXXXX = () => {
     null,
     null,
     [
-      /* @__PURE__ */ _jsxSorted("p", null, null, ["Count:", _wrapProp(count)], 1, "u6_0"),
+      /* @__PURE__ */ _jsxSorted("p", null, null, ["Count: ", _wrapProp(count)], 3, null),
       /* @__PURE__ */ _jsxSorted(
         "p",
         null,
@@ -51,20 +49,20 @@ export const Counter_component_XXXXXXXXXXXX = () => {
           {
             "q-e:click": /* @__PURE__ */ qrl(
               i_XXXXXXXXXXXX,
-              "Counter_component_button_q_e_click_XXXXXXXXXXXX",
+              "Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX",
               [count],
             ),
           },
           "Increment",
           3,
-          "u6_1",
+          null,
         ),
         3,
-        "u6_2",
+        null,
       ),
     ],
-    1,
-    "u6_3",
+    3,
+    "u6_0",
   );
 };
 
@@ -85,9 +83,9 @@ export const Counter_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_Counter_component_button_q_e_click_XXXXXXXXXXXX.ts === (ENTRY)
+=== test.tsx_Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX.ts === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const Counter_component_button_q_e_click_XXXXXXXXXXXX = () => {
+export const Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX = () => {
   const count = _captures[0];
   return count.value++;
 };
@@ -95,14 +93,14 @@ export const Counter_component_button_q_e_click_XXXXXXXXXXXX = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Counter_component_button_q_e_click_XXXXXXXXXXXX",
+  "name": "Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Counter_component_button_q_e_click",
+  "displayName": "test.tsx_Counter_component_div_p_button_q_e_click",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Counter_component_button_q_e_click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "ts",
-  "parent": "test.tsx_Counter_component",
+  "parent": "Counter_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,

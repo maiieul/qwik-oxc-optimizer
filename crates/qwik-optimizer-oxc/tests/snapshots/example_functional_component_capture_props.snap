@@ -63,21 +63,32 @@ export const App = component$(
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s__XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s__div_q_e_click_XXXXXXXXXXXX");
-import { useStore } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
 
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s__XXXXXXXXXXXX");
 import { useStore } from "@qwik.dev/core";
-export const App_component_XXXXXXXXXXXX = (_rawProps) => {
-  const state = useStore({ count: 0 });
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_1_XXXXXXXXXXXX");
+export const App_component_XXXXXXXXXXXX = ({
+  count,
+  rest: [
+    I2,
+    {
+      I3,
+      v1: [I4],
+      I5 = v2,
+      ...I6
+    },
+    I7 = v3,
+    ...I8
+  ],
+}) => {
+  const state = useStore({
+    count: 0,
+  });
   const {
     rest: [
       C2,
@@ -91,17 +102,7 @@ export const App_component_XXXXXXXXXXXX = (_rawProps) => {
       ...C8
     ],
   } = foo();
-  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s__XXXXXXXXXXXX", [
-    state,
-    count,
-    total,
-    I2,
-    I3,
-    I4,
-    I5,
-    I6,
-    I7,
-    I8,
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX", [
     C2,
     C3,
     C4,
@@ -109,9 +110,15 @@ export const App_component_XXXXXXXXXXXX = (_rawProps) => {
     C6,
     C7,
     C8,
-    v1,
-    v2,
-    v3,
+    I2,
+    I3,
+    I4,
+    I5,
+    I6,
+    I7,
+    I8,
+    count,
+    state,
   ]);
 };
 
@@ -130,48 +137,44 @@ export const App_component_XXXXXXXXXXXX = (_rawProps) => {
   "ctxName": "component$",
   "captures": false,
   "paramNames": [
-    "_rawProps"
+    "{count, rest: [I2, {I3, v1: [I4], I5}, ...I8]}"
   ]
 }
 */
 
-=== test.tsx_s__XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_App_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s__div_q_e_click_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
-export const s__XXXXXXXXXXXX = () => {
-  const _rawProps = _captures[0];
-  const state = _captures[1];
-  const total = _captures[2];
-  const I2 = _captures[3];
-  const I3 = _captures[4];
-  const I4 = _captures[5];
-  const I5 = _captures[6];
-  const I6 = _captures[7];
-  const I7 = _captures[8];
-  const I8 = _captures[9];
-  const C2 = _captures[10];
-  const C3 = _captures[11];
-  const C4 = _captures[12];
-  const C5 = _captures[13];
-  const C6 = _captures[14];
-  const C7 = _captures[15];
-  const C8 = _captures[16];
-  const v1 = _captures[17];
-  const v2 = _captures[18];
-  const v3 = _captures[19];
+import { qrl } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_div_q_e_click_XXXXXXXXXXXX");
+export const App_component_1_XXXXXXXXXXXX = () => {
+  const C2 = _captures[0],
+    C3 = _captures[1],
+    C4 = _captures[2],
+    C5 = _captures[3],
+    C6 = _captures[4],
+    C7 = _captures[5],
+    C8 = _captures[6],
+    I2 = _captures[7],
+    I3 = _captures[8],
+    I4 = _captures[9],
+    I5 = _captures[10],
+    I6 = _captures[11],
+    I7 = _captures[12],
+    I8 = _captures[13],
+    count = _captures[14],
+    state = _captures[15];
   return /* @__PURE__ */ _jsxSorted(
     "div",
-    null,
     {
-      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s__div_q_e_click_XXXXXXXXXXXX", [
-        state,
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_div_q_e_click_XXXXXXXXXXXX", [
         count,
+        state,
       ]),
     },
+    null,
     [I2, I3, I4, I5, I6, I7, I8, C2, C3, C4, C5, C6, C7, C8, v1, v2, v3],
-    1,
+    0,
     "u6_0",
   );
 };
@@ -179,28 +182,18 @@ export const s__XXXXXXXXXXXX = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "s__XXXXXXXXXXXX",
+  "name": "App_component_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_s_",
+  "displayName": "test.tsx_App_component_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_s__XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_App_component",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
   "captureNames": [
-    "_rawProps",
-    "state",
-    "total",
-    "I2",
-    "I3",
-    "I4",
-    "I5",
-    "I6",
-    "I7",
-    "I8",
     "C2",
     "C3",
     "C4",
@@ -208,38 +201,44 @@ export const s__XXXXXXXXXXXX = () => {
     "C6",
     "C7",
     "C8",
-    "v1",
-    "v2",
-    "v3"
+    "I2",
+    "I3",
+    "I4",
+    "I5",
+    "I6",
+    "I7",
+    "I8",
+    "count",
+    "state"
   ]
 }
 */
 
-=== test.tsx_s__div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_App_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const s__div_q_e_click_XXXXXXXXXXXX = () => {
-  const state = _captures[0];
-  const count = _captures[1];
+export const App_component_div_q_e_click_XXXXXXXXXXXX = () => {
+  const count = _captures[0],
+    state = _captures[1];
   return (state.count += count + total);
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "s__div_q_e_click_XXXXXXXXXXXX",
+  "name": "App_component_div_q_e_click_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_s__div_q_e_click",
+  "displayName": "test.tsx_App_component_div_q_e_click",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_s__div_q_e_click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_s_",
+  "parent": "App_component_1_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": true,
   "captureNames": [
-    "state",
-    "count"
+    "count",
+    "state"
   ]
 }
 */

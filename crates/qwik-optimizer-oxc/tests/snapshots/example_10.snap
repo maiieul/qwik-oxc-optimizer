@@ -22,16 +22,25 @@ const Header = $((decl1, { decl2 }, [decl3]) => {
 
 === project/test.tsx ===
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./project/test.tsx_Header_XXXXXXXXXXXX");
-const Header = /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_XXXXXXXXXXXX");
+/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_XXXXXXXXXXXX");
 
 === project/test.tsx_Header_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Header_XXXXXXXXXXXX = (decl1, { decl2 }, [decl3]) => {
-  const hola = ident1.no;
+  ident1.no;
   ident2;
-  const a = ident1 + ident3;
-  const b = ident1 + ident3;
-  ident4(ident5, [ident6], { ident7 }, { key: ident8 });
+  (ident1, ident3);
+  (ident1, ident3);
+  ident4(
+    ident5,
+    [ident6],
+    {
+      ident7,
+    },
+    {
+      key: ident8,
+    },
+  );
   class Some {
     prop = ident9;
     method() {
@@ -46,15 +55,20 @@ export const Header_XXXXXXXXXXXX = (decl1, { decl2 }, [decl3]) => {
   "origin": "project/test.tsx",
   "name": "Header_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "project/test.tsx_Header",
+  "displayName": "test.tsx_Header",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "project/test.tsx_Header_XXXXXXXXXXXX",
-  "path": "",
+  "canonicalFilename": "test.tsx_Header_XXXXXXXXXXXX",
+  "path": "project",
   "extension": "tsx",
   "parent": null,
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false
+  "captures": false,
+  "paramNames": [
+    "decl1",
+    "{decl2}",
+    "[decl3]"
+  ]
 }
 */
 

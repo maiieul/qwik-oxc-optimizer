@@ -14,14 +14,14 @@ export const $promoteToRoot$ = (ref: SeenRef) => {
 };
 
 === test.js ===
-export const $promoteToRoot$ = (ref: SeenRef) => {
-	const path = $getObjectPath$(ref) as string;
-	// should stay before the push
-	const idx = roots.length;
-	roots.push(new BackRef(path));
-	ref.$parent$ = null;
-	ref.$index$ = idx;
-	return idx;
+export const $promoteToRoot$ = (ref) => {
+  const path = $getObjectPath$(ref);
+  // should stay before the push
+  const idx = roots.length;
+  roots.push(new BackRef(path));
+  ref.$parent$ = null;
+  ref.$index$ = idx;
+  return idx;
 };
 
 === DIAGNOSTICS ===

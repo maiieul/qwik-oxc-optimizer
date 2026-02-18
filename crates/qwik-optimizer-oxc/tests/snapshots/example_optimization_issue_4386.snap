@@ -28,10 +28,8 @@ export const FOO_MAPPING = {
 };
 export default /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ inlinedQrl(() => {
-    const key = "A";
-    const value = FOO_MAPPING[key];
-    return <>{value}</>;
-  }, "default_component_jN9ZUuuADmk"),
+    return <>{FOO_MAPPING["A"]}</>;
+  }, "test_component_LUXeXe0DQrg"),
 );
 
 === DIAGNOSTICS ===

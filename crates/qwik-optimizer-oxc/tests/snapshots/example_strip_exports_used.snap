@@ -25,33 +25,31 @@ export default component$(() => {
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_default_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_default_useResource_XXXXXXXXXXXX");
-import mongodb from "mongodb";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
 export const onGet = () => {
   throw "Symbol removed by Qwik Optimizer, it can not be called from current platform";
 };
 export default /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "default_component_XXXXXXXXXXXX"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_default_component_XXXXXXXXXXXX.tsx === (ENTRY)
+=== test.tsx_test_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_default_useResource_XXXXXXXXXXXX");
 import { useResourceQrl } from "@qwik.dev/core";
-export const default_component_XXXXXXXXXXXX = () => {
-  useResourceQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "default_useResource_XXXXXXXXXXXX"));
+const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_useResource_XXXXXXXXXXXX");
+export const test_component_XXXXXXXXXXXX = () => {
+  useResourceQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_useResource_XXXXXXXXXXXX"));
   return <div>cmp</div>;
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "default_component_XXXXXXXXXXXX",
+  "name": "test_component_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_default_component",
+  "displayName": "test.tsx_test_component",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_default_component_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_test_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
@@ -61,23 +59,23 @@ export const default_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_default_useResource_XXXXXXXXXXXX.tsx === (ENTRY)
+=== test.tsx_test_component_useResource_XXXXXXXXXXXX.tsx === (ENTRY)
 import { onGet } from "./test";
-export const default_useResource_XXXXXXXXXXXX = () => {
+export const test_component_useResource_XXXXXXXXXXXX = () => {
   return onGet();
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "default_useResource_XXXXXXXXXXXX",
+  "name": "test_component_useResource_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_default_useResource",
+  "displayName": "test.tsx_test_component_useResource",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_default_useResource_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_test_component_useResource_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
-  "parent": "test.tsx_default_component",
+  "parent": "test_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useResource$",
   "captures": false

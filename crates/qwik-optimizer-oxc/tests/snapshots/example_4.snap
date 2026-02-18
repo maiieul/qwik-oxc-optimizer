@@ -16,7 +16,6 @@ export function App() {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_Header_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_Header_component_div_q_e_click_XXXXXXXXXXXX");
 export function App() {
   const Header = /* @__PURE__ */ componentQrl(
     /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_Header_component_XXXXXXXXXXXX"),
@@ -26,12 +25,12 @@ export function App() {
 
 === test.tsx_App_Header_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_Header_component_div_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_Header_component_div_onClick_XXXXXXXXXXXX");
 export const App_Header_component_XXXXXXXXXXXX = () => {
   console.log("mount");
   return (
     <div
-      onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_Header_component_div_q_e_click_XXXXXXXXXXXX")}
+      onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_Header_component_div_onClick_XXXXXXXXXXXX")}
     />
   );
 };
@@ -53,23 +52,26 @@ export const App_Header_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_App_Header_component_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
-export const App_Header_component_div_q_e_click_XXXXXXXXXXXX = (ctx) => console.log(ctx);
+=== test.tsx_App_Header_component_div_onClick_XXXXXXXXXXXX.tsx === (ENTRY)
+export const App_Header_component_div_onClick_XXXXXXXXXXXX = (ctx) => console.log(ctx);
 
 /*
 {
   "origin": "test.tsx",
-  "name": "App_Header_component_div_q_e_click_XXXXXXXXXXXX",
+  "name": "App_Header_component_div_onClick_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_App_Header_component_div_q_e_click",
+  "displayName": "test.tsx_App_Header_component_div_onClick",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_App_Header_component_div_q_e_click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_Header_component_div_onClick_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
-  "parent": "test.tsx_App_Header_component",
+  "parent": "App_Header_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
-  "captures": false
+  "captures": false,
+  "paramNames": [
+    "ctx"
+  ]
 }
 */
 

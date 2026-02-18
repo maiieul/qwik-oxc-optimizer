@@ -52,46 +52,37 @@ export const Parent = component$(() => {
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
-import { _noopQrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_useTask_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_a_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_b_client_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_useTask_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX");
-import { useStore } from "@qwik.dev/core";
-import mongo from "mongodb";
-import redis from "redis";
-import { handler } from "serverless";
-export const Parent = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Parent_component_XXXXXXXXXXXX"),
-);
+export const Parent = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"));
 
 === test.tsx_Parent_component_XXXXXXXXXXXX.js === (ENTRY)
-import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_useTask_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_useTask_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX");
-import { useTaskQrl } from "@qwik.dev/core";
-import { serverStuffQrl } from "@qwik.dev/core";
-import { serverLoaderQrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrl } from "@qwik.dev/core";
+import { _wrapProp } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
+import { serverLoaderQrl } from "@qwik.dev/core";
+import { serverStuffQrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
-export const Parent_component_XXXXXXXXXXXX = () => {
-  const state = useStore({ text: "" });
-  useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "useTask_XXXXXXXXXXXX", [state]));
-  serverStuffQrl(/* @__PURE__ */ _noopQrl("serverStuff_m6WhOB6TbVw"));
-  serverLoaderQrl(/* @__PURE__ */ _noopQrl("serverLoader_kkNmag62Eb0"));
-  useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "useTask_XXXXXXXXXXXX"));
+import { useTaskQrl } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_useTask_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_useTask_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX");
+export const s_XXXXXXXXXXXX = () => {
+  const state = useStore({
+    text: "",
+  });
+  // Double count watch
+  useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX", [state]));
+  serverStuffQrl(/* @__PURE__ */ _noopQrl("s_r1qAHX7Opp0"));
+  serverLoaderQrl(/* @__PURE__ */ _noopQrl("s_k1L0DiPQV1I"));
+  useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"));
   return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
     {
-      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Parent_component_div_q_e_click_XXXXXXXXXXXX"),
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s_XXXXXXXXXXXX"),
     },
-    state.text,
+    _wrapProp(state, "text"),
     3,
     "u6_0",
   );
@@ -100,7 +91,7 @@ export const Parent_component_XXXXXXXXXXXX = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_XXXXXXXXXXXX",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component",
   "hash": "XXXXXXXXXXXX",
@@ -114,13 +105,12 @@ export const Parent_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_useTask_XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_Parent_component_useTask_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import mongo from "mongodb";
 import redis from "redis";
-export const useTask_XXXXXXXXXXXX = async () => {
+export const s_XXXXXXXXXXXX = async () => {
   const state = _captures[0];
-  return;
   state.text = await mongo.users();
   redis.set(state.text);
 };
@@ -128,14 +118,14 @@ export const useTask_XXXXXXXXXXXX = async () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "useTask_XXXXXXXXXXXX",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_useTask",
+  "displayName": "test.tsx_Parent_component_useTask",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_useTask_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_useTask_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Parent_component",
+  "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": true,
@@ -145,60 +135,66 @@ export const useTask_XXXXXXXXXXXX = async () => {
 }
 */
 
-=== test.tsx_a_XXXXXXXXXXXX.js === (ENTRY)
-export const a_XXXXXXXXXXXX = () => {};
+=== test.tsx_Parent_component_serverStuff_a_XXXXXXXXXXXX.js === (ENTRY)
+export const s_XXXXXXXXXXXX = () => {
+  // from $(), should not be removed
+};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "a_XXXXXXXXXXXX",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_a",
+  "displayName": "test.tsx_Parent_component_serverStuff_a",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_a_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_serverStuff_a_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_serverStuff",
+  "parent": "s_r1qAHX7Opp0",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": false
 }
 */
 
-=== test.tsx_b_client_XXXXXXXXXXXX.js === (ENTRY)
-export const b_client_XXXXXXXXXXXX = () => {};
+=== test.tsx_Parent_component_serverStuff_b_client_XXXXXXXXXXXX.js === (ENTRY)
+export const s_XXXXXXXXXXXX = () => {
+  // from clien$(), should not be removed
+};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "b_client_XXXXXXXXXXXX",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_b_client",
+  "displayName": "test.tsx_Parent_component_serverStuff_b_client",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_b_client_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_serverStuff_b_client_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_serverStuff",
+  "parent": "s_r1qAHX7Opp0",
   "ctxKind": "function",
   "ctxName": "client$",
   "captures": false
 }
 */
 
-=== test.tsx_useTask_XXXXXXXXXXXX.js === (ENTRY)
-export const useTask_XXXXXXXXXXXX = () => {};
+=== test.tsx_Parent_component_useTask_1_XXXXXXXXXXXX.js === (ENTRY)
+export const s_XXXXXXXXXXXX = () => {
+  // Code
+};
 
 /*
 {
   "origin": "test.tsx",
-  "name": "useTask_XXXXXXXXXXXX",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_useTask",
+  "displayName": "test.tsx_Parent_component_useTask_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_useTask_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Parent_component_useTask_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Parent_component",
+  "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useTask$",
   "captures": false
@@ -206,19 +202,19 @@ export const useTask_XXXXXXXXXXXX = () => {};
 */
 
 === test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
-export const Parent_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("parent");
+export const s_XXXXXXXXXXXX = () => console.log("parent");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Parent_component_div_q_e_click_XXXXXXXXXXXX",
+  "name": "s_XXXXXXXXXXXX",
   "entry": null,
   "displayName": "test.tsx_Parent_component_div_q_e_click",
   "hash": "XXXXXXXXXXXX",
   "canonicalFilename": "test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Parent_component",
+  "parent": "s_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false

@@ -17,19 +17,21 @@ export const App = component$(() => {
 
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
-import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
+import { qrlDEV } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_p_q_e_click_XXXXXXXXXXXX");
-import { useStore } from "@qwik.dev/core";
 export const App = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
+  /* @__PURE__ */ qrlDEV(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX", {
+    file: "/user/qwik/src/test.tsx",
+    lo: 87,
+    hi: 224,
+    displayName: "test.tsx_App_component",
+  }),
 );
 
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
-import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_p_q_e_click_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
+import { qrlDEV } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_Cmp_p_q_e_click_XXXXXXXXXXXX");
 export const App_component_XXXXXXXXXXXX = () => {
   return /* @__PURE__ */ _jsxSorted(
     Cmp,
@@ -40,14 +42,33 @@ export const App_component_XXXXXXXXXXXX = () => {
       null,
       {
         class: "stuff",
-        "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_p_q_e_click_XXXXXXXXXXXX"),
+        "q-e:click": /* @__PURE__ */ qrlDEV(
+          i_XXXXXXXXXXXX,
+          "App_component_Cmp_p_q_e_click_XXXXXXXXXXXX",
+          {
+            file: "/user/qwik/src/test.tsx",
+            lo: 149,
+            hi: 174,
+            displayName: "test.tsx_App_component_Cmp_p_q_e_click",
+          },
+        ),
       },
       "Hello Qwik",
       3,
-      "u6_0",
+      null,
+      {
+        fileName: "test.tsx",
+        lineNumber: 6,
+        columnNumber: 7,
+      },
     ),
     3,
-    "u6_1",
+    "u6_0",
+    {
+      fileName: "test.tsx",
+      lineNumber: 5,
+      columnNumber: 5,
+    },
   );
 };
 
@@ -68,20 +89,20 @@ export const App_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_App_component_p_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
-export const App_component_p_q_e_click_XXXXXXXXXXXX = () => console.log("warn");
+=== test.tsx_App_component_Cmp_p_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
+export const App_component_Cmp_p_q_e_click_XXXXXXXXXXXX = () => console.log("warn");
 
 /*
 {
   "origin": "test.tsx",
-  "name": "App_component_p_q_e_click_XXXXXXXXXXXX",
+  "name": "App_component_Cmp_p_q_e_click_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_App_component_p_q_e_click",
+  "displayName": "test.tsx_App_component_Cmp_p_q_e_click",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_App_component_p_q_e_click_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_Cmp_p_q_e_click_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_App_component",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "eventHandler",
   "ctxName": "onClick$",
   "captures": false

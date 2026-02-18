@@ -23,7 +23,6 @@ export const App = component$(() => {
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-import { useStore } from "@qwik.dev/core";
 export enum Thing {
   A,
   B,

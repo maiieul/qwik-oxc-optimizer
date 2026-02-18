@@ -27,16 +27,10 @@ export const Lightweight = (props) => {
 
 === test.js ===
 import { componentQrl } from "@qwik.dev/core";
-import { useMemoQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-import { _jsxSorted } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_useMemo_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s__XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Lightweight_useMemo_XXXXXXXXXXXX");
-import { useStore } from "@qwik.dev/core";
-import { wrap } from "@qwik.dev/core";
-import { useEffect } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
+import { wrap, useEffect } from "@qwik.dev/core";
 export const useMemoQrl = (qrt) => {
   useEffect(qrt);
 };
@@ -50,14 +44,16 @@ export const Lightweight = (props) => {
 
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_useMemo_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_s__XXXXXXXXXXXX");
-import { useMemoQrl } from "@qwik.dev/core";
+import { useMemoQrl } from "./test";
 import { useStore } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_useMemo_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_1_XXXXXXXXXXXX");
 export const App_component_XXXXXXXXXXXX = (props) => {
-  const state = useStore({ count: 0 });
-  useMemoQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "useMemo_XXXXXXXXXXXX", [state]));
-  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "s__XXXXXXXXXXXX", [state]);
+  const state = useStore({
+    count: 0,
+  });
+  useMemoQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_useMemo_XXXXXXXXXXXX", [state]));
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX", [state]);
 };
 
 /*
@@ -73,13 +69,16 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false
+  "captures": false,
+  "paramNames": [
+    "props"
+  ]
 }
 */
 
-=== test.tsx_useMemo_XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_App_component_useMemo_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
-export const useMemo_XXXXXXXXXXXX = () => {
+export const App_component_useMemo_XXXXXXXXXXXX = () => {
   const state = _captures[0];
   console.log(state.count);
 };
@@ -87,14 +86,14 @@ export const useMemo_XXXXXXXXXXXX = () => {
 /*
 {
   "origin": "test.tsx",
-  "name": "useMemo_XXXXXXXXXXXX",
+  "name": "App_component_useMemo_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_useMemo",
+  "displayName": "test.tsx_App_component_useMemo",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_useMemo_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_useMemo_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_App_component",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useMemo$",
   "captures": true,
@@ -104,25 +103,26 @@ export const useMemo_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_s__XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_App_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
-export const s__XXXXXXXXXXXX = () => {
+import { _wrapProp } from "@qwik.dev/core";
+export const App_component_1_XXXXXXXXXXXX = () => {
   const state = _captures[0];
-  return /* @__PURE__ */ _jsxSorted("div", null, null, state.count, 3, "u6_0");
+  return /* @__PURE__ */ _jsxSorted("div", null, null, _wrapProp(state, "count"), 3, "u6_0");
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "s__XXXXXXXXXXXX",
+  "name": "App_component_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_s_",
+  "displayName": "test.tsx_App_component_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_s__XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_App_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_App_component",
+  "parent": "App_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,

@@ -45,17 +45,14 @@ export const Foo = component$(
 );
 
 === test.js ===
-import { componentQrl } from "@qwik.dev/core";
-import { qrl } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _getVarProps } from "@qwik.dev/core";
 import { _getConstProps } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
+import { componentQrl } from "@qwik.dev/core";
+import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_XXXXXXXXXXXX");
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { h } from "@qwik.dev/core";
-import { Fragment } from "@qwik.dev/core";
 export const Lightweight = (props) => {
   return /* @__PURE__ */ _jsxSorted(
     "div",
@@ -69,7 +66,9 @@ export const Lightweight = (props) => {
         /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null),
         /* @__PURE__ */ _jsxSplit(
           "button",
-          { ..._getVarProps(props) },
+          {
+            ..._getVarProps(props),
+          },
           _getConstProps(props),
           null,
           0,
@@ -79,19 +78,22 @@ export const Lightweight = (props) => {
       1,
       "u6_0",
     ),
-    3,
+    1,
     "u6_1",
   );
 };
 export const Foo = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
+  {
+    tagName: "my-foo",
+  },
 );
 
 === test.tsx_Foo_component_XXXXXXXXXXXX.js === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = (props) => {
-  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_XXXXXXXXXXXX", [props, children]);
+  return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX", [props]);
 };
 
 /*
@@ -107,21 +109,23 @@ export const Foo_component_XXXXXXXXXXXX = (props) => {
   "parent": null,
   "ctxKind": "function",
   "ctxName": "component$",
-  "captures": false
+  "captures": false,
+  "paramNames": [
+    "props"
+  ]
 }
 */
 
-=== test.tsx_Foo_XXXXXXXXXXXX.js === (ENTRY)
+=== test.tsx_Foo_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
+import { Lightweight } from "./test";
+import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
+import { _getConstProps } from "@qwik.dev/core";
+import { _getVarProps } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
 import { _jsxSplit } from "@qwik.dev/core";
-import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
-import { _getVarProps } from "@qwik.dev/core";
-import { _getConstProps } from "@qwik.dev/core";
-import { Lightweight } from "./test";
-export const Foo_XXXXXXXXXXXX = () => {
+export const Foo_component_1_XXXXXXXXXXXX = () => {
   const props = _captures[0];
-  const children = _captures[1];
   return /* @__PURE__ */ _jsxSorted(
     "div",
     null,
@@ -132,64 +136,105 @@ export const Foo_XXXXXXXXXXXX = () => {
         null,
         null,
         [
-          /* @__PURE__ */ _jsxSorted("div", null, { class: "class" }, null, 3, "u6_2"),
-          /* @__PURE__ */ _jsxSorted("div", null, { class: "class" }, null, 3, "u6_3"),
-          /* @__PURE__ */ _jsxSorted("div", null, { class: "class" }, "12", 3, "u6_4"),
+          /* @__PURE__ */ _jsxSorted(
+            "div",
+            null,
+            {
+              class: "class",
+            },
+            null,
+            3,
+            null,
+          ),
+          /* @__PURE__ */ _jsxSorted(
+            "div",
+            null,
+            {
+              class: "class",
+            },
+            null,
+            3,
+            null,
+          ),
+          /* @__PURE__ */ _jsxSorted(
+            "div",
+            null,
+            {
+              class: "class",
+            },
+            "12",
+            3,
+            null,
+          ),
         ],
-        1,
-        "u6_5",
+        3,
+        "u6_2",
       ),
       /* @__PURE__ */ _jsxSorted(
         "div",
         null,
-        { class: "class" },
+        {
+          class: "class",
+        },
         /* @__PURE__ */ _jsxSplit(
           Lightweight,
-          { ..._getVarProps(props) },
+          {
+            ..._getVarProps(props),
+          },
           _getConstProps(props),
           null,
           0,
-          null,
+          "u6_3",
         ),
-        3,
-        "u6_6",
+        1,
+        null,
       ),
       /* @__PURE__ */ _jsxSorted(
         "div",
         null,
-        { class: "class" },
+        {
+          class: "class",
+        },
         [
           /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null),
           /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null),
           /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, null),
         ],
-        1,
-        "u6_7",
+        3,
+        null,
       ),
-      /* @__PURE__ */ _jsxSorted("div", null, { class: "class" }, children, 3, "u6_8"),
+      /* @__PURE__ */ _jsxSorted(
+        "div",
+        null,
+        {
+          class: "class",
+        },
+        children,
+        1,
+        null,
+      ),
     ],
     1,
-    "u6_9",
+    "u6_4",
   );
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_XXXXXXXXXXXX",
+  "name": "Foo_component_1_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo",
+  "displayName": "test.tsx_Foo_component_1",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_1_XXXXXXXXXXXX",
   "path": "",
   "extension": "js",
-  "parent": "test.tsx_Foo_component",
+  "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "$",
   "captures": true,
   "captureNames": [
-    "props",
-    "children"
+    "props"
   ]
 }
 */

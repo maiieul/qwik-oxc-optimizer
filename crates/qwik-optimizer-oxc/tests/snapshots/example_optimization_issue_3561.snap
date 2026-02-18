@@ -39,7 +39,7 @@ export const Issue3561 = /* @__PURE__ */ componentQrl(
     const { currentVariant: { variantImage, variantNumber, setContents } = {} } = props.product;
     console.log(variantImage, variantNumber, setContents);
     return <p></p>;
-  }, "Issue3561_component_NKh3QDDWxo4"),
+  }, "Issue3561_component_hHTw654BZB8"),
 );
 
 === DIAGNOSTICS ===

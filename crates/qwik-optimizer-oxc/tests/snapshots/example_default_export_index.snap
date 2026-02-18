@@ -16,15 +16,15 @@ export default /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ inlinedQrl(() => {
     return (
       <div
-        onClick$={
+        q-e:click={
           /* @__PURE__ */ inlinedQrl(
             () => console.log(mongodb),
-            "default_component_div_q_e_click_MfKHh3bA4so",
+            "mongo_component_div_q_e_click_jncbxvZVtWY",
           )
         }
       ></div>
     );
-  }, "default_component_NUmxKsP6YN0"),
+  }, "mongo_component_ouWLj4jA2oI"),
 );
 
 === DIAGNOSTICS ===

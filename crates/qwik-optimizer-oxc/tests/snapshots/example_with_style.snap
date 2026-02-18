@@ -19,17 +19,19 @@ export const Foo = component$(
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_useStyles_XXXXXXXXXXXX");
 export const Foo = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
+  {
+    tagName: "my-foo",
+  },
 );
 
 === test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_useStyles_XXXXXXXXXXXX");
 import { useStylesQrl } from "@qwik.dev/core";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_useStyles_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = () => {
-  useStylesQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_useStyles_XXXXXXXXXXXX"));
+  useStylesQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_useStyles_XXXXXXXXXXXX"));
   return <div class="class" />;
 };
 
@@ -50,20 +52,20 @@ export const Foo_component_XXXXXXXXXXXX = () => {
 }
 */
 
-=== test.tsx_Foo_useStyles_XXXXXXXXXXXX.tsx === (ENTRY)
-export const Foo_useStyles_XXXXXXXXXXXX = ".class {}";
+=== test.tsx_Foo_component_useStyles_XXXXXXXXXXXX.tsx === (ENTRY)
+export const Foo_component_useStyles_XXXXXXXXXXXX = ".class {}";
 
 /*
 {
   "origin": "test.tsx",
-  "name": "Foo_useStyles_XXXXXXXXXXXX",
+  "name": "Foo_component_useStyles_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_Foo_useStyles",
+  "displayName": "test.tsx_Foo_component_useStyles",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_Foo_useStyles_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_Foo_component_useStyles_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
-  "parent": "test.tsx_Foo_component",
+  "parent": "Foo_component_XXXXXXXXXXXX",
   "ctxKind": "function",
   "ctxName": "useStyles$",
   "captures": false

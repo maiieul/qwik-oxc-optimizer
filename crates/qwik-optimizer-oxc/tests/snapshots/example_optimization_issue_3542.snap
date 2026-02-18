@@ -23,29 +23,31 @@ export const AtomStatus = component$(({ ctx, atom }) => {
 
 === test.jsx ===
 import { componentQrl } from "@qwik.dev/core";
+import { _captures } from "@qwik.dev/core";
 import { inlinedQrl } from "@qwik.dev/core";
 export const AtomStatus = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ inlinedQrl((_rawProps) => {
     let status = _rawProps.atom.status;
-    if (!_rawProps.atom.real) {
-      status = "WILL-VANISH";
-    } else if (JSON.stringify(undefined) == JSON.stringify(undefined)) {
+    if (!_rawProps.atom.real) status = "WILL-VANISH";
+    else if (JSON.stringify(_rawProps.atom.atom) == JSON.stringify(_rawProps.atom.real))
       status = "WTFED";
-    }
     return (
       <span
-        title={atom.ID}
-        onClick$={
+        title={_rawProps.atom.ID}
+        q-e:click={
           /* @__PURE__ */ inlinedQrl(
-            (ev) => atomStatusClick(ctx, ev, [atom]),
-            "AtomStatus_component_span_q_e_click_umHjCmk9egM",
-            [ctx, atom],
+            (ev) => {
+              const _rawProps = _captures[0];
+              return atomStatusClick(_rawProps.ctx, ev, [_rawProps.atom]);
+            },
+            "AtomStatus_component_span_q_e_click_0yqKAycyBF0",
+            [_rawProps],
           )
         }
-        class={["atom", status, ctx.store[atom.ID] ? "selected" : null]}
+        class={["atom", status, _rawProps.ctx.store[_rawProps.atom.ID] ? "selected" : null]}
       ></span>
     );
-  }, "AtomStatus_component_BHJ0BemzHIo"),
+  }, "AtomStatus_component_hdwpoUtydSA"),
 );
 
 === DIAGNOSTICS ===

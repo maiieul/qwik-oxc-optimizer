@@ -22,28 +22,27 @@ export default component$(() => {
 === test.tsx ===
 import { componentQrl } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_default_component_XXXXXXXXXXXX");
-import mongodb from "mongodb";
+const i_XXXXXXXXXXXX = () => import("./test.tsx_test_component_XXXXXXXXXXXX");
 export const onGet = () => {
   throw "Symbol removed by Qwik Optimizer, it can not be called from current platform";
 };
 export default /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "default_component_XXXXXXXXXXXX"),
+  /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
 
-=== test.tsx_default_component_XXXXXXXXXXXX.tsx === (ENTRY)
-export const default_component_XXXXXXXXXXXX = () => {
+=== test.tsx_test_component_XXXXXXXXXXXX.tsx === (ENTRY)
+export const test_component_XXXXXXXXXXXX = () => {
   return <div>cmp</div>;
 };
 
 /*
 {
   "origin": "test.tsx",
-  "name": "default_component_XXXXXXXXXXXX",
+  "name": "test_component_XXXXXXXXXXXX",
   "entry": null,
-  "displayName": "test.tsx_default_component",
+  "displayName": "test.tsx_test_component",
   "hash": "XXXXXXXXXXXX",
-  "canonicalFilename": "test.tsx_default_component_XXXXXXXXXXXX",
+  "canonicalFilename": "test.tsx_test_component_XXXXXXXXXXXX",
   "path": "",
   "extension": "tsx",
   "parent": null,
