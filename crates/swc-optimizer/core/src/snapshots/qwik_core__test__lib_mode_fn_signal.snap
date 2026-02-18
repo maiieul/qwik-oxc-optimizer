@@ -24,6 +24,7 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Counter_component_XXXXXXXXXXXX")
 export const Counter = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Counter_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_Counter_component_XXXXXXXXXXXX.ts === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
@@ -64,6 +65,7 @@ export const Counter_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -80,12 +82,14 @@ export const Counter_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX.ts === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX = () => {
   const count = _captures[0];
   return count.value++;
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -105,6 +109,7 @@ export const Counter_component_div_p_button_q_e_click_XXXXXXXXXXXX = () => {
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

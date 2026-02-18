@@ -35,12 +35,14 @@ export default (props) => {
     "u6_0",
   );
 };
+
 === test.tsx_test_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const test_div_q_e_click_XXXXXXXXXXXX = () => {
   const props = _captures[0];
   props.data.selectedOutputDetail = "options";
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -60,6 +62,7 @@ export const test_div_q_e_click_XXXXXXXXXXXX = () => {
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

@@ -22,6 +22,7 @@ export const App = () => {
   );
   return Header;
 };
+
 === test.tsx_App_Header_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_App_Header_component_div_onClick_XXXXXXXXXXXX");
@@ -33,6 +34,7 @@ export const App_Header_component_XXXXXXXXXXXX = () => {
     />
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -49,8 +51,10 @@ export const App_Header_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_App_Header_component_div_onClick_XXXXXXXXXXXX.tsx === (ENTRY)
 export const App_Header_component_div_onClick_XXXXXXXXXXXX = (ctx) => console.log(ctx);
+
 /*
 {
   "origin": "test.tsx",
@@ -70,6 +74,7 @@ export const App_Header_component_div_onClick_XXXXXXXXXXXX = (ctx) => console.lo
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

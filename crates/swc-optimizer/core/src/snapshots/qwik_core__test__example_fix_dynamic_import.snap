@@ -29,6 +29,7 @@ export function foo() {
 export const Header = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_XXXXXXXXXXXX"),
 );
+
 === project/folder/test.tsx_Header_component_XXXXXXXXXXXX.tsx ===
 import thing from "../state";
 export const Header_component_XXXXXXXXXXXX = () => {
@@ -39,6 +40,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
     </div>
   );
 };
+
 /*
 {
   "origin": "project/folder/test.tsx",
@@ -55,6 +57,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

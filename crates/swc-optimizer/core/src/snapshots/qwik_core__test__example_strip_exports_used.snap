@@ -32,6 +32,7 @@ export const onGet = () => {
 export default /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_test_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 import { useResourceQrl } from "@qwik.dev/core";
@@ -40,6 +41,7 @@ export const test_component_XXXXXXXXXXXX = () => {
   useResourceQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_useResource_XXXXXXXXXXXX"));
   return <div>cmp</div>;
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -56,11 +58,13 @@ export const test_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_test_component_useResource_XXXXXXXXXXXX.tsx === (ENTRY)
 import { onGet } from "./test";
 export const test_component_useResource_XXXXXXXXXXXX = () => {
   return onGet();
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -77,6 +81,7 @@ export const test_component_useResource_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

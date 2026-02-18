@@ -25,6 +25,7 @@ export const Foo = /* @__PURE__ */ componentQrl(
     tagName: "my-foo",
   },
 );
+
 === test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 import { useStylesQrl } from "@qwik.dev/core";
@@ -33,6 +34,7 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   useStylesQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_useStyles_XXXXXXXXXXXX"));
   return <div class="class" />;
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -49,8 +51,10 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_Foo_component_useStyles_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Foo_component_useStyles_XXXXXXXXXXXX = ".class {}";
+
 /*
 {
   "origin": "test.tsx",
@@ -67,6 +71,7 @@ export const Foo_component_useStyles_XXXXXXXXXXXX = ".class {}";
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

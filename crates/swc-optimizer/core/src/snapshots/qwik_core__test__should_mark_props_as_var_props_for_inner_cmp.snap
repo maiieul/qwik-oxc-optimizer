@@ -48,6 +48,7 @@ export const Image = /* @__PURE__ */ componentQrl(
 export const ModelImg = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "ModelImg_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_Image_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -70,6 +71,7 @@ export const Image_component_XXXXXXXXXXXX = (props) => {
     "u6_0",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -89,6 +91,7 @@ export const Image_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
+
 === test.tsx_ModelImg_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Image } from "./test";
 import { Resource } from "@qwik.dev/core";
@@ -139,6 +142,7 @@ export const ModelImg_component_XXXXXXXXXXXX = (props) => {
     "u6_5",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -158,6 +162,7 @@ export const ModelImg_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
+
 === test.tsx_ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 import { serverImg } from "~/routes/(authenticated)/layout";
@@ -166,6 +171,7 @@ export const ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX = async (_rawPro
   _rawProps.track(() => props.store.model);
   return await serverImg("some.png");
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -188,6 +194,7 @@ export const ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX = async (_rawPro
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

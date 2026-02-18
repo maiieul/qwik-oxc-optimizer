@@ -71,6 +71,7 @@ export const ButtonArrow = (_rawProps) => {
     </button>
   );
 };
+
 === test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { Button } from "./test";
 import { ButtonArrow } from "./test";
@@ -82,6 +83,7 @@ export const Foo_component_XXXXXXXXXXXX = (props) => {
     </div>
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -101,6 +103,7 @@ export const Foo_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
+
 === test.tsx_Button_button_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Button_button_q_e_click_XXXXXXXXXXXX = () => {
@@ -108,6 +111,7 @@ export const Button_button_q_e_click_XXXXXXXXXXXX = () => {
     text = _captures[1];
   return console.log(text, color);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -128,12 +132,14 @@ export const Button_button_q_e_click_XXXXXXXXXXXX = () => {
   ]
 }
 */
+
 === test.tsx_ButtonArrow_button_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const ButtonArrow_button_q_e_click_XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
   return console.log(_rawProps.text, _rawProps.color);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -153,6 +159,7 @@ export const ButtonArrow_button_q_e_click_XXXXXXXXXXXX = () => {
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

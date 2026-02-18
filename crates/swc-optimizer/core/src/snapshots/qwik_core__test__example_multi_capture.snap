@@ -36,12 +36,14 @@ export const Foo = /* @__PURE__ */ componentQrl(
 export const Bar = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Bar_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_Foo_component_XXXXXXXXXXXX.jsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
   return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX", [_rawProps]);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -61,6 +63,7 @@ export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
   ]
 }
 */
+
 === test.tsx_Foo_component_1_XXXXXXXXXXXX.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Foo_component_1_XXXXXXXXXXXX = () => {
@@ -74,6 +77,7 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
     </div>
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -93,12 +97,14 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
   ]
 }
 */
+
 === test.tsx_Bar_component_XXXXXXXXXXXX.jsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Bar_component_1_XXXXXXXXXXXX");
 export const Bar_component_XXXXXXXXXXXX = (_rawProps) => {
   return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Bar_component_1_XXXXXXXXXXXX", [_rawProps]);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -118,12 +124,14 @@ export const Bar_component_XXXXXXXXXXXX = (_rawProps) => {
   ]
 }
 */
+
 === test.tsx_Bar_component_1_XXXXXXXXXXXX.jsx === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Bar_component_1_XXXXXXXXXXXX = () => {
   const _rawProps = _captures[0];
   return <div>{_rawProps.bar}</div>;
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -143,6 +151,7 @@ export const Bar_component_1_XXXXXXXXXXXX = () => {
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

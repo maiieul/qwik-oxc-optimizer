@@ -59,6 +59,7 @@ export { I6 as _auto_I6 };
 export { I7 as _auto_I7 };
 export { I8 as _auto_I8 };
 export { I9 as _auto_I9 };
+
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _auto_I1 as I1 } from "./test";
 import { _auto_I2 as I2 } from "./test";
@@ -76,6 +77,7 @@ export const App_component_XXXXXXXXXXXX = (_rawProps) => {
   console.log(itsok, v1, v2, v3, obj);
   return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_1_XXXXXXXXXXXX");
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -95,12 +97,14 @@ export const App_component_XXXXXXXXXXXX = (_rawProps) => {
   ]
 }
 */
+
 === test.tsx_App_component_1_XXXXXXXXXXXX.js === (ENTRY)
 import { _auto_I10 as I10 } from "./test";
 import { _jsxSorted } from "@qwik.dev/core";
 export const App_component_1_XXXXXXXXXXXX = () => {
   return /* @__PURE__ */ _jsxSorted(I10, null, null, null, 3, "u6_0");
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -117,6 +121,7 @@ export const App_component_1_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

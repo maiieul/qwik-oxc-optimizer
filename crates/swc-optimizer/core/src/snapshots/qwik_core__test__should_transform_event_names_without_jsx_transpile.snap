@@ -27,6 +27,7 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_XXXXXXXXXXXX")
 export const Greeter = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Greeter_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_Greeter_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import mongo from "mongodb";
 import { qrl } from "@qwik.dev/core";
@@ -58,6 +59,7 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
     </div>
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -74,8 +76,10 @@ export const Greeter_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_Greeter_component_div_div_q_e_click_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Greeter_component_div_div_q_e_click_XXXXXXXXXXXX = () => {};
+
 /*
 {
   "origin": "test.tsx",
@@ -92,8 +96,10 @@ export const Greeter_component_div_div_q_e_click_XXXXXXXXXXXX = () => {};
   "captures": false
 }
 */
+
 === test.tsx_Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX = () => {};
+
 /*
 {
   "origin": "test.tsx",
@@ -110,8 +116,10 @@ export const Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX = () => {};
   "captures": false
 }
 */
+
 === test.tsx_Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX = () => {};
+
 /*
 {
   "origin": "test.tsx",
@@ -128,6 +136,7 @@ export const Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX = () => {};
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

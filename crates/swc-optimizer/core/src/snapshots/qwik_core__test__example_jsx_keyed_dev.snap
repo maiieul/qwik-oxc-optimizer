@@ -29,6 +29,7 @@ export const App = /* @__PURE__ */ componentQrl(
     displayName: "index.tsx_App_component",
   }),
 );
+
 === project/index.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -93,6 +94,7 @@ export const App_component_XXXXXXXXXXXX = (props) => {
     },
   );
 };
+
 /*
 {
   "origin": "project/index.tsx",
@@ -112,6 +114,7 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

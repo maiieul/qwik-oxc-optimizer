@@ -36,6 +36,7 @@ export const App = /* @__PURE__ */ componentQrl(
     displayName: "test.tsx_App_component",
   }),
 );
+
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { _noopQrlDEV } from "@qwik.dev/core";
@@ -107,6 +108,7 @@ export const App_component_XXXXXXXXXXXX = () => {
     },
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -123,6 +125,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

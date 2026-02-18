@@ -108,6 +108,7 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _fnSignal } from "@qwik.dev/core";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -276,6 +277,7 @@ export const App_component_XXXXXXXXXXXX = () => {
     "u6_6",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -292,12 +294,14 @@ export const App_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX = (_, _1, item) => {
   const cart = _captures[0];
   cart.push(item);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -322,6 +326,7 @@ export const App_component_loopArrowFn_span_q_e_click_XXXXXXXXXXXX = (_, _1, ite
   ]
 }
 */
+
 === test.tsx_App_component_loopForI_span_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const App_component_loopForI_span_q_e_click_XXXXXXXXXXXX = (_, _1, i) => {
@@ -329,6 +334,7 @@ export const App_component_loopForI_span_q_e_click_XXXXXXXXXXXX = (_, _1, i) => 
     results = _captures[1];
   cart.push(results[i]);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -354,12 +360,14 @@ export const App_component_loopForI_span_q_e_click_XXXXXXXXXXXX = (_, _1, i) => 
   ]
 }
 */
+
 === test.tsx_App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX = (_, _1, item) => {
   const cart = _captures[0];
   cart.push(item);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -384,6 +392,7 @@ export const App_component_loopForOf_span_q_e_click_XXXXXXXXXXXX = (_, _1, item)
   ]
 }
 */
+
 === test.tsx_App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX = (_, _1, key) => {
@@ -391,6 +400,7 @@ export const App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX = (_, _1, key) 
     results = _captures[1];
   cart.push(results[key]);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -416,6 +426,7 @@ export const App_component_loopForIn_span_q_e_click_XXXXXXXXXXXX = (_, _1, key) 
   ]
 }
 */
+
 === test.tsx_App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX = (_, _1, i) => {
@@ -423,6 +434,7 @@ export const App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX = (_, _1, i) =>
     results = _captures[1];
   cart.push(results[i]);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -448,12 +460,14 @@ export const App_component_loopWhile_span_q_e_click_XXXXXXXXXXXX = (_, _1, i) =>
   ]
 }
 */
+
 === test.tsx_App_component_div_button_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const App_component_div_button_q_e_click_XXXXXXXXXXXX = (_, _1, item) => {
   const cart = _captures[0];
   cart.push(item);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -478,6 +492,7 @@ export const App_component_div_button_q_e_click_XXXXXXXXXXXX = (_, _1, item) => 
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

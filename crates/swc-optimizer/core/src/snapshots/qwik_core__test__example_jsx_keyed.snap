@@ -24,6 +24,7 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX.js");
 export const App = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -61,6 +62,7 @@ export const App_component_XXXXXXXXXXXX = (props) => {
     "u6_2",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -80,6 +82,7 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

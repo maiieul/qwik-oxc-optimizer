@@ -60,6 +60,7 @@ export const Input = /* @__PURE__ */ componentQrl(
 export default /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_Input_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
@@ -70,6 +71,7 @@ export const Input_component_XXXXXXXXXXXX = (props) => {
   useTaskQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Input_component_useTask_XXXXXXXXXXXX", [props]));
   return /* @__PURE__ */ _jsxSorted(_Fragment, null, null, null, 3, "u6_0");
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -89,6 +91,7 @@ export const Input_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
+
 === test.tsx_Input_component_useTask_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const Input_component_useTask_XXXXXXXXXXXX = ({ track }) => {
@@ -97,6 +100,7 @@ export const Input_component_useTask_XXXXXXXXXXXX = ({ track }) => {
   track(() => props.error2);
   track(() => props.error3);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -119,6 +123,7 @@ export const Input_component_useTask_XXXXXXXXXXXX = ({ track }) => {
   ]
 }
 */
+
 === test.tsx_test_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Input } from "./test";
 import { _fnSignal } from "@qwik.dev/core";
@@ -201,6 +206,7 @@ export const test_component_XXXXXXXXXXXX = () => {
     "u6_2",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -217,12 +223,14 @@ export const test_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_test_component_div_button_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const test_component_div_button_q_e_click_XXXXXXXXXXXX = () => {
   const store = _captures[0];
   store.errors.test = store.errors.test ? undefined : "ERROR TEST";
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -242,6 +250,7 @@ export const test_component_div_button_q_e_click_XXXXXXXXXXXX = () => {
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

@@ -10,8 +10,10 @@ export const sym1 = $((ctx) => console.log("1"));
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_sym1_XXXXXXXXXXXX");
 export const sym1 = /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "sym1_XXXXXXXXXXXX");
+
 === test.tsx_sym1_XXXXXXXXXXXX.tsx === (ENTRY)
 export const sym1_XXXXXXXXXXXX = (ctx) => console.log("1");
+
 /*
 {
   "origin": "test.tsx",
@@ -31,6 +33,7 @@ export const sym1_XXXXXXXXXXXX = (ctx) => console.log("1");
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

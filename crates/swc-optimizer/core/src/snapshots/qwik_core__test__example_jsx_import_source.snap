@@ -21,12 +21,14 @@ export const App = () =>
     onClick$: () => console.log("App"),
   });
 export const App2 = qwikifyQrl(/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App2_qwikify_XXXXXXXXXXXX"));
+
 === test.tsx_App2_qwikify_XXXXXXXXXXXX.js === (ENTRY)
 import { jsx as _jsx } from "react/jsx-runtime";
 export const App2_qwikify_XXXXXXXXXXXX = () =>
   /* @__PURE__ */ _jsx("div", {
     onClick$: () => console.log("App2"),
   });
+
 /*
 {
   "origin": "test.tsx",
@@ -43,6 +45,7 @@ export const App2_qwikify_XXXXXXXXXXXX = () =>
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

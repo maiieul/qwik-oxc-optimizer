@@ -60,6 +60,7 @@ export default /* @__PURE__ */ componentQrl(
     displayName: "test.tsx_test_component",
   }),
 );
+
 === test.tsx_test_component_XXXXXXXXXXXX.js === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrlDEV } from "@qwik.dev/core";
@@ -90,6 +91,7 @@ export const test_component_XXXXXXXXXXXX = () => {
     },
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -106,9 +108,11 @@ export const test_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_test_component_button_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 import { api } from "./test";
 export const test_component_button_q_e_click_XXXXXXXXXXXX = async () => await api();
+
 /*
 {
   "origin": "test.tsx",
@@ -125,6 +129,7 @@ export const test_component_button_q_e_click_XXXXXXXXXXXX = async () => await ap
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

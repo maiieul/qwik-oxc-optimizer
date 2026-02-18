@@ -32,6 +32,7 @@ export const Header = /* @__PURE__ */ componentQrl(
 export const App = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
+
 === project/test.tsx_Header_component_XXXXXXXXXXXX.tsx ===
 import { Header } from "./test";
 import { bar as bbar } from "../state";
@@ -48,6 +49,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
     </Header>
   );
 };
+
 /*
 {
   "origin": "project/test.tsx",
@@ -64,9 +66,11 @@ export const Header_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === project/test.tsx_Header_component_Header_onClick_XXXXXXXXXXXX.tsx ===
 import dep3 from "dep3/something";
 export const Header_component_Header_onClick_XXXXXXXXXXXX = (ev) => dep3(ev);
+
 /*
 {
   "origin": "project/test.tsx",
@@ -86,12 +90,14 @@ export const Header_component_Header_onClick_XXXXXXXXXXXX = (ev) => dep3(ev);
   ]
 }
 */
+
 === project/test.tsx_App_component_XXXXXXXXXXXX.tsx ===
 import { Header } from "./test";
 import { foo } from "../state";
 export const App_component_XXXXXXXXXXXX = () => {
   return <Header>{foo()}</Header>;
 };
+
 /*
 {
   "origin": "project/test.tsx",
@@ -108,6 +114,7 @@ export const App_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

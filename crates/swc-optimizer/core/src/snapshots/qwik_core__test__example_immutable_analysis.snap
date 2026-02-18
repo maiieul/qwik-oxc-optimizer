@@ -64,6 +64,7 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX");
 export const App = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_App_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _fnSignal } from "@qwik.dev/core";
@@ -158,6 +159,7 @@ export const App_component_XXXXXXXXXXXX = (props) => {
     "u6_2",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -177,6 +179,7 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
+
 === test.tsx_App_component_remove_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const App_component_remove_XXXXXXXXXXXX = (id) => {
@@ -187,6 +190,7 @@ export const App_component_remove_XXXXXXXXXXXX = (id) => {
     1,
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -209,8 +213,10 @@ export const App_component_remove_XXXXXXXXXXXX = (id) => {
   ]
 }
 */
+
 === test.tsx_App_component_Fragment_Div_onEvent_XXXXXXXXXXXX.js === (ENTRY)
 export const App_component_Fragment_Div_onEvent_XXXXXXXXXXXX = () => console.log("stuff");
+
 /*
 {
   "origin": "test.tsx",
@@ -227,10 +233,12 @@ export const App_component_Fragment_Div_onEvent_XXXXXXXXXXXX = () => console.log
   "captures": false
 }
 */
+
 === test.tsx_App_component_Fragment_Div_transparent_XXXXXXXXXXXX.js === (ENTRY)
 export const App_component_Fragment_Div_transparent_XXXXXXXXXXXX = () => {
   console.log("stuff");
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -247,12 +255,14 @@ export const App_component_Fragment_Div_transparent_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_App_component_Fragment_Div_immutable4_XXXXXXXXXXXX.js === (ENTRY)
 import { _captures } from "@qwik.dev/core";
 export const App_component_Fragment_Div_immutable4_XXXXXXXXXXXX = (ev) => {
   const state = _captures[0];
   return console.log(state.count);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -275,6 +285,7 @@ export const App_component_Fragment_Div_immutable4_XXXXXXXXXXXX = (ev) => {
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []

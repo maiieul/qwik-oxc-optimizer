@@ -26,12 +26,14 @@ export const Foo = /* @__PURE__ */ componentQrl(
     tagName: "my-foo",
   },
 );
+
 === test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_1_XXXXXXXXXXXX");
 export const Foo_component_XXXXXXXXXXXX = () => {
   return /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_1_XXXXXXXXXXXX");
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -48,10 +50,12 @@ export const Foo_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_Foo_component_1_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Foo_component_1_XXXXXXXXXXXX = () => {
   return <div></div>;
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -68,6 +72,7 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

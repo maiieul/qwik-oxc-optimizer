@@ -22,6 +22,7 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_App_component_XXXXXXXXXXXX.ts");
 export const App = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "App_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_App_component_XXXXXXXXXXXX.ts === (ENTRY)
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
@@ -46,6 +47,7 @@ export const App_component_XXXXXXXXXXXX = (props) => {
     "u6_0",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -65,8 +67,10 @@ export const App_component_XXXXXXXXXXXX = (props) => {
   ]
 }
 */
+
 === test.tsx_App_component_Cmp_p_q_e_click_XXXXXXXXXXXX.ts === (ENTRY)
 export const App_component_Cmp_p_q_e_click_XXXXXXXXXXXX = () => console.log("warn");
+
 /*
 {
   "origin": "test.tsx",
@@ -83,6 +87,7 @@ export const App_component_Cmp_p_q_e_click_XXXXXXXXXXXX = () => console.log("war
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

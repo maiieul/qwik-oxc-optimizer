@@ -18,6 +18,7 @@ export const App = () => {
   const props = {};
   return jsx("div", props, "Hello Qwik");
 };
+
 === DIAGNOSTICS ===
 
 []

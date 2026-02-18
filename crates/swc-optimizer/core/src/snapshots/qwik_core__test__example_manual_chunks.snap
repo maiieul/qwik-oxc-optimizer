@@ -45,6 +45,7 @@ export const Parent = /* @__PURE__ */ componentQrl(
 export const Child = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_Parent_component_XXXXXXXXXXXX.js ===
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
@@ -70,6 +71,7 @@ export const Parent_component_XXXXXXXXXXXX = () => {
     "u6_0",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -86,6 +88,7 @@ export const Parent_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_Parent_component_useTask_XXXXXXXXXXXX.js ===
 import { _captures } from "@qwik.dev/core";
 import mongo from "mongodb";
@@ -95,6 +98,7 @@ export const Parent_component_useTask_XXXXXXXXXXXX = async () => {
   state.text = await mongo.users();
   redis.set(state.text);
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -114,8 +118,10 @@ export const Parent_component_useTask_XXXXXXXXXXXX = async () => {
   ]
 }
 */
+
 === test.tsx_Parent_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 export const Parent_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("parent");
+
 /*
 {
   "origin": "test.tsx",
@@ -132,6 +138,7 @@ export const Parent_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("pa
   "captures": false
 }
 */
+
 === test.tsx_Child_component_XXXXXXXXXXXX.js ===
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
@@ -157,6 +164,7 @@ export const Child_component_XXXXXXXXXXXX = () => {
     "u6_1",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -173,6 +181,7 @@ export const Child_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === test.tsx_Child_component_useTask_XXXXXXXXXXXX.js ===
 import { _captures } from "@qwik.dev/core";
 import mongo from "mongodb";
@@ -180,6 +189,7 @@ export const Child_component_useTask_XXXXXXXXXXXX = async () => {
   const state = _captures[0];
   state.text = await mongo.users();
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -199,8 +209,10 @@ export const Child_component_useTask_XXXXXXXXXXXX = async () => {
   ]
 }
 */
+
 === test.tsx_Child_component_div_q_e_click_XXXXXXXXXXXX.js === (ENTRY)
 export const Child_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("child");
+
 /*
 {
   "origin": "test.tsx",
@@ -217,6 +229,7 @@ export const Child_component_div_q_e_click_XXXXXXXXXXXX = () => console.log("chi
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

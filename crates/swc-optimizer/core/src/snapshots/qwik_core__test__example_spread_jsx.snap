@@ -45,6 +45,7 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_RouterHead_component_XXXXXXXXXXX
  */ export const RouterHead = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "RouterHead_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_RouterHead_component_XXXXXXXXXXXX.js === (ENTRY)
 import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { createElement as _createElement } from "@qwik.dev/core";
@@ -128,6 +129,7 @@ export const RouterHead_component_XXXXXXXXXXXX = () => {
     "u6_1",
   );
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -144,6 +146,7 @@ export const RouterHead_component_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
+
 === DIAGNOSTICS ===
 
 []

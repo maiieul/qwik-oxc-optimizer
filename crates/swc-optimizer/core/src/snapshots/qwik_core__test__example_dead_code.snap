@@ -22,11 +22,13 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_XXXXXXXXXXXX");
 export const Foo = /* @__PURE__ */ componentQrl(
   /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_XXXXXXXXXXXX"),
 );
+
 === test.tsx_Foo_component_XXXXXXXXXXXX.tsx === (ENTRY)
 export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
   useMount$(() => {});
   return <div />;
 };
+
 /*
 {
   "origin": "test.tsx",
@@ -46,6 +48,7 @@ export const Foo_component_XXXXXXXXXXXX = (_rawProps) => {
   ]
 }
 */
+
 === DIAGNOSTICS ===
 
 []
