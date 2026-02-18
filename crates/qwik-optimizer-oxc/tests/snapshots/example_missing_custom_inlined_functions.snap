@@ -32,3 +32,7 @@ export const App = component$((props) => {
   });
   return $(() => /* @__PURE__ */ _jsxSorted("div", null, null, state.count, 3, "u6_0"));
 });
+
+=== DIAGNOSTICS ===
+
+[]

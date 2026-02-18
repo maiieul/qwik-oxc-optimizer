@@ -33,7 +33,7 @@ export const App = component$((props) => {
   });
   return $(() => /* @__PURE__ */ _jsxSorted("div", null, null, _wrapProp(state, "count"), 3, "u6_0"));
 });
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 [
   {

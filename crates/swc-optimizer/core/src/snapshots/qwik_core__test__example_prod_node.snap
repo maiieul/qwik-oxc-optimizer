@@ -104,6 +104,6 @@ export const s_XXXXXXXXXXXX = () => console.log("third");
   "captures": false
 }
 */
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

@@ -67,6 +67,6 @@ export const Foo_component_useStyles_XXXXXXXXXXXX = ".class {}";
   "captures": false
 }
 */
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

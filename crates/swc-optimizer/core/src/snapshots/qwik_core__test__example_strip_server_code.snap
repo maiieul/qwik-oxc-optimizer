@@ -208,6 +208,6 @@ export const s_XXXXXXXXXXXX = () => console.log("parent");
   "captures": false
 }
 */
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

@@ -77,6 +77,6 @@ export const test_component_useResource_XXXXXXXXXXXX = () => {
   "captures": false
 }
 */
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

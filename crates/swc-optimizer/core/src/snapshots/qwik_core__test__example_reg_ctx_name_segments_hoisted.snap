@@ -47,6 +47,6 @@ export const Works = /* @__PURE__ */ componentQrl(
 );
 const STYLES = ".class {}";
 export { STYLES as _auto_STYLES };
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

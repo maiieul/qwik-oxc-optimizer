@@ -178,7 +178,7 @@ struct SnapshotOutput {
     input_filename: String,
     input_code: String,
     modules: Vec<SnapshotModuleOutput>,
-    diagnostics: Vec<String>,
+    diagnostics_json: String,
 }
 
 #[derive(Debug, Clone)]
@@ -208,17 +208,14 @@ fn build_snapshot_output(
         })
         .collect();
 
-    let diagnostics = result
-        .diagnostics
-        .iter()
-        .map(|diag| format!("[{:?}] {}", diag.category, diag.message))
-        .collect();
+    let diagnostics_json =
+        to_string_pretty(&result.diagnostics).expect("failed to serialize diagnostics");
 
     SnapshotOutput {
         input_filename: case.filename.clone(),
         input_code: case.code.clone(),
         modules,
-        diagnostics,
+        diagnostics_json,
     }
 }
 
@@ -249,13 +246,8 @@ fn render_snapshot_output(output: &SnapshotOutput) -> String {
         }
     }
 
-    if !output.diagnostics.is_empty() {
-        s.push_str("\n=== DIAGNOSTICS ===\n");
-        for diag in &output.diagnostics {
-            s.push_str(diag);
-            s.push('\n');
-        }
-    }
+    s.push_str("\n=== DIAGNOSTICS ===\n\n");
+    s.push_str(&output.diagnostics_json);
 
     s
 }
@@ -312,7 +304,10 @@ fn detect_oxfmt_runner() -> OxfmtRunner {
             .join(".bin")
             .join("oxfmt.cmd")
     } else {
-        workspace_root.join("node_modules").join(".bin").join("oxfmt")
+        workspace_root
+            .join("node_modules")
+            .join(".bin")
+            .join("oxfmt")
     };
 
     if local_oxfmt.exists() {

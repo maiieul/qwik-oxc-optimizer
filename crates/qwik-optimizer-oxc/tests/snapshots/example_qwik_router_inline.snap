@@ -22,4 +22,13 @@ export default component$(() => {
 
 
 === DIAGNOSTICS ===
-[SourceError] Unexpected token
+
+[
+  {
+    "scope": "optimizer",
+    "category": "sourceError",
+    "code": null,
+    "file": "../node_modules/@qwik.dev/router/index.qwik.mjs",
+    "message": "Unexpected token"
+  }
+]

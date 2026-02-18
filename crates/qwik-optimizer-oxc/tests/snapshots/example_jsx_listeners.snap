@@ -372,3 +372,7 @@ export const Foo_div_custom_XXXXXXXXXXXX = () => console.log("custom");
   "captures": false
 }
 */
+
+=== DIAGNOSTICS ===
+
+[]

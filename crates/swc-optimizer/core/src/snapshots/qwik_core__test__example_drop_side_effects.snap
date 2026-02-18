@@ -125,6 +125,6 @@ export const test_component_button_q_e_click_XXXXXXXXXXXX = async () => await ap
   "captures": false
 }
 */
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

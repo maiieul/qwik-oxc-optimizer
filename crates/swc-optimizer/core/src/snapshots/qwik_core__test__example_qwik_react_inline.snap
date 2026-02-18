@@ -236,6 +236,6 @@ async function renderToString(rootNode, opts) {
 }
 export { qwikify$, qwikifyQrl, renderToString };
 export { filterProps as _auto_filterProps };
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

@@ -160,3 +160,7 @@ export const Foo_component_p_q_e_click_XXXXXXXXXXXX = () => console.log("inner" 
   "captures": false
 }
 */
+
+=== DIAGNOSTICS ===
+
+[]

@@ -69,3 +69,7 @@ export const Foo_useStyles_XXXXXXXXXXXX = ".class {}";
   "captures": false
 }
 */
+
+=== DIAGNOSTICS ===
+
+[]

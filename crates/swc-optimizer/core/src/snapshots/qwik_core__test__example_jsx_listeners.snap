@@ -348,6 +348,6 @@ export const Foo_component_div_custom_XXXXXXXXXXXX = () => console.log("custom")
   "captures": false
 }
 */
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

@@ -10,3 +10,7 @@ const foo = inlinedQrl(null, "some_hash");
 === test.js ===
 import { inlinedQrl } from "@qwik.dev/core";
 const foo = inlinedQrl(null, "some_hash");
+
+=== DIAGNOSTICS ===
+
+[]

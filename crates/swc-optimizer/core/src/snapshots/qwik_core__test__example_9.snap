@@ -49,6 +49,6 @@ export const Header_XXXXXXXXXXXX = (decl1, { decl2 }, [decl3]) => {
   ]
 }
 */
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

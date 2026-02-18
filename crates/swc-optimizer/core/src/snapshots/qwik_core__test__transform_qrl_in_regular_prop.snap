@@ -63,6 +63,6 @@ export const Cmp_component_Cmp_foo_XXXXXXXXXXXX = () => console.log("hi there");
   "captures": false
 }
 */
-== DIAGNOSTICS ===
+=== DIAGNOSTICS ===
 
 []

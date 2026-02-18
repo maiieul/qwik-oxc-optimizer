@@ -30,3 +30,7 @@ export const sym1_XXXXXXXXXXXX = (ctx) => console.log("1");
   "captures": false
 }
 */
+
+=== DIAGNOSTICS ===
+
+[]

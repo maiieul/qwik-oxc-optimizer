@@ -23,3 +23,7 @@ export const $promoteToRoot$ = (ref: SeenRef) => {
 	ref.$index$ = idx;
 	return idx;
 };
+
+=== DIAGNOSTICS ===
+
+[]
