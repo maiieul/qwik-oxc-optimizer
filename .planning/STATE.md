@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 1 of 6 (Naming & Display Names)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-02-19 - Completed 01-01-PLAN.md (stack_ctxt naming architecture)
+Last activity: 2026-02-19 - Completed 01-02-PLAN.md (default export naming, hash, edge cases)
 
-Progress: [█░░░░░░░░░] ~5%
+Progress: [██░░░░░░░░] ~10%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 15min
-- Total execution time: 0.25 hours
+- Total plans completed: 2
+- Average duration: 30min
+- Total execution time: 1.0 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-naming | 1/3 | 15min | 15min |
+| 01-naming | 2/3 | 60min | 30min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (15min)
-- Trend: N/A (first plan)
+- Last 5 plans: 01-01 (15min), 01-02 (45min)
+- Trend: Plan complexity increasing as edge cases accumulate
 
 *Updated after each plan completion*
 
@@ -47,18 +47,24 @@ Recent decisions affecting current work:
 - [01-01]: Combined stack_ctxt + JSX event handler naming into single architectural change since they share the same push/pop mechanism
 - [01-01]: OXC represents component JSX elements as IdentifierReference (not Identifier) -- must handle both variants
 - [01-01]: Kept dollar_call_stack alongside new segment_stack for backward compatibility with finalize_segments matching
+- [01-02]: Hash computation: hash on display_name WITHOUT filename prefix, then prepend file_name after (matches SWC lines 358-368)
+- [01-02]: Fragment naming: only push when transpile_jsx=true (SWC sees Fragment after JSX transform)
+- [01-02]: Raw $() calls: don't push callee name (SWC's handle_qsegment returns before push)
+- [01-02]: Prod mode: use s_HASH for segment names in EmitMode::Prod
+- [01-02]: Collector display name functions: kept for internal nesting tracking, documented as NOT used for final naming
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
 - BUG-01 (TS stripping) needs research to decide approach: oxc_transformer feature, oxc_isolated_declarations, or manual stripping
-- transform_attr_name_for_display in jsx_transform.rs is now unused (dead code warning) -- clean up in future plan
+- 3 tests have segment ordering diffs (same names, different order) -- traversal order difference between SWC fold and OXC traverse
+- 2 tests have missing segments from multi-file inputs -- needs Phase 3 work
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-01-PLAN.md
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
