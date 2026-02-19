@@ -14,7 +14,7 @@ This roadmap drives the OXC optimizer from 160/162 snapshot diffs to zero, achie
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Naming & Display Names** - Fix segment naming to clear cascading diffs across 120+ snapshots
+- [x] **Phase 1: Naming & Display Names** - Fix segment naming to clear cascading diffs across 120+ snapshots
 - [ ] **Phase 2: Metadata** - Add paramNames and fix path field handling across 90+ snapshots
 - [ ] **Phase 3: Bugs & Correctness** - Fix TS stripping, missing segments, captures, component options, comments
 - [ ] **Phase 4: Signal & Props Transforms** - Implement _fnSignal, _wrapProp, props destructuring, QRL hoisting
@@ -35,8 +35,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Port SWC stack_ctxt naming architecture to OXC (escape_sym, segment_stack, dedup counter, JSX event naming)
-- [ ] 01-02-PLAN.md — Fix default export naming, verify hash computation, clean up dead collector code, comprehensive verification
+- [x] 01-01-PLAN.md — Port SWC stack_ctxt naming architecture to OXC (escape_sym, segment_stack, dedup counter, JSX event naming)
+- [x] 01-02-PLAN.md — Fix default export naming, verify hash computation, clean up dead collector code, comprehensive verification
 
 ### Phase 2: Metadata
 **Goal**: Segment metadata blocks in all output modules match SWC structure exactly (paramNames present, path fields populated correctly)
@@ -124,7 +124,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Naming & Display Names | 0/2 | Planned | - |
+| 1. Naming & Display Names | 2/2 | Complete | 2026-02-19 |
 | 2. Metadata | 0/1 | Not started | - |
 | 3. Bugs & Correctness | 0/4 | Not started | - |
 | 4. Signal & Props Transforms | 0/3 | Not started | - |

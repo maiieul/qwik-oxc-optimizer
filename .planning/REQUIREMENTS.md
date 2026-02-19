@@ -9,9 +9,9 @@ Requirements for milestone v1.0 — Full Snapshot Parity. Each maps to roadmap p
 
 ### Naming
 
-- [ ] **NAME-01**: Segment names use original attribute names for event handlers (`div_onClick` not `div_q_e_click`)
-- [ ] **NAME-02**: Display names include all intermediate scope elements (no dropped context)
-- [ ] **NAME-03**: Parent field uses segment name with hash format (not display name string)
+- [x] **NAME-01**: Segment names use original attribute names for event handlers (`div_onClick` not `div_q_e_click`)
+- [x] **NAME-02**: Display names include all intermediate scope elements (no dropped context)
+- [x] **NAME-03**: Parent field uses segment name with hash format (not display name string)
 
 ### Metadata
 
@@ -79,9 +79,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAME-01 | Phase 1 | Pending |
-| NAME-02 | Phase 1 | Pending |
-| NAME-03 | Phase 1 | Pending |
+| NAME-01 | Phase 1 | Complete |
+| NAME-02 | Phase 1 | Complete |
+| NAME-03 | Phase 1 | Complete |
 | META-01 | Phase 2 | Pending |
 | META-02 | Phase 2 | Pending |
 | BUG-01 | Phase 3 | Pending |
@@ -108,4 +108,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 after roadmap creation*
+*Last updated: 2026-02-19 after Phase 1 completion*
