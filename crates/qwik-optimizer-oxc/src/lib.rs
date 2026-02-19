@@ -230,7 +230,14 @@ pub fn transform_modules(
                     .map(|(_, code)| code.as_str())
                     .unwrap_or("");
 
-                let seg_path = format!("{}.{}", segment_analysis.canonical_filename, seg_ext);
+                let seg_path = if segment_analysis.path.is_empty() {
+                    format!("{}.{}", segment_analysis.canonical_filename, seg_ext)
+                } else {
+                    format!(
+                        "{}/{}.{}",
+                        segment_analysis.path, segment_analysis.canonical_filename, seg_ext
+                    )
+                };
                 let (segment_code, segment_map) = if !body_code.is_empty() {
                     let raw_code = code_move::build_segment_code_with_hoisted(
                         body_code,
@@ -300,6 +307,23 @@ fn output_extension(input_path: &str, transpile_ts: bool, transpile_jsx: bool) -
     }
 }
 
+/// Extract the directory part of a path (everything before the last path separator).
+///
+/// E.g., "src/routes/_repl/[id]/[[...slug]].tsx" -> "src/routes/_repl/[id]"
+/// E.g., "test.tsx" -> ""
+/// E.g., "components\\apps\\apps.tsx" -> "components\\apps"
+///
+/// Handles both Unix `/` and Windows `\\` separators.
+/// Matches SWC's `path_data.rel_dir`.
+fn rel_dir(path: &str) -> String {
+    let last_sep = path.rfind(|c: char| c == '/' || c == '\\');
+    if let Some(pos) = last_sep {
+        path[..pos].to_string()
+    } else {
+        String::new()
+    }
+}
+
 /// Convert internal SegmentData to public SegmentAnalysis.
 fn segment_data_to_analysis(
     seg: &SegmentData,
@@ -317,7 +341,7 @@ fn segment_data_to_analysis(
         display_name: seg.display_name.clone(),
         hash: seg.hash.clone(),
         canonical_filename,
-        path: String::new(), // Same directory
+        path: rel_dir(origin_path),
         extension: ext,
         parent: seg.parent.clone(),
         ctx_kind: seg.ctx_kind.clone(),

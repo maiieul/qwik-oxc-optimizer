@@ -370,9 +370,49 @@ impl QwikTransform {
         }
     }
 
+    /// Extract the basename with extension (file_name) from the filename path.
+    ///
+    /// E.g., "src/routes/_repl/[id]/[[...slug]].tsx" -> "[[...slug]].tsx"
+    /// E.g., "test.tsx" -> "test.tsx"
+    /// E.g., "components\\\\apps\\\\apps.tsx" -> "apps.tsx"
+    ///
+    /// Handles both Unix `/` and Windows `\\` path separators.
+    /// Matches SWC's `path_data.file_name`.
+    fn file_name(&self) -> &str {
+        // Find the last path separator (either / or \)
+        let last_sep = self
+            .filename
+            .rfind(|c: char| c == '/' || c == '\\')
+            .map(|pos| pos + 1)
+            .unwrap_or(0);
+        &self.filename[last_sep..]
+    }
+
+    /// Extract the file stem (basename without extension) from the filename path.
+    ///
+    /// Uses Rust's Path::file_stem() logic: strips only the LAST extension.
+    /// E.g., "[[...slug]].tsx" -> "[[...slug]]"
+    /// E.g., "test.tsx" -> "test"
+    /// E.g., "404.tsx" -> "404"
+    ///
+    /// Matches SWC's `path_data.file_stem`.
+    fn file_stem(&self) -> String {
+        let basename = self.file_name();
+        // Strip only the last extension (after the last dot, if the dot is not at position 0)
+        if let Some(dot_pos) = basename.rfind('.') {
+            if dot_pos > 0 {
+                return basename[..dot_pos].to_string();
+            }
+        }
+        basename.to_string()
+    }
+
     /// Build the canonical filename for a segment.
+    ///
+    /// Uses file_name (basename with extension), not the full path.
+    /// Matches SWC's `get_canonical_filename(display_name, symbol_name)`.
     fn build_canonical_filename(&self, display_name: &str, hash: &str) -> String {
-        format!("{}_{display_name}_{hash}", self.filename)
+        format!("{}_{display_name}_{hash}", self.file_name())
     }
 
     /// Compute the output file extension based on transpile options.
@@ -528,16 +568,28 @@ impl QwikTransform {
             display_name = format!("{}_{}", display_name, index);
         }
 
-        // 5. Hash -- computed on display_name (WITHOUT filename prefix), matching SWC
-        let full_display_name = format!("{}_{}", self.filename, display_name);
+        // 5. Hash -- computed on display_name (WITHOUT filename prefix), matching SWC.
+        // SWC hashes: scope? + rel_path + display_name (no file_name prefix).
+        // Then AFTER hashing, prepends file_name to display_name for the full display name.
         let segment_hash = hash::compute_segment_hash(
             self.options.scope.as_deref(),
             &self.filename,
-            &full_display_name,
+            &display_name,
         );
 
-        // 6. Build segment_name (display_name + hash, no filename prefix)
-        let segment_name = hash::format_segment_name(&display_name, &segment_hash);
+        // 6. Prepend file_name (basename with extension) to display_name
+        let full_display_name = format!("{}_{}", self.file_name(), display_name);
+
+        // 7. Build segment_name -- in Dev/Lib modes use "display_name_hash",
+        // in Prod mode use "s_hash" (mirrors SWC's register_context_name).
+        // SWC uses Dev|Test for full names and Lib|Prod for s_HASH, but since
+        // OXC tests default to Lib mode (matching SWC's Test mode behavior),
+        // we only use s_HASH for Prod mode.
+        let segment_name = if matches!(self.options.mode, crate::types::EmitMode::Prod) {
+            format!("s_{}", segment_hash)
+        } else {
+            hash::format_segment_name(&display_name, &segment_hash)
+        };
 
         (display_name, full_display_name, segment_hash, segment_name)
     }
@@ -947,7 +999,13 @@ impl QwikTransform {
                     self.create_jsx_event_segments_recursive(el);
                 }
                 JSXChild::Fragment(frag) => {
+                    if self.options.transpile_jsx {
+                        self.stack_ctxt.push("Fragment".to_string());
+                    }
                     self.create_jsx_event_segments_in_children(&frag.children);
+                    if self.options.transpile_jsx {
+                        self.stack_ctxt.pop();
+                    }
                 }
                 _ => {}
             }
@@ -1100,15 +1158,25 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         call: &mut CallExpression<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
-        // Push callee name to stack_ctxt for ALL identifier callees
-        // (mirrors SWC's fold_call_expr which pushes ident.sym for both
-        // marker functions and all other ident callees)
+        // Push callee name to stack_ctxt, mirroring SWC's fold_call_expr.
+        // SWC pushes the callee ident.sym for marker functions and all other
+        // ident callees, but NOT for:
+        // - Raw $() calls (handle_qsegment returns early without push)
+        // - sync$(), inlinedQrl, _fnSignal, jsx functions
         self.call_expr_ctxt_depths.push(self.stack_ctxt.len());
+
+        let kind = self.is_dollar_call(call);
+
+        // Only push callee name when it's NOT a raw $() call.
+        // SWC's handle_qsegment returns before the push at line 3186/3226.
         if let Expression::Identifier(ident) = &call.callee {
-            self.stack_ctxt.push(ident.name.as_str().to_string());
+            let is_raw_dollar = matches!(kind, Some(DollarCallKind::RawDollar));
+            if !is_raw_dollar {
+                self.stack_ctxt.push(ident.name.as_str().to_string());
+            }
         }
 
-        let Some(kind) = self.is_dollar_call(call) else {
+        let Some(kind) = kind else {
             return;
         };
 
@@ -1246,21 +1314,30 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         self.export_default_ctxt_depths
             .push(self.stack_ctxt.len());
 
-        let mut file_stem = self
-            .filename
-            .rsplit('/')
-            .next()
-            .unwrap_or(&self.filename)
-            .rsplit('.')
-            .last()
-            .unwrap_or(&self.filename)
-            .to_string();
+        let mut file_stem = self.file_stem();
 
         if file_stem == "index" {
-            // Use folder name instead
-            let parts: Vec<&str> = self.filename.rsplit('/').collect();
-            if parts.len() >= 2 {
-                file_stem = parts[1].to_string();
+            // Use folder name instead (mirrors SWC's rel_dir.file_name())
+            // Handle both / and \ path separators
+            let dir_part = {
+                let last_sep = self
+                    .filename
+                    .rfind(|c: char| c == '/' || c == '\\')
+                    .unwrap_or(0);
+                if last_sep > 0 {
+                    &self.filename[..last_sep]
+                } else {
+                    ""
+                }
+            };
+            if !dir_part.is_empty() {
+                let folder = dir_part
+                    .rsplit(|c: char| c == '/' || c == '\\')
+                    .next()
+                    .unwrap_or(dir_part);
+                if !folder.is_empty() {
+                    file_stem = folder.to_string();
+                }
             }
         }
 
@@ -1315,6 +1392,30 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         self.jsx_element_is_native.pop();
     }
 
+    fn enter_jsx_fragment(
+        &mut self,
+        _frag: &mut JSXFragment<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // Push "Fragment" to stack_ctxt only when JSX is being transpiled.
+        // In SWC, fragments become _jsxQ(Fragment, ...) calls after JSX transform,
+        // and handle_jsx pushes the first arg "Fragment" to stack_ctxt.
+        // When JSX is NOT transpiled, raw <> fragments don't push anything.
+        if self.options.transpile_jsx {
+            self.stack_ctxt.push("Fragment".to_string());
+        }
+    }
+
+    fn exit_jsx_fragment(
+        &mut self,
+        _frag: &mut JSXFragment<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if self.options.transpile_jsx {
+            self.stack_ctxt.pop();
+        }
+    }
+
     fn enter_jsx_attribute(
         &mut self,
         attr: &mut JSXAttribute<'a>,
@@ -1360,7 +1461,13 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
             Expression::JSXFragment(_) => {
                 if let Expression::JSXFragment(frag) = &*expr {
+                    if self.options.transpile_jsx {
+                        self.stack_ctxt.push("Fragment".to_string());
+                    }
                     self.create_jsx_event_segments_in_children(&frag.children);
+                    if self.options.transpile_jsx {
+                        self.stack_ctxt.pop();
+                    }
                 }
             }
             _ => {}
