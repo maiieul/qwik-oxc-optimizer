@@ -5,7 +5,7 @@
 //! record segments for extraction, rewrite imports, and handle special patterns
 //! (component$, useTask$, etc.).
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use oxc::ast::ast::*;
 use oxc::span::SPAN;
@@ -16,7 +16,7 @@ use crate::entry_strategy;
 use crate::hash;
 use crate::import_rewrite;
 use crate::jsx_transform::{
-    get_jsx_lambda_span, transform_attr_name_for_display, transform_jsx_element_inner,
+    get_jsx_lambda_span, transform_jsx_element_inner,
     transform_jsx_fragment_inner,
 };
 use crate::props_destructuring::{self, PropsDestructuringInfo};
@@ -152,7 +152,39 @@ pub(crate) struct QwikTransform {
     /// When the JSX transform encounters an event handler attribute whose value
     /// expression has a span start in this map, it replaces the value with
     /// a `qrl()` or `inlinedQrl()` call instead of keeping the raw lambda.
-    jsx_event_replacements: std::collections::HashMap<u32, JsxEventReplacement>,
+    jsx_event_replacements: HashMap<u32, JsxEventReplacement>,
+
+    /// Scope context stack (mirrors SWC's stack_ctxt).
+    /// Accumulates ALL scope names (variable names, function names, JSX element tags,
+    /// attribute names, callee names) as the AST is traversed. Display names are
+    /// built by joining this stack with "_" and running through `escape_sym()`.
+    stack_ctxt: Vec<String>,
+
+    /// Segment name stack for parent field (mirrors SWC's segment_stack).
+    /// Stores the segment_name (display_name + hash, e.g., "renderHeader_XXXXXXXXXXXX")
+    /// of each enclosing segment. Used to set the `parent` field on child segments.
+    segment_stack: Vec<String>,
+
+    /// Deduplication counter for display names (mirrors SWC's segment_names).
+    /// When the same display name occurs multiple times, appends "_1", "_2", etc.
+    segment_names: HashMap<String, u32>,
+
+    /// Depth markers for variable declarator stack_ctxt push/pop.
+    /// Each entry records the stack_ctxt length before the declarator was entered.
+    var_decl_ctxt_depths: Vec<usize>,
+
+    /// Depth markers for function declaration stack_ctxt push/pop.
+    fn_decl_ctxt_depths: Vec<usize>,
+
+    /// Depth markers for call expression stack_ctxt push/pop.
+    call_expr_ctxt_depths: Vec<usize>,
+
+    /// Depth markers for export default declaration stack_ctxt push/pop.
+    export_default_ctxt_depths: Vec<usize>,
+
+    /// Stack tracking whether current JSX element is a native HTML element.
+    /// Mirrors SWC's `jsx_element_is_native` stack.
+    jsx_element_is_native: Vec<bool>,
 }
 
 /// Info needed to build a qrl()/inlinedQrl() call for a JSX event handler.
@@ -195,7 +227,15 @@ impl QwikTransform {
             pending_segment_qrl_imports: Vec::new(),
             custom_jsx_import_source: None,
             source_code: source_code.to_string(),
-            jsx_event_replacements: std::collections::HashMap::new(),
+            jsx_event_replacements: HashMap::new(),
+            stack_ctxt: Vec::new(),
+            segment_stack: Vec::new(),
+            segment_names: HashMap::new(),
+            var_decl_ctxt_depths: Vec::new(),
+            fn_decl_ctxt_depths: Vec::new(),
+            call_expr_ctxt_depths: Vec::new(),
+            export_default_ctxt_depths: Vec::new(),
+            jsx_element_is_native: Vec::new(),
         }
     }
 
@@ -277,9 +317,11 @@ impl QwikTransform {
         let pending_qrl_imports = std::mem::take(&mut self.pending_segment_qrl_imports);
 
         for seg in self.segments.iter_mut() {
+            // Parent field now stores segment name with hash (e.g., "renderHeader_XXXXXXXXXXXX"),
+            // so match against seg.name (which is also segment name with hash).
             let children: Vec<_> = child_info
                 .iter()
-                .filter(|(parent, _, _)| parent == &seg.display_name)
+                .filter(|(parent, _, _)| parent == &seg.name)
                 .collect();
 
             if !children.is_empty() {
@@ -326,18 +368,6 @@ impl QwikTransform {
             }
             _ => None,
         }
-    }
-
-    /// Derive the display name for a dollar call from collector data or fallback.
-    fn derive_display_name_for_call(&self, call: &CallExpression<'_>) -> String {
-        let call_start = call.span.start;
-        let call_end = call.span.end;
-        for site in &self.collected.dollar_calls {
-            if site.span.0 == call_start && site.span.1 == call_end {
-                return site.display_name.clone();
-            }
-        }
-        format!("s_{}", self.segment_counter)
     }
 
     /// Build the canonical filename for a segment.
@@ -464,19 +494,59 @@ impl QwikTransform {
         }
     }
 
-    /// Record a segment and track imports. Returns the segment data.
-    fn record_segment(&mut self, call: &CallExpression<'_>, kind: &DollarCallKind) -> SegmentData {
-        let display_name = self.derive_display_name_for_call(call);
+    /// Build display name from the stack_ctxt, applying escape_sym, digit prefix,
+    /// and deduplication -- mirrors SWC's `register_context_name`.
+    ///
+    /// Returns `(display_name, full_display_name, segment_hash, segment_name)`.
+    fn register_context_name(&mut self) -> (String, String, String, String) {
+        // 1. Join stack context
+        let mut display_name = if self.stack_ctxt.is_empty() {
+            "s_".to_string()
+        } else {
+            self.stack_ctxt.join("_")
+        };
 
+        // 2. Escape non-alphanumeric chars
+        display_name = escape_sym(&display_name);
+
+        // 3. Ensure valid identifier start
+        if display_name.chars().next().is_some_and(|c| c.is_ascii_digit()) {
+            display_name = format!("_{}", display_name);
+        }
+
+        // 4. Deduplicate (mirrors SWC's segment_names logic)
+        let index = match self.segment_names.get_mut(&display_name) {
+            Some(count) => {
+                *count += 1;
+                *count
+            }
+            None => 0,
+        };
+        if index == 0 {
+            self.segment_names.insert(display_name.clone(), 0);
+        } else {
+            display_name = format!("{}_{}", display_name, index);
+        }
+
+        // 5. Hash -- computed on display_name (WITHOUT filename prefix), matching SWC
         let full_display_name = format!("{}_{}", self.filename, display_name);
-
         let segment_hash = hash::compute_segment_hash(
             self.options.scope.as_deref(),
             &self.filename,
             &full_display_name,
         );
 
+        // 6. Build segment_name (display_name + hash, no filename prefix)
         let segment_name = hash::format_segment_name(&display_name, &segment_hash);
+
+        (display_name, full_display_name, segment_hash, segment_name)
+    }
+
+    /// Record a segment and track imports. Returns the segment data.
+    fn record_segment(&mut self, call: &CallExpression<'_>, kind: &DollarCallKind) -> SegmentData {
+        let (display_name, full_display_name, segment_hash, segment_name) =
+            self.register_context_name();
+
         let canonical_filename = self.build_canonical_filename(&display_name, &segment_hash);
         let import_path = self.build_segment_import_path(&canonical_filename);
 
@@ -486,12 +556,13 @@ impl QwikTransform {
         };
         let ctx_kind = words::classify_ctx_kind(&ctx_name);
 
-        let parent = self.dollar_call_stack.last().cloned();
+        // Parent uses segment_stack (segment name WITH hash), matching SWC
+        let parent = self.segment_stack.last().cloned();
 
         let segment = SegmentData {
             display_name: full_display_name.clone(),
             hash: segment_hash.clone(),
-            name: segment_name,
+            name: segment_name.clone(),
             ctx_name: ctx_name.clone(),
             ctx_kind,
             origin: self.filename.clone(),
@@ -547,6 +618,12 @@ impl QwikTransform {
         }
 
         self.segment_counter += 1;
+
+        // Push to segment_stack (for parent field of nested segments)
+        self.segment_stack.push(segment_name);
+        // Push to dollar_call_stack (for finalize_segments parent matching)
+        self.dollar_call_stack.push(full_display_name);
+
         self.segments.push(segment.clone());
         segment
     }
@@ -554,28 +631,24 @@ impl QwikTransform {
     /// Record a segment for a JSX event handler attribute (e.g., onClick$).
     ///
     /// Unlike `record_segment`, this doesn't require a CallExpression -- it takes
-    /// the display name, span, and ctx_name directly from JSX attribute info.
+    /// the span and ctx_name directly from JSX attribute info.
+    /// The display name is derived from `stack_ctxt` (which should already have
+    /// the JSX element name and attribute name pushed).
     pub(crate) fn record_jsx_event_segment(
         &mut self,
-        display_name: &str,
         span: (u32, u32),
         ctx_name: &str,
     ) -> SegmentData {
-        let full_display_name = format!("{}_{}", self.filename, display_name);
+        let (display_name, full_display_name, segment_hash, segment_name) =
+            self.register_context_name();
 
-        let segment_hash = hash::compute_segment_hash(
-            self.options.scope.as_deref(),
-            &self.filename,
-            &full_display_name,
-        );
-
-        let segment_name = hash::format_segment_name(display_name, &segment_hash);
-        let canonical_filename = self.build_canonical_filename(display_name, &segment_hash);
+        let canonical_filename = self.build_canonical_filename(&display_name, &segment_hash);
         let import_path = self.build_segment_import_path(&canonical_filename);
 
         // attribute name pattern. This includes onClick$, onInput$, custom$, etc.
         let ctx_kind = crate::types::CtxKind::EventHandler;
-        let parent = self.dollar_call_stack.last().cloned();
+        // Parent uses segment_stack (segment name WITH hash), matching SWC
+        let parent = self.segment_stack.last().cloned();
 
         let segment = SegmentData {
             display_name: full_display_name.clone(),
@@ -639,13 +712,28 @@ impl QwikTransform {
         if self.custom_jsx_import_source.is_some() {
             return;
         }
-        let element_name = match &element.opening_element.name {
-            JSXElementName::Identifier(ident) => ident.name.as_str().to_string(),
-            JSXElementName::NamespacedName(ns) => {
-                format!("{}_{}", ns.namespace.name, ns.name.name)
+
+        // Push element name to stack_ctxt (mirrors SWC's fold_jsx_element)
+        let (element_name, is_native_element) = match &element.opening_element.name {
+            JSXElementName::Identifier(ident) => {
+                let name = ident.name.as_str().to_string();
+                let is_native = name.chars().next().is_some_and(|c| c.is_lowercase());
+                (Some(name), is_native)
             }
-            _ => "_".to_string(),
+            JSXElementName::IdentifierReference(ident) => {
+                let name = ident.name.as_str().to_string();
+                (Some(name), false) // Component elements are not native
+            }
+            JSXElementName::NamespacedName(ns) => {
+                let name = format!("{}:{}", ns.namespace.name, ns.name.name);
+                (Some(name), false)
+            }
+            _ => (None, false),
         };
+
+        if let Some(ref name) = element_name {
+            self.stack_ctxt.push(name.clone());
+        }
 
         // Scan attributes for $-suffixed names (including namespaced like document:onFocus$)
         for attr_item in &element.opening_element.attributes {
@@ -664,20 +752,32 @@ impl QwikTransform {
                         if let JSXAttributeValue::ExpressionContainer(container) = value {
                             let expr_span = get_jsx_lambda_span(&container.expression);
                             if let Some(span) = expr_span {
-                                // the event suffix (e.g., document:onFocus$ -> q_d_focus).
-                                let event_suffix = if let Some(ref prefix) = namespace_prefix {
-                                    let base = transform_attr_name_for_display(&attr_name_str);
-                                    let prefix_code = match prefix.as_str() {
-                                        "document" => "q_d",
-                                        "window" => "q_w",
-                                        _ => "q_e",
-                                    };
-                                    format!("{}_{}", prefix_code, base.trim_start_matches("q_e_"))
+                                // Push the attribute name to stack_ctxt (mirrors SWC's fold_jsx_attr)
+                                let attr_ctx_name = if let Some(ref prefix) = namespace_prefix {
+                                    // Namespaced: push "ns-name$" format
+                                    let full_attr = format!("{}:{}", prefix, attr_name_str);
+                                    if is_native_element {
+                                        if let Some(html_attr) = jsx_event_to_html_attribute(&full_attr) {
+                                            html_attr
+                                        } else {
+                                            format!("{}-{}", prefix, attr_name_str)
+                                        }
+                                    } else {
+                                        format!("{}-{}", prefix, attr_name_str)
+                                    }
+                                } else if is_native_element {
+                                    // Native element: transform event name
+                                    if let Some(html_attr) = jsx_event_to_html_attribute(&attr_name_str) {
+                                        html_attr
+                                    } else {
+                                        attr_name_str.clone()
+                                    }
                                 } else {
-                                    transform_attr_name_for_display(&attr_name_str)
+                                    // Component element: push original name
+                                    attr_name_str.clone()
                                 };
-                                let display_name = self
-                                    .derive_jsx_event_display_name(&element_name, &event_suffix);
+                                self.stack_ctxt.push(attr_ctx_name);
+
                                 let ctx_name = if namespace_prefix.is_some() {
                                     format!(
                                         "{}:{}",
@@ -688,7 +788,7 @@ impl QwikTransform {
                                     attr_name_str.clone()
                                 };
                                 let seg =
-                                    self.record_jsx_event_segment(&display_name, span, &ctx_name);
+                                    self.record_jsx_event_segment(span, &ctx_name);
                                 let seg_span_0 = seg.span.0;
 
                                 // Run capture analysis on the JSX event handler lambda.
@@ -818,6 +918,9 @@ impl QwikTransform {
                                         },
                                     );
                                 }
+
+                                // Pop the attribute name from stack_ctxt
+                                self.stack_ctxt.pop();
                             }
                         }
                     }
@@ -826,6 +929,11 @@ impl QwikTransform {
         }
 
         self.create_jsx_event_segments_in_children(&element.children);
+
+        // Pop element name from stack_ctxt
+        if element_name.is_some() {
+            self.stack_ctxt.pop();
+        }
     }
 
     /// Scan JSX children for elements with $-suffixed attributes.
@@ -843,25 +951,6 @@ impl QwikTransform {
                 }
                 _ => {}
             }
-        }
-    }
-
-    /// Build display name for a JSX event handler segment.
-    fn derive_jsx_event_display_name(&self, element_name: &str, event_suffix: &str) -> String {
-        let parent_ctx = self
-            .dollar_call_stack
-            .last()
-            .map(|s| s.as_str())
-            .unwrap_or("");
-
-        if parent_ctx.is_empty() {
-            format!("{}_{}", element_name, event_suffix)
-        } else {
-            // Strip filename prefix from parent context if present
-            let parent = parent_ctx
-                .strip_prefix(&format!("{}_", self.filename))
-                .unwrap_or(parent_ctx);
-            format!("{}_{}_{}", parent, element_name, event_suffix)
         }
     }
 
@@ -1011,6 +1100,14 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         call: &mut CallExpression<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        // Push callee name to stack_ctxt for ALL identifier callees
+        // (mirrors SWC's fold_call_expr which pushes ident.sym for both
+        // marker functions and all other ident callees)
+        self.call_expr_ctxt_depths.push(self.stack_ctxt.len());
+        if let Expression::Identifier(ident) = &call.callee {
+            self.stack_ctxt.push(ident.name.as_str().to_string());
+        }
+
         let Some(kind) = self.is_dollar_call(call) else {
             return;
         };
@@ -1063,7 +1160,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
         }
 
-        let segment = self.record_segment(call, &kind);
+        // record_segment reads stack_ctxt and pushes to segment_stack + dollar_call_stack
+        let _segment = self.record_segment(call, &kind);
 
         if let DollarCallKind::Named(ref name) = kind {
             if self.should_strip_ctx_name(name) {
@@ -1072,7 +1170,17 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         self.pending_dollar_calls.insert(call.span.start);
-        self.dollar_call_stack.push(segment.display_name.clone());
+    }
+
+    fn exit_call_expression(
+        &mut self,
+        _call: &mut CallExpression<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // Pop callee name from stack_ctxt
+        if let Some(depth) = self.call_expr_ctxt_depths.pop() {
+            self.stack_ctxt.truncate(depth);
+        }
     }
 
     fn enter_identifier_reference(
@@ -1095,6 +1203,151 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         if !self.capture_stack.is_empty() {
             self.collect_binding_pattern_names(&declarator.id);
         }
+
+        // Push variable name to stack_ctxt (mirrors SWC's fold_var_declarator)
+        self.var_decl_ctxt_depths.push(self.stack_ctxt.len());
+        if let BindingPattern::BindingIdentifier(ref ident) = declarator.id {
+            self.stack_ctxt.push(ident.name.as_str().to_string());
+        }
+    }
+
+    fn exit_variable_declarator(
+        &mut self,
+        _declarator: &mut VariableDeclarator<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if let Some(depth) = self.var_decl_ctxt_depths.pop() {
+            self.stack_ctxt.truncate(depth);
+        }
+    }
+
+    fn enter_function(&mut self, func: &mut Function<'a>, _ctx: &mut TraverseCtx<'a, ()>) {
+        // Push function name to stack_ctxt for named function declarations
+        // (mirrors SWC's fold_fn_decl)
+        self.fn_decl_ctxt_depths.push(self.stack_ctxt.len());
+        if let Some(ref id) = func.id {
+            self.stack_ctxt.push(id.name.as_str().to_string());
+        }
+    }
+
+    fn exit_function(&mut self, _func: &mut Function<'a>, _ctx: &mut TraverseCtx<'a, ()>) {
+        if let Some(depth) = self.fn_decl_ctxt_depths.pop() {
+            self.stack_ctxt.truncate(depth);
+        }
+    }
+
+    fn enter_export_default_declaration(
+        &mut self,
+        _decl: &mut ExportDefaultDeclaration<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // Push file stem (or folder name for index files) to stack_ctxt
+        // (mirrors SWC's fold_export_default_expr)
+        self.export_default_ctxt_depths
+            .push(self.stack_ctxt.len());
+
+        let mut file_stem = self
+            .filename
+            .rsplit('/')
+            .next()
+            .unwrap_or(&self.filename)
+            .rsplit('.')
+            .last()
+            .unwrap_or(&self.filename)
+            .to_string();
+
+        if file_stem == "index" {
+            // Use folder name instead
+            let parts: Vec<&str> = self.filename.rsplit('/').collect();
+            if parts.len() >= 2 {
+                file_stem = parts[1].to_string();
+            }
+        }
+
+        self.stack_ctxt.push(file_stem);
+    }
+
+    fn exit_export_default_declaration(
+        &mut self,
+        _decl: &mut ExportDefaultDeclaration<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if let Some(depth) = self.export_default_ctxt_depths.pop() {
+            self.stack_ctxt.truncate(depth);
+        }
+    }
+
+    fn enter_jsx_element(
+        &mut self,
+        el: &mut JSXElement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // Push element tag name to stack_ctxt (mirrors SWC's fold_jsx_element)
+        match &el.opening_element.name {
+            JSXElementName::Identifier(ident) => {
+                let is_native = ident.name.as_str().chars().next().is_some_and(|c| c.is_lowercase());
+                self.stack_ctxt.push(ident.name.as_str().to_string());
+                self.jsx_element_is_native.push(is_native);
+            }
+            JSXElementName::IdentifierReference(ident) => {
+                // Component JSX elements (capital first letter) are IdentifierReference in OXC
+                self.stack_ctxt.push(ident.name.as_str().to_string());
+                self.jsx_element_is_native.push(false);
+            }
+            _ => {
+                // For member expressions, namespaced names, etc.
+                self.jsx_element_is_native.push(false);
+            }
+        }
+    }
+
+    fn exit_jsx_element(
+        &mut self,
+        el: &mut JSXElement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if matches!(
+            el.opening_element.name,
+            JSXElementName::Identifier(_) | JSXElementName::IdentifierReference(_)
+        ) {
+            self.stack_ctxt.pop();
+        }
+        self.jsx_element_is_native.pop();
+    }
+
+    fn enter_jsx_attribute(
+        &mut self,
+        attr: &mut JSXAttribute<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // Push attribute name to stack_ctxt (mirrors SWC's fold_jsx_attr)
+        let is_native = self.jsx_element_is_native.last().copied().unwrap_or(false);
+        match &attr.name {
+            JSXAttributeName::Identifier(ident) => {
+                if is_native {
+                    if let Some(html_attr) = jsx_event_to_html_attribute(ident.name.as_str()) {
+                        self.stack_ctxt.push(html_attr);
+                    } else {
+                        self.stack_ctxt.push(ident.name.as_str().to_string());
+                    }
+                } else {
+                    self.stack_ctxt.push(ident.name.as_str().to_string());
+                }
+            }
+            JSXAttributeName::NamespacedName(ns) => {
+                // Push "ns-name" format (e.g., "host-onClick$")
+                self.stack_ctxt
+                    .push(format!("{}-{}", ns.namespace.name, ns.name.name));
+            }
+        }
+    }
+
+    fn exit_jsx_attribute(
+        &mut self,
+        _attr: &mut JSXAttribute<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.stack_ctxt.pop();
     }
 
     fn exit_expression(&mut self, expr: &mut Expression<'a>, ctx: &mut TraverseCtx<'a, ()>) {
@@ -1221,6 +1474,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 None => return,
             };
 
+            // Pop segment_stack and dollar_call_stack (pushed in record_segment)
+            self.segment_stack.pop();
             self.dollar_call_stack.pop();
 
             let is_component_exit =
@@ -1305,13 +1560,15 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     .collect();
 
                 let component_span = (call.span.start, call.span.end);
-                let component_display_name = self
+                // Use segment name (with hash) for parent matching since
+                // seg.parent now stores segment_name, not display_name.
+                let component_segment_name = self
                     .segments
                     .iter()
                     .find(|s| s.span == component_span)
-                    .map(|s| s.display_name.clone());
+                    .map(|s| s.name.clone());
 
-                if let Some(parent_name) = component_display_name {
+                if let Some(parent_name) = component_segment_name {
                     for seg in self.segments.iter_mut() {
                         if seg.parent.as_ref() != Some(&parent_name) || seg.capture_names.is_empty()
                         {
@@ -1700,6 +1957,107 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
         program.body = new_body;
     }
+}
+
+/// Normalize a symbol name by replacing non-alphanumeric chars with `_`,
+/// squashing consecutive underscores, and trimming leading/trailing underscores.
+///
+/// Port of SWC's `escape_sym` from `crates/swc-optimizer/core/src/transform.rs:3320`.
+fn escape_sym(str: &str) -> String {
+    str.chars()
+        .flat_map(|x| match x {
+            'A'..='Z' | 'a'..='z' | '0'..='9' => Some(x),
+            _ => Some('_'),
+        })
+        .fold((String::new(), None), |(mut acc, prev), x| {
+            if x == '_' {
+                if prev.is_none() {
+                    (acc, None)
+                } else {
+                    (acc, Some('_'))
+                }
+            } else {
+                if prev == Some('_') {
+                    acc.push('_');
+                }
+                acc.push(x);
+                (acc, Some(x))
+            }
+        })
+        .0
+}
+
+/// Convert a JSX event attribute name to its HTML attribute equivalent.
+///
+/// Only applies when the attribute name ends with `$` and starts with `on`.
+/// Returns `None` if the attribute doesn't match the pattern.
+///
+/// Port of SWC's `jsx_event_to_html_attribute` from
+/// `crates/swc-optimizer/core/src/transform.rs:3347`.
+///
+/// Examples:
+/// - `onClick$` -> `Some("q-e:click")`
+/// - `onInput$` -> `Some("q-e:input")`
+/// - `window:onClick$` is handled separately (prefix already stripped)
+/// - `onClick` (no $) -> `None`
+fn jsx_event_to_html_attribute(jsx_event: &str) -> Option<String> {
+    if !jsx_event.ends_with('$') {
+        return None;
+    }
+
+    let (prefix, idx) = get_event_scope_data_from_jsx_event(jsx_event);
+
+    if idx == usize::MAX {
+        return None;
+    }
+
+    let name = &jsx_event[idx..jsx_event.len() - 1];
+
+    if name == "DOMContentLoaded" {
+        return Some(format!("{}-d-o-m-content-loaded", prefix));
+    }
+
+    let processed_name = if let Some(stripped) = name.strip_prefix('-') {
+        // marker for case sensitive event name
+        stripped.to_string()
+    } else {
+        name.to_lowercase()
+    };
+
+    Some(create_event_name(&processed_name, prefix))
+}
+
+/// Get the event scope prefix and starting index from a JSX event name.
+///
+/// Port of SWC's `get_event_scope_data_from_jsx_event`.
+fn get_event_scope_data_from_jsx_event(jsx_event: &str) -> (&str, usize) {
+    if jsx_event.starts_with("window:on") {
+        ("q-w:", 9)
+    } else if jsx_event.starts_with("document:on") {
+        ("q-d:", 11)
+    } else if jsx_event.starts_with("on") {
+        ("q-e:", 2)
+    } else {
+        ("", usize::MAX)
+    }
+}
+
+/// Create an event name by converting from camelCase to kebab-case.
+///
+/// Port of SWC's `create_event_name`.
+fn create_event_name(name: &str, prefix: &str) -> String {
+    let mut result = String::from(prefix);
+
+    for c in name.chars() {
+        if c.is_ascii_uppercase() || c == '-' {
+            result.push('-');
+            result.push(c.to_ascii_lowercase());
+        } else {
+            result.push(c);
+        }
+    }
+
+    result
 }
 
 /// Analyze a JSX lambda's source code to extract identifier references and local declarations.
