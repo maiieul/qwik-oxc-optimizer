@@ -1044,6 +1044,9 @@ fn get_jsx_expression_span(expr: &JSXExpression<'_>) -> Option<(u32, u32)> {
 
 /// Transform a JSX attribute name to a display name suffix.
 ///
+/// NOTE: This is used ONLY for collector-internal nesting tracking (parent_display_name).
+/// The transform builds final display names from stack_ctxt (see transform.rs::register_context_name).
+///
 /// - `onClick$` -> `q_e_click`
 /// - `onInput$` -> `q_e_input`
 /// - `render$` -> `render`
@@ -1063,6 +1066,9 @@ fn transform_attr_name_for_display(attr_name: &str) -> String {
 }
 
 /// Derive display name for a JSX event handler.
+///
+/// NOTE: This is used ONLY for collector-internal nesting tracking (parent_display_name).
+/// The transform builds final display names from stack_ctxt (see transform.rs::register_context_name).
 fn derive_jsx_event_display_name(
     ctx: &CollectContext,
     element_name: Option<&str>,
@@ -1115,6 +1121,9 @@ fn walk_jsx_children_for_calls<'a>(
 }
 
 /// Derive the display name for a dollar call site from the lexical context.
+///
+/// NOTE: This is used ONLY for collector-internal nesting tracking (parent_display_name).
+/// The transform builds final display names from stack_ctxt (see transform.rs::register_context_name).
 ///
 /// The display name follows the pattern:
 /// - For `const Foo = component$(() => ...)` -> `"Foo_component"`

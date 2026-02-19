@@ -24,17 +24,6 @@ pub(crate) fn get_jsx_lambda_span(expr: &JSXExpression<'_>) -> Option<(u32, u32)
     }
 }
 
-/// Transform a JSX attribute name to a display name suffix.
-pub(crate) fn transform_attr_name_for_display(attr_name: &str) -> String {
-    let base = attr_name.strip_suffix('$').unwrap_or(attr_name);
-    if base.starts_with("on") && base.len() > 2 {
-        let event_part = &base[2..];
-        format!("q_e_{}", event_part.to_lowercase())
-    } else {
-        base.to_string()
-    }
-}
-
 // ---------------------------------------------------------------------------
 // JSX Transformation Helpers
 // ---------------------------------------------------------------------------
