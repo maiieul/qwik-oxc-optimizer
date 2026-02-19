@@ -32,12 +32,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Display names include all intermediate scope elements (no dropped parent elements like missing `div` between `App_component` and `button`)
   3. Parent field in segment metadata uses segment name with hash format (e.g. `renderHeader_XXXXXXXXXXXX`) not display name string (e.g. `test.tsx_renderHeader`)
   4. Segment filenames derived from corrected names match SWC filenames across all affected snapshots
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
+- [ ] 01-01-PLAN.md — Port SWC stack_ctxt naming architecture to OXC (escape_sym, segment_stack, dedup counter, JSX event naming)
+- [ ] 01-02-PLAN.md — Fix default export naming, verify hash computation, clean up dead collector code, comprehensive verification
 
 ### Phase 2: Metadata
 **Goal**: Segment metadata blocks in all output modules match SWC structure exactly (paramNames present, path fields populated correctly)
@@ -125,7 +124,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Naming & Display Names | 0/3 | Not started | - |
+| 1. Naming & Display Names | 0/2 | Planned | - |
 | 2. Metadata | 0/1 | Not started | - |
 | 3. Bugs & Correctness | 0/4 | Not started | - |
 | 4. Signal & Props Transforms | 0/3 | Not started | - |
