@@ -78,12 +78,12 @@ Plans:
   3. Inline component props are destructured via `_restProps` transform matching SWC's pattern
   4. QRL calls are hoisted to variable declarations (e.g. `const _ref = qrl(...)`) and referenced by variable, not inlined at each usage site
   5. Each implemented transform automatically adds its required imports (`_fnSignal`, `_wrapProp`, `_restProps` from `@builder.io/qwik`), reducing IMP-02 (missing imports) diffs as a side effect
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
-- [ ] 04-03: TBD
+- [ ] 04-01-PLAN.md — Extend JSX children signal wrapping for _wrapProp (named) + _fnSignal (complex reactive expressions)
+- [ ] 04-02-PLAN.md — Add loop tracking, q:p injection, QRL hoisting, event handler iteration variable transforms
+- [ ] 04-03-PLAN.md — Fix props destructuring: default values, skip cases, excluded_keys completeness
 
 ### Phase 5: JSX Keys & Flags
 **Goal**: JSX key values and immutability flags in _jsxSorted/_jsxSplit calls match SWC output exactly
