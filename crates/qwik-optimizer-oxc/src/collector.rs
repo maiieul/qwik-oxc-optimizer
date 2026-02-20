@@ -2,8 +2,12 @@
 //!
 //! Walk the parsed AST once (before transformation) to collect information
 //! needed by the transform pass: which imports come from `@qwik.dev/core`,
-//! which of those are `$`-suffixed, where `$()` call sites appear, and what
-//! the module exports. This is a read-only pass -- it does not mutate the AST.
+//! which of those are `$`-suffixed, what the module exports, and which
+//! identifiers are declared at module scope. This is a read-only pass --
+//! it does not mutate the AST.
+//!
+//! Display names and segment naming are handled entirely by the transform
+//! pass via `stack_ctxt` (see `transform.rs::register_context_name`).
 //!
 //! Also provides `compute_captures()` for capture analysis: given a set of
 //! identifier names referenced inside a $()-body and a set of names declared
@@ -16,7 +20,7 @@ use std::sync::LazyLock;
 use oxc::ast::ast::*;
 use oxc::semantic::Scoping;
 
-use crate::types::{CollectResult, DollarCallSite, ExportInfo, ImportInfo, ImportKind};
+use crate::types::{CollectResult, ExportInfo, ImportInfo, ImportKind};
 
 // ---------------------------------------------------------------------------
 // Capture Analysis
@@ -227,7 +231,7 @@ pub(crate) fn compute_captures(
     }
 }
 
-/// Context for tracking nesting depth during recursive AST walk.
+/// Context for the first-pass AST walk.
 struct CollectContext {
     /// Set of dollar-suffixed imports from @qwik.dev/core (or custom core_module).
     /// Contains LOCAL names (which may be aliases).
@@ -235,27 +239,12 @@ struct CollectContext {
     /// Alias map: local_name -> original_imported_name for $-suffixed imports.
     /// Only populated when the local name differs from the imported name.
     alias_map: HashMap<String, String>,
-    /// All located dollar call sites.
-    dollar_calls: Vec<DollarCallSite>,
     /// All import declarations.
     module_imports: Vec<ImportInfo>,
     /// All export declarations.
     module_exports: Vec<ExportInfo>,
     /// Names declared at module (top-level) scope.
     module_level_decls: HashSet<String>,
-    /// Current nesting depth inside $-calls (0 = top level).
-    nesting_depth: u32,
-    /// Parent call site's display name when nested.
-    parent_display_name: Option<String>,
-    /// Current variable name context (set when walking a variable declarator).
-    current_var_name: Option<String>,
-    /// Scope prefix from enclosing function declarations.
-    /// E.g., when inside `function App() { ... }`, scope_prefix is "App".
-    scope_prefix: Option<String>,
-    /// Name of wrapping non-dollar call when `$()` appears as an argument.
-    /// E.g., for `component($(() => ...))`, this is "component".
-    /// Used by `derive_display_name` to produce `renderHeader_component`.
-    wrapper_callee_name: Option<String>,
     /// The core module import path(s) to recognize as Qwik imports.
     /// Always includes "@qwik.dev/core"; may also include a custom core_module.
     core_modules: Vec<String>,
@@ -275,15 +264,9 @@ impl CollectContext {
         Self {
             dollar_imports: HashSet::new(),
             alias_map: HashMap::new(),
-            dollar_calls: Vec::new(),
             module_imports: Vec::new(),
             module_exports: Vec::new(),
             module_level_decls: HashSet::new(),
-            nesting_depth: 0,
-            parent_display_name: None,
-            current_var_name: None,
-            scope_prefix: None,
-            wrapper_callee_name: None,
             core_modules,
         }
     }
@@ -388,12 +371,12 @@ fn collect_statement_decl_names(names: &mut HashSet<String>, stmt: &oxc::ast::as
 /// Walks the program body to collect:
 /// - Dollar-suffixed imports from `@qwik.dev/core` (or custom core_module)
 /// - All import and export declarations
-/// - All `$()` call sites with display names and nesting info
 /// - Alias mappings for renamed $-suffixed imports
+/// - Module-level declaration names (for capture analysis)
+/// - Local `$`-suffixed definitions via `wrap()`/`implicit$FirstArg()`
 ///
-/// The `scoping` parameter is passed through for future capture analysis
-/// (Phase 9). It is unused in the collector but kept in the signature for
-/// API stability.
+/// Display names and segment naming are handled entirely by the transform
+/// pass via `stack_ctxt` (see `transform.rs::register_context_name`).
 ///
 /// The `core_module` parameter allows recognizing imports from a custom
 /// module (e.g., `@qwik.dev/react`, `@builder.io/qwik`) as Qwik core
@@ -433,7 +416,6 @@ pub(crate) fn collect<'a>(
     CollectResult {
         dollar_imports: ctx.dollar_imports,
         alias_map: ctx.alias_map,
-        dollar_calls: ctx.dollar_calls,
         module_imports: ctx.module_imports,
         module_exports: ctx.module_exports,
         module_level_decls: ctx.module_level_decls,
@@ -523,11 +505,9 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
                         ctx.dollar_imports.insert(name.clone());
                     }
 
-                    ctx.current_var_name = Some(name);
                     if let Some(init) = &declarator.init {
                         walk_expression_for_calls(ctx, init);
                     }
-                    ctx.current_var_name = None;
                 }
             }
             Declaration::FunctionDeclaration(func) => {
@@ -539,14 +519,11 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
                         span: (export.span.start, export.span.end),
                     });
 
-                    // Walk function body to find dollar calls inside exported functions
+                    // Walk function body to find wrap() definitions
                     if let Some(body) = &func.body {
-                        let prev_scope = ctx.scope_prefix.take();
-                        ctx.scope_prefix = Some(func_name);
                         for s in &body.statements {
                             walk_statement_for_calls(ctx, s);
                         }
-                        ctx.scope_prefix = prev_scope;
                     }
                 }
             }
@@ -599,11 +576,8 @@ fn collect_default_export(ctx: &mut CollectContext, export: &ExportDefaultDeclar
             }
         }
         _ => {
-            // For expressions, walk to find dollar calls
             if let Some(expr) = export.declaration.as_expression() {
-                ctx.current_var_name = Some("default".to_string());
                 walk_expression_for_calls(ctx, expr);
-                ctx.current_var_name = None;
             }
         }
     }
@@ -646,11 +620,9 @@ fn walk_statement_for_calls(ctx: &mut CollectContext, stmt: &Statement<'_>) {
                         ctx.dollar_imports.insert(name.clone());
                     }
                 }
-                ctx.current_var_name = var_name;
                 if let Some(init) = &declarator.init {
                     walk_expression_for_calls(ctx, init);
                 }
-                ctx.current_var_name = None;
             }
         }
         Statement::ExpressionStatement(expr_stmt) => {
@@ -681,20 +653,9 @@ fn walk_statement_for_calls(ctx: &mut CollectContext, stmt: &Statement<'_>) {
         }
         Statement::FunctionDeclaration(func) => {
             if let Some(body) = &func.body {
-                let func_name = func.id.as_ref().map(|id| id.name.as_str().to_string());
-                let prev_scope = ctx.scope_prefix.take();
-                if let Some(ref name) = func_name {
-                    // Compose with existing scope prefix for deeply nested functions
-                    ctx.scope_prefix = Some(if let Some(ref prev) = prev_scope {
-                        format!("{}_{}", prev, name)
-                    } else {
-                        name.clone()
-                    });
-                }
                 for s in &body.statements {
                     walk_statement_for_calls(ctx, s);
                 }
-                ctx.scope_prefix = prev_scope;
             }
         }
         _ => {}
@@ -705,48 +666,10 @@ fn walk_statement_for_calls(ctx: &mut CollectContext, stmt: &Statement<'_>) {
 fn walk_expression_for_calls(ctx: &mut CollectContext, expr: &Expression<'_>) {
     match expr {
         Expression::CallExpression(call) => {
-            if let Expression::Identifier(ident) = &call.callee {
-                let name = ident.name.as_str();
-                if ctx.dollar_imports.contains(name) {
-                    let original_name = ctx.alias_map.get(name).map(|s| s.as_str()).unwrap_or(name);
-                    let display_name = derive_display_name(ctx, original_name);
-                    let is_nested = ctx.nesting_depth > 0;
-                    let parent_name = ctx.parent_display_name.clone();
-
-                    ctx.dollar_calls.push(DollarCallSite {
-                        callee_name: original_name.to_string(),
-                        span: (call.span.start, call.span.end),
-                        display_name: display_name.clone(),
-                        is_nested,
-                        parent_name,
-                    });
-
-                    let prev_parent = ctx.parent_display_name.take();
-                    ctx.parent_display_name = Some(display_name);
-                    ctx.nesting_depth += 1;
-
-                    for arg in &call.arguments {
-                        walk_argument_for_calls(ctx, arg);
-                    }
-
-                    ctx.nesting_depth -= 1;
-                    ctx.parent_display_name = prev_parent;
-                    return;
-                }
-            }
-
-            // Non-dollar call: set wrapper_callee_name so nested $() calls
-            // can include the wrapper function name in their display name.
-            // E.g., component($(() => ...)) -> "renderHeader_component"
-            let prev_wrapper = ctx.wrapper_callee_name.take();
-            if let Expression::Identifier(ident) = &call.callee {
-                ctx.wrapper_callee_name = Some(ident.name.as_str().to_string());
-            }
             walk_expression_for_calls(ctx, &call.callee);
             for arg in &call.arguments {
                 walk_argument_for_calls(ctx, arg);
             }
-            ctx.wrapper_callee_name = prev_wrapper;
         }
         Expression::ArrowFunctionExpression(arrow) => {
             for stmt in &arrow.body.statements {
@@ -852,35 +775,7 @@ fn walk_jsx_expression_for_calls(ctx: &mut CollectContext, jsx_expr: &JSXExpress
     match jsx_expr {
         JSXExpression::EmptyExpression(_) => {}
         // JSXExpression inherits all Expression variants via inherit_variants! macro.
-        // CallExpression is the one we need to check for dollar calls.
         JSXExpression::CallExpression(call) => {
-            if let Expression::Identifier(ident) = &call.callee {
-                let name = ident.name.as_str();
-                if ctx.dollar_imports.contains(name) {
-                    let original_name = ctx.alias_map.get(name).map(|s| s.as_str()).unwrap_or(name);
-                    let display_name = derive_display_name(ctx, original_name);
-                    let is_nested = ctx.nesting_depth > 0;
-                    let parent_name = ctx.parent_display_name.clone();
-
-                    ctx.dollar_calls.push(DollarCallSite {
-                        callee_name: original_name.to_string(),
-                        span: (call.span.start, call.span.end),
-                        display_name: display_name.clone(),
-                        is_nested,
-                        parent_name,
-                    });
-
-                    let prev_parent = ctx.parent_display_name.take();
-                    ctx.parent_display_name = Some(display_name);
-                    ctx.nesting_depth += 1;
-                    for arg in &call.arguments {
-                        walk_argument_for_calls(ctx, arg);
-                    }
-                    ctx.nesting_depth -= 1;
-                    ctx.parent_display_name = prev_parent;
-                    return;
-                }
-            }
             walk_expression_for_calls(ctx, &call.callee);
             for arg in &call.arguments {
                 walk_argument_for_calls(ctx, arg);
@@ -901,125 +796,13 @@ fn walk_jsx_expression_for_calls(ctx: &mut CollectContext, jsx_expr: &JSXExpress
     }
 }
 
-/// Walk JSX element and its children for dollar calls.
+/// Walk JSX element and its children for wrap() definitions.
 fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>) {
-    let element_name = match &element.opening_element.name {
-        JSXElementName::Identifier(ident) => Some(ident.name.as_str().to_string()),
-        JSXElementName::NamespacedName(ns) => {
-            Some(format!("{}_{}", ns.namespace.name, ns.name.name))
-        }
-        JSXElementName::MemberExpression(_) => None,
-        _ => None,
-    };
-
     for attr in &element.opening_element.attributes {
         if let JSXAttributeItem::Attribute(attr) = attr {
-            let attr_name = match &attr.name {
-                JSXAttributeName::Identifier(ident) => ident.name.as_str(),
-                JSXAttributeName::NamespacedName(_ns) => {
-                    if let Some(value) = &attr.value {
-                        if let JSXAttributeValue::ExpressionContainer(container) = value {
-                            walk_jsx_expression_for_calls(ctx, &container.expression);
-                        }
-                    }
-                    continue;
-                }
-            };
-
-            if attr_name.ends_with('$') {
-                if let Some(value) = &attr.value {
-                    if let JSXAttributeValue::ExpressionContainer(container) = value {
-                        let expr_span = match &container.expression {
-                            JSXExpression::EmptyExpression(_) => None,
-                            _ => get_jsx_expression_span(&container.expression),
-                        };
-
-                        if let Some((start, end)) = expr_span {
-                            let event_suffix = transform_attr_name_for_display(attr_name);
-                            let display_name = derive_jsx_event_display_name(
-                                ctx,
-                                element_name.as_deref(),
-                                &event_suffix,
-                            );
-                            let is_nested = ctx.nesting_depth > 0;
-                            let parent_name = ctx.parent_display_name.clone();
-
-                            ctx.dollar_calls.push(DollarCallSite {
-                                callee_name: attr_name.to_string(),
-                                span: (start, end),
-                                display_name: display_name.clone(),
-                                is_nested,
-                                parent_name,
-                            });
-
-                            let prev_parent = ctx.parent_display_name.take();
-                            ctx.parent_display_name = Some(display_name);
-                            ctx.nesting_depth += 1;
-                            walk_jsx_expression_for_calls(ctx, &container.expression);
-                            ctx.nesting_depth -= 1;
-                            ctx.parent_display_name = prev_parent;
-                            continue;
-                        }
-                    }
-                }
-            }
-
             if let Some(value) = &attr.value {
                 if let JSXAttributeValue::ExpressionContainer(container) = value {
-                    // Check if the expression is a direct $() call inside a JSX attribute.
-                    // For patterns like onClick={$((ctx) => console.log(ctx))},
-                    // derive the display name using the JSX event naming pattern.
-                    let is_direct_dollar_call = matches!(
-                        &container.expression,
-                        JSXExpression::CallExpression(call)
-                            if matches!(&call.callee, Expression::Identifier(ident)
-                                if ctx.dollar_imports.contains(ident.name.as_str()))
-                    );
-
-                    if is_direct_dollar_call {
-                        // Convert attribute name to event suffix for display name
-                        // (e.g., "onClick" -> "onClick" used directly since it's not $-suffixed)
-                        let event_suffix = if attr_name.starts_with("on") && attr_name.len() > 2 {
-                            let event_part = &attr_name[2..];
-                            format!("q_e_{}", event_part.to_lowercase())
-                        } else {
-                            attr_name.to_string()
-                        };
-                        let display_name = derive_jsx_event_display_name(
-                            ctx,
-                            element_name.as_deref(),
-                            &event_suffix,
-                        );
-                        if let JSXExpression::CallExpression(call) = &container.expression {
-                            let callee_name = if let Expression::Identifier(ident) = &call.callee {
-                                let name = ident.name.as_str();
-                                ctx.alias_map.get(name).map(|s| s.as_str()).unwrap_or(name)
-                            } else {
-                                "$"
-                            };
-                            let is_nested = ctx.nesting_depth > 0;
-                            let parent_name = ctx.parent_display_name.clone();
-
-                            ctx.dollar_calls.push(DollarCallSite {
-                                callee_name: callee_name.to_string(),
-                                span: (call.span.start, call.span.end),
-                                display_name: display_name.clone(),
-                                is_nested,
-                                parent_name,
-                            });
-
-                            let prev_parent = ctx.parent_display_name.take();
-                            ctx.parent_display_name = Some(display_name);
-                            ctx.nesting_depth += 1;
-                            for arg in &call.arguments {
-                                walk_argument_for_calls(ctx, arg);
-                            }
-                            ctx.nesting_depth -= 1;
-                            ctx.parent_display_name = prev_parent;
-                        }
-                    } else {
-                        walk_jsx_expression_for_calls(ctx, &container.expression);
-                    }
+                    walk_jsx_expression_for_calls(ctx, &container.expression);
                 }
             }
         }
@@ -1027,77 +810,6 @@ fn walk_jsx_element_for_calls(ctx: &mut CollectContext, element: &JSXElement<'_>
     walk_jsx_children_for_calls(ctx, &element.children);
 }
 
-/// Get the span of a JSXExpression.
-fn get_jsx_expression_span(expr: &JSXExpression<'_>) -> Option<(u32, u32)> {
-    match expr {
-        JSXExpression::EmptyExpression(_) => None,
-        JSXExpression::ArrowFunctionExpression(arrow) => Some((arrow.span.start, arrow.span.end)),
-        JSXExpression::FunctionExpression(func) => Some((func.span.start, func.span.end)),
-        JSXExpression::CallExpression(call) => Some((call.span.start, call.span.end)),
-        JSXExpression::Identifier(ident) => Some((ident.span.start, ident.span.end)),
-        _ => {
-            // from the expression type. Many expression variants have a span field.
-            None
-        }
-    }
-}
-
-/// Transform a JSX attribute name to a display name suffix.
-///
-/// NOTE: This is used ONLY for collector-internal nesting tracking (parent_display_name).
-/// The transform builds final display names from stack_ctxt (see transform.rs::register_context_name).
-///
-/// - `onClick$` -> `q_e_click`
-/// - `onInput$` -> `q_e_input`
-/// - `render$` -> `render`
-/// - `shouldRemove$` -> `shouldRemove`
-fn transform_attr_name_for_display(attr_name: &str) -> String {
-    // Strip trailing $
-    let base = attr_name.strip_suffix('$').unwrap_or(attr_name);
-
-    // Handle onX -> q_e_x pattern
-    if base.starts_with("on") && base.len() > 2 {
-        let event_part = &base[2..]; // Everything after "on"
-        // Convert camelCase to lowercase
-        format!("q_e_{}", event_part.to_lowercase())
-    } else {
-        base.to_string()
-    }
-}
-
-/// Derive display name for a JSX event handler.
-///
-/// NOTE: This is used ONLY for collector-internal nesting tracking (parent_display_name).
-/// The transform builds final display names from stack_ctxt (see transform.rs::register_context_name).
-fn derive_jsx_event_display_name(
-    ctx: &CollectContext,
-    element_name: Option<&str>,
-    event_suffix: &str,
-) -> String {
-    // When inside a $()-body, parent_display_name already includes scope_prefix.
-    // When NOT inside a $()-body, fall back to current_var_name with scope_prefix prepended.
-    let parent_ctx = if let Some(ref parent) = ctx.parent_display_name {
-        parent.clone()
-    } else if let Some(ref var_name) = ctx.current_var_name {
-        if let Some(ref prefix) = ctx.scope_prefix {
-            format!("{}_{}", prefix, var_name)
-        } else {
-            var_name.clone()
-        }
-    } else if let Some(ref prefix) = ctx.scope_prefix {
-        prefix.clone()
-    } else {
-        String::new()
-    };
-
-    let elem = element_name.unwrap_or("_");
-
-    if parent_ctx.is_empty() {
-        format!("{}_{}", elem, event_suffix)
-    } else {
-        format!("{}_{}_{}", parent_ctx, elem, event_suffix)
-    }
-}
 
 /// Walk JSX children for dollar calls.
 fn walk_jsx_children_for_calls<'a>(
@@ -1120,45 +832,3 @@ fn walk_jsx_children_for_calls<'a>(
     }
 }
 
-/// Derive the display name for a dollar call site from the lexical context.
-///
-/// NOTE: This is used ONLY for collector-internal nesting tracking (parent_display_name).
-/// The transform builds final display names from stack_ctxt (see transform.rs::register_context_name).
-///
-/// The display name follows the pattern:
-/// - For `const Foo = component$(() => ...)` -> `"Foo_component"`
-/// - For `const bar = $(() => ...)` -> `"bar"`
-/// - For nested `$()` inside another `$()` body -> uses parent context
-/// - The filename prefix is NOT included here -- it's added during segment data construction.
-fn derive_display_name(ctx: &CollectContext, callee_name: &str) -> String {
-    let var_name = ctx.current_var_name.as_deref().unwrap_or("");
-
-    let callee_suffix = callee_name.strip_suffix('$').unwrap_or("");
-
-    let base = if var_name.is_empty() {
-        if callee_suffix.is_empty() {
-            "s_".to_string()
-        } else {
-            callee_suffix.to_string()
-        }
-    } else if callee_suffix.is_empty() {
-        // When a bare $() is an argument to a non-dollar wrapper function like
-        // component($(...)), include the wrapper name to avoid collisions with
-        // a direct $() assignment to the same variable.
-        // E.g., component($(() => ...)) on var "renderHeader" -> "renderHeader_component"
-        if let Some(ref wrapper) = ctx.wrapper_callee_name {
-            format!("{var_name}_{wrapper}")
-        } else {
-            var_name.to_string()
-        }
-    } else {
-        format!("{var_name}_{callee_suffix}")
-    };
-
-    // Prepend scope prefix (from enclosing function declarations)
-    if let Some(ref prefix) = ctx.scope_prefix {
-        format!("{prefix}_{base}")
-    } else {
-        base
-    }
-}

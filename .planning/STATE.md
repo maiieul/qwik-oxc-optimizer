@@ -51,7 +51,7 @@ Recent decisions affecting current work:
 - [01-02]: Fragment naming: only push when transpile_jsx=true (SWC sees Fragment after JSX transform)
 - [01-02]: Raw $() calls: don't push callee name (SWC's handle_qsegment returns before push)
 - [01-02]: Prod mode: use s_HASH for segment names in EmitMode::Prod
-- [01-02]: Collector display name functions: kept for internal nesting tracking, documented as NOT used for final naming
+- [01-cleanup]: Collector display name derivation removed entirely (DollarCallSite, derive_display_name, etc.) -- was dead code never consumed by transform
 
 ### Pending Todos
 

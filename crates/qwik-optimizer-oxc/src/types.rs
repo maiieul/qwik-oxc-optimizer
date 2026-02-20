@@ -426,9 +426,6 @@ pub(crate) struct CollectResult {
     /// e.g., {"Component" -> "component$", "onRender" -> "$"}
     pub alias_map: HashMap<String, String>,
 
-    /// Located $-call sites with span info.
-    pub dollar_calls: Vec<DollarCallSite>,
-
     /// All import declarations in the module.
     pub module_imports: Vec<ImportInfo>,
 
@@ -440,27 +437,6 @@ pub(crate) struct CollectResult {
     /// need serialization through `_captures`. Includes variable declarations,
     /// function declarations, and class declarations at the top level.
     pub module_level_decls: HashSet<String>,
-}
-
-/// A located $-call site in the source code.
-#[derive(Debug, Clone)]
-#[allow(dead_code)]
-pub(crate) struct DollarCallSite {
-    /// The name of the callee (e.g., "$", "component$").
-    pub callee_name: String,
-
-    /// Byte offset span of the entire call expression.
-    pub span: (u32, u32),
-
-    /// The display name derived from the lexical context
-    /// (e.g., "Header_component" for `const Header = component$(...)`).
-    pub display_name: String,
-
-    /// Whether this is a nested $-call (inside another $-call's body).
-    pub is_nested: bool,
-
-    /// The parent $-call's display name, if nested.
-    pub parent_name: Option<String>,
 }
 
 /// The kind of import specifier (default, namespace, or named).
