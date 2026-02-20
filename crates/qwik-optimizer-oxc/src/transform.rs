@@ -97,6 +97,18 @@ pub(crate) struct ImportTracker {
 
     /// Monotonic counter for hoisted function names (_hf0, _hf1, ...).
     pub hoisted_fn_counter: u32,
+
+    /// Set of identifier names that are considered "immutable" component tags.
+    /// Using these as JSX element tags does NOT set jsx_mutable = true.
+    /// Built from imports: Fragment, RenderOnce, Link, and any import from ?jsx or .md sources.
+    /// Mirrors SWC's immutable_function_cmp.
+    pub immutable_function_cmp: HashSet<String>,
+
+    /// Tracks whether the current JSX subtree has been marked as mutable.
+    /// Set to true when mutable children or non-immutable component tags are encountered.
+    /// Saved/restored around children processing to avoid leaking between siblings.
+    /// Mirrors SWC's jsx_mutable.
+    pub jsx_mutable: bool,
 }
 
 /// The core Qwik transform traversal state.
@@ -270,13 +282,74 @@ impl QwikTransform {
             format!("{}{}", c0, c1)
         };
 
+        // Build immutable_function_cmp set from imports (mirrors SWC lines 205-232).
+        // These are component tags that don't set jsx_mutable = true.
+        let mut immutable_function_cmp = HashSet::new();
+        // Always include _Fragment (the transform-generated import name)
+        immutable_function_cmp.insert("_Fragment".to_string());
+        for import in &collected.module_imports {
+            let source = &import.source;
+
+            // Fragment from jsx-runtime or jsx-dev-runtime
+            if source.contains("jsx-runtime") || source.contains("jsx-dev-runtime") {
+                for local_name in &import.specifiers {
+                    let imported_name = import
+                        .specifier_aliases
+                        .get(local_name)
+                        .map(|s| s.as_str())
+                        .unwrap_or(local_name.as_str());
+                    if imported_name == "Fragment" {
+                        immutable_function_cmp.insert(local_name.clone());
+                    }
+                }
+            }
+
+            // Fragment, RenderOnce from @qwik.dev/core or @builder.io/qwik
+            if source == "@qwik.dev/core" || source == "@builder.io/qwik" {
+                for local_name in &import.specifiers {
+                    let imported_name = import
+                        .specifier_aliases
+                        .get(local_name)
+                        .map(|s| s.as_str())
+                        .unwrap_or(local_name.as_str());
+                    if imported_name == "Fragment" || imported_name == "RenderOnce" {
+                        immutable_function_cmp.insert(local_name.clone());
+                    }
+                }
+            }
+
+            // Link from @qwik.dev/router or @builder.io/qwik-city
+            if source == "@qwik.dev/router" || source == "@builder.io/qwik-city" {
+                for local_name in &import.specifiers {
+                    let imported_name = import
+                        .specifier_aliases
+                        .get(local_name)
+                        .map(|s| s.as_str())
+                        .unwrap_or(local_name.as_str());
+                    if imported_name == "Link" {
+                        immutable_function_cmp.insert(local_name.clone());
+                    }
+                }
+            }
+
+            // ALL names from ?jsx or .md sources
+            if source.ends_with("?jsx") || source.ends_with(".md") {
+                for local_name in &import.specifiers {
+                    immutable_function_cmp.insert(local_name.clone());
+                }
+            }
+        }
+
         Self {
             options: options.clone(),
             collected,
             filename: filename.to_string(),
             segments: Vec::new(),
             diagnostics: Vec::new(),
-            import_tracker: ImportTracker::default(),
+            import_tracker: ImportTracker {
+                immutable_function_cmp,
+                ..ImportTracker::default()
+            },
             segment_counter: 0,
             dollar_call_stack: Vec::new(),
             pending_dollar_calls: HashSet::new(),
