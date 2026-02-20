@@ -64,7 +64,10 @@ export const Parent_component_XXXXXXXXXXXX = () => {
     "div",
     null,
     {
-      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Parent_component_div_q_e_click_XXXXXXXXXXXX"),
+      "q-e:click": /* @__PURE__ */ qrl(
+        i_XXXXXXXXXXXX,
+        "Parent_component_div_q_e_click_XXXXXXXXXXXX",
+      ),
     },
     _wrapProp(state, "text"),
     3,
@@ -157,7 +160,10 @@ export const Child_component_XXXXXXXXXXXX = () => {
     "div",
     null,
     {
-      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_div_q_e_click_XXXXXXXXXXXX"),
+      "q-e:click": /* @__PURE__ */ qrl(
+        i_XXXXXXXXXXXX,
+        "Child_component_div_q_e_click_XXXXXXXXXXXX",
+      ),
     },
     _wrapProp(state, "text"),
     3,

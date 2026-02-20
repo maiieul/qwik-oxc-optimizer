@@ -179,7 +179,10 @@ const AppDynamic1_component_R00UJ05gbes = (props) => {
   );
 };
 export const AppDynamic1 = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ inlinedQrl(AppDynamic1_component_R00UJ05gbes, "AppDynamic1_component_R00UJ05gbes"),
+  /* @__PURE__ */ inlinedQrl(
+    AppDynamic1_component_R00UJ05gbes,
+    "AppDynamic1_component_R00UJ05gbes",
+  ),
 );
 const AppDynamic2_component_3EY2zm0v00A = (props) => {
   return /* @__PURE__ */ _jsxSorted(
@@ -195,21 +198,30 @@ const AppDynamic2_component_3EY2zm0v00A = (props) => {
   );
 };
 export const AppDynamic2 = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ inlinedQrl(AppDynamic2_component_3EY2zm0v00A, "AppDynamic2_component_3EY2zm0v00A"),
+  /* @__PURE__ */ inlinedQrl(
+    AppDynamic2_component_3EY2zm0v00A,
+    "AppDynamic2_component_3EY2zm0v00A",
+  ),
 );
 const AppDynamic3_component_FVq83NlbTDQ = (props) => {
   if (prop.value) return /* @__PURE__ */ _jsxSorted(Stuff, null, null, null, 3, "u6_17");
   return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, "u6_18");
 };
 export const AppDynamic3 = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ inlinedQrl(AppDynamic3_component_FVq83NlbTDQ, "AppDynamic3_component_FVq83NlbTDQ"),
+  /* @__PURE__ */ inlinedQrl(
+    AppDynamic3_component_FVq83NlbTDQ,
+    "AppDynamic3_component_FVq83NlbTDQ",
+  ),
 );
 const AppDynamic4_component_IO0yr8UvWEI = (props) => {
   if (prop.value) return /* @__PURE__ */ _jsxSorted("div", null, null, null, 3, "u6_19");
   return /* @__PURE__ */ _jsxSorted(Stuff, null, null, null, 3, "u6_20");
 };
 export const AppDynamic4 = /* @__PURE__ */ componentQrl(
-  /* @__PURE__ */ inlinedQrl(AppDynamic4_component_IO0yr8UvWEI, "AppDynamic4_component_IO0yr8UvWEI"),
+  /* @__PURE__ */ inlinedQrl(
+    AppDynamic4_component_IO0yr8UvWEI,
+    "AppDynamic4_component_IO0yr8UvWEI",
+  ),
 );
 const AppStatic_component_gYRXqF3G5nE = (props) => {
   return /* @__PURE__ */ _jsxSorted(

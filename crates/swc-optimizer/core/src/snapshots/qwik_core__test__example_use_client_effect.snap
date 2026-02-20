@@ -37,14 +37,17 @@ import { _wrapProp } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useBrowserVisibleTaskQrl } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Child_component_useBrowserVisibleTask_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Child_component_useBrowserVisibleTask_XXXXXXXXXXXX");
 export const Child_component_XXXXXXXXXXXX = () => {
   const state = useStore({
     count: 0,
   });
   // Double count watch
   useBrowserVisibleTaskQrl(
-    /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_useBrowserVisibleTask_XXXXXXXXXXXX", [state]),
+    /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Child_component_useBrowserVisibleTask_XXXXXXXXXXXX", [
+      state,
+    ]),
   );
   return /* @__PURE__ */ _jsxSorted("div", null, null, _wrapProp(state, "count"), 3, "u6_0");
 };

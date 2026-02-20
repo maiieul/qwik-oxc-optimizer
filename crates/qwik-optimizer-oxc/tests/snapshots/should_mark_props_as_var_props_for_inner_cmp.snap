@@ -99,10 +99,13 @@ import { Fragment as _Fragment } from "@qwik.dev/core/jsx-runtime";
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useResourceQrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX");
 export const ModelImg_component_XXXXXXXXXXXX = (props) => {
   const imgLoc = useResourceQrl(
-    /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX", [props]),
+    /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "ModelImg_component_imgLoc_useResource_XXXXXXXXXXXX", [
+      props,
+    ]),
   );
   return /* @__PURE__ */ _jsxSorted(
     _Fragment,

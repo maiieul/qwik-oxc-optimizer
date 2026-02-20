@@ -28,9 +28,11 @@ export const test_component_XXXXXXXXXXXX = (props) => {
     "button",
     {
       ..._getVarProps(props),
-      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_component_button_q_e_click_XXXXXXXXXXXX", [
-        props,
-      ]),
+      "q-e:click": /* @__PURE__ */ qrl(
+        i_XXXXXXXXXXXX,
+        "test_component_button_q_e_click_XXXXXXXXXXXX",
+        [props],
+      ),
     },
     _getConstProps(props),
     null,

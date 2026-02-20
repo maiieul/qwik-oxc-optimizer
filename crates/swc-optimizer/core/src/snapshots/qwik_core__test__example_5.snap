@@ -28,7 +28,9 @@ export const Header_component_XXXXXXXXXXXX = () => {
   return (
     <>
       <div onClick={(ctx) => console.log("1")} />
-      <div onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_div_onClick_XXXXXXXXXXXX")} />
+      <div
+        onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_div_onClick_XXXXXXXXXXXX")}
+      />
     </>
   );
 };

@@ -72,7 +72,8 @@ export const Foo_component_XXXXXXXXXXXX = () => {
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_documentscroll_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () =>
   import("./test.tsx_Foo_component_div_host_onDocumentScroll_1_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_handler_XXXXXXXXXXXX");
@@ -80,7 +81,8 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_click_XXXX
 const i_XXXXXXXXXXXX = () =>
   import("./test.tsx_Foo_component_div_host_onDocumentScroll_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_host_onClick_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_q_e_c_lick_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Foo_component_div_custom_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () =>
@@ -100,7 +102,10 @@ export const Foo_component_1_XXXXXXXXXXXX = () => {
         i_XXXXXXXXXXXX,
         "Foo_component_div_q_e_documentscroll_1_XXXXXXXXXXXX",
       ),
-      "q-e:c-lick": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Foo_component_div_q_e_c_lick_XXXXXXXXXXXX"),
+      "q-e:c-lick": /* @__PURE__ */ qrl(
+        i_XXXXXXXXXXXX,
+        "Foo_component_div_q_e_c_lick_XXXXXXXXXXXX",
+      ),
       "q-e:document--scroll": /* @__PURE__ */ qrl(
         i_XXXXXXXXXXXX,
         "Foo_component_div_q_e_document_scroll_XXXXXXXXXXXX",

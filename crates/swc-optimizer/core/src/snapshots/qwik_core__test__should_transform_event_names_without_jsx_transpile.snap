@@ -31,8 +31,10 @@ export const Greeter = /* @__PURE__ */ componentQrl(
 === test.tsx_Greeter_component_XXXXXXXXXXXX.tsx === (ENTRY)
 import mongo from "mongodb";
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX");
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Greeter_component_div_div_q_e_click_2_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Greeter_component_div_div_q_e_click_1_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () => import("./test.tsx_Greeter_component_div_div_q_e_click_XXXXXXXXXXXX");
 export const Greeter_component_XXXXXXXXXXXX = () => {
   // Double count watch

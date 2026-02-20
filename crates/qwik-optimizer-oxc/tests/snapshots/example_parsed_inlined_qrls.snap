@@ -54,7 +54,14 @@ export const App = /* @__PURE__ */ componentQrl(
       null,
       null,
       [
-        /* @__PURE__ */ _jsxSorted("p", null, null, ["Count: ", _wrapProp(store, "count")], 3, null),
+        /* @__PURE__ */ _jsxSorted(
+          "p",
+          null,
+          null,
+          ["Count: ", _wrapProp(store, "count")],
+          3,
+          null,
+        ),
         /* @__PURE__ */ _jsxSorted(
           "p",
           null,

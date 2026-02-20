@@ -34,7 +34,8 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Cmp_component_XXXXXXXXXXXX");
 import { _jsxSorted } from "@qwik.dev/core";
 import { _wrapProp } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Cmp_component_div_div_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Cmp_component_div_div_button_q_e_click_XXXXXXXXXXXX");
 export const Cmp_component_XXXXXXXXXXXX = () => {
   const htmlSignal = useSignal("<h2><span>I'm a signal value!</span></h2>");
   return /* @__PURE__ */ _jsxSorted(

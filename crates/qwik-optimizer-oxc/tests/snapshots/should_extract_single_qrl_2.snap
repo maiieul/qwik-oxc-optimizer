@@ -44,7 +44,8 @@ import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 import { useStore } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./test.tsx_Parent_component_div_button_q_e_click_XXXXXXXXXXXX");
+const i_XXXXXXXXXXXX = () =>
+  import("./test.tsx_Parent_component_div_button_q_e_click_XXXXXXXXXXXX");
 const i_XXXXXXXXXXXX = () =>
   import("./test.tsx_Parent_component_div_button_q_e_click_1_XXXXXXXXXXXX");
 export const Parent_component_XXXXXXXXXXXX = () => {

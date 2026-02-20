@@ -29,7 +29,9 @@ const renderHeader = component(
 import { qrl } from "@qwik.dev/core";
 const i_XXXXXXXXXXXX = () => import("./test.tsx_renderHeader_div_onClick_XXXXXXXXXXXX");
 export const renderHeader_XXXXXXXXXXXX = () => {
-  return <div onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "renderHeader_div_onClick_XXXXXXXXXXXX")} />;
+  return (
+    <div onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "renderHeader_div_onClick_XXXXXXXXXXXX")} />
+  );
 };
 
 /*

@@ -64,7 +64,9 @@ export const ButtonArrow = (_rawProps) => {
     <button
       q-e:color={_rawProps.color}
       q-e:click={
-        /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "ButtonArrow_button_q_e_click_XXXXXXXXXXXX", [_rawProps])
+        /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "ButtonArrow_button_q_e_click_XXXXXXXXXXXX", [
+          _rawProps,
+        ])
       }
     >
       {_rawProps.text}

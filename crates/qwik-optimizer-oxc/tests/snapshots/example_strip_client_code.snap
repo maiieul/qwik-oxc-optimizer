@@ -67,7 +67,9 @@ export const Parent = /* @__PURE__ */ componentQrl(
         shouldRemove$: /* @__PURE__ */ _noopQrl("Parent_component_div_shouldRemove_EBj69wTX1do", [
           state,
         ]),
-        "q-e:click": /* @__PURE__ */ _noopQrl("Parent_component_div_q_e_click_oqNnfO6ubjU", [state]),
+        "q-e:click": /* @__PURE__ */ _noopQrl("Parent_component_div_q_e_click_oqNnfO6ubjU", [
+          state,
+        ]),
       },
       [
         /* @__PURE__ */ _jsxSorted(

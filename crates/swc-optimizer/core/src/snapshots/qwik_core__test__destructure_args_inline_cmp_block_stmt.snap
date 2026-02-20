@@ -26,7 +26,9 @@ export default (_rawProps) => {
     "div",
     {
       "data-is-active": _fnSignal(_hf0, [_rawProps], _hf0_str),
-      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_div_q_e_click_XXXXXXXXXXXX", [_rawProps]),
+      "q-e:click": /* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "test_div_q_e_click_XXXXXXXXXXXX", [
+        _rawProps,
+      ]),
     },
     null,
     null,

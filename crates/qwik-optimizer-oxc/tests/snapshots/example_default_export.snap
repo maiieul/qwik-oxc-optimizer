@@ -21,7 +21,8 @@ export default /* @__PURE__ */ componentQrl(
 === src/routes/_repl/[id]/[[...slug]].tsx_slug_component_XXXXXXXXXXXX.js ===
 import { _jsxSorted } from "@qwik.dev/core";
 import { qrl } from "@qwik.dev/core";
-const i_XXXXXXXXXXXX = () => import("./[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX.js");
+const i_XXXXXXXXXXXX = () =>
+  import("./[[...slug]].tsx_slug_component_div_q_e_click_XXXXXXXXXXXX.js");
 export const slug_component_XXXXXXXXXXXX = () => {
   return /* @__PURE__ */ _jsxSorted(
     "div",

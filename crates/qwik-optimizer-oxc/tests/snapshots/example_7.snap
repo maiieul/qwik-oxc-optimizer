@@ -30,7 +30,9 @@ const i_XXXXXXXXXXXX = () => import("./test.tsx_Header_component_div_onClick_XXX
 export const Header_component_XXXXXXXXXXXX = () => {
   console.log("mount");
   return (
-    <div onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_div_onClick_XXXXXXXXXXXX")} />
+    <div
+      onClick={/* @__PURE__ */ qrl(i_XXXXXXXXXXXX, "Header_component_div_onClick_XXXXXXXXXXXX")}
+    />
   );
 };
 
