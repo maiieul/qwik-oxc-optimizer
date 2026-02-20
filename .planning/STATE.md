@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 6 (imports/cleanup) -- entry module import scoping (06-01) and segment import ordering (06-02) done.
+**Current focus:** Phase 6 complete. All 16 plans across 6 phases executed. 24/162 snapshots match exactly, 138 remaining diffs.
 
 ## Current Position
 
 Phase: 6 of 6 (Import Ordering & Cleanup)
-Plan: 2 of 3 complete in phase 6 (06-01 entry import scoping + 06-02 segment import ordering done)
-Status: In progress
-Last activity: 2026-02-20 - Completed 06-01-PLAN.md (entry module import scoping)
+Plan: 3 of 3 complete in phase 6 (all plans done)
+Status: Phase complete -- ALL PHASES COMPLETE
+Last activity: 2026-02-20 - Completed 06-03-PLAN.md (QRL hoisting and lazy import ordering)
 
-Progress: [███████████████] ~97%
+Progress: [████████████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
+- Total plans completed: 16
 - Average duration: 15min
-- Total execution time: 4.2 hours
+- Total execution time: 4.4 hours
 
 **By Phase:**
 
@@ -32,11 +32,11 @@ Progress: [███████████████] ~97%
 | 03-bugs-correctness | 3/3 | 51min | 17min |
 | 04-signal-props-transforms | 4/4 | 77min | 19min |
 | 05-jsx-keys-flags | 3/3 | 36min | 12min |
-| 06-import-ordering-cleanup | 2/3 | 28min | 14min |
+| 06-import-ordering-cleanup | 3/3 | 39min | 13min |
 
 **Recent Trend:**
-- Last 5 plans: 05-01 (9min), 05-02 (14min), 05-03 (13min), 06-02 (8min), 06-01 (20min)
-- Trend: Entry import scoping required deep AST walker for referenced-ident collection, including JSX handling. 8 snapshots fixed.
+- Last 5 plans: 05-03 (13min), 06-02 (8min), 06-01 (20min), 06-03 (11min)
+- Trend: Final phase plans executed efficiently. QRL hoisting + lazy import ordering completed in 11min.
 
 *Updated after each plan completion*
 
@@ -99,6 +99,10 @@ Recent decisions affecting current work:
 - [06-01]: JSX element names need dedicated walker (JSXIdentifier/JSXElementName separate from Expression::Identifier)
 - [06-01]: BTreeMap grouping for specifier merging preserves insertion order (matches SWC original specifier order)
 - [06-01]: Side-effect imports (no specifiers) always kept regardless of reference scanning
+- [06-03]: Flush QRL hoists at function/arrow exit when loop_depth == 0 (avoids flushing inside .map() callback arrows)
+- [06-03]: Insert hoisted const declarations after variable declarations at function body top (matches SWC positioning)
+- [06-03]: Forward iteration order for hoists matches SWC BTreeMap alphabetical ordering
+- [06-03]: Lazy imports filtered by referenced-ident analysis in exit_program (critical for correct entry module with hoisted QRLs)
 
 ### Pending Todos
 
@@ -118,15 +122,19 @@ None.
 - Post-formatting restored (cherry-picked from sort-format-fix): 2-space indent, object expansion, JSX-aware parsing
 - Segment import ordering RESOLVED (06-02): 0 ordering-only diffs, 48 set diffs remain (other phase issues)
 - Entry module extra imports RESOLVED (06-01): post-hoc filtering eliminates segment-only imports (8 snapshots fixed, 156->148)
-- Remaining snapshot diffs are Phase 6 issues:
-  - use*() return value destructuring inlining (2 fixtures)
-  - QRL hoisting (deferred from 04-02)
-- 1 deferred naming issue (should_extract_single_qrl_2) -- dedup suffix on wrong segment due to traverse order
-- Text normalization: trailing spaces in JSX text nodes stripped (e.g., "First " -> "First") -- noted for future fix
-- 21 remaining flag mismatches: 10 OXC=1/SWC=3 (over-aggressive mutability), 8 OXC=3/SWC=1 (scope analysis needed for globals/locals), 3 edge cases
+- QRL hoisting RESOLVED (06-03): loop-context QRL calls hoisted to enclosing function body (10 more snapshots fixed, 148->138)
+- Entry module lazy import ordering RESOLVED (06-03): sorted + filtered by referenced-ident analysis
+- Remaining 138 snapshot diffs are beyond scope of current 6-phase plan:
+  - Capture list differences (iteration variables in captures, missing/extra captures)
+  - _fnSignal hoisting to module level vs segment level
+  - q:p / var_props ordering differences
+  - JSX flag differences (21 scope-analysis issues)
+  - Text normalization (trailing spaces in JSX text nodes)
+  - Segment body code differences (_hf naming, _fnSignal usage)
+  - 1 deferred naming issue (should_extract_single_qrl_2 dedup suffix)
 
 ## Session Continuity
 
-Last session: 2026-02-20T21:30:10Z
-Stopped at: Completed 06-01-PLAN.md (entry module import scoping)
+Last session: 2026-02-20T21:46:37Z
+Stopped at: Completed 06-03-PLAN.md (QRL hoisting and lazy import ordering) -- ALL PHASES COMPLETE
 Resume file: None
