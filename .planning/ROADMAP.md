@@ -46,10 +46,10 @@ Plans:
   1. Every segment's metadata JSON includes a `paramNames` array listing the segment function's parameter names
   2. The `path` field in segment metadata is populated with the file path (not empty), and `canonicalFilename` does not contain the path prefix that belongs in `path`
   3. Metadata-related diff lines are eliminated across the ~90 affected snapshots
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Implement paramNames extraction for $() calls and JSX event handlers, fix rel_dir backslash normalization
 
 ### Phase 3: Bugs & Correctness
 **Goal**: All correctness bugs are fixed -- TypeScript types stripped, all segments extracted, captures correct, component options preserved, comments retained
