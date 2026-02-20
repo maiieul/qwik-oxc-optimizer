@@ -18,8 +18,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Metadata** - Add paramNames and fix path field handling across 90+ snapshots
 - [x] **Phase 3: Bugs & Correctness** - Fix TS stripping, missing segments, captures, component options, comments
 - [x] **Phase 4: Signal & Props Transforms** - Implement _fnSignal, _wrapProp, props destructuring, QRL hoisting
-- [ ] **Phase 5: JSX Keys & Flags** - Fix key generation and immutability flag values
-- [ ] **Phase 6: Import Ordering & Cleanup** - Sort imports, merge specifiers, fix paths as final cleanup pass
+- [x] **Phase 5: JSX Keys & Flags** - Fix key generation and immutability flag values
+- [ ] **Phase 6: Import Ordering & Cleanup** - Sort imports, fix scoping, hoist QRLs, final cleanup pass
 
 ## Phase Details
 
@@ -102,26 +102,27 @@ Plans:
 - [x] 05-03-PLAN.md — [Gap closure] Fix mutable propagation from child elements to parents, fix member expression immutability classification
 
 ### Phase 6: Import Ordering & Cleanup
-**Goal**: Import statements in all output modules match SWC exactly in order, grouping, specifier merging, and path format -- the final cleanup pass to reach 0/162 diffs
+**Goal**: Fix import scoping, ordering, and remaining code-level diffs to close the gap toward 0/162 snapshot diffs
 **Depends on**: Phase 5 (all imports must exist before sorting; features in phases 3-5 add imports as side effects)
 **Requirements**: IMP-01, IMP-02, IMP-03, IMP-04
 **Success Criteria** (what must be TRUE):
   1. Import statements appear in the same order as SWC output (consistent sorting algorithm applied)
   2. No missing or extra imports remain in any output module (correct import set per module)
-  3. Multiple imports from the same module are merged into a single import statement with combined specifiers
-  4. Relative import paths match SWC format exactly (e.g. `./test.tsx_Header_...` not `./project/test.tsx_Header_...`)
-  5. All 162 snapshot tests pass with zero diffs against the SWC golden reference
-**Plans**: TBD
+  3. Relative import paths match SWC format exactly
+  4. QRL calls inside loops are hoisted to const declarations matching SWC
+  5. Snapshot diff count significantly reduced from 156 remaining diffs
+**Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md — Fix entry module import scoping: stop emitting segment-only imports, filter unused imports, fix body ordering
+- [ ] 06-02-PLAN.md — Fix segment module import ordering: alphabetical sort by local name matching SWC's local_idents.sort()
+- [ ] 06-03-PLAN.md — QRL hoisting inside function bodies + entry module lazy import ordering
 
 ## Progress
 
 **Execution Order:**
 Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
-(Subject to reassessment after each phase — see Overview)
+(Subject to reassessment after each phase -- see Overview)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -130,4 +131,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Bugs & Correctness | 3/3 | Complete | 2026-02-20 |
 | 4. Signal & Props Transforms | 4/4 | Complete | 2026-02-20 |
 | 5. JSX Keys & Flags | 3/3 | Complete (gaps remain) | 2026-02-20 |
-| 6. Import Ordering & Cleanup | 0/2 | Not started | - |
+| 6. Import Ordering & Cleanup | 0/3 | Not started | - |
