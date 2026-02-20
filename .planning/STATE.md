@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 6 (imports/cleanup) -- segment import ordering done (06-02).
+**Current focus:** Phase 6 (imports/cleanup) -- entry module import scoping (06-01) and segment import ordering (06-02) done.
 
 ## Current Position
 
 Phase: 6 of 6 (Import Ordering & Cleanup)
-Plan: 2 of 3 complete in phase 6 (06-02 segment import ordering done)
+Plan: 2 of 3 complete in phase 6 (06-01 entry import scoping + 06-02 segment import ordering done)
 Status: In progress
-Last activity: 2026-02-20 - Completed 06-02-PLAN.md (segment import ordering)
+Last activity: 2026-02-20 - Completed 06-01-PLAN.md (entry module import scoping)
 
-Progress: [██████████████░] ~96%
+Progress: [███████████████] ~97%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
+- Total plans completed: 15
 - Average duration: 15min
-- Total execution time: 3.9 hours
+- Total execution time: 4.2 hours
 
 **By Phase:**
 
@@ -32,11 +32,11 @@ Progress: [██████████████░] ~96%
 | 03-bugs-correctness | 3/3 | 51min | 17min |
 | 04-signal-props-transforms | 4/4 | 77min | 19min |
 | 05-jsx-keys-flags | 3/3 | 36min | 12min |
-| 06-import-ordering-cleanup | 1/3 | 8min | 8min |
+| 06-import-ordering-cleanup | 2/3 | 28min | 14min |
 
 **Recent Trend:**
-- Last 5 plans: 04-04 (35min), 05-01 (9min), 05-02 (14min), 05-03 (13min), 06-02 (8min)
-- Trend: Import ordering was straightforward -- collect-sort-emit pattern with one deviation (_captures must be emitted first, not sorted).
+- Last 5 plans: 05-01 (9min), 05-02 (14min), 05-03 (13min), 06-02 (8min), 06-01 (20min)
+- Trend: Entry import scoping required deep AST walker for referenced-ident collection, including JSX handling. 8 snapshots fixed.
 
 *Updated after each plan completion*
 
@@ -94,6 +94,11 @@ Recent decisions affecting current work:
 - [06-02]: _captures import emitted first (before sorted list) -- SWC special case, not sorted with other imports
 - [06-02]: Standard Rust string comparison for import sort order -- matches SWC Atom::cmp
 - [06-02]: Lazy import declarations moved after all sorted imports -- matches SWC extra_top_items positioning
+- [06-01]: Post-hoc referenced-ident filtering in exit_program instead of scope-tracking during traversal (conceptually matches SWC DCE)
+- [06-01]: collect_referenced_idents descends into nested function/arrow bodies (correct for inline strategy)
+- [06-01]: JSX element names need dedicated walker (JSXIdentifier/JSXElementName separate from Expression::Identifier)
+- [06-01]: BTreeMap grouping for specifier merging preserves insertion order (matches SWC original specifier order)
+- [06-01]: Side-effect imports (no specifiers) always kept regardless of reference scanning
 
 ### Pending Todos
 
@@ -112,8 +117,8 @@ None.
 - Phase 5 DONE: JSX key generation (05-01), immutability flags (05-02), flag propagation (05-03)
 - Post-formatting restored (cherry-picked from sort-format-fix): 2-space indent, object expansion, JSX-aware parsing
 - Segment import ordering RESOLVED (06-02): 0 ordering-only diffs, 48 set diffs remain (other phase issues)
+- Entry module extra imports RESOLVED (06-01): post-hoc filtering eliminates segment-only imports (8 snapshots fixed, 156->148)
 - Remaining snapshot diffs are Phase 6 issues:
-  - Entry module extra imports (06-01)
   - use*() return value destructuring inlining (2 fixtures)
   - QRL hoisting (deferred from 04-02)
 - 1 deferred naming issue (should_extract_single_qrl_2) -- dedup suffix on wrong segment due to traverse order
@@ -122,6 +127,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-20T21:18:00Z
-Stopped at: Completed 06-02-PLAN.md (segment import ordering)
+Last session: 2026-02-20T21:30:10Z
+Stopped at: Completed 06-01-PLAN.md (entry module import scoping)
 Resume file: None
