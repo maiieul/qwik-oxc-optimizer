@@ -1309,13 +1309,29 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         .iter()
                         .flat_map(|imp| imp.specifiers.iter().cloned())
                         .collect();
-                    let info = props_destructuring::analyze_props_destructuring(
+                    let mut info = props_destructuring::analyze_props_destructuring(
                         &arrow.params,
                         &import_names,
                     );
                     if info.needs_transform {
                         if info.rest_name.is_some() {
                             self.import_tracker.needs_rest_props = true;
+                        }
+                        self.active_props_info = Some(info);
+                    } else if let Some(ref param_name) = info.props_param_name {
+                        // Non-destructured props param (e.g., `(props) =>`).
+                        // Detect body destructuring early so prop_keys are available
+                        // for JSX transforms (which run before component$ exit_expression).
+                        let body_destr = props_destructuring::detect_body_destructuring(
+                            &arrow.body.statements,
+                            param_name,
+                        );
+                        if let Some(ref body_info) = body_destr {
+                            // Populate prop_keys from body destructuring so that
+                            // detect_signal_wrap can recognize destructured aliases
+                            // in JSX contexts (e.g., `bindValue` -> _wrapProp(props, "bind:value"))
+                            info.prop_keys = body_info.prop_keys.clone();
+                            info.rest_name = body_info.rest_name.clone();
                         }
                         self.active_props_info = Some(info);
                     }
@@ -1753,6 +1769,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         .collect()
                 });
             let destr_props_ref = destr_props.as_deref();
+            let props_param_name: Option<String> = self.active_props_info.as_ref()
+                .and_then(|info| info.props_param_name.clone());
+            let props_param_ref = props_param_name.as_deref();
 
             // Take hoisted_function_stmts out to avoid borrow conflict with &mut self
             let mut hoisted_stmts = std::mem::take(&mut self.hoisted_function_stmts);
@@ -1774,6 +1793,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             &mut hoisted_stmts,
                             loop_depth,
                             &iteration_vars,
+                            props_param_ref,
                         );
                         *expr = result;
                     }
@@ -1793,6 +1813,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             &mut hoisted_stmts,
                             loop_depth,
                             &iteration_vars,
+                            props_param_ref,
                         );
                         *expr = result;
                     }
@@ -1866,61 +1887,125 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             // props_info is only Some when is_component_exit is true, so the
             // inner kind/name checks are unnecessary -- flatten to one level.
             if let Some(ref info) = props_info {
-                if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first_mut() {
-                    if !arrow.params.items.is_empty() {
-                        let new_pattern = ctx.ast.binding_pattern_binding_identifier(
-                            SPAN,
-                            ctx.ast.atom(&info.raw_props_name),
-                        );
-                        let new_param = ctx.ast.formal_parameter(
-                            SPAN,
-                            ctx.ast.vec(),
-                            new_pattern,
-                            None::<oxc::allocator::Box<'a, TSTypeAnnotation<'a>>>,
-                            None::<oxc::allocator::Box<'a, Expression<'a>>>,
-                            false,
-                            None,
-                            false,
-                            false,
-                        );
-                        arrow.params.items[0] = new_param;
-                        arrow.params.rest = None;
-                    }
-
-                    if let Some(ref rest_name) = info.rest_name {
-                        let excluded_keys: Vec<String> =
-                            info.prop_keys.iter().map(|(key, _)| key.clone()).collect();
-                        let rest_stmt = props_destructuring::build_rest_props_declaration(
-                            rest_name,
-                            &info.raw_props_name,
-                            &excluded_keys,
-                            ctx,
-                        );
-
-                        let mut old_stmts = ctx.ast.vec();
-                        std::mem::swap(&mut arrow.body.statements, &mut old_stmts);
-                        let mut new_stmts = ctx.ast.vec_with_capacity(1 + old_stmts.len());
-                        new_stmts.push(rest_stmt);
-                        for s in old_stmts {
-                            new_stmts.push(s);
+                if info.needs_transform {
+                    // Standard destructured props: replace parameter, rewrite references
+                    if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first_mut() {
+                        if !arrow.params.items.is_empty() {
+                            let new_pattern = ctx.ast.binding_pattern_binding_identifier(
+                                SPAN,
+                                ctx.ast.atom(&info.raw_props_name),
+                            );
+                            let new_param = ctx.ast.formal_parameter(
+                                SPAN,
+                                ctx.ast.vec(),
+                                new_pattern,
+                                None::<oxc::allocator::Box<'a, TSTypeAnnotation<'a>>>,
+                                None::<oxc::allocator::Box<'a, Expression<'a>>>,
+                                false,
+                                None,
+                                false,
+                                false,
+                            );
+                            arrow.params.items[0] = new_param;
+                            arrow.params.rest = None;
                         }
-                        arrow.body.statements = new_stmts;
+
+                        if let Some(ref rest_name) = info.rest_name {
+                            let excluded_keys: Vec<String> =
+                                info.prop_keys.iter().map(|(key, _)| key.clone()).collect();
+                            let rest_stmt = props_destructuring::build_rest_props_declaration(
+                                rest_name,
+                                &info.raw_props_name,
+                                &excluded_keys,
+                                ctx,
+                            );
+
+                            let mut old_stmts = ctx.ast.vec();
+                            std::mem::swap(&mut arrow.body.statements, &mut old_stmts);
+                            let mut new_stmts = ctx.ast.vec_with_capacity(1 + old_stmts.len());
+                            new_stmts.push(rest_stmt);
+                            for s in old_stmts {
+                                new_stmts.push(s);
+                            }
+                            arrow.body.statements = new_stmts;
+                        }
+
+                        let prop_map: Vec<(String, String)> = info
+                            .prop_keys
+                            .iter()
+                            .map(|(key, local)| (local.clone(), key.clone()))
+                            .collect();
+
+                        if !prop_map.is_empty() {
+                            props_destructuring::rewrite_body_statements(
+                                &mut arrow.body.statements,
+                                &prop_map,
+                                &info.raw_props_name,
+                                &info.prop_defaults,
+                                ctx,
+                            );
+                        }
                     }
-
-                    let prop_map: Vec<(String, String)> = info
-                        .prop_keys
-                        .iter()
-                        .map(|(key, local)| (local.clone(), key.clone()))
-                        .collect();
-
-                    if !prop_map.is_empty() {
-                        props_destructuring::rewrite_body_statements(
-                            &mut arrow.body.statements,
-                            &prop_map,
-                            &info.raw_props_name,
-                            &info.prop_defaults,
-                            ctx,
+                } else if let Some(ref param_name) = info.props_param_name {
+                    // Non-destructured props param (e.g., `(props) =>`).
+                    // Check for body destructuring: `const { "bind:value": bindValue } = props;`
+                    if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first_mut() {
+                        let body_destr = props_destructuring::detect_body_destructuring(
+                            &arrow.body.statements,
+                            param_name,
                         );
+
+                        if let Some(body_info) = body_destr {
+                            // Remove the destructuring statement
+                            let removed_stmt = arrow.body.statements.remove(body_info.stmt_index);
+                            let _ = removed_stmt;
+
+                            // If rest pattern: insert `const rest = _restProps(props, [...])`
+                            if let Some(ref rest_name) = body_info.rest_name {
+                                self.import_tracker.needs_rest_props = true;
+                                let excluded_keys: Vec<String> =
+                                    body_info.prop_keys.iter().map(|(key, _)| key.clone()).collect();
+                                let rest_stmt = props_destructuring::build_rest_props_declaration(
+                                    rest_name,
+                                    param_name,
+                                    &excluded_keys,
+                                    ctx,
+                                );
+                                arrow.body.statements.insert(body_info.stmt_index, rest_stmt);
+                            }
+
+                            // Build a prop_map for rewriting: (local_alias -> original_key)
+                            // In non-JSX contexts, replace alias with props["key"] (computed member)
+                            // The JSX contexts are handled by detect_signal_wrap via props_param_name
+                            let prop_map: Vec<(String, String)> = body_info
+                                .prop_keys
+                                .iter()
+                                .map(|(key, local)| (local.clone(), key.clone()))
+                                .collect();
+
+                            if !prop_map.is_empty() {
+                                // Rewrite local alias references in non-JSX body statements.
+                                // For body destructuring, replace `bindValue` with `props["bind:value"]`
+                                // in non-JSX positions (like useSignal(bindValue) -> useSignal(props["bind:value"]))
+                                // JSX positions are handled by _wrapProp via detect_signal_wrap.
+                                rewrite_body_destr_references(
+                                    &mut arrow.body.statements,
+                                    &prop_map,
+                                    param_name,
+                                    ctx,
+                                );
+                            }
+
+                            // Handle `const test = useSignal(...)` where `test` is a destructured prop key:
+                            // Strip the `const test =` to just `useSignal(...)` as expression statement.
+                            // This is for destructure_args_colon_props3 where `test` was a prop key.
+                            let non_rest_aliases: std::collections::HashSet<String> = body_info
+                                .prop_keys
+                                .iter()
+                                .map(|(_, local)| local.clone())
+                                .collect();
+                            strip_prop_alias_bindings(&mut arrow.body.statements, &non_rest_aliases, ctx);
+                        }
                     }
                 }
 
@@ -3075,6 +3160,19 @@ pub(crate) fn argument_to_expression<'a>(
         Argument::BigIntLiteral(e) => Expression::BigIntLiteral(e),
         Argument::RegExpLiteral(e) => Expression::RegExpLiteral(e),
         Argument::StringLiteral(e) => Expression::StringLiteral(e),
+        // MemberExpression variants (inherited via inherit_variants!)
+        Argument::ComputedMemberExpression(e) => Expression::ComputedMemberExpression(e),
+        Argument::StaticMemberExpression(e) => Expression::StaticMemberExpression(e),
+        Argument::PrivateFieldExpression(e) => Expression::PrivateFieldExpression(e),
+        Argument::Super(e) => Expression::Super(e),
+        Argument::V8IntrinsicExpression(e) => Expression::V8IntrinsicExpression(e),
+        Argument::PrivateInExpression(e) => Expression::PrivateInExpression(e),
+        // TypeScript expressions
+        Argument::TSAsExpression(e) => Expression::TSAsExpression(e),
+        Argument::TSSatisfiesExpression(e) => Expression::TSSatisfiesExpression(e),
+        Argument::TSTypeAssertion(e) => Expression::TSTypeAssertion(e),
+        Argument::TSNonNullExpression(e) => Expression::TSNonNullExpression(e),
+        Argument::TSInstantiationExpression(e) => Expression::TSInstantiationExpression(e),
         // Catch-all for any other inherited variants
         _ => ctx.ast.expression_identifier(SPAN, "undefined"),
     }
@@ -3109,5 +3207,137 @@ fn extract_callback_params(arg: &Argument<'_>) -> Vec<String> {
             })
             .collect(),
         _ => Vec::new(),
+    }
+}
+
+/// Rewrite body destructuring alias references in non-JSX statements.
+///
+/// Replaces occurrences of `alias` with `props["key"]` (computed member access)
+/// in variable declarations and expression statements. Does NOT touch return
+/// statements since those contain JSX which is handled by detect_signal_wrap.
+fn rewrite_body_destr_references<'a>(
+    stmts: &mut oxc::allocator::Vec<'a, Statement<'a>>,
+    prop_map: &[(String, String)], // (local_alias, original_key)
+    props_param_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    for stmt in stmts.iter_mut() {
+        match stmt {
+            Statement::VariableDeclaration(decl) => {
+                for declarator in decl.declarations.iter_mut() {
+                    if let Some(ref mut init) = declarator.init {
+                        rewrite_expr_body_destr(init, prop_map, props_param_name, ctx);
+                    }
+                }
+            }
+            Statement::ExpressionStatement(expr_stmt) => {
+                rewrite_expr_body_destr(&mut expr_stmt.expression, prop_map, props_param_name, ctx);
+            }
+            // Don't rewrite return statements -- JSX children are handled by detect_signal_wrap
+            _ => {}
+        }
+    }
+}
+
+/// Recursively rewrite identifier references matching body destructuring aliases
+/// to `props["key"]` computed member expressions.
+fn rewrite_expr_body_destr<'a>(
+    expr: &mut Expression<'a>,
+    prop_map: &[(String, String)],
+    props_param_name: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    match expr {
+        Expression::Identifier(ident) => {
+            let name = ident.name.as_str();
+            for (local_alias, original_key) in prop_map {
+                if local_alias == name {
+                    // Replace with props["original_key"]
+                    let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(props_param_name));
+                    let key_atom = ctx.ast.atom(original_key.as_str());
+                    let key_expr = ctx.ast.expression_string_literal(SPAN, key_atom, None);
+                    let member = ctx.ast.computed_member_expression(SPAN, obj, key_expr, false);
+                    *expr = Expression::ComputedMemberExpression(ctx.ast.alloc(member));
+                    return;
+                }
+            }
+        }
+        Expression::CallExpression(call) => {
+            rewrite_expr_body_destr(&mut call.callee, prop_map, props_param_name, ctx);
+            for i in 0..call.arguments.len() {
+                let placeholder = Argument::from(ctx.ast.expression_identifier(SPAN, "undefined"));
+                let old = std::mem::replace(&mut call.arguments[i], placeholder);
+                let mut arg_expr = argument_to_expression(old, ctx);
+                rewrite_expr_body_destr(&mut arg_expr, prop_map, props_param_name, ctx);
+                call.arguments[i] = Argument::from(arg_expr);
+            }
+        }
+        Expression::BinaryExpression(bin) => {
+            rewrite_expr_body_destr(&mut bin.left, prop_map, props_param_name, ctx);
+            rewrite_expr_body_destr(&mut bin.right, prop_map, props_param_name, ctx);
+        }
+        Expression::StaticMemberExpression(mem) => {
+            rewrite_expr_body_destr(&mut mem.object, prop_map, props_param_name, ctx);
+        }
+        Expression::ComputedMemberExpression(mem) => {
+            rewrite_expr_body_destr(&mut mem.object, prop_map, props_param_name, ctx);
+            rewrite_expr_body_destr(&mut mem.expression, prop_map, props_param_name, ctx);
+        }
+        Expression::ConditionalExpression(cond) => {
+            rewrite_expr_body_destr(&mut cond.test, prop_map, props_param_name, ctx);
+            rewrite_expr_body_destr(&mut cond.consequent, prop_map, props_param_name, ctx);
+            rewrite_expr_body_destr(&mut cond.alternate, prop_map, props_param_name, ctx);
+        }
+        Expression::LogicalExpression(log) => {
+            rewrite_expr_body_destr(&mut log.left, prop_map, props_param_name, ctx);
+            rewrite_expr_body_destr(&mut log.right, prop_map, props_param_name, ctx);
+        }
+        Expression::UnaryExpression(unary) => {
+            rewrite_expr_body_destr(&mut unary.argument, prop_map, props_param_name, ctx);
+        }
+        Expression::ParenthesizedExpression(paren) => {
+            rewrite_expr_body_destr(&mut paren.expression, prop_map, props_param_name, ctx);
+        }
+        Expression::TemplateLiteral(tmpl) => {
+            for e in tmpl.expressions.iter_mut() {
+                rewrite_expr_body_destr(e, prop_map, props_param_name, ctx);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Strip `const <alias> = <expr>` bindings where `<alias>` matches a destructured
+/// prop key, converting them to expression statements containing just `<expr>`.
+///
+/// This handles the `destructure_args_colon_props3` pattern where:
+/// `const test = useSignal(rest["bind:value"])` -> `useSignal(rest["bind:value"])`
+/// because `test` was originally a destructured prop from `const { test, ...rest } = props`.
+fn strip_prop_alias_bindings<'a>(
+    stmts: &mut oxc::allocator::Vec<'a, Statement<'a>>,
+    non_rest_aliases: &std::collections::HashSet<String>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    let mut indices_to_replace: Vec<(usize, Expression<'a>)> = Vec::new();
+
+    for (i, stmt) in stmts.iter_mut().enumerate() {
+        if let Statement::VariableDeclaration(decl) = stmt {
+            if decl.declarations.len() == 1 {
+                let declarator = &mut decl.declarations[0];
+                if let BindingPattern::BindingIdentifier(ident) = &declarator.id {
+                    if non_rest_aliases.contains(ident.name.as_str()) {
+                        if let Some(init) = declarator.init.take() {
+                            indices_to_replace.push((i, init));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Replace in reverse order to preserve indices
+    for (i, init_expr) in indices_to_replace.into_iter().rev() {
+        let expr_stmt = ctx.ast.statement_expression(SPAN, init_expr);
+        stmts[i] = expr_stmt;
     }
 }

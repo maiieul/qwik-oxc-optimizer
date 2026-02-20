@@ -136,6 +136,7 @@ enum SignalWrapResult {
 fn detect_signal_wrap(
     value: &Expression<'_>,
     destructured_props: Option<&[(String, String)]>,
+    props_param_name: Option<&str>,
 ) -> SignalWrapResult {
     match value {
         Expression::StaticMemberExpression(member) => {
@@ -143,8 +144,17 @@ fn detect_signal_wrap(
 
             if prop_name == "value" {
                 if let Expression::Identifier(ident) = &member.object {
-                    let _name = ident.name.as_str();
-                    return SignalWrapResult::WrapPropSignal;
+                    let name = ident.name.as_str();
+                    // If the object is a body-destructured prop alias (e.g., `test` from
+                    // `const { test, ...rest } = props`), don't wrap as WrapPropSignal.
+                    // Instead, let it fall through to _fnSignal wrapping which treats
+                    // `test.value` as `props.test.value`.
+                    let is_prop_alias = destructured_props
+                        .map(|props| props.iter().any(|(local, _)| local == name))
+                        .unwrap_or(false);
+                    if !is_prop_alias {
+                        return SignalWrapResult::WrapPropSignal;
+                    }
                 }
             }
 
@@ -152,8 +162,35 @@ fn detect_signal_wrap(
                 if ident.name.as_str() == "_rawProps" && prop_name != "value" {
                     return SignalWrapResult::WrapPropNamed(prop_name.to_string());
                 }
+                // Non-destructured props param: props.class -> _wrapProp(props, "class")
+                if let Some(param_name) = props_param_name {
+                    if ident.name.as_str() == param_name && prop_name != "value" {
+                        return SignalWrapResult::WrapPropNamed(prop_name.to_string());
+                    }
+                }
             }
 
+            SignalWrapResult::None
+        }
+        // props["bind:value"] -> _wrapProp(props, "bind:value")
+        Expression::ComputedMemberExpression(member) => {
+            if let Some(param_name) = props_param_name {
+                if let Expression::Identifier(ident) = &member.object {
+                    if ident.name.as_str() == param_name {
+                        if let Expression::StringLiteral(s) = &member.expression {
+                            return SignalWrapResult::WrapPropNamed(s.value.to_string());
+                        }
+                    }
+                }
+            }
+            // Also handle _rawProps["key"] pattern
+            if let Expression::Identifier(ident) = &member.object {
+                if ident.name.as_str() == "_rawProps" {
+                    if let Expression::StringLiteral(s) = &member.expression {
+                        return SignalWrapResult::WrapPropNamed(s.value.to_string());
+                    }
+                }
+            }
             SignalWrapResult::None
         }
         // destructured prop alias, treat as _wrapProp(_rawProps, "fromProps")
@@ -242,6 +279,7 @@ fn collect_reactive_deps(
     expr: &Expression<'_>,
     destructured_props: Option<&[(String, String)]>,
     collected_imports: &[crate::types::ImportInfo],
+    props_param_name: Option<&str>,
 ) -> (Vec<ReactiveDep>, bool) {
     let mut primary_deps: Vec<ReactiveDep> = Vec::new();
     let mut local_deps: Vec<ReactiveDep> = Vec::new();
@@ -256,6 +294,7 @@ fn collect_reactive_deps(
         &mut local_deps,
         &mut seen,
         &mut has_non_reactive_non_const,
+        props_param_name,
     );
 
     // Local deps only materialize when there are primary deps.
@@ -280,6 +319,7 @@ fn collect_reactive_deps_inner(
     local_deps: &mut Vec<ReactiveDep>,
     seen: &mut std::collections::HashSet<String>,
     has_non_reactive_non_const: &mut bool,
+    props_param_name: Option<&str>,
 ) {
     match expr {
         // signal.value -> signal is a reactive dep
@@ -290,20 +330,44 @@ fn collect_reactive_deps_inner(
 
             if prop == "value" {
                 if let Some(root_name) = &root {
-                    if !seen.contains(root_name.as_str()) {
-                        let param = format!("p{}", primary_deps.len());
-                        seen.insert(root_name.clone());
-                        primary_deps.push(ReactiveDep {
-                            root_name: root_name.clone(),
-                            param_name: param,
-                        });
+                    // Check if this is a body-destructured prop alias.
+                    // E.g., `test.value` where `test` came from `{ test, ...rest } = props`
+                    // In this case, the dep should be `props` (the props param), not `test`.
+                    let prop_alias_origin = destructured_props.and_then(|props| {
+                        props.iter().find(|(local, _)| local == root_name).and_then(|_| {
+                            props_param_name.map(|p| p.to_string())
+                        })
+                    });
+
+                    if let Some(origin_name) = prop_alias_origin {
+                        // Use the props param as the dep instead of the alias
+                        if !seen.contains(&origin_name) {
+                            let param = format!("p{}", primary_deps.len());
+                            seen.insert(origin_name.clone());
+                            primary_deps.push(ReactiveDep {
+                                root_name: origin_name,
+                                param_name: param,
+                            });
+                        }
+                    } else {
+                        if !seen.contains(root_name.as_str()) {
+                            let param = format!("p{}", primary_deps.len());
+                            seen.insert(root_name.clone());
+                            primary_deps.push(ReactiveDep {
+                                root_name: root_name.clone(),
+                                param_name: param,
+                            });
+                        }
                     }
                     return; // Don't recurse further
                 }
             }
 
             if let Some(root_name) = &root {
-                if root_name == "_rawProps" {
+                // _rawProps or non-destructured props param (e.g., "props") are primary reactive sources
+                let is_props_source = root_name == "_rawProps"
+                    || props_param_name.is_some_and(|p| p == root_name.as_str());
+                if is_props_source {
                     if !seen.contains(root_name.as_str()) {
                         let param = format!("p{}", primary_deps.len());
                         seen.insert(root_name.clone());
@@ -348,6 +412,7 @@ fn collect_reactive_deps_inner(
                 local_deps,
                 seen,
                 has_non_reactive_non_const,
+                props_param_name,
             );
         }
 
@@ -408,6 +473,7 @@ fn collect_reactive_deps_inner(
                 local_deps,
                 seen,
                 has_non_reactive_non_const,
+                props_param_name,
             );
             collect_reactive_deps_inner(
                 &bin.right,
@@ -417,6 +483,7 @@ fn collect_reactive_deps_inner(
                 local_deps,
                 seen,
                 has_non_reactive_non_const,
+                props_param_name,
             );
         }
         Expression::ConditionalExpression(cond) => {
@@ -428,6 +495,7 @@ fn collect_reactive_deps_inner(
                 local_deps,
                 seen,
                 has_non_reactive_non_const,
+                props_param_name,
             );
             collect_reactive_deps_inner(
                 &cond.consequent,
@@ -437,6 +505,7 @@ fn collect_reactive_deps_inner(
                 local_deps,
                 seen,
                 has_non_reactive_non_const,
+                props_param_name,
             );
             collect_reactive_deps_inner(
                 &cond.alternate,
@@ -446,6 +515,7 @@ fn collect_reactive_deps_inner(
                 local_deps,
                 seen,
                 has_non_reactive_non_const,
+                props_param_name,
             );
         }
         Expression::UnaryExpression(unary) => {
@@ -457,6 +527,7 @@ fn collect_reactive_deps_inner(
                 local_deps,
                 seen,
                 has_non_reactive_non_const,
+                props_param_name,
             );
         }
         Expression::ObjectExpression(obj) => {
@@ -471,6 +542,7 @@ fn collect_reactive_deps_inner(
                             local_deps,
                             seen,
                             has_non_reactive_non_const,
+                            props_param_name,
                         );
                     }
                     ObjectPropertyKind::SpreadProperty(s) => {
@@ -482,6 +554,7 @@ fn collect_reactive_deps_inner(
                             local_deps,
                             seen,
                             has_non_reactive_non_const,
+                            props_param_name,
                         );
                     }
                 }
@@ -496,6 +569,7 @@ fn collect_reactive_deps_inner(
                 local_deps,
                 seen,
                 has_non_reactive_non_const,
+                props_param_name,
             );
         }
 
@@ -542,6 +616,7 @@ fn build_fn_signal_wrapping<'a>(
     destructured_props: Option<&[(String, String)]>,
     tracker: &mut ImportTracker,
     ctx: &mut TraverseCtx<'a, ()>,
+    props_param_name: Option<&str>,
 ) -> (Expression<'a>, String, String) {
     let hf_index = tracker.hoisted_fn_counter;
     tracker.hoisted_fn_counter += 1;
@@ -554,7 +629,9 @@ fn build_fn_signal_wrapping<'a>(
     let mut body_str = codegen.into_source_text();
 
     for dep in deps {
-        if dep.root_name == "_rawProps" {
+        let is_props_dep = dep.root_name == "_rawProps"
+            || props_param_name.is_some_and(|p| p == dep.root_name.as_str());
+        if is_props_dep {
             if let Some(props) = destructured_props {
                 for (local_alias, original_key) in props {
                     body_str = replace_identifier_in_code(
@@ -564,7 +641,7 @@ fn build_fn_signal_wrapping<'a>(
                     );
                 }
             }
-            body_str = replace_identifier_in_code(&body_str, "_rawProps", &dep.param_name);
+            body_str = replace_identifier_in_code(&body_str, &dep.root_name, &dep.param_name);
         } else {
             body_str = replace_identifier_in_code(&body_str, &dep.root_name, &dep.param_name);
         }
@@ -886,6 +963,7 @@ fn jsx_attr_value_to_expression<'a>(
     hoisted_stmts: &mut Vec<(String, String)>,
     loop_depth: u32,
     iteration_vars: &[String],
+    props_param_name: Option<&str>,
 ) -> Expression<'a> {
     match value {
         JSXAttributeValue::StringLiteral(lit) => Expression::StringLiteral(lit),
@@ -903,6 +981,7 @@ fn jsx_attr_value_to_expression<'a>(
                 hoisted_stmts,
                 loop_depth,
                 iteration_vars,
+                props_param_name,
             )
         }
         JSXAttributeValue::Fragment(frag) => transform_jsx_fragment_inner(
@@ -914,6 +993,7 @@ fn jsx_attr_value_to_expression<'a>(
             hoisted_stmts,
             loop_depth,
             iteration_vars,
+            props_param_name,
         ),
     }
 }
@@ -930,13 +1010,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     hoisted_stmts: &mut Vec<(String, String)>,
     loop_depth: u32,
     iteration_vars: &[String],
+    props_param_name: Option<&str>,
 ) -> Expression<'a> {
     // When a custom JSX import source is set (e.g., React), use the standard
     // JSX runtime transform: _jsx("tag", {props}) instead of Qwik's _jsxSorted.
     if tracker.custom_jsx_source.is_some() {
         return transform_jsx_element_custom_source(
             element, tracker, ctx, hoisted_stmts, module_imports, destructured_props,
-            loop_depth, iteration_vars,
+            loop_depth, iteration_vars, props_param_name,
         );
     }
 
@@ -982,6 +1063,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             hoisted_stmts,
                             loop_depth,
                             iteration_vars,
+                            props_param_name,
                         ));
                     }
                     continue;
@@ -1000,6 +1082,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             hoisted_stmts,
                             loop_depth,
                             iteration_vars,
+                            props_param_name,
                         )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1022,6 +1105,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             hoisted_stmts,
                             loop_depth,
                             iteration_vars,
+                            props_param_name,
                         )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1042,6 +1126,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             hoisted_stmts,
                             loop_depth,
                             iteration_vars,
+                            props_param_name,
                         )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1098,6 +1183,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                         hoisted_stmts,
                         loop_depth,
                         iteration_vars,
+                        props_param_name,
                     )
                 } else {
                     // Boolean attribute: <input disabled /> -> disabled: true
@@ -1109,7 +1195,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                 // _rawProps.propName -> _wrapProp(_rawProps, "propName") in const props
                 // But NOT signal.value() (function call on .value)
                 if !is_call_on_value(&value) {
-                    match detect_signal_wrap(&value, destructured_props) {
+                    match detect_signal_wrap(&value, destructured_props, props_param_name) {
                         SignalWrapResult::WrapPropSignal => {
                             // Extract the signal identifier from X.value
                             if let Expression::StaticMemberExpression(member) = value {
@@ -1122,14 +1208,18 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                         }
                         SignalWrapResult::WrapPropNamed(prop_name) => {
                             // Build _wrapProp(source, "propName") in const props.
-                            // Source is either _rawProps (for destructured props) or extracted from
-                            // a StaticMemberExpression (for _rawProps.propName).
+                            // Source is either the props param or _rawProps, extracted from
+                            // a StaticMemberExpression/ComputedMemberExpression (for props.X or props["key"]).
+                            let raw_props_fallback = props_param_name.unwrap_or("_rawProps");
                             let source_obj =
                                 if let Expression::StaticMemberExpression(member) = value {
                                     member.unbox().object
+                                } else if let Expression::ComputedMemberExpression(member) = value {
+                                    member.unbox().object
                                 } else {
-                                    // For destructured prop identifiers, build _rawProps reference
-                                    ctx.ast.expression_identifier(SPAN, "_rawProps")
+                                    // For destructured prop identifiers, build props param reference
+                                    let atom = ctx.ast.atom(raw_props_fallback);
+                                    ctx.ast.expression_identifier(SPAN, atom)
                                 };
                             let wrapped = import_rewrite::build_wrap_prop_call_named(
                                 source_obj, &prop_name, ctx,
@@ -1147,7 +1237,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                 } else if !contains_function_call(&value) {
                     // Reactive deps without non-reactive refs -> _fnSignal wrapping
                     let (deps, has_non_reactive) =
-                        collect_reactive_deps(&value, destructured_props, module_imports);
+                        collect_reactive_deps(&value, destructured_props, module_imports, props_param_name);
                     if !deps.is_empty() && !has_non_reactive {
                         // Wrap with _fnSignal
                         let (wrapped, fn_code, str_code) = build_fn_signal_wrapping(
@@ -1156,6 +1246,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             destructured_props,
                             tracker,
                             ctx,
+                            props_param_name,
                         );
                         tracker.needs_fn_signal = true;
                         hoisted_stmts.push((fn_code, str_code));
@@ -1221,6 +1312,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         hoisted_stmts,
         loop_depth,
         iteration_vars,
+        props_param_name,
     );
 
     // Compute flags
@@ -1441,6 +1533,7 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
     hoisted_stmts: &mut Vec<(String, String)>,
     loop_depth: u32,
     iteration_vars: &[String],
+    props_param_name: Option<&str>,
 ) -> Expression<'a> {
     tracker.needs_jsx_sorted = true;
     tracker.needs_fragment = true;
@@ -1457,6 +1550,7 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
         hoisted_stmts,
         loop_depth,
         iteration_vars,
+        props_param_name,
     );
 
     // Flags: 1 for multiple children, 3 for single/no children
@@ -1505,6 +1599,7 @@ pub(crate) fn transform_jsx_children<'a>(
     hoisted_stmts: &mut Vec<(String, String)>,
     loop_depth: u32,
     iteration_vars: &[String],
+    props_param_name: Option<&str>,
 ) -> (Option<Expression<'a>>, usize) {
     let mut child_exprs: Vec<Expression<'a>> = Vec::new();
 
@@ -1532,6 +1627,7 @@ pub(crate) fn transform_jsx_children<'a>(
                     hoisted_stmts,
                     loop_depth,
                     iteration_vars,
+                    props_param_name,
                 );
                 child_exprs.push(transformed);
             }
@@ -1546,6 +1642,7 @@ pub(crate) fn transform_jsx_children<'a>(
                     hoisted_stmts,
                     loop_depth,
                     iteration_vars,
+                    props_param_name,
                 );
                 child_exprs.push(transformed);
             }
@@ -1572,6 +1669,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                     hoisted_stmts,
                                     loop_depth,
                                     iteration_vars,
+                                    props_param_name,
                                 );
                                 child_exprs.push(result);
                             }
@@ -1585,6 +1683,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                     hoisted_stmts,
                                     loop_depth,
                                     iteration_vars,
+                                    props_param_name,
                                 );
                                 child_exprs.push(result);
                             }
@@ -1592,7 +1691,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                 // Check for signal wrapping in children
                                 // (mirrors attribute-level logic at lines 1031-1092)
                                 if !is_call_on_value(&other) {
-                                    match detect_signal_wrap(&other, destructured_props) {
+                                    match detect_signal_wrap(&other, destructured_props, props_param_name) {
                                         SignalWrapResult::WrapPropSignal => {
                                             // signal.value -> _wrapProp(signal) [EXISTING]
                                             if let Expression::StaticMemberExpression(member) =
@@ -1609,12 +1708,16 @@ pub(crate) fn transform_jsx_children<'a>(
                                             }
                                         }
                                         SignalWrapResult::WrapPropNamed(prop_name) => {
-                                            // _rawProps.propName or destructured prop ->
-                                            // _wrapProp(_rawProps, "propName") [NEW]
+                                            // _rawProps.propName, props.X, props["X"], or destructured prop ->
+                                            // _wrapProp(source, "propName")
+                                            let raw_props_fallback = props_param_name.unwrap_or("_rawProps");
                                             let source_obj = if let Expression::StaticMemberExpression(member) = other {
                                                 member.unbox().object
+                                            } else if let Expression::ComputedMemberExpression(member) = other {
+                                                member.unbox().object
                                             } else {
-                                                ctx.ast.expression_identifier(SPAN, "_rawProps")
+                                                let atom = ctx.ast.atom(raw_props_fallback);
+                                                ctx.ast.expression_identifier(SPAN, atom)
                                             };
                                             let wrapped =
                                                 import_rewrite::build_wrap_prop_call_named(
@@ -1636,6 +1739,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                         &other,
                                         destructured_props,
                                         module_imports,
+                                        props_param_name,
                                     );
                                     if !deps.is_empty() && !has_non_reactive {
                                         let (wrapped, fn_code, str_code) =
@@ -1645,6 +1749,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                                 destructured_props,
                                                 tracker,
                                                 ctx,
+                                                props_param_name,
                                             );
                                         tracker.needs_fn_signal = true;
                                         hoisted_stmts.push((fn_code, str_code));
@@ -1803,6 +1908,7 @@ fn transform_jsx_element_custom_source<'a>(
     destructured_props: Option<&[(String, String)]>,
     loop_depth: u32,
     iteration_vars: &[String],
+    props_param_name: Option<&str>,
 ) -> Expression<'a> {
     // Signal that we need the _jsx import (reuses needs_jsx_sorted flag --
     // the import emission in transform.rs will emit _jsx instead of _jsxSorted
@@ -1845,6 +1951,7 @@ fn transform_jsx_element_custom_source<'a>(
                         hoisted_stmts,
                         loop_depth,
                         iteration_vars,
+                        props_param_name,
                     )
                 } else {
                     // Boolean attribute: <input disabled /> -> disabled: true
@@ -1883,6 +1990,7 @@ fn transform_jsx_element_custom_source<'a>(
         hoisted_stmts,
         loop_depth,
         iteration_vars,
+        props_param_name,
     );
 
     if let Some(children) = children_expr {

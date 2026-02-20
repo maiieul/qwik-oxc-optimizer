@@ -39,6 +39,11 @@ pub(crate) struct PropsDestructuringInfo {
     /// E.g., `{ some = 1 + 2 }` -> { "some": "1 + 2" }
     /// E.g., `{ stuffDefault: hey2 = 123 }` -> { "hey2": "123" }
     pub prop_defaults: HashMap<String, String>,
+
+    /// When the first param is a plain BindingIdentifier (e.g., `props`),
+    /// this stores the identifier name. Used for signal wrapping of
+    /// `props.class` -> `_wrapProp(props, "class")` patterns.
+    pub props_param_name: Option<String>,
 }
 
 impl Default for PropsDestructuringInfo {
@@ -49,8 +54,22 @@ impl Default for PropsDestructuringInfo {
             rest_name: None,
             raw_props_name: "_rawProps".to_string(),
             prop_defaults: HashMap::new(),
+            props_param_name: None,
         }
     }
+}
+
+/// Information extracted from detecting manual body destructuring of the props parameter.
+///
+/// E.g., `const { "bind:value": bindValue, test, ...rest } = props;`
+#[derive(Debug, Clone)]
+pub(crate) struct BodyDestructuringInfo {
+    /// Pairs of (original_key, local_alias) from the ObjectPattern.
+    pub prop_keys: Vec<(String, String)>,
+    /// The rest variable name if a rest pattern exists.
+    pub rest_name: Option<String>,
+    /// Index of the destructuring statement in the arrow body.
+    pub stmt_index: usize,
 }
 
 /// Analyze the first parameter of a component$ arrow function to detect
@@ -139,7 +158,11 @@ pub(crate) fn analyze_props_destructuring(
                 }
             }
         }
-        BindingPattern::BindingIdentifier(_) => {}
+        BindingPattern::BindingIdentifier(ident) => {
+            let name = ident.name.to_string();
+            info.props_param_name = Some(name.clone());
+            info.raw_props_name = name;
+        }
         _ => {}
     }
 
@@ -849,4 +872,69 @@ pub(crate) fn build_rest_props_declaration<'a>(
     );
 
     Statement::from(Declaration::VariableDeclaration(ctx.ast.alloc(declaration)))
+}
+
+/// Scan the arrow body for a destructuring statement of the form:
+/// `const { "key1": alias1, key2, ...rest } = <props_param_name>;`
+///
+/// Returns `Some(BodyDestructuringInfo)` if found, `None` otherwise.
+pub(crate) fn detect_body_destructuring(
+    statements: &[Statement<'_>],
+    props_param_name: &str,
+) -> Option<BodyDestructuringInfo> {
+    for (i, stmt) in statements.iter().enumerate() {
+        if let Statement::VariableDeclaration(decl) = stmt {
+            if decl.declarations.len() != 1 {
+                continue;
+            }
+            let declarator = &decl.declarations[0];
+            // Check that init is an identifier matching props_param_name
+            if let Some(Expression::Identifier(init_ident)) = &declarator.init {
+                if init_ident.name.as_str() != props_param_name {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+            // Check that pattern is an ObjectPattern
+            if let BindingPattern::ObjectPattern(obj_pat) = &declarator.id {
+                let mut prop_keys = Vec::new();
+                let mut rest_name = None;
+
+                for prop in &obj_pat.properties {
+                    let key_name = extract_property_key_name(&prop.key);
+                    match &prop.value {
+                        BindingPattern::BindingIdentifier(ident) => {
+                            if let Some(key) = key_name {
+                                let local = ident.name.to_string();
+                                prop_keys.push((key, local));
+                            }
+                        }
+                        BindingPattern::AssignmentPattern(assign) => {
+                            if let Some(key) = key_name {
+                                if let BindingPattern::BindingIdentifier(left_ident) = &assign.left {
+                                    let local = left_ident.name.to_string();
+                                    prop_keys.push((key, local));
+                                }
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+
+                if let Some(rest) = &obj_pat.rest {
+                    if let BindingPattern::BindingIdentifier(ident) = &rest.argument {
+                        rest_name = Some(ident.name.to_string());
+                    }
+                }
+
+                return Some(BodyDestructuringInfo {
+                    prop_keys,
+                    rest_name,
+                    stmt_index: i,
+                });
+            }
+        }
+    }
+    None
 }
