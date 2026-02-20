@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 4 complete - Signal & Props Transforms (all 3/3 plans done). Ready for Phase 5 planning.
+**Current focus:** Phase 4 complete - Signal & Props Transforms (all 4/4 plans done including gap closure). Ready for Phase 5 planning.
 
 ## Current Position
 
 Phase: 4 of 6 (Signal & Props Transforms)
-Plan: 3 of 3 complete in phase 4 (04-01 + 04-02 + 04-03 all done)
+Plan: 4 of 4 complete in phase 4 (04-01 + 04-02 + 04-03 + 04-04 gap closure all done)
 Status: Phase complete
-Last activity: 2026-02-20 - Completed 04-02-PLAN.md (loop tracking + q:p injection)
+Last activity: 2026-02-20 - Completed 04-04-PLAN.md (non-destructured props _wrapProp gap closure)
 
-Progress: [█████████░] ~83%
+Progress: [██████████░] ~85%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: 16min
-- Total execution time: 2.6 hours
+- Total plans completed: 10
+- Average duration: 17min
+- Total execution time: 3.2 hours
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [█████████░] ~83%
 | 01-naming | 2/2 | 60min | 30min |
 | 02-metadata | 1/1 | 15min | 15min |
 | 03-bugs-correctness | 3/3 | 51min | 17min |
-| 04-signal-props-transforms | 3/3 | 42min | 14min |
+| 04-signal-props-transforms | 4/4 | 77min | 19min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (11min), 03-03 (35min), 04-01 (6min), 04-03 (11min), 04-02 (25min)
-- Trend: Loop tracking required multiple OXC API fixes (BindingPattern vs BindingPatternKind, expression_array arity, param naming). Clean implementation with q:p injection matching SWC format.
+- Last 5 plans: 03-03 (35min), 04-01 (6min), 04-03 (11min), 04-02 (25min), 04-04 (35min)
+- Trend: Gap closure plan required body destructuring detection, reference rewriting, prop alias origin mapping for _fnSignal, and pre-existing bug fix in argument_to_expression. All 4 affected test cases now match SWC.
 
 *Updated after each plan completion*
 
@@ -74,6 +74,10 @@ Recent decisions affecting current work:
 - [04-03]: Default expressions serialized to strings during analysis, rebuilt via parse-and-clone during rewrite (avoids arena lifetime issues)
 - [04-03]: Import identifiers treated as const for default value checking (matches SWC is_const_expr)
 - [04-03]: use*() return value destructuring inlining deferred to Phase 6 (only 2 test fixtures affected)
+- [04-04]: Body destructuring detected separately from parameter destructuring -- two distinct code paths
+- [04-04]: Props param name threaded through all JSX transform functions as Option<&str> parameter
+- [04-04]: Prop alias origin mapping for _fnSignal: test.value -> [props] dep with p0.test.value hoisted fn
+- [04-04]: argument_to_expression was missing MemberExpression variants (pre-existing bug) -- fixed
 
 ### Pending Todos
 
@@ -87,17 +91,16 @@ None.
 - BUG-04 (segment ordering) RESOLVED -- span-based sort before output iteration
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
+- Gap 1 (non-destructured props) RESOLVED -- 04-04 gap closure plan
 - Remaining snapshot diffs are Phase 5/6 issues:
-  - Phase 4 DONE: q:p injection (04-02), _wrapProp children wrapping (04-01), _fnSignal children wrapping (04-01), props destructuring defaults + skip cases (04-03)
-  - Phase 5: _jsxSorted imports (181x), Fragment (67x)
-  - Phase 6: import ordering (~20x), use*() inlining (2x deferred), QRL hoisting (deferred from 04-02)
+  - Phase 4 DONE: q:p injection (04-02), _wrapProp children wrapping (04-01), _fnSignal children wrapping (04-01), props destructuring defaults + skip cases (04-03), non-destructured props _wrapProp (04-04)
+  - Phase 5: JSX keys, children flags, _jsxSorted imports
+  - Phase 6: import ordering, use*() inlining (2x deferred), QRL hoisting (deferred from 04-02)
 - 1 deferred naming issue (should_extract_single_qrl_2) -- dedup suffix on wrong segment due to traverse order
 - Text normalization: trailing spaces in JSX text nodes stripped (e.g., "First " -> "First") -- noted for future fix
-- Non-destructured props parameter (e.g., `(props)` instead of `({fromProps})`) not yet handled for _wrapProp -- may need attention in Phase 5/6
-- Pre-existing test failure in destructure_args_colon_props from concurrent 04-01 work (snapshot mismatch in segment file)
 
 ## Session Continuity
 
-Last session: 2026-02-20T13:45:00Z
-Stopped at: Completed 04-02-PLAN.md (loop tracking + q:p injection) -- Phase 4 complete
+Last session: 2026-02-20T14:43:43Z
+Stopped at: Completed 04-04-PLAN.md (non-destructured props _wrapProp gap closure) -- Phase 4 fully complete
 Resume file: None
