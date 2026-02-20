@@ -224,6 +224,11 @@ pub(crate) fn compute_captures(
         capture_names.push(name.clone());
     }
 
+    // Sort capture names alphabetically to match SWC's ordering.
+    // SWC uses a HashSet->Vec->sort() pattern in compute_scoped_idents(),
+    // which produces alphabetical order regardless of encounter order.
+    capture_names.sort();
+
     CaptureAnalysisResult {
         capture_names,
         reemitted_imports,
