@@ -231,6 +231,11 @@ fn contains_function_call(expr: &Expression<'_>) -> bool {
 /// - `_rawProps` identifier in a member expression (`_rawProps.propName`)
 /// - A destructured prop identifier
 ///
+/// Unknown local identifiers (not imports, globals, or props) are "co-reactive":
+/// they become deps only when at least one primary reactive dep exists.
+/// SWC treats `fromLocal + fromProps` as `_fnSignal(_hf, [_rawProps, fromLocal], ...)`
+/// but bare `fromLocal` stays unwrapped.
+///
 /// Returns the list of unique reactive deps and whether the expression
 /// contains any non-reactive non-const sub-expressions (which would prevent wrapping).
 fn collect_reactive_deps(
@@ -238,7 +243,8 @@ fn collect_reactive_deps(
     destructured_props: Option<&[(String, String)]>,
     collected_imports: &[crate::types::ImportInfo],
 ) -> (Vec<ReactiveDep>, bool) {
-    let mut deps: Vec<ReactiveDep> = Vec::new();
+    let mut primary_deps: Vec<ReactiveDep> = Vec::new();
+    let mut local_deps: Vec<ReactiveDep> = Vec::new();
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut has_non_reactive_non_const = false;
 
@@ -246,19 +252,32 @@ fn collect_reactive_deps(
         expr,
         destructured_props,
         collected_imports,
-        &mut deps,
+        &mut primary_deps,
+        &mut local_deps,
         &mut seen,
         &mut has_non_reactive_non_const,
     );
 
-    (deps, has_non_reactive_non_const)
+    // Local deps only materialize when there are primary deps.
+    // This matches SWC behavior: bare `fromLocal` stays unwrapped,
+    // but `fromLocal + fromProps` produces _fnSignal with both deps.
+    if !primary_deps.is_empty() {
+        // Merge local deps into primary deps, re-numbering params
+        for mut local in local_deps {
+            local.param_name = format!("p{}", primary_deps.len());
+            primary_deps.push(local);
+        }
+    }
+
+    (primary_deps, has_non_reactive_non_const)
 }
 
 fn collect_reactive_deps_inner(
     expr: &Expression<'_>,
     destructured_props: Option<&[(String, String)]>,
     collected_imports: &[crate::types::ImportInfo],
-    deps: &mut Vec<ReactiveDep>,
+    primary_deps: &mut Vec<ReactiveDep>,
+    local_deps: &mut Vec<ReactiveDep>,
     seen: &mut std::collections::HashSet<String>,
     has_non_reactive_non_const: &mut bool,
 ) {
@@ -272,9 +291,9 @@ fn collect_reactive_deps_inner(
             if prop == "value" {
                 if let Some(root_name) = &root {
                     if !seen.contains(root_name.as_str()) {
-                        let param = format!("p{}", deps.len());
+                        let param = format!("p{}", primary_deps.len());
                         seen.insert(root_name.clone());
-                        deps.push(ReactiveDep {
+                        primary_deps.push(ReactiveDep {
                             root_name: root_name.clone(),
                             param_name: param,
                         });
@@ -286,9 +305,9 @@ fn collect_reactive_deps_inner(
             if let Some(root_name) = &root {
                 if root_name == "_rawProps" {
                     if !seen.contains(root_name.as_str()) {
-                        let param = format!("p{}", deps.len());
+                        let param = format!("p{}", primary_deps.len());
                         seen.insert(root_name.clone());
-                        deps.push(ReactiveDep {
+                        primary_deps.push(ReactiveDep {
                             root_name: root_name.clone(),
                             param_name: param,
                         });
@@ -310,9 +329,9 @@ fn collect_reactive_deps_inner(
 
                 if has_chain_depth(expr, 2) {
                     if !seen.contains(root_name.as_str()) {
-                        let param = format!("p{}", deps.len());
+                        let param = format!("p{}", primary_deps.len());
                         seen.insert(root_name.clone());
-                        deps.push(ReactiveDep {
+                        primary_deps.push(ReactiveDep {
                             root_name: root_name.clone(),
                             param_name: param,
                         });
@@ -325,7 +344,8 @@ fn collect_reactive_deps_inner(
                 &member.object,
                 destructured_props,
                 collected_imports,
-                deps,
+                primary_deps,
+                local_deps,
                 seen,
                 has_non_reactive_non_const,
             );
@@ -338,9 +358,9 @@ fn collect_reactive_deps_inner(
                 for (local_alias, _original_key) in props {
                     if local_alias == name {
                         if !seen.contains("_rawProps") {
-                            let param = format!("p{}", deps.len());
+                            let param = format!("p{}", primary_deps.len());
                             seen.insert("_rawProps".to_string());
-                            deps.push(ReactiveDep {
+                            primary_deps.push(ReactiveDep {
                                 root_name: "_rawProps".to_string(),
                                 param_name: param,
                             });
@@ -362,10 +382,21 @@ fn collect_reactive_deps_inner(
                 return;
             }
 
-            // Unknown identifier (not a prop, import, or global) -- prevents
-            // _fnSignal wrapping when mixed with reactive deps (SWC aborts
-            // inlining for unknown identifiers).
-            *has_non_reactive_non_const = true;
+            // Unknown local identifier (not a prop, import, or global).
+            // These are "co-reactive": they become deps only when the
+            // expression also contains primary reactive sources (signal.value,
+            // _rawProps, store chains).  A bare `fromLocal` stays unwrapped,
+            // but `fromLocal + fromProps` produces
+            // `_fnSignal(_hf, [_rawProps, fromLocal], ...)`.
+            if !seen.contains(name) {
+                // Use a placeholder param -- will be renumbered in collect_reactive_deps()
+                let param = format!("p{}", local_deps.len());
+                seen.insert(name.to_string());
+                local_deps.push(ReactiveDep {
+                    root_name: name.to_string(),
+                    param_name: param,
+                });
+            }
         }
 
         Expression::BinaryExpression(bin) => {
@@ -373,7 +404,8 @@ fn collect_reactive_deps_inner(
                 &bin.left,
                 destructured_props,
                 collected_imports,
-                deps,
+                primary_deps,
+                local_deps,
                 seen,
                 has_non_reactive_non_const,
             );
@@ -381,7 +413,8 @@ fn collect_reactive_deps_inner(
                 &bin.right,
                 destructured_props,
                 collected_imports,
-                deps,
+                primary_deps,
+                local_deps,
                 seen,
                 has_non_reactive_non_const,
             );
@@ -391,7 +424,8 @@ fn collect_reactive_deps_inner(
                 &cond.test,
                 destructured_props,
                 collected_imports,
-                deps,
+                primary_deps,
+                local_deps,
                 seen,
                 has_non_reactive_non_const,
             );
@@ -399,7 +433,8 @@ fn collect_reactive_deps_inner(
                 &cond.consequent,
                 destructured_props,
                 collected_imports,
-                deps,
+                primary_deps,
+                local_deps,
                 seen,
                 has_non_reactive_non_const,
             );
@@ -407,7 +442,8 @@ fn collect_reactive_deps_inner(
                 &cond.alternate,
                 destructured_props,
                 collected_imports,
-                deps,
+                primary_deps,
+                local_deps,
                 seen,
                 has_non_reactive_non_const,
             );
@@ -417,7 +453,8 @@ fn collect_reactive_deps_inner(
                 &unary.argument,
                 destructured_props,
                 collected_imports,
-                deps,
+                primary_deps,
+                local_deps,
                 seen,
                 has_non_reactive_non_const,
             );
@@ -430,7 +467,8 @@ fn collect_reactive_deps_inner(
                             &p.value,
                             destructured_props,
                             collected_imports,
-                            deps,
+                            primary_deps,
+                            local_deps,
                             seen,
                             has_non_reactive_non_const,
                         );
@@ -440,7 +478,8 @@ fn collect_reactive_deps_inner(
                             &s.argument,
                             destructured_props,
                             collected_imports,
-                            deps,
+                            primary_deps,
+                            local_deps,
                             seen,
                             has_non_reactive_non_const,
                         );
@@ -453,7 +492,8 @@ fn collect_reactive_deps_inner(
                 &paren.expression,
                 destructured_props,
                 collected_imports,
-                deps,
+                primary_deps,
+                local_deps,
                 seen,
                 has_non_reactive_non_const,
             );
@@ -544,7 +584,15 @@ fn build_fn_signal_wrapping<'a>(
 
     let fn_code = format!("const {} = ({}) => {};", hf_name, params_str, body_for_fn);
 
-    let minified = minify_expression_string(&body_str);
+    // For the string representation, strip wrapping parens that OXC codegen
+    // adds for ambiguous expression starts (e.g., object literals `({...})`).
+    // SWC's string form uses the raw expression: `{props:p0.fromProps}`
+    let str_body = if body_str.starts_with('(') && body_str.ends_with(')') {
+        &body_str[1..body_str.len() - 1]
+    } else {
+        &body_str
+    };
+    let minified = minify_expression_string(str_body);
     let str_code = format!(
         "const {} = \"{}\";",
         hf_str_name,
