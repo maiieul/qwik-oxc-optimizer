@@ -110,6 +110,39 @@ fn is_const_jsx_value(value: &Expression<'_>) -> bool {
     crate::is_const::is_const_expression(value)
 }
 
+/// Check if a child expression is immutable for JSX flag computation.
+/// Mirrors SWC's convert_to_signal_item is_const check + convert_children call check.
+fn is_child_expression_immutable(expr: &Expression<'_>) -> bool {
+    match expr {
+        // Literals are always immutable
+        Expression::StringLiteral(_)
+        | Expression::NumericLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_) => true,
+
+        // Known immutable function calls (transform-generated)
+        Expression::CallExpression(call) => {
+            if let Expression::Identifier(ref callee) = call.callee {
+                matches!(
+                    callee.name.as_str(),
+                    "_wrapProp"
+                        | "_fnSignal"
+                        | "_jsxSorted"
+                        | "_jsxSplit"
+                        | "_jsxC"
+                        | "_IMMUTABLE"
+                )
+            } else {
+                false
+            }
+        }
+
+        // Fallthrough: handles TemplateLiteral (with/without expressions),
+        // identifiers, member expressions, etc. via is_const_expression
+        other => crate::is_const::is_const_expression(other),
+    }
+}
+
 /// Result of analyzing a JSX prop value for signal wrapping.
 enum SignalWrapResult {
     /// Expression should be wrapped with _wrapProp(signal) -- Form 1.
@@ -1042,6 +1075,25 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         _ => false,
     };
 
+    // Component tags not in immutable_function_cmp set make the parent's subtree mutable.
+    // This communicates to the parent element via tracker.jsx_mutable.
+    // (SWC transform.rs lines 866-867)
+    if is_fn {
+        let tag_name = match &element.opening_element.name {
+            JSXElementName::Identifier(ident) => Some(ident.name.as_str()),
+            JSXElementName::IdentifierReference(ident) => Some(ident.name.as_str()),
+            _ => None,
+        };
+        if let Some(name) = tag_name {
+            if !tracker.immutable_function_cmp.contains(name) {
+                tracker.jsx_mutable = true;
+            }
+        } else {
+            // MemberExpression or other complex tags are always mutable
+            tracker.jsx_mutable = true;
+        }
+    }
+
     // Classify attributes: detect spreads, separate key, classify var/const props
     let mut has_spread = false;
     let mut key_value: Option<Expression<'a>> = None;
@@ -1327,7 +1379,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     }
 
     // Build children
-    let (children_expr, children_count) = transform_jsx_children(
+    let (children_expr, _children_count, children_mutable) = transform_jsx_children(
         &mut element.children,
         tracker,
         ctx,
@@ -1340,14 +1392,28 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         key_prefix,
     );
 
-    // Compute flags
-    let flags = if has_spread {
-        0
-    } else if children_count > 1 {
-        1
-    } else {
-        3
-    };
+    // Compute immutability flags (mirrors SWC transform.rs lines 1570-1571, 1931-1937)
+    let static_listeners = !has_spread;
+    let mut static_subtree = !has_spread;
+
+    // var_props existence breaks static_subtree (SWC line 1469)
+    if !var_props.is_empty() {
+        static_subtree = false;
+    }
+
+    // Children mutability breaks static_subtree
+    if children_mutable {
+        static_subtree = false;
+    }
+
+    // Encode flags as bitfield: bit 0 = static_listeners, bit 1 = static_subtree
+    let mut flags: u32 = 0;
+    if static_listeners {
+        flags |= 1;
+    }
+    if static_subtree {
+        flags |= 2;
+    }
 
     // Generate key: component tags (is_fn) and root elements (root_jsx_mode) get keys,
     // nested native elements get null (mirrors SWC's should_emit_key = is_fn || root_jsx_mode)
@@ -1568,7 +1634,7 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
     let tag = ctx.ast.expression_identifier(SPAN, "_Fragment");
 
     // Build children
-    let (children_expr, children_count) = transform_jsx_children(
+    let (children_expr, _children_count, children_mutable) = transform_jsx_children(
         &mut fragment.children,
         tracker,
         ctx,
@@ -1581,8 +1647,13 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
         key_prefix,
     );
 
-    // Flags: 1 for multiple children, 3 for single/no children
-    let flags: u32 = if children_count > 1 { 1 } else { 3 };
+    // Fragment has no props, no spread, no event handlers
+    // static_listeners is always true for fragments
+    let static_subtree = !children_mutable;
+    let mut flags: u32 = 1; // static_listeners = true (bit 0)
+    if static_subtree {
+        flags |= 2; // bit 1
+    }
 
     // Generate auto-key (fragments always emit key -- is_fn=true in SWC)
     let key_str = format!("{}_{}", key_prefix, tracker.jsx_key_counter);
@@ -1617,7 +1688,8 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
 }
 
 /// Transform JSX children to expression(s).
-/// Returns (children_expression, significant_children_count).
+/// Returns (children_expression, significant_children_count, any_child_mutable).
+/// The third element indicates whether any child was mutable (for flag computation).
 pub(crate) fn transform_jsx_children<'a>(
     children: &mut oxc::allocator::Vec<'a, JSXChild<'a>>,
     tracker: &mut ImportTracker,
@@ -1629,8 +1701,9 @@ pub(crate) fn transform_jsx_children<'a>(
     iteration_vars: &[String],
     props_param_name: Option<&str>,
     key_prefix: &str,
-) -> (Option<Expression<'a>>, usize) {
+) -> (Option<Expression<'a>>, usize, bool) {
     let mut child_exprs: Vec<Expression<'a>> = Vec::new();
+    let mut any_child_mutable = false;
 
     // Take children out to process them
     let mut old_children = ctx.ast.vec();
@@ -1639,6 +1712,7 @@ pub(crate) fn transform_jsx_children<'a>(
     for child in old_children {
         match child {
             JSXChild::Text(text) => {
+                // String literals are immutable -- no change to any_child_mutable
                 let trimmed = normalize_jsx_text(text.value.as_str());
                 if !trimmed.is_empty() {
                     let atom = ctx.ast.atom(&trimmed);
@@ -1646,6 +1720,10 @@ pub(crate) fn transform_jsx_children<'a>(
                 }
             }
             JSXChild::Element(el) => {
+                // Save jsx_mutable before processing child element
+                let prev_mutable = tracker.jsx_mutable;
+                tracker.jsx_mutable = false;
+
                 // Recursively transform child JSXElement (children are never root)
                 let transformed = transform_jsx_element_inner(
                     el.unbox(),
@@ -1660,9 +1738,20 @@ pub(crate) fn transform_jsx_children<'a>(
                     false,
                     key_prefix,
                 );
+
+                // If child element set jsx_mutable, this subtree is mutable
+                if tracker.jsx_mutable {
+                    any_child_mutable = true;
+                }
+                tracker.jsx_mutable = prev_mutable;
+
                 child_exprs.push(transformed);
             }
             JSXChild::Fragment(frag) => {
+                // Save jsx_mutable before processing child fragment
+                let prev_mutable = tracker.jsx_mutable;
+                tracker.jsx_mutable = false;
+
                 // Recursively transform child JSXFragment (children are never root)
                 let transformed = transform_jsx_fragment_inner(
                     frag.unbox(),
@@ -1677,6 +1766,13 @@ pub(crate) fn transform_jsx_children<'a>(
                     false,
                     key_prefix,
                 );
+
+                // If child fragment set jsx_mutable, this subtree is mutable
+                if tracker.jsx_mutable {
+                    any_child_mutable = true;
+                }
+                tracker.jsx_mutable = prev_mutable;
+
                 child_exprs.push(transformed);
             }
             JSXChild::ExpressionContainer(container) => {
@@ -1693,6 +1789,10 @@ pub(crate) fn transform_jsx_children<'a>(
                         // If it's a JSXElement or JSXFragment, transform it
                         match transformed {
                             Expression::JSXElement(el) => {
+                                // Save/restore jsx_mutable around element processing
+                                let prev_mutable = tracker.jsx_mutable;
+                                tracker.jsx_mutable = false;
+
                                 let result = transform_jsx_element_inner(
                                     el.unbox(),
                                     tracker,
@@ -1706,9 +1806,19 @@ pub(crate) fn transform_jsx_children<'a>(
                                     false,
                                     key_prefix,
                                 );
+
+                                if tracker.jsx_mutable {
+                                    any_child_mutable = true;
+                                }
+                                tracker.jsx_mutable = prev_mutable;
+
                                 child_exprs.push(result);
                             }
                             Expression::JSXFragment(frag) => {
+                                // Save/restore jsx_mutable around fragment processing
+                                let prev_mutable = tracker.jsx_mutable;
+                                tracker.jsx_mutable = false;
+
                                 let result = transform_jsx_fragment_inner(
                                     frag.unbox(),
                                     tracker,
@@ -1722,6 +1832,12 @@ pub(crate) fn transform_jsx_children<'a>(
                                     false,
                                     key_prefix,
                                 );
+
+                                if tracker.jsx_mutable {
+                                    any_child_mutable = true;
+                                }
+                                tracker.jsx_mutable = prev_mutable;
+
                                 child_exprs.push(result);
                             }
                             other => {
@@ -1731,6 +1847,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                     match detect_signal_wrap(&other, destructured_props, props_param_name) {
                                         SignalWrapResult::WrapPropSignal => {
                                             // signal.value -> _wrapProp(signal) [EXISTING]
+                                            // _wrapProp calls are immutable -- no mutability change
                                             if let Expression::StaticMemberExpression(member) =
                                                 other
                                             {
@@ -1747,6 +1864,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                         SignalWrapResult::WrapPropNamed(prop_name) => {
                                             // _rawProps.propName, props.X, props["X"], or destructured prop ->
                                             // _wrapProp(source, "propName")
+                                            // _wrapProp calls are immutable -- no mutability change
                                             let raw_props_fallback = props_param_name.unwrap_or("_rawProps");
                                             let source_obj = if let Expression::StaticMemberExpression(member) = other {
                                                 member.unbox().object
@@ -1768,7 +1886,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                     }
                                 }
                                 // Check for _fnSignal wrapping (complex reactive
-                                // expressions) [NEW]
+                                // expressions)
                                 if !is_call_on_value(&other)
                                     && !contains_function_call(&other)
                                 {
@@ -1779,6 +1897,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                         props_param_name,
                                     );
                                     if !deps.is_empty() && !has_non_reactive {
+                                        // _fnSignal calls are immutable -- no mutability change
                                         let (wrapped, fn_code, str_code) =
                                             build_fn_signal_wrapping(
                                                 other,
@@ -1794,6 +1913,11 @@ pub(crate) fn transform_jsx_children<'a>(
                                         continue;
                                     }
                                 }
+                                // After all wrapping attempts, check remaining expression
+                                // mutability for flag computation
+                                if !is_child_expression_immutable(&other) {
+                                    any_child_mutable = true;
+                                }
                                 child_exprs.push(other);
                             }
                         }
@@ -1801,6 +1925,8 @@ pub(crate) fn transform_jsx_children<'a>(
                 }
             }
             JSXChild::Spread(spread) => {
+                // Spread children make subtree mutable
+                any_child_mutable = true;
                 let spread = spread.unbox();
                 child_exprs.push(spread.expression);
             }
@@ -1809,14 +1935,22 @@ pub(crate) fn transform_jsx_children<'a>(
 
     let count = child_exprs.len();
     match count {
-        0 => (None, 0),
-        1 => (Some(child_exprs.into_iter().next().unwrap()), 1),
+        0 => (None, 0, any_child_mutable),
+        1 => (
+            Some(child_exprs.into_iter().next().unwrap()),
+            1,
+            any_child_mutable,
+        ),
         _ => {
             let mut elements = ctx.ast.vec_with_capacity(count);
             for child in child_exprs {
                 elements.push(ArrayExpressionElement::from(child));
             }
-            (Some(ctx.ast.expression_array(SPAN, elements)), count)
+            (
+                Some(ctx.ast.expression_array(SPAN, elements)),
+                count,
+                any_child_mutable,
+            )
         }
     }
 }
@@ -2020,7 +2154,7 @@ fn transform_jsx_element_custom_source<'a>(
     }
 
     // Process children: add as `children` prop if present
-    let (children_expr, _children_count) = transform_jsx_children(
+    let (children_expr, _children_count, _children_mutable) = transform_jsx_children(
         &mut element.children,
         tracker,
         ctx,
