@@ -626,7 +626,11 @@ impl QwikTransform {
             needed_imports: vec![], // Populated by finalize_segments
             segment_qrl_names: vec![],
             body_span: (call.span.start, call.span.end),
-            param_names: vec![],        // Set by props destructuring if needed
+            param_names: if let Some(first_arg) = call.arguments.first() {
+                extract_param_names_from_argument(first_arg)
+            } else {
+                vec![]
+            },
             body_code: String::new(),   // Populated in exit_expression for segment strategy
             child_lazy_imports: vec![], // Populated by finalize_segments
             needs_qrl_import: false,    // Populated by finalize_segments
@@ -2248,6 +2252,95 @@ fn analyze_lambda_captures(source_code: &str, span: (u32, u32)) -> (Vec<String>,
     }
 
     (Vec::new(), HashSet::new())
+}
+
+/// Convert a BindingPattern to a human-readable string for paramNames metadata.
+/// Matches SWC's `pat_to_string` (transform.rs:2312-2368).
+fn binding_pattern_to_string(pattern: &BindingPattern<'_>) -> Option<String> {
+    match pattern {
+        BindingPattern::BindingIdentifier(ident) => Some(ident.name.as_str().to_string()),
+        BindingPattern::ObjectPattern(obj) => {
+            let mut parts = Vec::new();
+            for prop in &obj.properties {
+                if prop.shorthand {
+                    // Shorthand {a} -- equivalent to SWC's ObjectPatProp::Assign
+                    if let BindingPattern::BindingIdentifier(ident) = &prop.value {
+                        parts.push(ident.name.as_str().to_string());
+                    }
+                } else {
+                    // KeyValue {key: value} -- equivalent to SWC's ObjectPatProp::KeyValue
+                    let key_str = match &prop.key {
+                        PropertyKey::StaticIdentifier(ident) => ident.name.as_str().to_string(),
+                        PropertyKey::StringLiteral(s) => s.value.as_str().to_string(),
+                        PropertyKey::NumericLiteral(n) => n.value.to_string(),
+                        PropertyKey::BigIntLiteral(b) => {
+                            b.raw.as_ref().map_or_else(String::new, |r| r.as_str().to_string())
+                        }
+                        _ => continue, // Computed keys: skip
+                    };
+                    if let Some(value) = binding_pattern_to_string(&prop.value) {
+                        parts.push(format!("{}: {}", key_str, value));
+                    }
+                }
+            }
+            // Skip rest properties in object patterns (SWC skips ObjectPatProp::Rest)
+            if parts.is_empty() {
+                None
+            } else {
+                Some(format!("{{{}}}", parts.join(", ")))
+            }
+        }
+        BindingPattern::ArrayPattern(arr) => {
+            let mut parts = Vec::new();
+            for elem in &arr.elements {
+                match elem {
+                    Some(pat) => {
+                        if let Some(name) = binding_pattern_to_string(pat) {
+                            parts.push(name);
+                        }
+                    }
+                    None => parts.push(String::new()),
+                }
+            }
+            if parts.is_empty() {
+                None
+            } else {
+                Some(format!("[{}]", parts.join(", ")))
+            }
+        }
+        BindingPattern::AssignmentPattern(assign) => {
+            // Assignment pattern with default: use the left-hand side
+            binding_pattern_to_string(&assign.left)
+        }
+    }
+}
+
+/// Extract parameter names from FormalParameters.
+/// Matches SWC's `extract_param_names` inner logic (transform.rs:2370-2399).
+fn extract_param_names_from_params(params: &FormalParameters<'_>) -> Vec<String> {
+    let mut names = Vec::new();
+    for param in &params.items {
+        if let Some(name) = binding_pattern_to_string(&param.pattern) {
+            names.push(name);
+        }
+    }
+    // Handle rest parameter: ...args
+    if let Some(rest) = &params.rest {
+        if let Some(name) = binding_pattern_to_string(&rest.rest.argument) {
+            names.push(format!("...{}", name));
+        }
+    }
+    names
+}
+
+/// Extract parameter names from a $() call argument.
+/// Handles ArrowFunctionExpression and FunctionExpression arguments.
+fn extract_param_names_from_argument(arg: &Argument<'_>) -> Vec<String> {
+    match arg {
+        Argument::ArrowFunctionExpression(arrow) => extract_param_names_from_params(&arrow.params),
+        Argument::FunctionExpression(func) => extract_param_names_from_params(&func.params),
+        _ => Vec::new(),
+    }
 }
 
 /// Collect binding names from a BindingPattern into a set.
