@@ -2674,8 +2674,17 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         // 3c: Build lazy import declarations (const i_XXX = () => import(...))
+        // Sort by import path to match SWC's BTreeMap ordering (alphabetical by key).
+        // Filter to only include lazy imports whose identifier is actually referenced
+        // in the entry module body. With QRL hoisting, event handler lazy imports
+        // may only be referenced inside segment bodies, not the entry module.
+        self.import_tracker.lazy_imports.sort_by(|a, b| a.1.cmp(&b.1));
         let mut lazy_imports: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
         for (hash, import_path) in &self.import_tracker.lazy_imports {
+            let ident_name = format!("i_{}", hash);
+            if !referenced_idents.contains(ident_name.as_str()) {
+                continue; // Only used in segment bodies -- don't emit in entry module
+            }
             let stmt = import_rewrite::build_lazy_import_declaration(hash, import_path, ctx);
             lazy_imports.push(stmt);
         }
