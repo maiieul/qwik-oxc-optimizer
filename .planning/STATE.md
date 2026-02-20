@@ -9,29 +9,30 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 
 ## Current Position
 
-Phase: 1 of 6 complete (Naming & Display Names)
-Plan: 2 of 2 complete in phase 1
-Status: Phase 1 complete, ready to plan Phase 2
-Last activity: 2026-02-19 - Phase 1 verified and complete
+Phase: 2 of 6 (Metadata)
+Plan: 1 of ? in phase 2
+Status: In progress
+Last activity: 2026-02-20 - Completed 02-01-PLAN.md
 
-Progress: [██░░░░░░░░] ~15%
+Progress: [███░░░░░░░] ~20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 30min
-- Total execution time: 1.0 hours
+- Total plans completed: 3
+- Average duration: 25min
+- Total execution time: 1.25 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-naming | 2/2 ✓ | 60min | 30min |
+| 01-naming | 2/2 | 60min | 30min |
+| 02-metadata | 1/? | 15min | 15min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (15min), 01-02 (45min)
-- Trend: Plan complexity increasing as edge cases accumulate
+- Last 5 plans: 01-01 (15min), 01-02 (45min), 02-01 (15min)
+- Trend: Plan 02-01 was fast (well-researched, localized changes)
 
 *Updated after each plan completion*
 
@@ -52,6 +53,9 @@ Recent decisions affecting current work:
 - [01-02]: Raw $() calls: don't push callee name (SWC's handle_qsegment returns before push)
 - [01-02]: Prod mode: use s_HASH for segment names in EmitMode::Prod
 - [01-cleanup]: Collector display name derivation removed entirely (DollarCallSite, derive_display_name, etc.) -- was dead code never consumed by transform
+- [02-01]: 23 remaining paramNames mismatches are from q:p iteration variable injection (transform_event_handler_with_iter_var) -- separate feature
+- [02-01]: OXC FormalParameterRest has nested .rest.argument path (different from plan assumption)
+- [02-01]: support_windows_paths test had double backslashes vs SWC's single -- fixed
 
 ### Pending Todos
 
@@ -62,9 +66,10 @@ None.
 - BUG-01 (TS stripping) needs research to decide approach: oxc_transformer feature, oxc_isolated_declarations, or manual stripping
 - 3 tests have segment ordering diffs (same names, different order) -- traversal order difference between SWC fold and OXC traverse
 - 2 tests have missing segments from multi-file inputs -- needs Phase 3 work
+- 23 event handler segments need q:p iteration variable injection for full paramNames parity
 
 ## Session Continuity
 
-Last session: 2026-02-19
-Stopped at: Phase 1 complete, ready to plan Phase 2
+Last session: 2026-02-20
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None
