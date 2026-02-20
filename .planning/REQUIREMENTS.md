@@ -20,12 +20,12 @@ Requirements for milestone v1.0 — Full Snapshot Parity. Each maps to roadmap p
 
 ### Bugs & Correctness
 
-- [ ] **BUG-01**: TypeScript type annotations stripped when `transpile_ts=true`
-- [ ] **BUG-02**: Component options object preserved in `componentQrl()` second argument
-- [ ] **BUG-03**: Captured variables match SWC (correct vars, correct order)
-- [ ] **BUG-04**: All segments extracted (no missing segment files)
-- [ ] **BUG-05**: `qwik_router_inline` complex transformation handled correctly
-- [ ] **BUG-06**: Source comments preserved in output
+- [x] **BUG-01**: TypeScript type annotations stripped when `transpile_ts=true`
+- [x] **BUG-02**: Component options object preserved in `componentQrl()` second argument
+- [x] **BUG-03**: Captured variables match SWC (correct vars, correct order)
+- [x] **BUG-04**: All segments extracted (no missing segment files)
+- [x] **BUG-05**: `qwik_router_inline` complex transformation handled correctly
+- [x] **BUG-06**: Source comments preserved in output
 
 ### Signal & Props Transforms
 
@@ -84,12 +84,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAME-03 | Phase 1 | Complete |
 | META-01 | Phase 2 | Complete |
 | META-02 | Phase 2 | Complete |
-| BUG-01 | Phase 3 | Pending |
-| BUG-02 | Phase 3 | Pending |
-| BUG-03 | Phase 3 | Pending |
-| BUG-04 | Phase 3 | Pending |
-| BUG-05 | Phase 3 | Pending |
-| BUG-06 | Phase 3 | Pending |
+| BUG-01 | Phase 3 | Complete |
+| BUG-02 | Phase 3 | Complete |
+| BUG-03 | Phase 3 | Complete |
+| BUG-04 | Phase 3 | Complete |
+| BUG-05 | Phase 3 | Complete |
+| BUG-06 | Phase 3 | Complete |
 | SIG-01 | Phase 4 | Pending |
 | SIG-02 | Phase 4 | Pending |
 | PROP-01 | Phase 4 | Pending |
@@ -108,4 +108,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-20 after Phase 2 completion*
+*Last updated: 2026-02-20 after Phase 3 completion*
