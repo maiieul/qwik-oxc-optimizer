@@ -1847,8 +1847,16 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     let qrl_name = words::dollar_to_qrl_name(name);
                     let qrl_atom = ctx.ast.atom(&qrl_name);
                     let qrl_callee = ctx.ast.expression_identifier(SPAN, qrl_atom);
-                    let mut args = ctx.ast.vec_with_capacity(1);
+                    let mut args = ctx.ast.vec_with_capacity(call.arguments.len().max(1));
                     args.push(Argument::from(replacement));
+                    // Pass through additional arguments (e.g., { tagName: "my-foo" } for component$)
+                    for i in 1..call.arguments.len() {
+                        let placeholder = Argument::from(
+                            ctx.ast.expression_identifier(SPAN, "undefined"),
+                        );
+                        let extra_arg = std::mem::replace(&mut call.arguments[i], placeholder);
+                        args.push(extra_arg);
+                    }
                     // Only component$ is tree-shakeable and gets PURE annotation.
                     // Side-effectful wrappers (useStylesQrl, useTaskQrl, etc.) must NOT
                     // have PURE because bundlers would incorrectly remove them.
