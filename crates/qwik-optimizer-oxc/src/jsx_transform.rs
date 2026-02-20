@@ -1030,6 +1030,18 @@ pub(crate) fn transform_jsx_element_inner<'a>(
 
     let tag = build_tag_expression(&element.opening_element.name, ctx);
 
+    // Determine if this is a component (function) tag -- uppercase first char or member expression
+    let is_fn = match &element.opening_element.name {
+        JSXElementName::Identifier(ident) => {
+            ident.name.as_str().starts_with(|c: char| c.is_uppercase())
+        }
+        JSXElementName::IdentifierReference(ident) => {
+            ident.name.as_str().starts_with(|c: char| c.is_uppercase())
+        }
+        JSXElementName::MemberExpression(_) => true,
+        _ => false,
+    };
+
     // Classify attributes: detect spreads, separate key, classify var/const props
     let mut has_spread = false;
     let mut key_value: Option<Expression<'a>> = None;
@@ -1037,7 +1049,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     let mut const_props: Vec<(String, Expression<'a>)> = Vec::new();
     let mut spread_args: Vec<Expression<'a>> = Vec::new();
     let mut _has_only_events = true;
-    let mut has_any_visible_prop = false;
+    let mut _has_any_visible_prop = false;
 
     // Take attributes out of the opening element
     let mut attrs = ctx.ast.vec();
@@ -1182,7 +1194,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                 }
 
                 // Regular attribute
-                has_any_visible_prop = true;
+                _has_any_visible_prop = true;
                 _has_only_events = false;
                 let value = if let Some(val) = attr.value {
                     jsx_attr_value_to_expression(
@@ -1337,20 +1349,20 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         3
     };
 
-    // Generate key
+    // Generate key: component tags (is_fn) and root elements (root_jsx_mode) get keys,
+    // nested native elements get null (mirrors SWC's should_emit_key = is_fn || root_jsx_mode)
+    let should_emit_key = is_fn || root_jsx_mode;
     let key_expr = if let Some(key) = key_value {
+        // User-provided key from JSX `key` prop
         key
-    } else if children_count > 0
-        || has_any_visible_prop
-        || !const_props.is_empty()
-        || !var_props.is_empty()
-    {
-        // Generate auto-key for elements with content (they may be siblings)
-        let key_str = format!("u6_{}", tracker.jsx_key_counter);
+    } else if should_emit_key {
+        // Generate auto-key: "XX_N" where XX = key_prefix, N = counter
+        let key_str = format!("{}_{}", key_prefix, tracker.jsx_key_counter);
         tracker.jsx_key_counter += 1;
         let atom = ctx.ast.atom(&key_str);
         ctx.ast.expression_string_literal(SPAN, atom, None)
     } else {
+        // No key for nested native elements
         ctx.ast.expression_null_literal(SPAN)
     };
 
