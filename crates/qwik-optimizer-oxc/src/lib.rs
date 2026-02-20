@@ -94,7 +94,37 @@ pub fn transform_modules(
         }
 
         let mut program = parse_result.program;
-        let scoping = parse_result.scoping;
+        let mut scoping = parse_result.scoping;
+
+        // BUG-01: Strip TypeScript types before Qwik transform pass.
+        // SWC does typescript::strip() before the Qwik fold. Without this,
+        // type annotations remain in output when transpile_ts=true.
+        if transform_options.transpile_ts && parse_result.source_type.is_typescript() {
+            use std::path::Path;
+            let ts_options = oxc::transformer::TransformOptions {
+                typescript: oxc::transformer::TypeScriptOptions::default(),
+                // Explicitly disable JSX transform -- we only want TS stripping here.
+                // JsxOptions::default() enables jsx_plugin, which would transform JSX
+                // to React.createElement calls before the Qwik pass runs.
+                jsx: oxc::transformer::JsxOptions::disable(),
+                ..Default::default()
+            };
+            let transformer = oxc::transformer::Transformer::new(
+                &allocator,
+                Path::new(&input.path),
+                &ts_options,
+            );
+            let _ts_return = transformer.build_with_scoping(
+                scoping,
+                &mut program,
+            );
+            // Rebuild semantic scoping for the stripped AST.
+            // The transformer consumes Scoping, so we must rebuild it.
+            let semantic_ret = oxc::semantic::SemanticBuilder::new()
+                .with_excess_capacity(2.0)
+                .build(&program);
+            scoping = semantic_ret.semantic.into_scoping();
+        }
 
         let collect_result = collector::collect(&program, &scoping, config.core_module.as_deref());
 
