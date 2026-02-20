@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 5 gap closure complete (05-03). Phase 6 (imports/cleanup) is next.
+**Current focus:** Phase 6 (imports/cleanup) -- segment import ordering done (06-02).
 
 ## Current Position
 
-Phase: 5 of 6 (JSX Keys & Flags)
-Plan: 3 of 3 complete in phase 5 (05-03 flag propagation gap closure done)
-Status: Phase complete
-Last activity: 2026-02-20 - Completed 05-03-PLAN.md (flag propagation gap closure)
+Phase: 6 of 6 (Import Ordering & Cleanup)
+Plan: 2 of 3 complete in phase 6 (06-02 segment import ordering done)
+Status: In progress
+Last activity: 2026-02-20 - Completed 06-02-PLAN.md (segment import ordering)
 
-Progress: [█████████████░] ~95%
+Progress: [██████████████░] ~96%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
-- Average duration: 16min
-- Total execution time: 3.8 hours
+- Total plans completed: 14
+- Average duration: 15min
+- Total execution time: 3.9 hours
 
 **By Phase:**
 
@@ -32,10 +32,11 @@ Progress: [█████████████░] ~95%
 | 03-bugs-correctness | 3/3 | 51min | 17min |
 | 04-signal-props-transforms | 4/4 | 77min | 19min |
 | 05-jsx-keys-flags | 3/3 | 36min | 12min |
+| 06-import-ordering-cleanup | 1/3 | 8min | 8min |
 
 **Recent Trend:**
-- Last 5 plans: 04-02 (25min), 04-04 (35min), 05-01 (9min), 05-02 (14min), 05-03 (13min)
-- Trend: Gap closure plan required understanding OXC's bottom-up traversal vs SWC's top-down approach for flag propagation.
+- Last 5 plans: 04-04 (35min), 05-01 (9min), 05-02 (14min), 05-03 (13min), 06-02 (8min)
+- Trend: Import ordering was straightforward -- collect-sort-emit pattern with one deviation (_captures must be emitted first, not sorted).
 
 *Updated after each plan completion*
 
@@ -90,6 +91,9 @@ Recent decisions affecting current work:
 - [05-03]: contains_mutable_jsx_call scans expression trees for _jsxSorted calls with non-immutable component tags
 - [05-03]: Member expressions: mutable by default, immutable only when base object is a known import (matches SWC ConstCollector)
 - [05-03]: Remaining 21 flag mismatches are scope-analysis issues (unresolved globals, local mutable bindings)
+- [06-02]: _captures import emitted first (before sorted list) -- SWC special case, not sorted with other imports
+- [06-02]: Standard Rust string comparison for import sort order -- matches SWC Atom::cmp
+- [06-02]: Lazy import declarations moved after all sorted imports -- matches SWC extra_top_items positioning
 
 ### Pending Todos
 
@@ -107,8 +111,9 @@ None.
 - Gap 2 (flag propagation) RESOLVED -- 05-03 gap closure plan (122->21 mismatches)
 - Phase 5 DONE: JSX key generation (05-01), immutability flags (05-02), flag propagation (05-03)
 - Post-formatting restored (cherry-picked from sort-format-fix): 2-space indent, object expansion, JSX-aware parsing
+- Segment import ordering RESOLVED (06-02): 0 ordering-only diffs, 48 set diffs remain (other phase issues)
 - Remaining snapshot diffs are Phase 6 issues:
-  - Import ordering
+  - Entry module extra imports (06-01)
   - use*() return value destructuring inlining (2 fixtures)
   - QRL hoisting (deferred from 04-02)
 - 1 deferred naming issue (should_extract_single_qrl_2) -- dedup suffix on wrong segment due to traverse order
@@ -117,6 +122,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-20T19:43:00Z
-Stopped at: Completed 05-03-PLAN.md (flag propagation gap closure)
+Last session: 2026-02-20T21:18:00Z
+Stopped at: Completed 06-02-PLAN.md (segment import ordering)
 Resume file: None
