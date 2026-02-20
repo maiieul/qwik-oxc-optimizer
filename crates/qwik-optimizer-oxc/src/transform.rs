@@ -190,6 +190,21 @@ pub(crate) struct QwikTransform {
     /// Stack tracking whether current JSX element is a native HTML element.
     /// Mirrors SWC's `jsx_element_is_native` stack.
     jsx_element_is_native: Vec<bool>,
+
+    /// Depth counter for nested loops. When > 0, QRL calls are inside a loop context.
+    loop_depth: u32,
+
+    /// Stack of iteration variables for each loop scope.
+    /// Each entry contains the iteration variable names for that loop level.
+    iteration_var_stack: Vec<Vec<String>>,
+
+    /// Depth counter for iteration method callbacks (.map/.filter/etc).
+    /// Increment on entering an iteration method call, decrement on exit.
+    /// When > 0, the current scope is inside an iteration method callback.
+    /// Uses a depth counter (not bool) to handle nested iteration methods
+    /// correctly: e.g. arr.map(x => x.items.filter(y => ...)) — exiting
+    /// the inner .filter() decrements to 1 (still inside .map()), not 0.
+    in_callback_depth: u32,
 }
 
 /// Info needed to build a qrl()/inlinedQrl() call for a JSX event handler.
@@ -242,6 +257,9 @@ impl QwikTransform {
             call_expr_ctxt_depths: Vec::new(),
             export_default_ctxt_depths: Vec::new(),
             jsx_element_is_native: Vec::new(),
+            loop_depth: 0,
+            iteration_var_stack: Vec::new(),
+            in_callback_depth: 0,
         }
     }
 
@@ -284,6 +302,16 @@ impl QwikTransform {
     /// Get the custom JSX import source module path, if any.
     pub fn custom_jsx_import_source(&self) -> Option<&str> {
         self.custom_jsx_import_source.as_deref()
+    }
+
+    /// Get the current loop depth.
+    pub(crate) fn loop_depth(&self) -> u32 {
+        self.loop_depth
+    }
+
+    /// Get all current iteration variables, flattened from all loop scopes.
+    pub(crate) fn current_iteration_vars(&self) -> Vec<String> {
+        self.iteration_var_stack.iter().flatten().cloned().collect()
     }
 
     /// Check if a ctx name should be stripped based on strip_ctx_name config.
@@ -1177,6 +1205,34 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         call: &mut CallExpression<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        // Check if this is an array iteration method call (.map, .filter, etc.)
+        if let Expression::StaticMemberExpression(member) = &call.callee {
+            let method_name = member.property.name.as_str();
+            if matches!(
+                method_name,
+                "map"
+                    | "filter"
+                    | "forEach"
+                    | "flatMap"
+                    | "some"
+                    | "every"
+                    | "find"
+                    | "findIndex"
+                    | "reduce"
+                    | "reduceRight"
+            ) {
+                self.loop_depth += 1;
+                self.in_callback_depth += 1;
+                // Extract callback parameters as iteration variables
+                if let Some(first_arg) = call.arguments.first() {
+                    let iteration_vars = extract_callback_params(first_arg);
+                    self.iteration_var_stack.push(iteration_vars);
+                } else {
+                    self.iteration_var_stack.push(Vec::new());
+                }
+            }
+        }
+
         // Push callee name to stack_ctxt, mirroring SWC's fold_call_expr.
         // SWC pushes the callee ident.sym for marker functions and all other
         // ident callees, but NOT for:
@@ -1271,9 +1327,31 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
     fn exit_call_expression(
         &mut self,
-        _call: &mut CallExpression<'a>,
+        call: &mut CallExpression<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        // Clean up iteration tracking for array methods
+        if let Expression::StaticMemberExpression(member) = &call.callee {
+            let method_name = member.property.name.as_str();
+            if matches!(
+                method_name,
+                "map"
+                    | "filter"
+                    | "forEach"
+                    | "flatMap"
+                    | "some"
+                    | "every"
+                    | "find"
+                    | "findIndex"
+                    | "reduce"
+                    | "reduceRight"
+            ) {
+                self.iteration_var_stack.pop();
+                self.loop_depth -= 1;
+                self.in_callback_depth = self.in_callback_depth.saturating_sub(1);
+            }
+        }
+
         // Pop callee name from stack_ctxt
         if let Some(depth) = self.call_expr_ctxt_depths.pop() {
             self.stack_ctxt.truncate(depth);
@@ -1478,6 +1556,143 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
         self.stack_ctxt.pop();
+    }
+
+    // -----------------------------------------------------------------------
+    // Loop tracking: enter/exit hooks for for/for-in/for-of/while statements
+    // -----------------------------------------------------------------------
+
+    fn enter_for_statement(
+        &mut self,
+        node: &mut ForStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.loop_depth += 1;
+        // Extract iteration variable from init: for (let i = ...) or for (var i = ...)
+        let iteration_vars =
+            if let Some(ForStatementInit::VariableDeclaration(ref decl)) = node.init {
+                decl.declarations
+                    .first()
+                    .and_then(|d| {
+                        if let BindingPattern::BindingIdentifier(ref ident) = d.id {
+                            Some(vec![ident.name.to_string()])
+                        } else {
+                            None
+                        }
+                    })
+                    .unwrap_or_default()
+            } else {
+                Vec::new()
+            };
+        self.iteration_var_stack.push(iteration_vars);
+    }
+
+    fn exit_for_statement(
+        &mut self,
+        _node: &mut ForStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.iteration_var_stack.pop();
+        self.loop_depth -= 1;
+    }
+
+    fn enter_for_in_statement(
+        &mut self,
+        node: &mut ForInStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.loop_depth += 1;
+        let iteration_vars = match &node.left {
+            ForStatementLeft::VariableDeclaration(decl) => decl
+                .declarations
+                .first()
+                .and_then(|d| {
+                    if let BindingPattern::BindingIdentifier(ref ident) = d.id {
+                        Some(vec![ident.name.to_string()])
+                    } else {
+                        None
+                    }
+                })
+                .unwrap_or_default(),
+            ForStatementLeft::AssignmentTargetIdentifier(ident) => {
+                vec![ident.name.to_string()]
+            }
+            _ => Vec::new(),
+        };
+        self.iteration_var_stack.push(iteration_vars);
+    }
+
+    fn exit_for_in_statement(
+        &mut self,
+        _node: &mut ForInStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.iteration_var_stack.pop();
+        self.loop_depth -= 1;
+    }
+
+    fn enter_for_of_statement(
+        &mut self,
+        node: &mut ForOfStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.loop_depth += 1;
+        let iteration_vars = match &node.left {
+            ForStatementLeft::VariableDeclaration(decl) => decl
+                .declarations
+                .first()
+                .and_then(|d| {
+                    if let BindingPattern::BindingIdentifier(ref ident) = d.id {
+                        Some(vec![ident.name.to_string()])
+                    } else {
+                        None
+                    }
+                })
+                .unwrap_or_default(),
+            ForStatementLeft::AssignmentTargetIdentifier(ident) => {
+                vec![ident.name.to_string()]
+            }
+            _ => Vec::new(),
+        };
+        self.iteration_var_stack.push(iteration_vars);
+    }
+
+    fn exit_for_of_statement(
+        &mut self,
+        _node: &mut ForOfStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.iteration_var_stack.pop();
+        self.loop_depth -= 1;
+    }
+
+    fn enter_while_statement(
+        &mut self,
+        node: &mut WhileStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.loop_depth += 1;
+        // Extract iteration variable from test: while (i < ...) => extract "i"
+        let iteration_vars = match &node.test {
+            Expression::BinaryExpression(bin) => {
+                if let Expression::Identifier(ref ident) = bin.left {
+                    vec![ident.name.to_string()]
+                } else {
+                    Vec::new()
+                }
+            }
+            _ => Vec::new(),
+        };
+        self.iteration_var_stack.push(iteration_vars);
+    }
+
+    fn exit_while_statement(
+        &mut self,
+        _node: &mut WhileStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.iteration_var_stack.pop();
+        self.loop_depth -= 1;
     }
 
     fn exit_expression(&mut self, expr: &mut Expression<'a>, ctx: &mut TraverseCtx<'a, ()>) {
@@ -2835,5 +3050,37 @@ pub(crate) fn argument_to_expression<'a>(
         Argument::StringLiteral(e) => Expression::StringLiteral(e),
         // Catch-all for any other inherited variants
         _ => ctx.ast.expression_identifier(SPAN, "undefined"),
+    }
+}
+
+/// Extract callback parameter names from the first argument of an iteration method.
+/// E.g., for `.map((item, index) => ...)`, returns `["item", "index"]`.
+fn extract_callback_params(arg: &Argument<'_>) -> Vec<String> {
+    match arg {
+        Argument::ArrowFunctionExpression(arrow) => arrow
+            .params
+            .items
+            .iter()
+            .filter_map(|p| {
+                if let BindingPattern::BindingIdentifier(ref ident) = p.pattern {
+                    Some(ident.name.to_string())
+                } else {
+                    None
+                }
+            })
+            .collect(),
+        Argument::FunctionExpression(func) => func
+            .params
+            .items
+            .iter()
+            .filter_map(|p| {
+                if let BindingPattern::BindingIdentifier(ref ident) = p.pattern {
+                    Some(ident.name.to_string())
+                } else {
+                    None
+                }
+            })
+            .collect(),
+        _ => Vec::new(),
     }
 }
