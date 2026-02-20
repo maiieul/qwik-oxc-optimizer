@@ -207,6 +207,69 @@ fn is_child_expression_immutable(expr: &Expression<'_>) -> bool {
     }
 }
 
+/// Check if an expression tree contains already-transformed _jsxSorted/_jsxSplit calls
+/// with non-immutable component tags.
+///
+/// In OXC's bottom-up traversal, inner JSX elements are transformed before their parent.
+/// When a non-immutable component like `<Stuff/>` is inside a ternary or logical expression,
+/// it becomes `_jsxSorted(Stuff, ...)`. SWC would detect `<Stuff/>` as a non-immutable component
+/// during top-down children processing and set jsx_mutable. We simulate this by scanning
+/// already-transformed expressions for such calls.
+fn contains_mutable_jsx_call(
+    expr: &Expression<'_>,
+    immutable_function_cmp: &std::collections::HashSet<String>,
+) -> bool {
+    match expr {
+        Expression::CallExpression(call) => {
+            if let Expression::Identifier(ref callee) = call.callee {
+                if matches!(callee.name.as_str(), "_jsxSorted" | "_jsxSplit" | "_jsxC") {
+                    // Check first argument: if it's a non-immutable component identifier, mutable
+                    if let Some(first_arg) = call.arguments.first() {
+                        if let Some(Expression::Identifier(tag_ident)) =
+                            first_arg.as_expression()
+                        {
+                            let tag_name = tag_ident.name.as_str();
+                            // Check if it's a component (starts with uppercase) and not immutable
+                            if tag_name.starts_with(|c: char| c.is_uppercase())
+                                && !immutable_function_cmp.contains(tag_name)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    // Also check children (4th argument) recursively
+                    if let Some(children_arg) = call.arguments.get(3) {
+                        if let Some(child_expr) = children_arg.as_expression() {
+                            if contains_mutable_jsx_call(child_expr, immutable_function_cmp) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            false
+        }
+        // Recurse into expression types that may contain transformed JSX
+        Expression::ConditionalExpression(cond) => {
+            contains_mutable_jsx_call(&cond.test, immutable_function_cmp)
+                || contains_mutable_jsx_call(&cond.consequent, immutable_function_cmp)
+                || contains_mutable_jsx_call(&cond.alternate, immutable_function_cmp)
+        }
+        Expression::LogicalExpression(log) => {
+            contains_mutable_jsx_call(&log.left, immutable_function_cmp)
+                || contains_mutable_jsx_call(&log.right, immutable_function_cmp)
+        }
+        Expression::ParenthesizedExpression(paren) => {
+            contains_mutable_jsx_call(&paren.expression, immutable_function_cmp)
+        }
+        Expression::ArrayExpression(arr) => arr.elements.iter().any(|elem| {
+            elem.as_expression()
+                .is_some_and(|e| contains_mutable_jsx_call(e, immutable_function_cmp))
+        }),
+        _ => false,
+    }
+}
+
 /// Result of analyzing a JSX prop value for signal wrapping.
 enum SignalWrapResult {
     /// Expression should be wrapped with _wrapProp(signal) -- Form 1.
@@ -1479,6 +1542,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         flags |= 2;
     }
 
+    // Propagate mutability to parent element via tracker.jsx_mutable.
+    // In SWC, var_props existence sets self.jsx_mutable = true (transform.rs line 1469),
+    // which propagates to the parent's static_subtree check via the save/restore pattern
+    // in transform_jsx_children.
+    if has_spread || !var_props.is_empty() || children_mutable {
+        tracker.jsx_mutable = true;
+    }
+
     // Generate key: component tags (is_fn) and root elements (root_jsx_mode) get keys,
     // nested native elements get null (mirrors SWC's should_emit_key = is_fn || root_jsx_mode)
     let should_emit_key = is_fn || root_jsx_mode;
@@ -1719,6 +1790,11 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
         flags |= 2; // bit 1
     }
 
+    // Propagate children mutability to parent via tracker.jsx_mutable.
+    if children_mutable {
+        tracker.jsx_mutable = true;
+    }
+
     // Generate auto-key (fragments always emit key -- is_fn=true in SWC)
     let key_str = format!("{}_{}", key_prefix, tracker.jsx_key_counter);
     tracker.jsx_key_counter += 1;
@@ -1784,7 +1860,14 @@ pub(crate) fn transform_jsx_children<'a>(
                 }
             }
             JSXChild::Element(el) => {
-                // Save jsx_mutable before processing child element
+                // Capture pre-existing jsx_mutable from inner exit_expression
+                // processing (bottom-up: inner JSX elements transformed before parent).
+                // E.g., <Stuff/> inside a ternary sets jsx_mutable via exit_expression
+                // before the parent element's transform_jsx_children runs.
+                if tracker.jsx_mutable {
+                    any_child_mutable = true;
+                }
+                // Save and reset for child element processing
                 let prev_mutable = tracker.jsx_mutable;
                 tracker.jsx_mutable = false;
 
@@ -1812,7 +1895,11 @@ pub(crate) fn transform_jsx_children<'a>(
                 child_exprs.push(transformed);
             }
             JSXChild::Fragment(frag) => {
-                // Save jsx_mutable before processing child fragment
+                // Capture pre-existing jsx_mutable from inner exit_expression
+                if tracker.jsx_mutable {
+                    any_child_mutable = true;
+                }
+                // Save and reset for child fragment processing
                 let prev_mutable = tracker.jsx_mutable;
                 tracker.jsx_mutable = false;
 
@@ -1853,6 +1940,10 @@ pub(crate) fn transform_jsx_children<'a>(
                         // If it's a JSXElement or JSXFragment, transform it
                         match transformed {
                             Expression::JSXElement(el) => {
+                                // Capture pre-existing jsx_mutable from inner exit_expression
+                                if tracker.jsx_mutable {
+                                    any_child_mutable = true;
+                                }
                                 // Save/restore jsx_mutable around element processing
                                 let prev_mutable = tracker.jsx_mutable;
                                 tracker.jsx_mutable = false;
@@ -1879,6 +1970,10 @@ pub(crate) fn transform_jsx_children<'a>(
                                 child_exprs.push(result);
                             }
                             Expression::JSXFragment(frag) => {
+                                // Capture pre-existing jsx_mutable from inner exit_expression
+                                if tracker.jsx_mutable {
+                                    any_child_mutable = true;
+                                }
                                 // Save/restore jsx_mutable around fragment processing
                                 let prev_mutable = tracker.jsx_mutable;
                                 tracker.jsx_mutable = false;
@@ -1982,6 +2077,18 @@ pub(crate) fn transform_jsx_children<'a>(
                                         continue;
                                     }
                                 }
+                                // Check if tracker.jsx_mutable was set by an inner JSX element
+                                // that was already transformed by exit_expression (bottom-up).
+                                // This happens when JSX elements are nested inside non-JSX
+                                // expressions like ternaries or logical &&.
+                                // Example: {cond ? <p/> : <Stuff/>} -- <Stuff/>'s exit_expression
+                                // set jsx_mutable, and we need to pick it up here.
+                                if tracker.jsx_mutable {
+                                    any_child_mutable = true;
+                                    // Reset so it doesn't leak to sibling expressions.
+                                    // The parent will propagate via Fix A if needed.
+                                    tracker.jsx_mutable = false;
+                                }
                                 // No wrapping happened. Check the expression itself
                                 // for mutability. SWC uses scope analysis to
                                 // determine if identifiers are const (in-scope vs
@@ -1989,6 +2096,17 @@ pub(crate) fn transform_jsx_children<'a>(
                                 // templates are mutable; everything else delegates to
                                 // is_child_expression_immutable.
                                 if !is_child_expression_immutable(&other) {
+                                    any_child_mutable = true;
+                                }
+                                // Check for already-transformed _jsxSorted calls with
+                                // non-immutable component tags. In OXC's bottom-up
+                                // traversal, inner JSX elements like <Stuff/> are
+                                // transformed before their parent processes children.
+                                // SWC detects these top-down; we scan the expression.
+                                if contains_mutable_jsx_call(
+                                    &other,
+                                    &tracker.immutable_function_cmp,
+                                ) {
                                     any_child_mutable = true;
                                 }
                                 child_exprs.push(other);
