@@ -297,6 +297,9 @@ fn collect_reactive_deps_inner(
                 }
 
                 if is_imported_identifier(root_name, collected_imports) {
+                    // Imports act like "side effects" in SWC: they prevent
+                    // _fnSignal wrapping when mixed with reactive deps.
+                    *has_non_reactive_non_const = true;
                     return;
                 }
 
@@ -348,6 +351,9 @@ fn collect_reactive_deps_inner(
             }
 
             if is_imported_identifier(name, collected_imports) {
+                // Imports act like "side effects" in SWC: they prevent
+                // _fnSignal wrapping when mixed with reactive deps.
+                *has_non_reactive_non_const = true;
                 return;
             }
 
@@ -356,7 +362,10 @@ fn collect_reactive_deps_inner(
                 return;
             }
 
-            // we know it's not a signal. For now, identifiers used standalone in
+            // Unknown identifier (not a prop, import, or global) -- prevents
+            // _fnSignal wrapping when mixed with reactive deps (SWC aborts
+            // inlining for unknown identifiers).
+            *has_non_reactive_non_const = true;
         }
 
         Expression::BinaryExpression(bin) => {
@@ -1451,20 +1460,67 @@ pub(crate) fn transform_jsx_children<'a>(
                                 child_exprs.push(result);
                             }
                             other => {
-                                // signal.value access -> _wrapProp(signal)
+                                // Check for signal wrapping in children
+                                // (mirrors attribute-level logic at lines 1031-1092)
                                 if !is_call_on_value(&other) {
-                                    if let SignalWrapResult::WrapPropSignal =
-                                        detect_signal_wrap(&other, destructured_props)
-                                    {
-                                        if let Expression::StaticMemberExpression(member) = other {
-                                            let signal_obj = member.unbox().object;
-                                            let wrapped = import_rewrite::build_wrap_prop_call(
-                                                signal_obj, ctx,
-                                            );
+                                    match detect_signal_wrap(&other, destructured_props) {
+                                        SignalWrapResult::WrapPropSignal => {
+                                            // signal.value -> _wrapProp(signal) [EXISTING]
+                                            if let Expression::StaticMemberExpression(member) =
+                                                other
+                                            {
+                                                let signal_obj = member.unbox().object;
+                                                let wrapped =
+                                                    import_rewrite::build_wrap_prop_call(
+                                                        signal_obj, ctx,
+                                                    );
+                                                tracker.needs_wrap_prop = true;
+                                                child_exprs.push(wrapped);
+                                                continue;
+                                            }
+                                        }
+                                        SignalWrapResult::WrapPropNamed(prop_name) => {
+                                            // _rawProps.propName or destructured prop ->
+                                            // _wrapProp(_rawProps, "propName") [NEW]
+                                            let source_obj = if let Expression::StaticMemberExpression(member) = other {
+                                                member.unbox().object
+                                            } else {
+                                                ctx.ast.expression_identifier(SPAN, "_rawProps")
+                                            };
+                                            let wrapped =
+                                                import_rewrite::build_wrap_prop_call_named(
+                                                    source_obj, &prop_name, ctx,
+                                                );
                                             tracker.needs_wrap_prop = true;
                                             child_exprs.push(wrapped);
                                             continue;
                                         }
+                                        SignalWrapResult::None => {}
+                                    }
+                                }
+                                // Check for _fnSignal wrapping (complex reactive
+                                // expressions) [NEW]
+                                if !is_call_on_value(&other)
+                                    && !contains_function_call(&other)
+                                {
+                                    let (deps, has_non_reactive) = collect_reactive_deps(
+                                        &other,
+                                        destructured_props,
+                                        module_imports,
+                                    );
+                                    if !deps.is_empty() && !has_non_reactive {
+                                        let (wrapped, fn_code, str_code) =
+                                            build_fn_signal_wrapping(
+                                                other,
+                                                &deps,
+                                                destructured_props,
+                                                tracker,
+                                                ctx,
+                                            );
+                                        tracker.needs_fn_signal = true;
+                                        hoisted_stmts.push((fn_code, str_code));
+                                        child_exprs.push(wrapped);
+                                        continue;
                                     }
                                 }
                                 child_exprs.push(other);
