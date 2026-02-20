@@ -1359,8 +1359,8 @@ fn apply_case_overrides(name: &str, case: &mut TestInput) {
             case.transpile_jsx = true;
         }
         "support_windows_paths" => {
-            case.filename = "components\\\\apps\\\\apps.tsx".to_string();
-            case.src_dir = "C:\\\\users\\\\apps".to_string();
+            case.filename = "components\\apps\\apps.tsx".to_string();
+            case.src_dir = "C:\\users\\apps".to_string();
             case.transpile_jsx = true;
             case.is_server = Some(false);
         }

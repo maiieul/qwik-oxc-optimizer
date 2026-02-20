@@ -318,7 +318,7 @@ fn output_extension(input_path: &str, transpile_ts: bool, transpile_jsx: bool) -
 fn rel_dir(path: &str) -> String {
     let last_sep = path.rfind(|c: char| c == '/' || c == '\\');
     if let Some(pos) = last_sep {
-        path[..pos].to_string()
+        path[..pos].replace('\\', "/")
     } else {
         String::new()
     }

@@ -694,6 +694,7 @@ impl QwikTransform {
         &mut self,
         span: (u32, u32),
         ctx_name: &str,
+        param_names: Vec<String>,
     ) -> SegmentData {
         let (display_name, full_display_name, segment_hash, segment_name) =
             self.register_context_name();
@@ -721,7 +722,7 @@ impl QwikTransform {
             needed_imports: vec![],
             segment_qrl_names: vec![],
             body_span: span,
-            param_names: vec![],
+            param_names,
             body_code: String::new(),
             child_lazy_imports: vec![],
             needs_qrl_import: false,
@@ -843,8 +844,10 @@ impl QwikTransform {
                                 } else {
                                     attr_name_str.clone()
                                 };
+                                let param_names =
+                                    extract_param_names_from_jsx_expr(&container.expression);
                                 let seg =
-                                    self.record_jsx_event_segment(span, &ctx_name);
+                                    self.record_jsx_event_segment(span, &ctx_name, param_names);
                                 let seg_span_0 = seg.span.0;
 
                                 // Run capture analysis on the JSX event handler lambda.
@@ -2339,6 +2342,18 @@ fn extract_param_names_from_argument(arg: &Argument<'_>) -> Vec<String> {
     match arg {
         Argument::ArrowFunctionExpression(arrow) => extract_param_names_from_params(&arrow.params),
         Argument::FunctionExpression(func) => extract_param_names_from_params(&func.params),
+        _ => Vec::new(),
+    }
+}
+
+/// Extract parameter names from a JSX attribute expression (event handler).
+/// Handles ArrowFunctionExpression and FunctionExpression in JSX expression containers.
+fn extract_param_names_from_jsx_expr(expr: &JSXExpression<'_>) -> Vec<String> {
+    match expr {
+        JSXExpression::ArrowFunctionExpression(arrow) => {
+            extract_param_names_from_params(&arrow.params)
+        }
+        JSXExpression::FunctionExpression(func) => extract_param_names_from_params(&func.params),
         _ => Vec::new(),
     }
 }
