@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 5 in progress - JSX Keys & Flags (plan 01 complete, key generation fixed).
+**Current focus:** Phase 5 complete - JSX Keys & Flags. Phase 6 (imports/cleanup) is next.
 
 ## Current Position
 
 Phase: 5 of 6 (JSX Keys & Flags)
-Plan: 1 of 2 complete in phase 5 (05-01 key generation done)
-Status: In progress
-Last activity: 2026-02-20 - Completed 05-01-PLAN.md (JSX key prefix and root_jsx_mode)
+Plan: 2 of 2 complete in phase 5 (05-02 immutability flags done)
+Status: Phase complete
+Last activity: 2026-02-20 - Completed 05-02-PLAN.md (JSX immutability flags)
 
-Progress: [███████████░] ~88%
+Progress: [████████████░] ~92%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 12
 - Average duration: 16min
-- Total execution time: 3.4 hours
+- Total execution time: 3.6 hours
 
 **By Phase:**
 
@@ -31,11 +31,11 @@ Progress: [███████████░] ~88%
 | 02-metadata | 1/1 | 15min | 15min |
 | 03-bugs-correctness | 3/3 | 51min | 17min |
 | 04-signal-props-transforms | 4/4 | 77min | 19min |
-| 05-jsx-keys-flags | 1/2 | 9min | 9min |
+| 05-jsx-keys-flags | 2/2 | 23min | 12min |
 
 **Recent Trend:**
-- Last 5 plans: 04-01 (6min), 04-03 (11min), 04-02 (25min), 04-04 (35min), 05-01 (9min)
-- Trend: Key generation plan was straightforward -- well-defined algorithm from SWC reference, clean parameter threading pattern.
+- Last 5 plans: 04-03 (11min), 04-02 (25min), 04-04 (35min), 05-01 (9min), 05-02 (14min)
+- Trend: Flag computation required iterative refinement -- SWC's actual behavior differed from plan analysis in mutability check ordering.
 
 *Updated after each plan completion*
 
@@ -82,6 +82,10 @@ Recent decisions affecting current work:
 - [05-01]: Manual base64url encoding (6-bit lookup table) instead of adding base64 crate dependency
 - [05-01]: root_jsx_mode hooks added to all 9 SWC-equivalent statement types (function, arrow, for/for-in/for-of, while, do-while, if, block, return)
 - [05-01]: is_fn detection: uppercase first char on Identifier/IdentifierReference + MemberExpression match
+- [05-02]: immutable_function_cmp built in QwikTransform::new() from collected imports (Fragment, RenderOnce, Link, ?jsx/.md)
+- [05-02]: jsx_mutable and immutable_function_cmp stored on ImportTracker for jsx_transform.rs access
+- [05-02]: WrapPropSignal keeps immutable (SWC is_const=true); WrapPropNamed marks mutable (SWC is_const=false)
+- [05-02]: Identifiers/member exprs treated as immutable in children (approximates SWC scope; may miss globals)
 
 ### Pending Todos
 
@@ -96,15 +100,18 @@ None.
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
 - Gap 1 (non-destructured props) RESOLVED -- 04-04 gap closure plan
-- Remaining snapshot diffs are Phase 5/6 issues:
-  - Phase 5 DONE: JSX key generation (05-01)
-  - Phase 5 TODO: immutability flags (05-02)
-  - Phase 6: import ordering, use*() inlining (2x deferred), QRL hoisting (deferred from 04-02)
+- Phase 5 DONE: JSX key generation (05-01) and immutability flags (05-02)
+- Remaining snapshot diffs are Phase 6 issues:
+  - Import ordering
+  - Indentation/formatting (tabs vs spaces)
+  - use*() return value destructuring inlining (2 fixtures)
+  - QRL hoisting (deferred from 04-02)
 - 1 deferred naming issue (should_extract_single_qrl_2) -- dedup suffix on wrong segment due to traverse order
 - Text normalization: trailing spaces in JSX text nodes stripped (e.g., "First " -> "First") -- noted for future fix
+- globalThing flag mismatch: unresolved globals marked immutable (flag=3) instead of SWC's mutable (flag=1) -- needs scope analysis to fix properly
 
 ## Session Continuity
 
-Last session: 2026-02-20T17:54:47Z
-Stopped at: Completed 05-01-PLAN.md (JSX key prefix and root_jsx_mode)
+Last session: 2026-02-20T18:13:00Z
+Stopped at: Completed 05-02-PLAN.md (JSX immutability flags)
 Resume file: None
