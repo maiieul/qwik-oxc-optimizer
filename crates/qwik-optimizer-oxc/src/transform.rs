@@ -1225,7 +1225,17 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
             if name == "component$" {
                 if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first() {
-                    let info = props_destructuring::analyze_props_destructuring(&arrow.params);
+                    // Build set of import names for const-checking default values
+                    let import_names: HashSet<String> = self
+                        .collected
+                        .module_imports
+                        .iter()
+                        .flat_map(|imp| imp.specifiers.iter().cloned())
+                        .collect();
+                    let info = props_destructuring::analyze_props_destructuring(
+                        &arrow.params,
+                        &import_names,
+                    );
                     if info.needs_transform {
                         if info.rest_name.is_some() {
                             self.import_tracker.needs_rest_props = true;
@@ -1666,6 +1676,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             &mut arrow.body.statements,
                             &prop_map,
                             &info.raw_props_name,
+                            &info.prop_defaults,
                             ctx,
                         );
                     }
