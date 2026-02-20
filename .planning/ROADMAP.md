@@ -61,13 +61,12 @@ Plans:
   3. Captured variable lists match SWC exactly (same variables, same order) across all snapshots
   4. `componentQrl()` calls include the component options object as second argument when present (e.g. `{ tagName: "my-foo" }`)
   5. Source comments from the original input are preserved in output modules (not stripped)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
-- [ ] 03-03: TBD
-- [ ] 03-04: TBD
+- [ ] 03-01-PLAN.md — Fix component options dropping (BUG-02) and segment comment stripping (BUG-06)
+- [ ] 03-02-PLAN.md — Implement TypeScript type stripping via oxc_transformer (BUG-01)
+- [ ] 03-03-PLAN.md — Replace qwik_router_inline fixture (BUG-05), fix segment ordering (BUG-04), triage remaining diffs (BUG-03)
 
 ### Phase 4: Signal & Props Transforms
 **Goal**: Signal reactivity wrappers, props destructuring, and QRL hoisting transforms produce output matching SWC exactly
@@ -126,7 +125,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Naming & Display Names | 2/2 | Complete | 2026-02-19 |
 | 2. Metadata | 1/1 | Complete | 2026-02-20 |
-| 3. Bugs & Correctness | 0/4 | Not started | - |
+| 3. Bugs & Correctness | 0/3 | Not started | - |
 | 4. Signal & Props Transforms | 0/3 | Not started | - |
 | 5. JSX Keys & Flags | 0/2 | Not started | - |
 | 6. Import Ordering & Cleanup | 0/2 | Not started | - |
