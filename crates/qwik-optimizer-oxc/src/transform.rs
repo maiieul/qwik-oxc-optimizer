@@ -8,6 +8,7 @@
 use std::collections::{HashMap, HashSet};
 
 use oxc::ast::ast::*;
+use oxc::ast::Comment;
 use oxc::span::SPAN;
 use oxc_traverse::{Traverse, TraverseCtx};
 
@@ -148,6 +149,10 @@ pub(crate) struct QwikTransform {
     /// Original source code, used for extracting JSX lambda body code by span.
     source_code: String,
 
+    /// Source comments from the original parse, used for comment-preserving codegen.
+    /// Stored as standard Vec (Comment is Copy) since arena Vec can't outlive the allocator.
+    source_comments: Vec<Comment>,
+
     /// JSX event handler replacement info, keyed by lambda expression span start.
     /// When the JSX transform encounters an event handler attribute whose value
     /// expression has a span start in this map, it replaces the value with
@@ -227,6 +232,7 @@ impl QwikTransform {
             pending_segment_qrl_imports: Vec::new(),
             custom_jsx_import_source: None,
             source_code: source_code.to_string(),
+            source_comments: Vec::new(),
             jsx_event_replacements: HashMap::new(),
             stack_ctxt: Vec::new(),
             segment_stack: Vec::new(),
@@ -1160,6 +1166,12 @@ impl QwikTransform {
 }
 
 impl<'a> Traverse<'a, ()> for QwikTransform {
+    fn enter_program(&mut self, program: &mut Program<'a>, _ctx: &mut TraverseCtx<'a, ()>) {
+        // Store comments from the parsed program for use in comment-preserving codegen.
+        // Comment is Copy, so we clone each one into a standard Vec.
+        self.source_comments = program.comments.iter().copied().collect();
+    }
+
     fn enter_call_expression(
         &mut self,
         call: &mut CallExpression<'a>,
@@ -1792,10 +1804,13 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         _ => Some(argument_to_expression(body_arg, ctx)),
                     };
 
-                    if let Some(ref expr_val) = body_expr {
-                        let mut codegen = oxc::codegen::Codegen::new();
-                        codegen.print_expression(expr_val);
-                        let body_code = codegen.into_source_text();
+                    if let Some(expr_val) = body_expr {
+                        let body_code = codegen_expression_with_comments(
+                            expr_val,
+                            &self.source_code,
+                            &self.source_comments,
+                            ctx,
+                        );
                         self.segment_body_codes.push((call.span.start, body_code));
                     }
                 }
@@ -2714,6 +2729,56 @@ fn minify_fn_string(source: &str) -> String {
     }
 
     source.to_string()
+}
+
+/// Serialize an expression to a code string, preserving source comments.
+///
+/// Creates a temporary Program containing the expression as an ExpressionStatement,
+/// includes source comments whose `attached_to` positions fall within the expression's
+/// span range, and uses `Codegen::build()` to emit the code with comments.
+///
+/// The result is the expression code without the trailing semicolon/newline that
+/// `build()` adds for the ExpressionStatement.
+fn codegen_expression_with_comments<'a>(
+    expr: Expression<'a>,
+    source_text: &str,
+    source_comments: &[Comment],
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> String {
+    use oxc::span::{GetSpan, SourceType};
+
+    let expr_span = expr.span();
+
+    // Filter comments to those attached to nodes within the expression's span range.
+    let mut comments = ctx.ast.vec_with_capacity(source_comments.len());
+    for comment in source_comments {
+        if comment.attached_to >= expr_span.start && comment.attached_to < expr_span.end {
+            comments.push(*comment);
+        }
+    }
+
+    // Build a temporary program containing just this expression as an ExpressionStatement.
+    let stmt = ctx.ast.statement_expression(expr_span, expr);
+    let mut body = ctx.ast.vec_with_capacity(1);
+    body.push(stmt);
+
+    let source_in_arena = ctx.ast.allocator.alloc_str(source_text);
+    let program = ctx.ast.program(
+        expr_span,
+        SourceType::mjs(),
+        source_in_arena,
+        comments,
+        None,
+        ctx.ast.vec(),
+        body,
+    );
+
+    let codegen_result = oxc::codegen::Codegen::new().build(&program);
+    let code = codegen_result.code;
+
+    // build() emits "expression;\n" for an ExpressionStatement.
+    // Strip the trailing ";\n" to get just the expression code.
+    code.trim_end().strip_suffix(';').unwrap_or(code.trim_end()).to_string()
 }
 
 /// Convert an Argument to an Expression.
