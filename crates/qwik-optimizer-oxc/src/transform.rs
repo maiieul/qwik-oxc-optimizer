@@ -232,6 +232,13 @@ pub(crate) struct QwikTransform {
     /// Computed from base64url(DefaultHasher(scope?, rel_path).to_le_bytes())[0..2]
     /// with '-' and '_' chars replaced by '0'.
     jsx_key_prefix: String,
+
+    /// QRL declarations to hoist to the top of the enclosing function body.
+    /// Each entry: (lazy_import_ident_name, segment_export_name, capture_names).
+    /// Populated when replace_jsx_element_handlers processes a segment-strategy
+    /// QRL replacement while loop_depth > 0.
+    /// Flushed in exit_function / exit_arrow_function_expression when loop_depth == 0.
+    pending_loop_qrl_hoists: Vec<(String, String, Vec<String>)>,
 }
 
 /// Info needed to build a qrl()/inlinedQrl() call for a JSX event handler.
@@ -378,6 +385,7 @@ impl QwikTransform {
             root_jsx_mode: true,
             root_jsx_mode_stack: Vec::new(),
             jsx_key_prefix,
+            pending_loop_qrl_hoists: Vec::new(),
         }
     }
 
@@ -1281,6 +1289,21 @@ impl QwikTransform {
                                 &info.capture_names,
                                 ctx,
                             )
+                        } else if self.loop_depth > 0 {
+                            // Inside a loop: hoist QRL to enclosing function body.
+                            // Buffer the QRL components and replace inline with
+                            // an identifier reference to the segment name.
+                            let import_ident = format!("i_{}", info.hash);
+                            // Drop the original lambda value
+                            let _ = std::mem::take(&mut attr.value);
+                            self.pending_loop_qrl_hoists.push((
+                                import_ident,
+                                info.segment_name.clone(),
+                                info.capture_names.clone(),
+                            ));
+                            // Replace with identifier reference to the hoisted const
+                            let seg_atom = ctx.ast.atom(&info.segment_name);
+                            ctx.ast.expression_identifier(SPAN, seg_atom)
                         } else {
                             // qrl(i_hash, "name", [captures]) -- segment strategy
                             let import_ident = format!("i_{}", info.hash);
@@ -1563,12 +1586,20 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         self.root_jsx_mode = true;
     }
 
-    fn exit_function(&mut self, _func: &mut Function<'a>, _ctx: &mut TraverseCtx<'a, ()>) {
+    fn exit_function(&mut self, func: &mut Function<'a>, ctx: &mut TraverseCtx<'a, ()>) {
         if let Some(depth) = self.fn_decl_ctxt_depths.pop() {
             self.stack_ctxt.truncate(depth);
         }
         if let Some(prev) = self.root_jsx_mode_stack.pop() {
             self.root_jsx_mode = prev;
+        }
+        // Flush pending QRL hoists when exiting a function that's not inside a loop.
+        // This prepends hoisted const declarations to the function body.
+        if self.loop_depth == 0 && !self.pending_loop_qrl_hoists.is_empty() {
+            if let Some(ref mut body) = func.body {
+                let hoists = std::mem::take(&mut self.pending_loop_qrl_hoists);
+                flush_qrl_hoists_to_body(&mut body.statements, &hoists, ctx);
+            }
         }
     }
 
@@ -1583,9 +1614,14 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
     fn exit_arrow_function_expression(
         &mut self,
-        _arrow: &mut ArrowFunctionExpression<'a>,
-        _ctx: &mut TraverseCtx<'a, ()>,
+        arrow: &mut ArrowFunctionExpression<'a>,
+        ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        // Flush pending QRL hoists when exiting an arrow that's not inside a loop.
+        if self.loop_depth == 0 && !self.pending_loop_qrl_hoists.is_empty() {
+            let hoists = std::mem::take(&mut self.pending_loop_qrl_hoists);
+            flush_qrl_hoists_to_body(&mut arrow.body.statements, &hoists, ctx);
+        }
         if let Some(prev) = self.root_jsx_mode_stack.pop() {
             self.root_jsx_mode = prev;
         }
@@ -2790,6 +2826,59 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         program.body = new_body;
+    }
+}
+
+/// Flush pending QRL hoists to a function body.
+///
+/// Prepends `const seg_name = /* @__PURE__ */ qrl(import_ident, "seg_name", [captures]);`
+/// declarations to the beginning of `statements`. This implements SWC's behavior of
+/// hoisting QRL calls from inside loops to the enclosing function body.
+fn flush_qrl_hoists_to_body<'a>(
+    statements: &mut oxc::allocator::Vec<'a, Statement<'a>>,
+    hoists: &[(String, String, Vec<String>)],
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    // Find the insertion point: after variable declarations at the top of the body.
+    // SWC places hoisted QRL consts after local variable declarations (useStore, useSignal, etc.)
+    // but before function declarations, loops, and return statements.
+    let mut insert_idx = 0;
+    for (i, stmt) in statements.iter().enumerate() {
+        match stmt {
+            Statement::VariableDeclaration(_) => {
+                insert_idx = i + 1;
+            }
+            _ => break,
+        }
+    }
+
+    // Build const declarations and insert in forward order.
+    // We increment insert_idx after each insertion so the hoists appear in
+    // the same order they were pushed (which matches SWC's source-order hoisting).
+    let mut idx = insert_idx;
+    for (import_ident, seg_name, captures) in hoists.iter() {
+        let qrl_call = import_rewrite::build_qrl_call(import_ident, seg_name, captures, ctx);
+
+        let binding = ctx
+            .ast
+            .binding_pattern_binding_identifier(SPAN, ctx.ast.atom(seg_name.as_str()));
+        let declarator = ctx.ast.variable_declarator(
+            SPAN,
+            VariableDeclarationKind::Const,
+            binding,
+            None::<oxc::allocator::Box<'a, TSTypeAnnotation<'a>>>,
+            Some(qrl_call),
+            false,
+        );
+        let declaration = ctx.ast.variable_declaration(
+            SPAN,
+            VariableDeclarationKind::Const,
+            ctx.ast.vec1(declarator),
+            false,
+        );
+        let stmt = Statement::from(Declaration::VariableDeclaration(ctx.ast.alloc(declaration)));
+        statements.insert(idx, stmt);
+        idx += 1;
     }
 }
 
