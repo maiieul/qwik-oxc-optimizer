@@ -15,8 +15,8 @@ Requirements for milestone v1.0 — Full Snapshot Parity. Each maps to roadmap p
 
 ### Metadata
 
-- [ ] **META-01**: Segment metadata includes `paramNames` array
-- [ ] **META-02**: Path field handling matches SWC (`path` field populated, not `canonicalFilename` prefix)
+- [x] **META-01**: Segment metadata includes `paramNames` array
+- [x] **META-02**: Path field handling matches SWC (`path` field populated, not `canonicalFilename` prefix)
 
 ### Bugs & Correctness
 
@@ -82,8 +82,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAME-01 | Phase 1 | Complete |
 | NAME-02 | Phase 1 | Complete |
 | NAME-03 | Phase 1 | Complete |
-| META-01 | Phase 2 | Pending |
-| META-02 | Phase 2 | Pending |
+| META-01 | Phase 2 | Complete |
+| META-02 | Phase 2 | Complete |
 | BUG-01 | Phase 3 | Pending |
 | BUG-02 | Phase 3 | Pending |
 | BUG-03 | Phase 3 | Pending |
@@ -108,4 +108,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 after Phase 1 completion*
+*Last updated: 2026-02-20 after Phase 2 completion*

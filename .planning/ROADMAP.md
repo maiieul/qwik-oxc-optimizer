@@ -15,7 +15,7 @@ This roadmap drives the OXC optimizer from 160/162 snapshot diffs to zero, achie
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Naming & Display Names** - Fix segment naming to clear cascading diffs across 120+ snapshots
-- [ ] **Phase 2: Metadata** - Add paramNames and fix path field handling across 90+ snapshots
+- [x] **Phase 2: Metadata** - Add paramNames and fix path field handling across 90+ snapshots
 - [ ] **Phase 3: Bugs & Correctness** - Fix TS stripping, missing segments, captures, component options, comments
 - [ ] **Phase 4: Signal & Props Transforms** - Implement _fnSignal, _wrapProp, props destructuring, QRL hoisting
 - [ ] **Phase 5: JSX Keys & Flags** - Fix key generation and immutability flag values
@@ -49,7 +49,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 02-01-PLAN.md — Implement paramNames extraction for $() calls and JSX event handlers, fix rel_dir backslash normalization
+- [x] 02-01-PLAN.md — Implement paramNames extraction for $() calls and JSX event handlers, fix rel_dir backslash normalization
 
 ### Phase 3: Bugs & Correctness
 **Goal**: All correctness bugs are fixed -- TypeScript types stripped, all segments extracted, captures correct, component options preserved, comments retained
@@ -125,7 +125,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Naming & Display Names | 2/2 | Complete | 2026-02-19 |
-| 2. Metadata | 0/1 | Not started | - |
+| 2. Metadata | 1/1 | Complete | 2026-02-20 |
 | 3. Bugs & Correctness | 0/4 | Not started | - |
 | 4. Signal & Props Transforms | 0/3 | Not started | - |
 | 5. JSX Keys & Flags | 0/2 | Not started | - |
