@@ -5,6 +5,7 @@
 //! extracted segment. Each segment becomes its own module file containing
 //! the extracted function body as an exported const, with any needed imports.
 
+use crate::emit::swc_codegen_options;
 use crate::types::{ImportKind, SegmentData, TransformOptions};
 
 /// Build a segment's JavaScript source code with optional hoisted function declarations.
@@ -304,29 +305,24 @@ pub(crate) fn emit_segment_with_map(
 ) -> (String, Option<String>) {
     let allocator = oxc::allocator::Allocator::default();
     let source_in_arena = allocator.alloc_str(raw_code);
-    let source_type = oxc::span::SourceType::mjs();
+    let source_type = oxc::span::SourceType::jsx();
     let ret = oxc::parser::Parser::new(&allocator, source_in_arena, source_type).parse();
     if ret.panicked || !ret.errors.is_empty() {
         return (raw_code.to_string(), None);
     }
 
-    if source_maps {
+    let sm_path = if source_maps {
         use std::path::PathBuf;
-        let codegen_options = oxc::codegen::CodegenOptions {
-            source_map_path: Some(PathBuf::from(segment_filename)),
-            ..Default::default()
-        };
-        let codegen_result = oxc::codegen::Codegen::new()
-            .with_options(codegen_options)
-            .with_source_text(source_in_arena)
-            .build(&ret.program);
-
-        let map = codegen_result.map.map(|sm| sm.to_json_string());
-        (codegen_result.code, map)
+        Some(PathBuf::from(segment_filename))
     } else {
-        let codegen_result = oxc::codegen::Codegen::new()
-            .with_source_text(source_in_arena)
-            .build(&ret.program);
-        (codegen_result.code, None)
-    }
+        None
+    };
+    let codegen_result = oxc::codegen::Codegen::new()
+        .with_options(swc_codegen_options(sm_path))
+        .with_source_text(source_in_arena)
+        .build(&ret.program);
+
+    let map = codegen_result.map.map(|sm| sm.to_json_string());
+    let code = crate::emit::expand_single_prop_objects(&codegen_result.code);
+    (code, map)
 }
