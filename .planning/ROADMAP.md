@@ -52,13 +52,13 @@ Plans:
 - [x] 02-01-PLAN.md — Implement paramNames extraction for $() calls and JSX event handlers, fix rel_dir backslash normalization
 
 ### Phase 3: Bugs & Correctness
-**Goal**: All correctness bugs are fixed -- TypeScript types stripped, all segments extracted, captures correct, component options preserved, comments retained
+**Goal**: All correctness bugs are fixed -- TypeScript types stripped, all segments extracted, capture ordering correct, component options preserved, comments retained
 **Depends on**: Phase 2 (correct names and metadata needed to verify segment output)
 **Requirements**: BUG-01, BUG-02, BUG-03, BUG-04, BUG-05, BUG-06
 **Success Criteria** (what must be TRUE):
   1. When `transpile_ts=true`, output contains no TypeScript type annotations (no `: Type` in parameter lists, no `interface`/`type` declarations in JS output)
   2. OXC produces the same number of segment files as SWC for every test case (no missing segments)
-  3. Captured variable lists match SWC exactly (same variables, same order) across all snapshots
+  3. Capture variable ordering matches SWC for cases where the same variables are captured (genuine ordering bugs fixed); capture content diffs caused by missing Phase 4 transforms (_wrapProp, _fnSignal, props destructuring, q:p injection) are deferred to Phase 4
   4. `componentQrl()` calls include the component options object as second argument when present (e.g. `{ tagName: "my-foo" }`)
   5. Source comments from the original input are preserved in output modules (not stripped)
 **Plans**: 3 plans
@@ -66,7 +66,7 @@ Plans:
 Plans:
 - [ ] 03-01-PLAN.md — Fix component options dropping (BUG-02) and segment comment stripping (BUG-06)
 - [ ] 03-02-PLAN.md — Implement TypeScript type stripping via oxc_transformer (BUG-01)
-- [ ] 03-03-PLAN.md — Replace qwik_router_inline fixture (BUG-05), fix segment ordering (BUG-04), triage remaining diffs (BUG-03)
+- [ ] 03-03-PLAN.md — Replace qwik_router_inline fixture (BUG-05), fix segment ordering (BUG-04), fix capture ordering bugs (BUG-03 scoped), triage remaining diffs
 
 ### Phase 4: Signal & Props Transforms
 **Goal**: Signal reactivity wrappers, props destructuring, and QRL hoisting transforms produce output matching SWC exactly
