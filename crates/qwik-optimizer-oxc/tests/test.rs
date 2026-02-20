@@ -292,27 +292,18 @@ fn command_available(program: &str) -> bool {
 }
 
 fn detect_oxfmt_runner() -> OxfmtRunner {
-    let workspace_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .ancestors()
-        .nth(2)
-        .map(|p| p.to_path_buf())
-        .unwrap_or_else(|| PathBuf::from(env!("CARGO_MANIFEST_DIR")));
+    let bin_name = if cfg!(windows) { "oxfmt.cmd" } else { "oxfmt" };
 
-    let local_oxfmt = if cfg!(windows) {
-        workspace_root
-            .join("node_modules")
-            .join(".bin")
-            .join("oxfmt.cmd")
-    } else {
-        workspace_root
-            .join("node_modules")
-            .join(".bin")
-            .join("oxfmt")
-    };
-
-    if local_oxfmt.exists() {
-        return OxfmtRunner::Local(local_oxfmt);
+    // Walk up from CARGO_MANIFEST_DIR to find node_modules/.bin/oxfmt.
+    // This handles git worktrees where node_modules lives in the main repo
+    // root rather than the worktree directory.
+    for ancestor in PathBuf::from(env!("CARGO_MANIFEST_DIR")).ancestors() {
+        let candidate = ancestor.join("node_modules").join(".bin").join(bin_name);
+        if candidate.exists() {
+            return OxfmtRunner::Local(candidate);
+        }
     }
+
     if command_available("oxfmt") {
         return OxfmtRunner::GlobalBinary;
     }
