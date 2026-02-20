@@ -884,6 +884,8 @@ fn jsx_attr_value_to_expression<'a>(
     destructured_props: Option<&[(String, String)]>,
     module_imports: &[crate::types::ImportInfo],
     hoisted_stmts: &mut Vec<(String, String)>,
+    loop_depth: u32,
+    iteration_vars: &[String],
 ) -> Expression<'a> {
     match value {
         JSXAttributeValue::StringLiteral(lit) => Expression::StringLiteral(lit),
@@ -899,6 +901,8 @@ fn jsx_attr_value_to_expression<'a>(
                 destructured_props,
                 module_imports,
                 hoisted_stmts,
+                loop_depth,
+                iteration_vars,
             )
         }
         JSXAttributeValue::Fragment(frag) => transform_jsx_fragment_inner(
@@ -908,6 +912,8 @@ fn jsx_attr_value_to_expression<'a>(
             destructured_props,
             module_imports,
             hoisted_stmts,
+            loop_depth,
+            iteration_vars,
         ),
     }
 }
@@ -922,12 +928,15 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     destructured_props: Option<&[(String, String)]>,
     module_imports: &[crate::types::ImportInfo],
     hoisted_stmts: &mut Vec<(String, String)>,
+    loop_depth: u32,
+    iteration_vars: &[String],
 ) -> Expression<'a> {
     // When a custom JSX import source is set (e.g., React), use the standard
     // JSX runtime transform: _jsx("tag", {props}) instead of Qwik's _jsxSorted.
     if tracker.custom_jsx_source.is_some() {
         return transform_jsx_element_custom_source(
             element, tracker, ctx, hoisted_stmts, module_imports, destructured_props,
+            loop_depth, iteration_vars,
         );
     }
 
@@ -971,6 +980,8 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             destructured_props,
                             module_imports,
                             hoisted_stmts,
+                            loop_depth,
+                            iteration_vars,
                         ));
                     }
                     continue;
@@ -987,6 +998,8 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             destructured_props,
                             module_imports,
                             hoisted_stmts,
+                            loop_depth,
+                            iteration_vars,
                         )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1007,6 +1020,8 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             destructured_props,
                             module_imports,
                             hoisted_stmts,
+                            loop_depth,
+                            iteration_vars,
                         )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1025,6 +1040,8 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             destructured_props,
                             module_imports,
                             hoisted_stmts,
+                            loop_depth,
+                            iteration_vars,
                         )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1079,6 +1096,8 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                         destructured_props,
                         module_imports,
                         hoisted_stmts,
+                        loop_depth,
+                        iteration_vars,
                     )
                 } else {
                     // Boolean attribute: <input disabled /> -> disabled: true
@@ -1151,6 +1170,47 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         }
     }
 
+    // Inject q:p / q:ps for iteration variables used by event handlers in loops
+    if loop_depth > 0 && !iteration_vars.is_empty() {
+        let mut used_iter_vars: Vec<String> = Vec::new();
+        for iter_var in iteration_vars {
+            // Check if any event handler (q-e:*, q-d:*, q-w:*) var_prop or const_prop uses this variable.
+            // In SWC, the check is on var_props (q-e: keys), but the handler value could be
+            // in either var_props or const_props depending on whether it's already been replaced
+            // by a qrl() call. Check both.
+            let is_used = const_props.iter().any(|(key, value)| {
+                key.starts_with("q-") && expr_uses_ident(value, iter_var)
+            }) || var_props.iter().any(|(key, value)| {
+                key.starts_with("q-") && expr_uses_ident(value, iter_var)
+            });
+            if is_used && !used_iter_vars.contains(iter_var) {
+                used_iter_vars.push(iter_var.clone());
+            }
+        }
+
+        if !used_iter_vars.is_empty() {
+            if used_iter_vars.len() == 1 {
+                // q:p = iterVar (identifier reference)
+                let var_name = &used_iter_vars[0];
+                let ident_expr = ctx
+                    .ast
+                    .expression_identifier(SPAN, ctx.ast.atom(var_name));
+                var_props.push(("q:p".to_string(), ident_expr));
+            } else {
+                // q:ps = [var1, var2, ...] (array expression)
+                let mut elements = ctx.ast.vec();
+                for var_name in &used_iter_vars {
+                    let ident = ctx
+                        .ast
+                        .expression_identifier(SPAN, ctx.ast.atom(var_name));
+                    elements.push(ArrayExpressionElement::from(ident));
+                }
+                let arr = ctx.ast.expression_array(SPAN, elements);
+                var_props.push(("q:ps".to_string(), arr));
+            }
+        }
+    }
+
     // Build children
     let (children_expr, children_count) = transform_jsx_children(
         &mut element.children,
@@ -1159,6 +1219,8 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         destructured_props,
         module_imports,
         hoisted_stmts,
+        loop_depth,
+        iteration_vars,
     );
 
     // Compute flags
@@ -1294,9 +1356,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         } else {
             let mut props_vec = ctx.ast.vec_with_capacity(var_props.len());
             for (name, value) in var_props {
-                let key = ctx
-                    .ast
-                    .property_key_static_identifier(SPAN, ctx.ast.atom(&name));
+                // Use string literal key for names with special chars (q:p, etc.)
+                let key = if name.contains(':') || name.contains('-') || name.contains('$') {
+                    let atom = ctx.ast.atom(&name);
+                    PropertyKey::from(ctx.ast.expression_string_literal(SPAN, atom, None))
+                } else {
+                    ctx.ast
+                        .property_key_static_identifier(SPAN, ctx.ast.atom(&name))
+                };
                 props_vec.push(ctx.ast.object_property_kind_object_property(
                     SPAN,
                     PropertyKind::Init,
@@ -1372,6 +1439,8 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
     destructured_props: Option<&[(String, String)]>,
     module_imports: &[crate::types::ImportInfo],
     hoisted_stmts: &mut Vec<(String, String)>,
+    loop_depth: u32,
+    iteration_vars: &[String],
 ) -> Expression<'a> {
     tracker.needs_jsx_sorted = true;
     tracker.needs_fragment = true;
@@ -1386,6 +1455,8 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
         destructured_props,
         module_imports,
         hoisted_stmts,
+        loop_depth,
+        iteration_vars,
     );
 
     // Flags: 1 for multiple children, 3 for single/no children
@@ -1432,6 +1503,8 @@ pub(crate) fn transform_jsx_children<'a>(
     destructured_props: Option<&[(String, String)]>,
     module_imports: &[crate::types::ImportInfo],
     hoisted_stmts: &mut Vec<(String, String)>,
+    loop_depth: u32,
+    iteration_vars: &[String],
 ) -> (Option<Expression<'a>>, usize) {
     let mut child_exprs: Vec<Expression<'a>> = Vec::new();
 
@@ -1457,6 +1530,8 @@ pub(crate) fn transform_jsx_children<'a>(
                     destructured_props,
                     module_imports,
                     hoisted_stmts,
+                    loop_depth,
+                    iteration_vars,
                 );
                 child_exprs.push(transformed);
             }
@@ -1469,6 +1544,8 @@ pub(crate) fn transform_jsx_children<'a>(
                     destructured_props,
                     module_imports,
                     hoisted_stmts,
+                    loop_depth,
+                    iteration_vars,
                 );
                 child_exprs.push(transformed);
             }
@@ -1493,6 +1570,8 @@ pub(crate) fn transform_jsx_children<'a>(
                                     destructured_props,
                                     module_imports,
                                     hoisted_stmts,
+                                    loop_depth,
+                                    iteration_vars,
                                 );
                                 child_exprs.push(result);
                             }
@@ -1504,6 +1583,8 @@ pub(crate) fn transform_jsx_children<'a>(
                                     destructured_props,
                                     module_imports,
                                     hoisted_stmts,
+                                    loop_depth,
+                                    iteration_vars,
                                 );
                                 child_exprs.push(result);
                             }
@@ -1599,6 +1680,110 @@ pub(crate) fn transform_jsx_children<'a>(
 }
 
 // ---------------------------------------------------------------------------
+// Expression identifier checking for q:p injection
+// ---------------------------------------------------------------------------
+
+/// Recursively check if an expression references an identifier by name.
+fn expr_uses_ident(expr: &Expression<'_>, name: &str) -> bool {
+    match expr {
+        Expression::Identifier(ident) => ident.name.as_str() == name,
+        Expression::StaticMemberExpression(mem) => expr_uses_ident(&mem.object, name),
+        Expression::ComputedMemberExpression(mem) => {
+            expr_uses_ident(&mem.object, name) || expr_uses_ident(&mem.expression, name)
+        }
+        Expression::BinaryExpression(bin) => {
+            expr_uses_ident(&bin.left, name) || expr_uses_ident(&bin.right, name)
+        }
+        Expression::CallExpression(call) => {
+            expr_uses_ident(&call.callee, name)
+                || call.arguments.iter().any(|a| arg_uses_ident(a, name))
+        }
+        Expression::ConditionalExpression(cond) => {
+            expr_uses_ident(&cond.test, name)
+                || expr_uses_ident(&cond.consequent, name)
+                || expr_uses_ident(&cond.alternate, name)
+        }
+        Expression::TemplateLiteral(tpl) => {
+            tpl.expressions.iter().any(|e| expr_uses_ident(e, name))
+        }
+        Expression::UnaryExpression(u) => expr_uses_ident(&u.argument, name),
+        Expression::LogicalExpression(log) => {
+            expr_uses_ident(&log.left, name) || expr_uses_ident(&log.right, name)
+        }
+        Expression::AssignmentExpression(assign) => expr_uses_ident(&assign.right, name),
+        Expression::ParenthesizedExpression(paren) => expr_uses_ident(&paren.expression, name),
+        Expression::ArrayExpression(arr) => arr.elements.iter().any(|elem| match elem {
+            ArrayExpressionElement::SpreadElement(s) => expr_uses_ident(&s.argument, name),
+            ArrayExpressionElement::Elision(_) => false,
+            _ => {
+                if let Some(expr) = elem.as_expression() {
+                    expr_uses_ident(expr, name)
+                } else {
+                    false
+                }
+            }
+        }),
+        Expression::ObjectExpression(obj) => obj.properties.iter().any(|prop| match prop {
+            ObjectPropertyKind::ObjectProperty(p) => expr_uses_ident(&p.value, name),
+            ObjectPropertyKind::SpreadProperty(s) => expr_uses_ident(&s.argument, name),
+        }),
+        Expression::ArrowFunctionExpression(arrow) => {
+            // Check the body of arrow functions (used for event handler iteration var detection)
+            match &arrow.body.statements.as_slice() {
+                [Statement::ExpressionStatement(stmt)] => expr_uses_ident(&stmt.expression, name),
+                _ => {
+                    // For block bodies, check all statements for identifier usage
+                    arrow.body.statements.iter().any(|stmt| stmt_uses_ident(stmt, name))
+                }
+            }
+        }
+        Expression::FunctionExpression(func) => {
+            if let Some(body) = &func.body {
+                body.statements.iter().any(|stmt| stmt_uses_ident(stmt, name))
+            } else {
+                false
+            }
+        }
+        _ => false,
+    }
+}
+
+/// Check if a statement references an identifier by name.
+fn stmt_uses_ident(stmt: &Statement<'_>, name: &str) -> bool {
+    match stmt {
+        Statement::ExpressionStatement(s) => expr_uses_ident(&s.expression, name),
+        Statement::ReturnStatement(s) => {
+            s.argument.as_ref().is_some_and(|e| expr_uses_ident(e, name))
+        }
+        Statement::VariableDeclaration(s) => s.declarations.iter().any(|d| {
+            d.init.as_ref().is_some_and(|e| expr_uses_ident(e, name))
+        }),
+        Statement::IfStatement(s) => {
+            expr_uses_ident(&s.test, name)
+                || stmt_uses_ident(&s.consequent, name)
+                || s.alternate.as_ref().is_some_and(|a| stmt_uses_ident(a, name))
+        }
+        Statement::BlockStatement(s) => s.body.iter().any(|stmt| stmt_uses_ident(stmt, name)),
+        _ => false,
+    }
+}
+
+/// Check if an Argument references an identifier by name.
+fn arg_uses_ident(arg: &Argument<'_>, name: &str) -> bool {
+    match arg {
+        Argument::SpreadElement(s) => expr_uses_ident(&s.argument, name),
+        _ => {
+            // Argument inherits Expression variants
+            if let Some(expr) = arg.as_expression() {
+                expr_uses_ident(expr, name)
+            } else {
+                false
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Custom JSX import source transform (React-style _jsx)
 // ---------------------------------------------------------------------------
 
@@ -1616,6 +1801,8 @@ fn transform_jsx_element_custom_source<'a>(
     hoisted_stmts: &mut Vec<(String, String)>,
     module_imports: &[crate::types::ImportInfo],
     destructured_props: Option<&[(String, String)]>,
+    loop_depth: u32,
+    iteration_vars: &[String],
 ) -> Expression<'a> {
     // Signal that we need the _jsx import (reuses needs_jsx_sorted flag --
     // the import emission in transform.rs will emit _jsx instead of _jsxSorted
@@ -1656,6 +1843,8 @@ fn transform_jsx_element_custom_source<'a>(
                         destructured_props,
                         module_imports,
                         hoisted_stmts,
+                        loop_depth,
+                        iteration_vars,
                     )
                 } else {
                     // Boolean attribute: <input disabled /> -> disabled: true
@@ -1692,6 +1881,8 @@ fn transform_jsx_element_custom_source<'a>(
         destructured_props,
         module_imports,
         hoisted_stmts,
+        loop_depth,
+        iteration_vars,
     );
 
     if let Some(children) = children_expr {

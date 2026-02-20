@@ -304,11 +304,6 @@ impl QwikTransform {
         self.custom_jsx_import_source.as_deref()
     }
 
-    /// Get the current loop depth.
-    pub(crate) fn loop_depth(&self) -> u32 {
-        self.loop_depth
-    }
-
     /// Get all current iteration variables, flattened from all loop scopes.
     pub(crate) fn current_iteration_vars(&self) -> Vec<String> {
         self.iteration_var_stack.iter().flatten().cloned().collect()
@@ -878,17 +873,43 @@ impl QwikTransform {
                                 } else {
                                     attr_name_str.clone()
                                 };
-                                let param_names =
+                                let mut param_names =
                                     extract_param_names_from_jsx_expr(&container.expression);
-                                let seg =
-                                    self.record_jsx_event_segment(span, &ctx_name, param_names);
-                                let seg_span_0 = seg.span.0;
 
                                 // Run capture analysis on the JSX event handler lambda.
                                 // This determines which variables from the enclosing scope
                                 // need to be serialized and restored in the segment module.
+                                // We do this BEFORE segment recording so we can use the
+                                // body_ident_refs to check iteration variable usage.
                                 let (body_ident_refs, body_local_decls) =
                                     analyze_lambda_captures(&self.source_code, span);
+
+                                // When inside a loop, check if the handler uses iteration
+                                // variables and transform param_names accordingly
+                                // (mirrors SWC's transform_event_handler_with_iter_var).
+                                if self.loop_depth > 0 {
+                                    let iter_vars = self.current_iteration_vars();
+                                    let used_iter_vars: Vec<String> = iter_vars
+                                        .iter()
+                                        .filter(|v| body_ident_refs.contains(v))
+                                        .cloned()
+                                        .collect();
+                                    if !used_iter_vars.is_empty() {
+                                        // Ensure at least 2 params (event, element)
+                                        // SWC uses "_" for both placeholders
+                                        while param_names.len() < 2 {
+                                            param_names.push("_".to_string());
+                                        }
+                                        // Append used iteration variables
+                                        for var_name in &used_iter_vars {
+                                            param_names.push(var_name.clone());
+                                        }
+                                    }
+                                }
+
+                                let seg =
+                                    self.record_jsx_event_segment(span, &ctx_name, param_names);
+                                let seg_span_0 = seg.span.0;
                                 let capture_result = collector::compute_captures(
                                     &body_ident_refs,
                                     &body_local_decls,
@@ -1736,6 +1757,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             // Take hoisted_function_stmts out to avoid borrow conflict with &mut self
             let mut hoisted_stmts = std::mem::take(&mut self.hoisted_function_stmts);
             let module_imports = &self.collected.module_imports;
+            let loop_depth = self.loop_depth;
+            let iteration_vars = self.current_iteration_vars();
 
             match expr {
                 Expression::JSXElement(_) => {
@@ -1749,6 +1772,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             destr_props_ref,
                             module_imports,
                             &mut hoisted_stmts,
+                            loop_depth,
+                            &iteration_vars,
                         );
                         *expr = result;
                     }
@@ -1766,6 +1791,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             destr_props_ref,
                             module_imports,
                             &mut hoisted_stmts,
+                            loop_depth,
+                            &iteration_vars,
                         );
                         *expr = result;
                     }
