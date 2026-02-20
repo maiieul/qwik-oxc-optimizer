@@ -2489,59 +2489,93 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
     fn exit_program(&mut self, program: &mut Program<'a>, ctx: &mut TraverseCtx<'a, ()>) {
         let core_module = &self.options.core_module;
 
-        let mut new_stmts: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
-
-        for qrl_name in &self.import_tracker.qrl_imports {
-            let stmt = import_rewrite::build_named_import(qrl_name, core_module, ctx);
-            new_stmts.push(stmt);
-        }
-
-        // For inline strategy, segments are inlined in the entry module, so any
-        // Qrl-suffixed imports from nested $-calls (stored in segment_qrl_names)
-        // also need to be emitted at the entry module level.
+        // Determine if we're in inline/hoist mode (segments stay in entry module)
         let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
             || matches!(
                 self.options.entry_strategy,
                 crate::types::EntryStrategy::Hoist
             );
+
+        // ---------------------------------------------------------------
+        // Phase 1: Swap out old body and separate into categories
+        // ---------------------------------------------------------------
+        let mut old_body = ctx.ast.vec();
+        std::mem::swap(&mut program.body, &mut old_body);
+
+        // Separate old_body into: Qwik-core imports (to strip), non-Qwik imports,
+        // and non-import stmts
+        let mut non_qwik_imports: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
+        let mut non_import_stmts: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
+
+        for stmt in old_body {
+            if let Statement::ImportDeclaration(ref import_decl) = stmt {
+                let source = import_decl.source.value.as_str();
+                let is_qwik_core = self
+                    .collected
+                    .module_imports
+                    .iter()
+                    .any(|i| i.source == source && i.is_qwik_core);
+                if is_qwik_core {
+                    continue; // Skip -- Qwik core imports are re-emitted as synthetic imports
+                }
+                non_qwik_imports.push(stmt);
+            } else {
+                non_import_stmts.push(stmt);
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // Phase 2: Collect referenced identifiers from the entry module body
+        // ---------------------------------------------------------------
+        // Scan non-import statements to find which identifiers are actually
+        // referenced in the entry module. This is used to filter synthetic
+        // framework imports and non-Qwik user imports that are only needed
+        // by segment bodies (which become separate files).
+        let referenced_idents = collect_referenced_idents(&non_import_stmts);
+
+        // ---------------------------------------------------------------
+        // Phase 3: Build synthetic framework import statements
+        // ---------------------------------------------------------------
+        // These are framework imports from import_tracker (componentQrl, qrl,
+        // _jsxSorted, etc.) Each entry is (local_name, statement).
+
+        // 3a: Qrl-suffixed imports (componentQrl, useStylesQrl, etc.)
+        let mut synthetic_imports: std::vec::Vec<(&str, Statement<'a>)> = std::vec::Vec::new();
+        for qrl_name in &self.import_tracker.qrl_imports {
+            let stmt = import_rewrite::build_named_import(qrl_name, core_module, ctx);
+            synthetic_imports.push((qrl_name.as_str(), stmt));
+        }
+
+        // For inline strategy, add segment-level Qrl-suffixed imports too
         if is_inline {
-            // For inline strategy, segments are inlined in the entry module, so any
-            // Qrl-suffixed imports from nested $-calls (stored in pending_segment_qrl_imports)
-            // also need to be emitted at the entry module level.
-            // Note: finalize_segments() hasn't run yet, so segment_qrl_names are still empty.
-            // We read directly from pending_segment_qrl_imports instead.
             let mut emitted_qrl_names: std::collections::HashSet<String> =
                 self.import_tracker.qrl_imports.iter().cloned().collect();
             for (_parent_name, qrl_name) in &self.pending_segment_qrl_imports {
                 if emitted_qrl_names.insert(qrl_name.clone()) {
                     let stmt =
                         import_rewrite::build_named_import(qrl_name, core_module, ctx);
-                    new_stmts.push(stmt);
+                    synthetic_imports.push(("_segment_qrl", stmt));
                 }
             }
         }
 
+        // 3b: Other framework imports (qrl, inlinedQrl, _captures, etc.)
         if self.import_tracker.needs_qrl {
             let stmt = import_rewrite::build_named_import("qrl", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("qrl", stmt));
         }
         if self.import_tracker.needs_inlined_qrl {
             let stmt = import_rewrite::build_named_import("inlinedQrl", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("inlinedQrl", stmt));
         }
-
         if self.import_tracker.needs_captures {
             let stmt = import_rewrite::build_named_import("_captures", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_captures", stmt));
         }
-
         if self.import_tracker.needs_rest_props {
             let stmt = import_rewrite::build_named_import("_restProps", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_restProps", stmt));
         }
-
-        // When custom JSX source is set, emit `import { jsx as _jsx } from "{source}/jsx-runtime"`
-        // instead of `import { _jsxSorted } from "@qwik.dev/core"`.
         if self.import_tracker.needs_jsx_sorted {
             if let Some(ref source) = self.import_tracker.custom_jsx_source {
                 let jsx_runtime_source = format!("{}/jsx-runtime", source);
@@ -2551,55 +2585,48 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     &jsx_runtime_source,
                     ctx,
                 );
-                new_stmts.push(stmt);
+                synthetic_imports.push(("_jsx", stmt));
             } else {
                 let stmt = import_rewrite::build_named_import("_jsxSorted", core_module, ctx);
-                new_stmts.push(stmt);
+                synthetic_imports.push(("_jsxSorted", stmt));
             }
         }
         if self.import_tracker.needs_get_var_props {
             let stmt = import_rewrite::build_named_import("_getVarProps", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_getVarProps", stmt));
         }
         if self.import_tracker.needs_get_const_props {
             let stmt = import_rewrite::build_named_import("_getConstProps", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_getConstProps", stmt));
         }
         if self.import_tracker.needs_jsx_split {
             let stmt = import_rewrite::build_named_import("_jsxSplit", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_jsxSplit", stmt));
         }
-
         if self.import_tracker.needs_wrap_prop {
             let stmt = import_rewrite::build_named_import("_wrapProp", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_wrapProp", stmt));
         }
         if self.import_tracker.needs_fn_signal {
             let stmt = import_rewrite::build_named_import("_fnSignal", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_fnSignal", stmt));
         }
         if self.import_tracker.needs_val {
             let stmt = import_rewrite::build_named_import("_val", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_val", stmt));
         }
         if self.import_tracker.needs_chk {
             let stmt = import_rewrite::build_named_import("_chk", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_chk", stmt));
         }
         if self.import_tracker.needs_noop_qrl {
             let stmt = import_rewrite::build_named_import("_noopQrl", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_noopQrl", stmt));
         }
         if self.import_tracker.needs_qrl_sync {
             let stmt = import_rewrite::build_named_import("_qrlSync", core_module, ctx);
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_qrlSync", stmt));
         }
-
-        for (hash, import_path) in &self.import_tracker.lazy_imports {
-            let stmt = import_rewrite::build_lazy_import_declaration(hash, import_path, ctx);
-            new_stmts.push(stmt);
-        }
-
         if self.import_tracker.needs_fragment {
             let stmt = import_rewrite::build_aliased_import(
                 "Fragment",
@@ -2607,22 +2634,48 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 "@qwik.dev/core/jsx-runtime",
                 ctx,
             );
-            new_stmts.push(stmt);
+            synthetic_imports.push(("_Fragment", stmt));
         }
 
-        // Collect non-dollar specifiers from Qwik core imports that need to be preserved.
-        // These are specifiers like `useStore` that were imported alongside $-suffixed ones.
-        // Build constants (isServer, isBrowser, isDev) are NOT re-emitted because they are
-        // handled by const_replace which strips them from the AST.
-        // Aliased specifiers (e.g., `isServer as myServer`) are re-emitted with the alias.
+        // 3c: Build lazy import declarations (const i_XXX = () => import(...))
+        let mut lazy_imports: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
+        for (hash, import_path) in &self.import_tracker.lazy_imports {
+            let stmt = import_rewrite::build_lazy_import_declaration(hash, import_path, ctx);
+            lazy_imports.push(stmt);
+        }
+
+        // ---------------------------------------------------------------
+        // Phase 4: Filter synthetic imports -- keep only those referenced
+        // ---------------------------------------------------------------
+        // For segment strategy, many framework imports (e.g., _jsxSorted,
+        // _wrapProp, _fnSignal) are only used inside segment bodies that
+        // become separate files. Remove them from the entry module.
+        let filtered_synthetic: std::vec::Vec<Statement<'a>> = synthetic_imports
+            .into_iter()
+            .filter(|(name, _stmt)| referenced_idents.contains(*name))
+            .map(|(_name, stmt)| stmt)
+            .collect();
+
+        // ---------------------------------------------------------------
+        // Phase 5: Collect and filter non-dollar Qwik core specifiers
+        // ---------------------------------------------------------------
+        // These are specifiers like `useStore`, `mutable` that were imported
+        // alongside $-suffixed ones from @qwik.dev/core.
+        // Only emit those that are actually referenced in entry module code.
+        // Merge specifiers from the same source into single import statements.
         const BUILD_CONSTANTS: &[&str] = &["isServer", "isBrowser", "isDev"];
+
+        // Group kept specifiers by source: { source => [(imported, local)] }
+        let mut grouped_specifiers:
+            std::collections::BTreeMap<String, std::vec::Vec<(String, String)>> =
+            std::collections::BTreeMap::new();
+
         for import_info in &self.collected.module_imports {
             if import_info.is_qwik_core {
                 for spec_name in &import_info.specifiers {
                     if self.collected.dollar_imports.contains(spec_name) {
                         continue; // Dollar import: stripped
                     }
-                    // Check if this specifier is a build constant (by imported name)
                     let imported_name = import_info
                         .specifier_aliases
                         .get(spec_name)
@@ -2632,49 +2685,107 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         continue; // Build constant: handled by const_replace
                     }
 
-                    if import_info.specifier_aliases.contains_key(spec_name) {
-                        // Aliased import: emit `import { imported as local } from "..."`
-                        let stmt = import_rewrite::build_aliased_import(
-                            imported_name,
-                            spec_name,
-                            &import_info.source,
-                            ctx,
-                        );
-                        new_stmts.push(stmt);
-                    } else {
-                        // Non-aliased import: emit `import { name } from "..."`
-                        let stmt =
-                            import_rewrite::build_named_import(spec_name, &import_info.source, ctx);
-                        new_stmts.push(stmt);
+                    // Only emit if referenced in entry module body
+                    if !referenced_idents.contains(spec_name.as_str()) {
+                        continue; // Only used in segments -- don't emit in entry module
                     }
+
+                    // Group by source for merging
+                    grouped_specifiers
+                        .entry(import_info.source.clone())
+                        .or_default()
+                        .push((imported_name.to_string(), spec_name.clone()));
                 }
             }
         }
 
-        // Always rebuild body: new imports first, then filtered old statements
-        let existing_len = program.body.len();
-        let mut new_body = ctx.ast.vec_with_capacity(new_stmts.len() + existing_len);
+        // Build merged import statements from grouped specifiers.
+        // Specifiers are in original source order (order of import_info.specifiers)
+        // which matches SWC's preserved order.
+        let mut non_dollar_imports: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
+        for (source, specifiers) in grouped_specifiers {
+            let stmt =
+                import_rewrite::build_multi_specifier_import(&specifiers, &source, ctx);
+            non_dollar_imports.push(stmt);
+        }
 
-        for stmt in new_stmts {
+        // ---------------------------------------------------------------
+        // Phase 6: Filter non-Qwik user imports from old_body
+        // ---------------------------------------------------------------
+        // User imports like `import { mongodb } from "mondodb"` should only
+        // appear in the entry module if they're actually referenced in the
+        // entry module's non-import code.
+        let filtered_non_qwik_imports: std::vec::Vec<Statement<'a>> = non_qwik_imports
+            .into_iter()
+            .filter(|stmt| {
+                if let Statement::ImportDeclaration(import_decl) = stmt {
+                    // Check if ANY specifier from this import is referenced
+                    if let Some(specifiers) = &import_decl.specifiers {
+                        for spec in specifiers {
+                            let local_name = match spec {
+                                ImportDeclarationSpecifier::ImportSpecifier(s) => {
+                                    s.local.name.as_str()
+                                }
+                                ImportDeclarationSpecifier::ImportDefaultSpecifier(s) => {
+                                    s.local.name.as_str()
+                                }
+                                ImportDeclarationSpecifier::ImportNamespaceSpecifier(s) => {
+                                    s.local.name.as_str()
+                                }
+                            };
+                            if referenced_idents.contains(local_name) {
+                                return true;
+                            }
+                        }
+                        return false; // No specifiers referenced
+                    }
+                    // Side-effect import (no specifiers): always keep
+                    true
+                } else {
+                    true // Not an import -- keep
+                }
+            })
+            .collect();
+
+        // ---------------------------------------------------------------
+        // Phase 7: Assemble body in SWC order
+        // ---------------------------------------------------------------
+        // SWC order:
+        // 1. Synthetic framework imports (componentQrl, qrl, etc.) - filtered
+        // 2. Lazy import declarations (const i_XXX = ...)
+        // 3. Non-dollar Qwik core specifiers (useStore, mutable, etc.) - merged
+        // 4. Original non-Qwik imports (filtered)
+        // 5. Original non-import code (exports, declarations, etc.)
+
+        let total_capacity = filtered_synthetic.len()
+            + lazy_imports.len()
+            + non_dollar_imports.len()
+            + filtered_non_qwik_imports.len()
+            + non_import_stmts.len();
+        let mut new_body = ctx.ast.vec_with_capacity(total_capacity);
+
+        // 1: Filtered synthetic framework imports
+        for stmt in filtered_synthetic {
             new_body.push(stmt);
         }
 
-        let mut old_body = ctx.ast.vec();
-        std::mem::swap(&mut program.body, &mut old_body);
-        for stmt in old_body {
-            // Skip original Qwik core import declarations (they've been replaced
-            // by the new imports above: Qrl-suffixed + non-dollar specifiers)
-            if let Statement::ImportDeclaration(ref import_decl) = stmt {
-                let source = import_decl.source.value.as_str();
-                let is_qwik_core = self
-                    .collected
-                    .module_imports
-                    .iter()
-                    .any(|i| i.source == source && i.is_qwik_core);
-                if is_qwik_core {
-                    continue; // Skip -- already re-emitted above
-                }
-            }
+        // 2: Lazy import declarations
+        for stmt in lazy_imports {
+            new_body.push(stmt);
+        }
+
+        // 3: Non-dollar Qwik core specifiers (merged by source)
+        for stmt in non_dollar_imports {
+            new_body.push(stmt);
+        }
+
+        // 4: Filtered non-Qwik user imports
+        for stmt in filtered_non_qwik_imports {
+            new_body.push(stmt);
+        }
+
+        // 5: Non-import code (exports, declarations, expressions)
+        for stmt in non_import_stmts {
             new_body.push(stmt);
         }
 
@@ -2781,6 +2892,554 @@ fn create_event_name(name: &str, prefix: &str) -> String {
     }
 
     result
+}
+
+/// Collect all identifier names referenced in a list of statements.
+///
+/// Unlike `walk_statement_for_captures`, this function:
+/// - DOES descend into nested function/arrow bodies (needed for inline strategy)
+/// - Returns a HashSet of unique identifier names (not a Vec)
+/// - Does NOT track local declarations (only collects references)
+/// - Skips import declarations (we only want to see what non-import code references)
+///
+/// Used by `exit_program` to determine which synthetic framework imports and
+/// non-Qwik user imports are actually needed in the entry module.
+fn collect_referenced_idents(stmts: &[Statement<'_>]) -> HashSet<String> {
+    let mut idents = HashSet::new();
+    for stmt in stmts {
+        if matches!(stmt, Statement::ImportDeclaration(_)) {
+            continue; // Skip import declarations themselves
+        }
+        collect_idents_from_statement(stmt, &mut idents);
+    }
+    idents
+}
+
+/// Walk a statement collecting all identifier reference names (deep traversal).
+fn collect_idents_from_statement(stmt: &Statement<'_>, idents: &mut HashSet<String>) {
+    match stmt {
+        Statement::VariableDeclaration(var_decl) => {
+            for declarator in &var_decl.declarations {
+                if let Some(init) = &declarator.init {
+                    collect_idents_from_expression(init, idents);
+                }
+            }
+        }
+        Statement::ExpressionStatement(expr_stmt) => {
+            collect_idents_from_expression(&expr_stmt.expression, idents);
+        }
+        Statement::ReturnStatement(ret) => {
+            if let Some(arg) = &ret.argument {
+                collect_idents_from_expression(arg, idents);
+            }
+        }
+        Statement::BlockStatement(block) => {
+            for s in &block.body {
+                collect_idents_from_statement(s, idents);
+            }
+        }
+        Statement::IfStatement(if_stmt) => {
+            collect_idents_from_expression(&if_stmt.test, idents);
+            collect_idents_from_statement(&if_stmt.consequent, idents);
+            if let Some(alt) = &if_stmt.alternate {
+                collect_idents_from_statement(alt, idents);
+            }
+        }
+        Statement::ForStatement(for_stmt) => {
+            if let Some(init) = &for_stmt.init {
+                match init {
+                    ForStatementInit::VariableDeclaration(var_decl) => {
+                        for declarator in &var_decl.declarations {
+                            if let Some(init_expr) = &declarator.init {
+                                collect_idents_from_expression(init_expr, idents);
+                            }
+                        }
+                    }
+                    _ => {
+                        if let Some(expr) = init.as_expression() {
+                            collect_idents_from_expression(expr, idents);
+                        }
+                    }
+                }
+            }
+            if let Some(test) = &for_stmt.test {
+                collect_idents_from_expression(test, idents);
+            }
+            if let Some(update) = &for_stmt.update {
+                collect_idents_from_expression(update, idents);
+            }
+            collect_idents_from_statement(&for_stmt.body, idents);
+        }
+        Statement::ForInStatement(for_in) => {
+            collect_idents_from_expression(&for_in.right, idents);
+            collect_idents_from_statement(&for_in.body, idents);
+        }
+        Statement::ForOfStatement(for_of) => {
+            collect_idents_from_expression(&for_of.right, idents);
+            collect_idents_from_statement(&for_of.body, idents);
+        }
+        Statement::WhileStatement(while_stmt) => {
+            collect_idents_from_expression(&while_stmt.test, idents);
+            collect_idents_from_statement(&while_stmt.body, idents);
+        }
+        Statement::DoWhileStatement(do_while) => {
+            collect_idents_from_statement(&do_while.body, idents);
+            collect_idents_from_expression(&do_while.test, idents);
+        }
+        Statement::FunctionDeclaration(func) => {
+            // Descend into function body (unlike capture walker)
+            for param in &func.params.items {
+                collect_idents_from_binding_pattern(&param.pattern, idents);
+            }
+            if let Some(body) = &func.body {
+                for s in &body.statements {
+                    collect_idents_from_statement(s, idents);
+                }
+            }
+        }
+        Statement::SwitchStatement(switch) => {
+            collect_idents_from_expression(&switch.discriminant, idents);
+            for case in &switch.cases {
+                if let Some(test) = &case.test {
+                    collect_idents_from_expression(test, idents);
+                }
+                for s in &case.consequent {
+                    collect_idents_from_statement(s, idents);
+                }
+            }
+        }
+        Statement::ThrowStatement(throw) => {
+            collect_idents_from_expression(&throw.argument, idents);
+        }
+        Statement::TryStatement(try_stmt) => {
+            for s in &try_stmt.block.body {
+                collect_idents_from_statement(s, idents);
+            }
+            if let Some(handler) = &try_stmt.handler {
+                for s in &handler.body.body {
+                    collect_idents_from_statement(s, idents);
+                }
+            }
+            if let Some(finalizer) = &try_stmt.finalizer {
+                for s in &finalizer.body {
+                    collect_idents_from_statement(s, idents);
+                }
+            }
+        }
+        Statement::LabeledStatement(labeled) => {
+            collect_idents_from_statement(&labeled.body, idents);
+        }
+        // ExportNamedDeclaration and ExportDefaultDeclaration
+        Statement::ExportNamedDeclaration(export) => {
+            if let Some(decl) = &export.declaration {
+                match decl {
+                    Declaration::VariableDeclaration(var_decl) => {
+                        for declarator in &var_decl.declarations {
+                            if let Some(init) = &declarator.init {
+                                collect_idents_from_expression(init, idents);
+                            }
+                        }
+                    }
+                    Declaration::FunctionDeclaration(func) => {
+                        for param in &func.params.items {
+                            collect_idents_from_binding_pattern(&param.pattern, idents);
+                        }
+                        if let Some(body) = &func.body {
+                            for s in &body.statements {
+                                collect_idents_from_statement(s, idents);
+                            }
+                        }
+                    }
+                    Declaration::ClassDeclaration(class) => {
+                        if let Some(super_class) = &class.super_class {
+                            collect_idents_from_expression(super_class, idents);
+                        }
+                        for elem in &class.body.body {
+                            collect_idents_from_class_element(elem, idents);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+        }
+        Statement::ExportDefaultDeclaration(export) => {
+            match &export.declaration {
+                ExportDefaultDeclarationKind::FunctionDeclaration(func) => {
+                    for param in &func.params.items {
+                        collect_idents_from_binding_pattern(&param.pattern, idents);
+                    }
+                    if let Some(body) = &func.body {
+                        for s in &body.statements {
+                            collect_idents_from_statement(s, idents);
+                        }
+                    }
+                }
+                ExportDefaultDeclarationKind::ClassDeclaration(class) => {
+                    if let Some(super_class) = &class.super_class {
+                        collect_idents_from_expression(super_class, idents);
+                    }
+                    for elem in &class.body.body {
+                        collect_idents_from_class_element(elem, idents);
+                    }
+                }
+                _ => {
+                    if let Some(expr) = export.declaration.as_expression() {
+                        collect_idents_from_expression(expr, idents);
+                    }
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Walk an expression collecting all identifier reference names (deep traversal).
+/// Unlike `walk_expression_for_captures`, this DOES descend into nested functions.
+fn collect_idents_from_expression(expr: &Expression<'_>, idents: &mut HashSet<String>) {
+    match expr {
+        Expression::Identifier(ident) => {
+            idents.insert(ident.name.as_str().to_string());
+        }
+        Expression::CallExpression(call) => {
+            collect_idents_from_expression(&call.callee, idents);
+            for arg in &call.arguments {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        collect_idents_from_expression(&spread.argument, idents);
+                    }
+                    _ => {
+                        if let Some(expr) = arg.as_expression() {
+                            collect_idents_from_expression(expr, idents);
+                        }
+                    }
+                }
+            }
+        }
+        Expression::StaticMemberExpression(member) => {
+            collect_idents_from_expression(&member.object, idents);
+        }
+        Expression::ComputedMemberExpression(member) => {
+            collect_idents_from_expression(&member.object, idents);
+            collect_idents_from_expression(&member.expression, idents);
+        }
+        Expression::PrivateFieldExpression(member) => {
+            collect_idents_from_expression(&member.object, idents);
+        }
+        Expression::BinaryExpression(binary) => {
+            collect_idents_from_expression(&binary.left, idents);
+            collect_idents_from_expression(&binary.right, idents);
+        }
+        Expression::LogicalExpression(logical) => {
+            collect_idents_from_expression(&logical.left, idents);
+            collect_idents_from_expression(&logical.right, idents);
+        }
+        Expression::AssignmentExpression(assign) => {
+            collect_idents_from_assignment_target(&assign.left, idents);
+            collect_idents_from_expression(&assign.right, idents);
+        }
+        Expression::UnaryExpression(unary) => {
+            collect_idents_from_expression(&unary.argument, idents);
+        }
+        Expression::UpdateExpression(update) => {
+            match &update.argument {
+                SimpleAssignmentTarget::AssignmentTargetIdentifier(ident) => {
+                    idents.insert(ident.name.as_str().to_string());
+                }
+                SimpleAssignmentTarget::StaticMemberExpression(member) => {
+                    collect_idents_from_expression(&member.object, idents);
+                }
+                SimpleAssignmentTarget::ComputedMemberExpression(member) => {
+                    collect_idents_from_expression(&member.object, idents);
+                    collect_idents_from_expression(&member.expression, idents);
+                }
+                SimpleAssignmentTarget::PrivateFieldExpression(member) => {
+                    collect_idents_from_expression(&member.object, idents);
+                }
+                _ => {}
+            }
+        }
+        Expression::ConditionalExpression(cond) => {
+            collect_idents_from_expression(&cond.test, idents);
+            collect_idents_from_expression(&cond.consequent, idents);
+            collect_idents_from_expression(&cond.alternate, idents);
+        }
+        Expression::TemplateLiteral(tmpl) => {
+            for expr in &tmpl.expressions {
+                collect_idents_from_expression(expr, idents);
+            }
+        }
+        Expression::ArrayExpression(arr) => {
+            for elem in &arr.elements {
+                match elem {
+                    ArrayExpressionElement::SpreadElement(spread) => {
+                        collect_idents_from_expression(&spread.argument, idents);
+                    }
+                    ArrayExpressionElement::Elision(_) => {}
+                    _ => {
+                        if let Some(expr) = elem.as_expression() {
+                            collect_idents_from_expression(expr, idents);
+                        }
+                    }
+                }
+            }
+        }
+        Expression::ObjectExpression(obj) => {
+            for prop in &obj.properties {
+                match prop {
+                    ObjectPropertyKind::ObjectProperty(p) => {
+                        if p.computed {
+                            if let Some(key_expr) = p.key.as_expression() {
+                                collect_idents_from_expression(key_expr, idents);
+                            }
+                        }
+                        collect_idents_from_expression(&p.value, idents);
+                    }
+                    ObjectPropertyKind::SpreadProperty(spread) => {
+                        collect_idents_from_expression(&spread.argument, idents);
+                    }
+                }
+            }
+        }
+        // IMPORTANT: Unlike capture walker, we DO descend into nested functions
+        // because in inline/hoist mode, the segment code is inside arrow functions.
+        Expression::ArrowFunctionExpression(arrow) => {
+            for param in &arrow.params.items {
+                collect_idents_from_binding_pattern(&param.pattern, idents);
+            }
+            for s in &arrow.body.statements {
+                collect_idents_from_statement(s, idents);
+            }
+        }
+        Expression::FunctionExpression(func) => {
+            for param in &func.params.items {
+                collect_idents_from_binding_pattern(&param.pattern, idents);
+            }
+            if let Some(body) = &func.body {
+                for s in &body.statements {
+                    collect_idents_from_statement(s, idents);
+                }
+            }
+        }
+        Expression::ParenthesizedExpression(paren) => {
+            collect_idents_from_expression(&paren.expression, idents);
+        }
+        Expression::SequenceExpression(seq) => {
+            for expr in &seq.expressions {
+                collect_idents_from_expression(expr, idents);
+            }
+        }
+        Expression::AwaitExpression(await_expr) => {
+            collect_idents_from_expression(&await_expr.argument, idents);
+        }
+        Expression::TaggedTemplateExpression(tagged) => {
+            collect_idents_from_expression(&tagged.tag, idents);
+            for expr in &tagged.quasi.expressions {
+                collect_idents_from_expression(expr, idents);
+            }
+        }
+        Expression::NewExpression(new_expr) => {
+            collect_idents_from_expression(&new_expr.callee, idents);
+            for arg in &new_expr.arguments {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        collect_idents_from_expression(&spread.argument, idents);
+                    }
+                    _ => {
+                        if let Some(expr) = arg.as_expression() {
+                            collect_idents_from_expression(expr, idents);
+                        }
+                    }
+                }
+            }
+        }
+        Expression::YieldExpression(yield_expr) => {
+            if let Some(arg) = &yield_expr.argument {
+                collect_idents_from_expression(arg, idents);
+            }
+        }
+        Expression::ImportExpression(import_expr) => {
+            collect_idents_from_expression(&import_expr.source, idents);
+        }
+        Expression::ClassExpression(class) => {
+            if let Some(super_class) = &class.super_class {
+                collect_idents_from_expression(super_class, idents);
+            }
+            for elem in &class.body.body {
+                collect_idents_from_class_element(elem, idents);
+            }
+        }
+        // JSX expressions reference identifiers in element names and attribute values
+        Expression::JSXElement(jsx) => {
+            collect_idents_from_jsx_element(jsx, idents);
+        }
+        Expression::JSXFragment(frag) => {
+            for child in &frag.children {
+                collect_idents_from_jsx_child(child, idents);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Walk a JSX element collecting all identifier references.
+fn collect_idents_from_jsx_element(elem: &JSXElement<'_>, idents: &mut HashSet<String>) {
+    // Element name: <Component ...> references "Component"
+    match &elem.opening_element.name {
+        JSXElementName::Identifier(id) => {
+            // Lowercase = HTML element (div, span), uppercase = component reference
+            let name = id.name.as_str();
+            if name.starts_with(|c: char| c.is_uppercase()) {
+                idents.insert(name.to_string());
+            }
+        }
+        JSXElementName::IdentifierReference(id) => {
+            idents.insert(id.name.as_str().to_string());
+        }
+        JSXElementName::MemberExpression(member) => {
+            collect_idents_from_jsx_member_expr(member, idents);
+        }
+        JSXElementName::NamespacedName(_) => {}
+        JSXElementName::ThisExpression(_) => {}
+    }
+
+    // Attributes
+    for attr in &elem.opening_element.attributes {
+        match attr {
+            JSXAttributeItem::Attribute(a) => {
+                if let Some(value) = &a.value {
+                    match value {
+                        JSXAttributeValue::ExpressionContainer(expr) => {
+                            if let Some(inner) = expr.expression.as_expression() {
+                                collect_idents_from_expression(inner, idents);
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            JSXAttributeItem::SpreadAttribute(spread) => {
+                collect_idents_from_expression(&spread.argument, idents);
+            }
+        }
+    }
+
+    // Children
+    for child in &elem.children {
+        collect_idents_from_jsx_child(child, idents);
+    }
+}
+
+/// Walk a JSX child collecting identifier references.
+fn collect_idents_from_jsx_child(child: &JSXChild<'_>, idents: &mut HashSet<String>) {
+    match child {
+        JSXChild::Element(elem) => {
+            collect_idents_from_jsx_element(elem, idents);
+        }
+        JSXChild::Fragment(frag) => {
+            for c in &frag.children {
+                collect_idents_from_jsx_child(c, idents);
+            }
+        }
+        JSXChild::ExpressionContainer(expr) => {
+            if let Some(inner) = expr.expression.as_expression() {
+                collect_idents_from_expression(inner, idents);
+            }
+        }
+        JSXChild::Spread(spread) => {
+            collect_idents_from_expression(&spread.expression, idents);
+        }
+        JSXChild::Text(_) => {}
+    }
+}
+
+/// Walk a JSX member expression to collect the root identifier.
+fn collect_idents_from_jsx_member_expr(
+    member: &JSXMemberExpression<'_>,
+    idents: &mut HashSet<String>,
+) {
+    match &member.object {
+        JSXMemberExpressionObject::IdentifierReference(id) => {
+            idents.insert(id.name.as_str().to_string());
+        }
+        JSXMemberExpressionObject::MemberExpression(inner) => {
+            collect_idents_from_jsx_member_expr(inner, idents);
+        }
+        JSXMemberExpressionObject::ThisExpression(_) => {}
+    }
+}
+
+/// Walk a binding pattern collecting identifier references from default values.
+fn collect_idents_from_binding_pattern(
+    pattern: &BindingPattern<'_>,
+    idents: &mut HashSet<String>,
+) {
+    match pattern {
+        BindingPattern::ObjectPattern(obj) => {
+            for prop in &obj.properties {
+                collect_idents_from_binding_pattern(&prop.value, idents);
+            }
+            if let Some(rest) = &obj.rest {
+                collect_idents_from_binding_pattern(&rest.argument, idents);
+            }
+        }
+        BindingPattern::ArrayPattern(arr) => {
+            for elem in arr.elements.iter().flatten() {
+                collect_idents_from_binding_pattern(elem, idents);
+            }
+            if let Some(rest) = &arr.rest {
+                collect_idents_from_binding_pattern(&rest.argument, idents);
+            }
+        }
+        BindingPattern::AssignmentPattern(assign) => {
+            collect_idents_from_binding_pattern(&assign.left, idents);
+            collect_idents_from_expression(&assign.right, idents);
+        }
+        _ => {}
+    }
+}
+
+/// Walk a class element collecting identifier references.
+fn collect_idents_from_class_element(elem: &ClassElement<'_>, idents: &mut HashSet<String>) {
+    match elem {
+        ClassElement::MethodDefinition(method) => {
+            if let Some(body) = &method.value.body {
+                for s in &body.statements {
+                    collect_idents_from_statement(s, idents);
+                }
+            }
+        }
+        ClassElement::PropertyDefinition(prop) => {
+            if let Some(value) = &prop.value {
+                collect_idents_from_expression(value, idents);
+            }
+        }
+        ClassElement::StaticBlock(block) => {
+            for s in &block.body {
+                collect_idents_from_statement(s, idents);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Walk an assignment target collecting identifier references.
+fn collect_idents_from_assignment_target(
+    target: &AssignmentTarget<'_>,
+    idents: &mut HashSet<String>,
+) {
+    match target {
+        AssignmentTarget::AssignmentTargetIdentifier(ident) => {
+            idents.insert(ident.name.as_str().to_string());
+        }
+        AssignmentTarget::StaticMemberExpression(member) => {
+            collect_idents_from_expression(&member.object, idents);
+        }
+        AssignmentTarget::ComputedMemberExpression(member) => {
+            collect_idents_from_expression(&member.object, idents);
+            collect_idents_from_expression(&member.expression, idents);
+        }
+        _ => {}
+    }
 }
 
 /// Analyze a JSX lambda's source code to extract identifier references and local declarations.

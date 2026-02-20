@@ -178,6 +178,47 @@ pub(crate) fn build_aliased_import<'a>(
     Statement::from(import_decl)
 }
 
+/// Build a multi-specifier import declaration:
+///   `import { spec1, spec2, imported3 as local3 } from "source"`
+///
+/// Each specifier is a `(imported_name, local_name)` pair. When imported == local,
+/// it's a simple specifier; otherwise an aliased specifier.
+pub(crate) fn build_multi_specifier_import<'a>(
+    specifier_pairs: &[(String, String)],
+    source: &str,
+    ctx: &mut TraverseCtx<'a, ()>,
+) -> Statement<'a> {
+    let source_atom = ctx.ast.atom(source);
+    let mut specifiers = ctx.ast.vec_with_capacity(specifier_pairs.len());
+
+    for (imported_name, local_name) in specifier_pairs {
+        let imported_atom = ctx.ast.atom(imported_name.as_str());
+        let local_atom = ctx.ast.atom(local_name.as_str());
+        let local = ctx.ast.binding_identifier(SPAN, local_atom);
+        let imported = ctx
+            .ast
+            .module_export_name_identifier_name(SPAN, imported_atom);
+        let specifier = ctx
+            .ast
+            .import_specifier(SPAN, imported, local, ImportOrExportKind::Value);
+        specifiers.push(ImportDeclarationSpecifier::ImportSpecifier(
+            ctx.ast.alloc(specifier),
+        ));
+    }
+
+    let source_lit = ctx.ast.string_literal(SPAN, source_atom, None);
+    let import_decl = ctx.ast.module_declaration_import_declaration(
+        SPAN,
+        Some(specifiers),
+        source_lit,
+        None,
+        None::<oxc::allocator::Box<'a, WithClause<'a>>>,
+        ImportOrExportKind::Value,
+    );
+
+    Statement::from(import_decl)
+}
+
 /// Build a lazy import declaration:
 ///   `const i_hash = () => import("./path_segment_hash")`
 pub(crate) fn build_lazy_import_declaration<'a>(
