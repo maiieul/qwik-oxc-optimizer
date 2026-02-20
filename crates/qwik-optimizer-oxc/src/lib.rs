@@ -225,14 +225,19 @@ pub fn transform_modules(
         all_modules.push(main_module);
 
         let body_codes = qwik_transform.take_segment_body_codes();
-        let segments = qwik_transform.extracted_segments();
+        // Sort segments by source span position (ascending) for consistent output order.
+        // SWC's fold processes nodes top-down in source order, while OXC's traverse
+        // visitor exits inner nodes before outer ones, producing a different insertion order.
+        // Sorting by span.0 (start position) restores source order to match SWC.
+        let mut segments = qwik_transform.extracted_segments().to_vec();
+        segments.sort_by_key(|seg| seg.span.0);
         let stripped_spans = qwik_transform.stripped_segments();
         let custom_jsx_src = qwik_transform.custom_jsx_import_source().map(|s| s.to_string());
 
         let is_inline_like = entry_strategy::should_inline(&transform_options.entry_strategy)
             || matches!(transform_options.entry_strategy, EntryStrategy::Hoist);
 
-        for seg in segments {
+        for seg in &segments {
             if stripped_spans.contains(&seg.span.0) {
                 continue;
             }
