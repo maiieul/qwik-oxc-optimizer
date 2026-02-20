@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 4 complete - Signal & Props Transforms (all 4/4 plans done including gap closure). Ready for Phase 5 planning.
+**Current focus:** Phase 5 in progress - JSX Keys & Flags (plan 01 complete, key generation fixed).
 
 ## Current Position
 
-Phase: 4 of 6 (Signal & Props Transforms)
-Plan: 4 of 4 complete in phase 4 (04-01 + 04-02 + 04-03 + 04-04 gap closure all done)
-Status: Phase complete
-Last activity: 2026-02-20 - Completed 04-04-PLAN.md (non-destructured props _wrapProp gap closure)
+Phase: 5 of 6 (JSX Keys & Flags)
+Plan: 1 of 2 complete in phase 5 (05-01 key generation done)
+Status: In progress
+Last activity: 2026-02-20 - Completed 05-01-PLAN.md (JSX key prefix and root_jsx_mode)
 
-Progress: [██████████░] ~85%
+Progress: [███████████░] ~88%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
-- Average duration: 17min
-- Total execution time: 3.2 hours
+- Total plans completed: 11
+- Average duration: 16min
+- Total execution time: 3.4 hours
 
 **By Phase:**
 
@@ -31,10 +31,11 @@ Progress: [██████████░] ~85%
 | 02-metadata | 1/1 | 15min | 15min |
 | 03-bugs-correctness | 3/3 | 51min | 17min |
 | 04-signal-props-transforms | 4/4 | 77min | 19min |
+| 05-jsx-keys-flags | 1/2 | 9min | 9min |
 
 **Recent Trend:**
-- Last 5 plans: 03-03 (35min), 04-01 (6min), 04-03 (11min), 04-02 (25min), 04-04 (35min)
-- Trend: Gap closure plan required body destructuring detection, reference rewriting, prop alias origin mapping for _fnSignal, and pre-existing bug fix in argument_to_expression. All 4 affected test cases now match SWC.
+- Last 5 plans: 04-01 (6min), 04-03 (11min), 04-02 (25min), 04-04 (35min), 05-01 (9min)
+- Trend: Key generation plan was straightforward -- well-defined algorithm from SWC reference, clean parameter threading pattern.
 
 *Updated after each plan completion*
 
@@ -78,6 +79,9 @@ Recent decisions affecting current work:
 - [04-04]: Props param name threaded through all JSX transform functions as Option<&str> parameter
 - [04-04]: Prop alias origin mapping for _fnSignal: test.value -> [props] dep with p0.test.value hoisted fn
 - [04-04]: argument_to_expression was missing MemberExpression variants (pre-existing bug) -- fixed
+- [05-01]: Manual base64url encoding (6-bit lookup table) instead of adding base64 crate dependency
+- [05-01]: root_jsx_mode hooks added to all 9 SWC-equivalent statement types (function, arrow, for/for-in/for-of, while, do-while, if, block, return)
+- [05-01]: is_fn detection: uppercase first char on Identifier/IdentifierReference + MemberExpression match
 
 ### Pending Todos
 
@@ -93,14 +97,14 @@ None.
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
 - Gap 1 (non-destructured props) RESOLVED -- 04-04 gap closure plan
 - Remaining snapshot diffs are Phase 5/6 issues:
-  - Phase 4 DONE: q:p injection (04-02), _wrapProp children wrapping (04-01), _fnSignal children wrapping (04-01), props destructuring defaults + skip cases (04-03), non-destructured props _wrapProp (04-04)
-  - Phase 5: JSX keys, children flags, _jsxSorted imports
+  - Phase 5 DONE: JSX key generation (05-01)
+  - Phase 5 TODO: immutability flags (05-02)
   - Phase 6: import ordering, use*() inlining (2x deferred), QRL hoisting (deferred from 04-02)
 - 1 deferred naming issue (should_extract_single_qrl_2) -- dedup suffix on wrong segment due to traverse order
 - Text normalization: trailing spaces in JSX text nodes stripped (e.g., "First " -> "First") -- noted for future fix
 
 ## Session Continuity
 
-Last session: 2026-02-20T14:43:43Z
-Stopped at: Completed 04-04-PLAN.md (non-destructured props _wrapProp gap closure) -- Phase 4 fully complete
+Last session: 2026-02-20T17:54:47Z
+Stopped at: Completed 05-01-PLAN.md (JSX key prefix and root_jsx_mode)
 Resume file: None
