@@ -94,11 +94,11 @@ Plans:
   1. JSX key values match SWC (correct generated keys like `"u6_0"` instead of `null`, and `null` where SWC uses `null`)
   2. JSX immutability flags match SWC values (correct `0`, `1`, or `2` per element, not blanket `3`)
   3. Key and flag diffs eliminated across the ~80 affected snapshots
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — Fix JSX key generation: compute key prefix from file hash, implement root_jsx_mode, emit keys only for root elements and component tags
+- [ ] 05-02-PLAN.md — Fix immutability flags: replace simplistic formula with static_listeners + static_subtree bitfield, track jsx_mutable through children processing
 
 ### Phase 6: Import Ordering & Cleanup
 **Goal**: Import statements in all output modules match SWC exactly in order, grouping, specifier merging, and path format -- the final cleanup pass to reach 0/162 diffs
