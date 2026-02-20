@@ -111,14 +111,75 @@ fn is_const_jsx_value(value: &Expression<'_>) -> bool {
 }
 
 /// Check if a child expression is immutable for JSX flag computation.
-/// Mirrors SWC's convert_to_signal_item is_const check + convert_children call check.
+///
+/// This determines whether a child expression breaks `static_subtree`.
+/// SWC uses scope analysis to check if identifiers are in-scope (const) vs
+/// unresolved globals (mutable). Without full scope info, we approximate:
+/// - Identifiers and member expressions are treated as immutable (most JSX
+///   children reference local variables or imports, which are in-scope)
+/// - Function calls are mutable UNLESS they're known immutable calls
+/// - Tagged template expressions are mutable
+/// - Literals and template literals (without expressions) are immutable
+///
+/// This is a conservative approximation that may miss some global references,
+/// but matches SWC's behavior for the vast majority of real-world patterns.
 fn is_child_expression_immutable(expr: &Expression<'_>) -> bool {
     match expr {
         // Literals are always immutable
         Expression::StringLiteral(_)
         | Expression::NumericLiteral(_)
         | Expression::BooleanLiteral(_)
-        | Expression::NullLiteral(_) => true,
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_) => true,
+
+        // Identifiers: treated as immutable (local vars, imports are in-scope).
+        // SWC uses scope analysis; we approximate by treating all identifiers as const.
+        // This may incorrectly mark some global references as const, but those are rare
+        // in JSX children and the alternative (marking all identifiers as mutable) would
+        // cause many more mismatches.
+        Expression::Identifier(_) => true,
+
+        // Member expressions on identifiers: dep.thing, signal.value etc.
+        // Treated as immutable (the base identifier is in-scope).
+        Expression::StaticMemberExpression(_)
+        | Expression::ComputedMemberExpression(_) => true,
+
+        // Template literals: const if no expressions or all expressions are const
+        Expression::TemplateLiteral(tpl) => {
+            tpl.expressions.is_empty()
+                || tpl.expressions.iter().all(|e| is_child_expression_immutable(e))
+        }
+
+        // Unary expressions: typeof is always const, others check inner
+        Expression::UnaryExpression(unary) => {
+            matches!(unary.operator, UnaryOperator::Typeof)
+                || is_child_expression_immutable(&unary.argument)
+        }
+
+        // Binary expressions: const if both sides are const
+        Expression::BinaryExpression(bin) => {
+            is_child_expression_immutable(&bin.left)
+                && is_child_expression_immutable(&bin.right)
+        }
+
+        // Conditional expressions: const if all parts are const
+        Expression::ConditionalExpression(cond) => {
+            is_child_expression_immutable(&cond.test)
+                && is_child_expression_immutable(&cond.consequent)
+                && is_child_expression_immutable(&cond.alternate)
+        }
+
+        // Logical expressions: const if both sides are const
+        Expression::LogicalExpression(log) => {
+            is_child_expression_immutable(&log.left)
+                && is_child_expression_immutable(&log.right)
+        }
+
+        // Parenthesized: check inner
+        Expression::ParenthesizedExpression(paren) => {
+            is_child_expression_immutable(&paren.expression)
+        }
 
         // Known immutable function calls (transform-generated)
         Expression::CallExpression(call) => {
@@ -137,9 +198,12 @@ fn is_child_expression_immutable(expr: &Expression<'_>) -> bool {
             }
         }
 
-        // Fallthrough: handles TemplateLiteral (with/without expressions),
-        // identifiers, member expressions, etc. via is_const_expression
-        other => crate::is_const::is_const_expression(other),
+        // Tagged template expressions are always mutable
+        Expression::TaggedTemplateExpression(_) => false,
+
+        // Arrow/function expressions, object/array literals with spreads, etc.
+        // are mutable
+        _ => false,
     }
 }
 
@@ -1841,13 +1905,17 @@ pub(crate) fn transform_jsx_children<'a>(
                                 child_exprs.push(result);
                             }
                             other => {
-                                // Check for signal wrapping in children
-                                // (mirrors attribute-level logic at lines 1031-1092)
+                                // Check for signal wrapping in children.
+                                // SWC's convert_to_signal_item returns (is_const, expr):
+                                // - WrapPropSignal (signal.value): is_const=true
+                                // - WrapPropNamed (props.X, destructured): is_const=false
+                                // - _fnSignal wrapping: is_const=true (const call)
+                                // - No wrapping: check is_const_expression
                                 if !is_call_on_value(&other) {
                                     match detect_signal_wrap(&other, destructured_props, props_param_name) {
                                         SignalWrapResult::WrapPropSignal => {
-                                            // signal.value -> _wrapProp(signal) [EXISTING]
-                                            // _wrapProp calls are immutable -- no mutability change
+                                            // signal.value -> _wrapProp(signal)
+                                            // SWC: is_const = true (immutable)
                                             if let Expression::StaticMemberExpression(member) =
                                                 other
                                             {
@@ -1864,7 +1932,8 @@ pub(crate) fn transform_jsx_children<'a>(
                                         SignalWrapResult::WrapPropNamed(prop_name) => {
                                             // _rawProps.propName, props.X, props["X"], or destructured prop ->
                                             // _wrapProp(source, "propName")
-                                            // _wrapProp calls are immutable -- no mutability change
+                                            // SWC: is_const = false (mutable)
+                                            any_child_mutable = true;
                                             let raw_props_fallback = props_param_name.unwrap_or("_rawProps");
                                             let source_obj = if let Expression::StaticMemberExpression(member) = other {
                                                 member.unbox().object
@@ -1887,6 +1956,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                 }
                                 // Check for _fnSignal wrapping (complex reactive
                                 // expressions)
+                                // SWC: _fnSignal result is const (immutable)
                                 if !is_call_on_value(&other)
                                     && !contains_function_call(&other)
                                 {
@@ -1897,7 +1967,6 @@ pub(crate) fn transform_jsx_children<'a>(
                                         props_param_name,
                                     );
                                     if !deps.is_empty() && !has_non_reactive {
-                                        // _fnSignal calls are immutable -- no mutability change
                                         let (wrapped, fn_code, str_code) =
                                             build_fn_signal_wrapping(
                                                 other,
@@ -1913,8 +1982,12 @@ pub(crate) fn transform_jsx_children<'a>(
                                         continue;
                                     }
                                 }
-                                // After all wrapping attempts, check remaining expression
-                                // mutability for flag computation
+                                // No wrapping happened. Check the expression itself
+                                // for mutability. SWC uses scope analysis to
+                                // determine if identifiers are const (in-scope vs
+                                // global). We approximate: function calls and tagged
+                                // templates are mutable; everything else delegates to
+                                // is_child_expression_immutable.
                                 if !is_child_expression_immutable(&other) {
                                     any_child_mutable = true;
                                 }
