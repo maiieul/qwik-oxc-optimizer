@@ -78,12 +78,13 @@ Plans:
   3. Inline component props are destructured via `_restProps` transform matching SWC's pattern
   4. QRL calls are hoisted to variable declarations (e.g. `const _ref = qrl(...)`) and referenced by variable, not inlined at each usage site
   5. Each implemented transform automatically adds its required imports (`_fnSignal`, `_wrapProp`, `_restProps` from `@builder.io/qwik`), reducing IMP-02 (missing imports) diffs as a side effect
-**Plans**: 3 plans
+**Plans**: 4 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Extend JSX children signal wrapping for _wrapProp (named) + _fnSignal (complex reactive expressions)
-- [ ] 04-02-PLAN.md — Add loop tracking, q:p injection, QRL hoisting, event handler iteration variable transforms
-- [ ] 04-03-PLAN.md — Fix props destructuring: default values, skip cases, excluded_keys completeness
+- [x] 04-01-PLAN.md — Extend JSX children signal wrapping for _wrapProp (named) + _fnSignal (complex reactive expressions)
+- [x] 04-02-PLAN.md — Add loop tracking, q:p injection, QRL hoisting, event handler iteration variable transforms
+- [x] 04-03-PLAN.md — Fix props destructuring: default values, skip cases, excluded_keys completeness
+- [ ] 04-04-PLAN.md — [Gap closure] Handle non-destructured (props) parameter for _wrapProp signal wrapping
 
 ### Phase 5: JSX Keys & Flags
 **Goal**: JSX key values and immutability flags in _jsxSorted/_jsxSplit calls match SWC output exactly
@@ -126,6 +127,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Naming & Display Names | 2/2 | Complete | 2026-02-19 |
 | 2. Metadata | 1/1 | Complete | 2026-02-20 |
 | 3. Bugs & Correctness | 3/3 | Complete | 2026-02-20 |
-| 4. Signal & Props Transforms | 0/3 | Not started | - |
+| 4. Signal & Props Transforms | 3/4 | Gap closure | - |
 | 5. JSX Keys & Flags | 0/2 | Not started | - |
 | 6. Import Ordering & Cleanup | 0/2 | Not started | - |
