@@ -106,9 +106,9 @@ None.
 - Gap 1 (non-destructured props) RESOLVED -- 04-04 gap closure plan
 - Gap 2 (flag propagation) RESOLVED -- 05-03 gap closure plan (122->21 mismatches)
 - Phase 5 DONE: JSX key generation (05-01), immutability flags (05-02), flag propagation (05-03)
+- Post-formatting restored (cherry-picked from sort-format-fix): 2-space indent, object expansion, JSX-aware parsing
 - Remaining snapshot diffs are Phase 6 issues:
   - Import ordering
-  - Indentation/formatting (tabs vs spaces)
   - use*() return value destructuring inlining (2 fixtures)
   - QRL hoisting (deferred from 04-02)
 - 1 deferred naming issue (should_extract_single_qrl_2) -- dedup suffix on wrong segment due to traverse order

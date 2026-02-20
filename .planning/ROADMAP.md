@@ -99,7 +99,7 @@ Plans:
 Plans:
 - [x] 05-01-PLAN.md — Fix JSX key generation: compute key prefix from file hash, implement root_jsx_mode, emit keys only for root elements and component tags
 - [x] 05-02-PLAN.md — Fix immutability flags: replace simplistic formula with static_listeners + static_subtree bitfield, track jsx_mutable through children processing
-- [ ] 05-03-PLAN.md — [Gap closure] Fix mutable propagation from child elements to parents, fix member expression immutability classification
+- [x] 05-03-PLAN.md — [Gap closure] Fix mutable propagation from child elements to parents, fix member expression immutability classification
 
 ### Phase 6: Import Ordering & Cleanup
 **Goal**: Import statements in all output modules match SWC exactly in order, grouping, specifier merging, and path format -- the final cleanup pass to reach 0/162 diffs
@@ -129,5 +129,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. Metadata | 1/1 | Complete | 2026-02-20 |
 | 3. Bugs & Correctness | 3/3 | Complete | 2026-02-20 |
 | 4. Signal & Props Transforms | 4/4 | Complete | 2026-02-20 |
-| 5. JSX Keys & Flags | 0/2 | Not started | - |
+| 5. JSX Keys & Flags | 3/3 | Complete (gaps remain) | 2026-02-20 |
 | 6. Import Ordering & Cleanup | 0/2 | Not started | - |
