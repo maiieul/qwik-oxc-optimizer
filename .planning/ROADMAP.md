@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Naming & Display Names** - Fix segment naming to clear cascading diffs across 120+ snapshots
 - [x] **Phase 2: Metadata** - Add paramNames and fix path field handling across 90+ snapshots
 - [x] **Phase 3: Bugs & Correctness** - Fix TS stripping, missing segments, captures, component options, comments
-- [ ] **Phase 4: Signal & Props Transforms** - Implement _fnSignal, _wrapProp, props destructuring, QRL hoisting
+- [x] **Phase 4: Signal & Props Transforms** - Implement _fnSignal, _wrapProp, props destructuring, QRL hoisting
 - [ ] **Phase 5: JSX Keys & Flags** - Fix key generation and immutability flag values
 - [ ] **Phase 6: Import Ordering & Cleanup** - Sort imports, merge specifiers, fix paths as final cleanup pass
 
