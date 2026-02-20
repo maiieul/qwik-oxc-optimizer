@@ -205,6 +205,21 @@ pub(crate) struct QwikTransform {
     /// correctly: e.g. arr.map(x => x.items.filter(y => ...)) — exiting
     /// the inner .filter() decrements to 1 (still inside .map()), not 0.
     in_callback_depth: u32,
+
+    /// Whether the next JSX element processed is the "root" element in its scope.
+    /// When true, the element gets a generated key; when false, native elements get null.
+    /// Set to true on entering function/arrow bodies and statement-level scopes
+    /// (for/while/if/block/return), set to false after first JSX element processes.
+    /// Mirrors SWC's root_jsx_mode.
+    root_jsx_mode: bool,
+
+    /// Stack for saving/restoring root_jsx_mode across nested scopes.
+    root_jsx_mode_stack: Vec<bool>,
+
+    /// Precomputed JSX key prefix string (e.g., "u6" for test.tsx).
+    /// Computed from base64url(DefaultHasher(scope?, rel_path).to_le_bytes())[0..2]
+    /// with '-' and '_' chars replaced by '0'.
+    jsx_key_prefix: String,
 }
 
 /// Info needed to build a qrl()/inlinedQrl() call for a JSX event handler.
@@ -228,6 +243,33 @@ impl QwikTransform {
         filename: &str,
         source_code: &str,
     ) -> Self {
+        // Compute JSX key prefix from file hash (matches SWC transform.ts lines 163-183)
+        let jsx_key_prefix = {
+            use std::collections::hash_map::DefaultHasher;
+            use std::hash::Hasher;
+
+            let mut hasher = DefaultHasher::new();
+            if let Some(ref scope) = options.scope {
+                hasher.write(scope.as_bytes());
+            }
+            hasher.write(filename.as_bytes());
+            let file_hash = hasher.finish();
+
+            // Base64url encode first 2 chars of LE bytes
+            // MUST use URL_SAFE alphabet (matches SWC), NOT standard base64 (+/)
+            const CHARS: &[u8] =
+                b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+            let bytes = file_hash.to_le_bytes();
+            let b0 = bytes[0] as usize;
+            let b1 = bytes[1] as usize;
+            let c0 = CHARS[b0 >> 2] as char;
+            let c1 = CHARS[((b0 & 0x03) << 4) | (b1 >> 4)] as char;
+            // Replace - and _ with 0 (matching SWC)
+            let c0 = if c0 == '-' || c0 == '_' { '0' } else { c0 };
+            let c1 = if c1 == '-' || c1 == '_' { '0' } else { c1 };
+            format!("{}{}", c0, c1)
+        };
+
         Self {
             options: options.clone(),
             collected,
@@ -260,6 +302,9 @@ impl QwikTransform {
             loop_depth: 0,
             iteration_var_stack: Vec::new(),
             in_callback_depth: 0,
+            root_jsx_mode: true,
+            root_jsx_mode_stack: Vec::new(),
+            jsx_key_prefix,
         }
     }
 
@@ -1440,11 +1485,36 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         if let Some(ref id) = func.id {
             self.stack_ctxt.push(id.name.as_str().to_string());
         }
+        // Save and set root_jsx_mode for function bodies (mirrors SWC fold_fn_expr)
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
     }
 
     fn exit_function(&mut self, _func: &mut Function<'a>, _ctx: &mut TraverseCtx<'a, ()>) {
         if let Some(depth) = self.fn_decl_ctxt_depths.pop() {
             self.stack_ctxt.truncate(depth);
+        }
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
+    }
+
+    fn enter_arrow_function_expression(
+        &mut self,
+        _arrow: &mut ArrowFunctionExpression<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
+    }
+
+    fn exit_arrow_function_expression(
+        &mut self,
+        _arrow: &mut ArrowFunctionExpression<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
         }
     }
 
@@ -1604,6 +1674,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         node: &mut ForStatement<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
         self.loop_depth += 1;
         // Extract iteration variable from init: for (let i = ...) or for (var i = ...)
         let iteration_vars =
@@ -1631,6 +1703,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
     ) {
         self.iteration_var_stack.pop();
         self.loop_depth -= 1;
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
     }
 
     fn enter_for_in_statement(
@@ -1638,6 +1713,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         node: &mut ForInStatement<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
         self.loop_depth += 1;
         let iteration_vars = match &node.left {
             ForStatementLeft::VariableDeclaration(decl) => decl
@@ -1666,6 +1743,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
     ) {
         self.iteration_var_stack.pop();
         self.loop_depth -= 1;
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
     }
 
     fn enter_for_of_statement(
@@ -1673,6 +1753,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         node: &mut ForOfStatement<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
         self.loop_depth += 1;
         let iteration_vars = match &node.left {
             ForStatementLeft::VariableDeclaration(decl) => decl
@@ -1701,6 +1783,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
     ) {
         self.iteration_var_stack.pop();
         self.loop_depth -= 1;
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
     }
 
     fn enter_while_statement(
@@ -1708,6 +1793,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         node: &mut WhileStatement<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
         self.loop_depth += 1;
         // Extract iteration variable from test: while (i < ...) => extract "i"
         let iteration_vars = match &node.test {
@@ -1730,6 +1817,85 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
     ) {
         self.iteration_var_stack.pop();
         self.loop_depth -= 1;
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
+    }
+
+    fn enter_do_while_statement(
+        &mut self,
+        _stmt: &mut DoWhileStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
+    }
+
+    fn exit_do_while_statement(
+        &mut self,
+        _stmt: &mut DoWhileStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
+    }
+
+    fn enter_if_statement(
+        &mut self,
+        _stmt: &mut IfStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
+    }
+
+    fn exit_if_statement(
+        &mut self,
+        _stmt: &mut IfStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
+    }
+
+    fn enter_block_statement(
+        &mut self,
+        _stmt: &mut BlockStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
+    }
+
+    fn exit_block_statement(
+        &mut self,
+        _stmt: &mut BlockStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
+    }
+
+    fn enter_return_statement(
+        &mut self,
+        _stmt: &mut ReturnStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
+    }
+
+    fn exit_return_statement(
+        &mut self,
+        _stmt: &mut ReturnStatement<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
     }
 
     fn exit_expression(&mut self, expr: &mut Expression<'a>, ctx: &mut TraverseCtx<'a, ()>) {
@@ -1779,6 +1945,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             let loop_depth = self.loop_depth;
             let iteration_vars = self.current_iteration_vars();
 
+            let root_mode = self.root_jsx_mode;
+            let key_prefix = self.jsx_key_prefix.clone();
+
             match expr {
                 Expression::JSXElement(_) => {
                     let placeholder = ctx.ast.expression_null_literal(SPAN);
@@ -1794,9 +1963,12 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             loop_depth,
                             &iteration_vars,
                             props_param_ref,
+                            root_mode,
+                            &key_prefix,
                         );
                         *expr = result;
                     }
+                    self.root_jsx_mode = false;
                     self.hoisted_function_stmts = hoisted_stmts;
                     return;
                 }
@@ -1814,9 +1986,12 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             loop_depth,
                             &iteration_vars,
                             props_param_ref,
+                            root_mode,
+                            &key_prefix,
                         );
                         *expr = result;
                     }
+                    self.root_jsx_mode = false;
                     self.hoisted_function_stmts = hoisted_stmts;
                     return;
                 }

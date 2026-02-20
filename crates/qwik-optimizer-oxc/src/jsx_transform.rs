@@ -964,6 +964,7 @@ fn jsx_attr_value_to_expression<'a>(
     loop_depth: u32,
     iteration_vars: &[String],
     props_param_name: Option<&str>,
+    key_prefix: &str,
 ) -> Expression<'a> {
     match value {
         JSXAttributeValue::StringLiteral(lit) => Expression::StringLiteral(lit),
@@ -971,7 +972,7 @@ fn jsx_attr_value_to_expression<'a>(
             jsx_expression_to_expression(container.unbox().expression, ctx)
         }
         JSXAttributeValue::Element(el) => {
-            // JSX element as attribute value: transform it
+            // JSX element as attribute value: transform it (never root JSX)
             transform_jsx_element_inner(
                 el.unbox(),
                 tracker,
@@ -982,6 +983,8 @@ fn jsx_attr_value_to_expression<'a>(
                 loop_depth,
                 iteration_vars,
                 props_param_name,
+                false,
+                key_prefix,
             )
         }
         JSXAttributeValue::Fragment(frag) => transform_jsx_fragment_inner(
@@ -994,6 +997,8 @@ fn jsx_attr_value_to_expression<'a>(
             loop_depth,
             iteration_vars,
             props_param_name,
+            false,
+            key_prefix,
         ),
     }
 }
@@ -1011,13 +1016,15 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     loop_depth: u32,
     iteration_vars: &[String],
     props_param_name: Option<&str>,
+    root_jsx_mode: bool,
+    key_prefix: &str,
 ) -> Expression<'a> {
     // When a custom JSX import source is set (e.g., React), use the standard
     // JSX runtime transform: _jsx("tag", {props}) instead of Qwik's _jsxSorted.
     if tracker.custom_jsx_source.is_some() {
         return transform_jsx_element_custom_source(
             element, tracker, ctx, hoisted_stmts, module_imports, destructured_props,
-            loop_depth, iteration_vars, props_param_name,
+            loop_depth, iteration_vars, props_param_name, key_prefix,
         );
     }
 
@@ -1064,6 +1071,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             loop_depth,
                             iteration_vars,
                             props_param_name,
+                            key_prefix,
                         ));
                     }
                     continue;
@@ -1083,6 +1091,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             loop_depth,
                             iteration_vars,
                             props_param_name,
+                            key_prefix,
                         )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1106,6 +1115,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             loop_depth,
                             iteration_vars,
                             props_param_name,
+                            key_prefix,
                         )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1127,6 +1137,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             loop_depth,
                             iteration_vars,
                             props_param_name,
+                            key_prefix,
                         )
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
@@ -1184,6 +1195,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                         loop_depth,
                         iteration_vars,
                         props_param_name,
+                        key_prefix,
                     )
                 } else {
                     // Boolean attribute: <input disabled /> -> disabled: true
@@ -1313,6 +1325,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         loop_depth,
         iteration_vars,
         props_param_name,
+        key_prefix,
     );
 
     // Compute flags
@@ -1534,6 +1547,8 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
     loop_depth: u32,
     iteration_vars: &[String],
     props_param_name: Option<&str>,
+    _root_jsx_mode: bool,
+    key_prefix: &str,
 ) -> Expression<'a> {
     tracker.needs_jsx_sorted = true;
     tracker.needs_fragment = true;
@@ -1551,13 +1566,14 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
         loop_depth,
         iteration_vars,
         props_param_name,
+        key_prefix,
     );
 
     // Flags: 1 for multiple children, 3 for single/no children
     let flags: u32 = if children_count > 1 { 1 } else { 3 };
 
-    // Generate auto-key
-    let key_str = format!("u6_{}", tracker.jsx_key_counter);
+    // Generate auto-key (fragments always emit key -- is_fn=true in SWC)
+    let key_str = format!("{}_{}", key_prefix, tracker.jsx_key_counter);
     tracker.jsx_key_counter += 1;
     let key_atom = ctx.ast.atom(&key_str);
     let key_expr = ctx.ast.expression_string_literal(SPAN, key_atom, None);
@@ -1600,6 +1616,7 @@ pub(crate) fn transform_jsx_children<'a>(
     loop_depth: u32,
     iteration_vars: &[String],
     props_param_name: Option<&str>,
+    key_prefix: &str,
 ) -> (Option<Expression<'a>>, usize) {
     let mut child_exprs: Vec<Expression<'a>> = Vec::new();
 
@@ -1617,7 +1634,7 @@ pub(crate) fn transform_jsx_children<'a>(
                 }
             }
             JSXChild::Element(el) => {
-                // Recursively transform child JSXElement
+                // Recursively transform child JSXElement (children are never root)
                 let transformed = transform_jsx_element_inner(
                     el.unbox(),
                     tracker,
@@ -1628,11 +1645,13 @@ pub(crate) fn transform_jsx_children<'a>(
                     loop_depth,
                     iteration_vars,
                     props_param_name,
+                    false,
+                    key_prefix,
                 );
                 child_exprs.push(transformed);
             }
             JSXChild::Fragment(frag) => {
-                // Recursively transform child JSXFragment
+                // Recursively transform child JSXFragment (children are never root)
                 let transformed = transform_jsx_fragment_inner(
                     frag.unbox(),
                     tracker,
@@ -1643,6 +1662,8 @@ pub(crate) fn transform_jsx_children<'a>(
                     loop_depth,
                     iteration_vars,
                     props_param_name,
+                    false,
+                    key_prefix,
                 );
                 child_exprs.push(transformed);
             }
@@ -1670,6 +1691,8 @@ pub(crate) fn transform_jsx_children<'a>(
                                     loop_depth,
                                     iteration_vars,
                                     props_param_name,
+                                    false,
+                                    key_prefix,
                                 );
                                 child_exprs.push(result);
                             }
@@ -1684,6 +1707,8 @@ pub(crate) fn transform_jsx_children<'a>(
                                     loop_depth,
                                     iteration_vars,
                                     props_param_name,
+                                    false,
+                                    key_prefix,
                                 );
                                 child_exprs.push(result);
                             }
@@ -1909,6 +1934,7 @@ fn transform_jsx_element_custom_source<'a>(
     loop_depth: u32,
     iteration_vars: &[String],
     props_param_name: Option<&str>,
+    key_prefix: &str,
 ) -> Expression<'a> {
     // Signal that we need the _jsx import (reuses needs_jsx_sorted flag --
     // the import emission in transform.rs will emit _jsx instead of _jsxSorted
@@ -1952,6 +1978,7 @@ fn transform_jsx_element_custom_source<'a>(
                         loop_depth,
                         iteration_vars,
                         props_param_name,
+                        key_prefix,
                     )
                 } else {
                     // Boolean attribute: <input disabled /> -> disabled: true
@@ -1991,6 +2018,7 @@ fn transform_jsx_element_custom_source<'a>(
         loop_depth,
         iteration_vars,
         props_param_name,
+        key_prefix,
     );
 
     if let Some(children) = children_expr {
