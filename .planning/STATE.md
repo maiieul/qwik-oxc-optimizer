@@ -123,7 +123,7 @@ None.
 - Segment import ordering RESOLVED (06-02): 0 ordering-only diffs, 48 set diffs remain (other phase issues)
 - Entry module extra imports RESOLVED (06-01): post-hoc filtering eliminates segment-only imports (8 snapshots fixed, 156->148)
 - QRL hoisting RESOLVED (06-03): loop-context QRL calls hoisted to enclosing function body (10 more snapshots fixed, 148->138)
-- Entry module lazy import ordering RESOLVED (06-03): sorted + filtered by referenced-ident analysis
+- Entry module lazy import ordering RESOLVED (06-03): sorted by hash (matching SWC BTreeMap<Id> key) + filtered by referenced-ident analysis
 - Remaining 138 snapshot diffs are beyond scope of current 6-phase plan:
   - Capture list differences (iteration variables in captures, missing/extra captures)
   - _fnSignal hoisting to module level vs segment level
@@ -135,6 +135,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-20T21:46:37Z
-Stopped at: Completed 06-03-PLAN.md (QRL hoisting and lazy import ordering) -- ALL PHASES COMPLETE
+Last session: 2026-02-21T00:15:00Z
+Stopped at: Phase 6 complete. All 6 phases executed. Lazy import sort key fixed (hash instead of path).
 Resume file: None

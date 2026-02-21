@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Bugs & Correctness** - Fix TS stripping, missing segments, captures, component options, comments
 - [x] **Phase 4: Signal & Props Transforms** - Implement _fnSignal, _wrapProp, props destructuring, QRL hoisting
 - [x] **Phase 5: JSX Keys & Flags** - Fix key generation and immutability flag values
-- [ ] **Phase 6: Import Ordering & Cleanup** - Sort imports, fix scoping, hoist QRLs, final cleanup pass
+- [x] **Phase 6: Import Ordering & Cleanup** - Sort imports, fix scoping, hoist QRLs, final cleanup pass
 
 ## Phase Details
 
@@ -114,9 +114,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Fix entry module import scoping: stop emitting segment-only imports, filter unused imports, fix body ordering
-- [ ] 06-02-PLAN.md — Fix segment module import ordering: alphabetical sort by local name matching SWC's local_idents.sort()
-- [ ] 06-03-PLAN.md — QRL hoisting inside function bodies + entry module lazy import ordering
+- [x] 06-01-PLAN.md — Fix entry module import scoping: stop emitting segment-only imports, filter unused imports, fix body ordering
+- [x] 06-02-PLAN.md — Fix segment module import ordering: alphabetical sort by local name matching SWC's local_idents.sort()
+- [x] 06-03-PLAN.md — QRL hoisting inside function bodies + entry module lazy import ordering
 
 ## Progress
 
@@ -131,4 +131,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Bugs & Correctness | 3/3 | Complete | 2026-02-20 |
 | 4. Signal & Props Transforms | 4/4 | Complete | 2026-02-20 |
 | 5. JSX Keys & Flags | 3/3 | Complete (gaps remain) | 2026-02-20 |
-| 6. Import Ordering & Cleanup | 0/3 | Not started | - |
+| 6. Import Ordering & Cleanup | 3/3 | Complete | 2026-02-21 |

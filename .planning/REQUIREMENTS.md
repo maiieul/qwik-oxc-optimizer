@@ -29,22 +29,22 @@ Requirements for milestone v1.0 — Full Snapshot Parity. Each maps to roadmap p
 
 ### Signal & Props Transforms
 
-- [ ] **SIG-01**: `_fnSignal` wrapper emitted for derived signals in JSX children
-- [ ] **SIG-02**: `_wrapProp(obj, "prop")` 2-argument form generated
-- [ ] **PROP-01**: Inline component props destructuring and `_restProps` transformed
-- [ ] **QRL-01**: QRL calls hoisted to variables (not inlined at usage site)
+- [x] **SIG-01**: `_fnSignal` wrapper emitted for derived signals in JSX children
+- [x] **SIG-02**: `_wrapProp(obj, "prop")` 2-argument form generated
+- [x] **PROP-01**: Inline component props destructuring and `_restProps` transformed
+- [x] **QRL-01**: QRL calls hoisted to variables (not inlined at usage site)
 
 ### JSX
 
-- [ ] **JSX-01**: JSX key generation matches SWC values
-- [ ] **JSX-02**: JSX immutability flags match SWC values
+- [x] **JSX-01**: JSX key generation matches SWC values
+- [x] **JSX-02**: JSX immutability flags match SWC values
 
 ### Imports
 
-- [ ] **IMP-01**: Import statement ordering matches SWC
-- [ ] **IMP-02**: No missing or extra imports (correct import set per module)
-- [ ] **IMP-03**: Import specifiers from same module merged into single import
-- [ ] **IMP-04**: Relative import paths match SWC format
+- [x] **IMP-01**: Import statement ordering matches SWC
+- [x] **IMP-02**: No missing or extra imports (correct import set per module)
+- [x] **IMP-03**: Import specifiers from same module merged into single import
+- [x] **IMP-04**: Relative import paths match SWC format
 
 ## v2 Requirements
 
@@ -90,16 +90,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BUG-04 | Phase 3 | Complete |
 | BUG-05 | Phase 3 | Complete |
 | BUG-06 | Phase 3 | Complete |
-| SIG-01 | Phase 4 | Pending |
-| SIG-02 | Phase 4 | Pending |
-| PROP-01 | Phase 4 | Pending |
-| QRL-01 | Phase 4 | Pending |
-| JSX-01 | Phase 5 | Pending |
-| JSX-02 | Phase 5 | Pending |
-| IMP-01 | Phase 6 | Pending |
-| IMP-02 | Phase 6 | Pending |
-| IMP-03 | Phase 6 | Pending |
-| IMP-04 | Phase 6 | Pending |
+| SIG-01 | Phase 4 | Complete |
+| SIG-02 | Phase 4 | Complete |
+| PROP-01 | Phase 4 | Complete |
+| QRL-01 | Phase 4 | Complete |
+| JSX-01 | Phase 5 | Complete |
+| JSX-02 | Phase 5 | Complete |
+| IMP-01 | Phase 6 | Complete |
+| IMP-02 | Phase 6 | Complete |
+| IMP-03 | Phase 6 | Complete |
+| IMP-04 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 21 total
@@ -108,4 +108,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-20 after Phase 3 completion*
+*Last updated: 2026-02-21 after Phase 6 completion*
