@@ -3000,6 +3000,21 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         // ---------------------------------------------------------------
+        // Phase 1c: Hoist strategy -- extract inlinedQrl callbacks to named consts
+        // ---------------------------------------------------------------
+        // For EntryStrategy::Hoist, SWC extracts the first argument of each
+        // inlinedQrl() call into a preceding named const declaration:
+        //   const Name_hash = (props) => { ... };
+        //   export const Name = componentQrl(inlinedQrl(Name_hash, "Name_hash"));
+        // OXC currently keeps the callback inline. This step extracts it.
+        if matches!(
+            self.options.entry_strategy,
+            crate::types::EntryStrategy::Hoist
+        ) {
+            extract_hoist_consts(&mut non_import_stmts, ctx);
+        }
+
+        // ---------------------------------------------------------------
         // Phase 2: Collect referenced identifiers from the entry module body
         // ---------------------------------------------------------------
         // Scan non-import statements to find which identifiers are actually
@@ -3469,6 +3484,169 @@ fn simplify_unused_pure_var_decls<'a>(
             }
         }
         i += 1;
+    }
+}
+
+/// Extract inlinedQrl callback expressions to named const declarations for Hoist strategy.
+///
+/// For EntryStrategy::Hoist, SWC creates a named const for each segment's callback:
+/// ```js
+/// const Name_hash = (props) => { ... };
+/// export const Name = componentQrl(inlinedQrl(Name_hash, "Name_hash"));
+/// ```
+///
+/// This function walks `stmts`, finds `inlinedQrl(callback, "name", ...)` calls,
+/// extracts `callback` to `const name = callback;`, replaces callback with an
+/// identifier reference to `name`, and inserts the const before the containing statement.
+///
+/// Port of SWC's `fold_module` lines 2567-2592.
+fn extract_hoist_consts<'a>(
+    stmts: &mut std::vec::Vec<Statement<'a>>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    // Process statements in reverse order so insertions don't shift indices
+    // of statements we haven't processed yet.
+    // Collect (insert_index, const_declarations) pairs first, then insert.
+    let mut insertions: std::vec::Vec<(usize, std::vec::Vec<Statement<'a>>)> =
+        std::vec::Vec::new();
+
+    for i in 0..stmts.len() {
+        let mut extracted: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
+        extract_inlined_qrl_from_stmt(&mut stmts[i], &mut extracted, ctx);
+        if !extracted.is_empty() {
+            insertions.push((i, extracted));
+        }
+    }
+
+    // Insert in reverse order to maintain correct indices
+    for (idx, consts) in insertions.into_iter().rev() {
+        for (j, const_stmt) in consts.into_iter().enumerate() {
+            stmts.insert(idx + j, const_stmt);
+        }
+    }
+}
+
+/// Recursively find `inlinedQrl(callback, "name", ...)` or `inlinedQrlDEV(callback, "name", ...)`
+/// calls in a statement and extract callbacks to named const declarations.
+fn extract_inlined_qrl_from_stmt<'a>(
+    stmt: &mut Statement<'a>,
+    extracted: &mut std::vec::Vec<Statement<'a>>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    // Walk into the statement to find inlinedQrl calls.
+    // They can be nested: componentQrl(inlinedQrl(...))
+    match stmt {
+        Statement::ExportNamedDeclaration(export_decl) => {
+            if let Some(ref mut decl) = export_decl.declaration {
+                extract_inlined_qrl_from_decl(decl, extracted, ctx);
+            }
+        }
+        Statement::VariableDeclaration(var_decl) => {
+            for declarator in var_decl.declarations.iter_mut() {
+                if let Some(ref mut init) = declarator.init {
+                    extract_inlined_qrl_from_expr(init, extracted, ctx);
+                }
+            }
+        }
+        Statement::ExpressionStatement(expr_stmt) => {
+            extract_inlined_qrl_from_expr(&mut expr_stmt.expression, extracted, ctx);
+        }
+        _ => {}
+    }
+}
+
+/// Extract from a Declaration node.
+fn extract_inlined_qrl_from_decl<'a>(
+    decl: &mut Declaration<'a>,
+    extracted: &mut std::vec::Vec<Statement<'a>>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    if let Declaration::VariableDeclaration(var_decl) = decl {
+        for declarator in var_decl.declarations.iter_mut() {
+            if let Some(ref mut init) = declarator.init {
+                extract_inlined_qrl_from_expr(init, extracted, ctx);
+            }
+        }
+    }
+}
+
+/// Extract from an Expression, recursively descending into call arguments.
+fn extract_inlined_qrl_from_expr<'a>(
+    expr: &mut Expression<'a>,
+    extracted: &mut std::vec::Vec<Statement<'a>>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    match expr {
+        Expression::CallExpression(call) => {
+            // Check if this is inlinedQrl(...) or inlinedQrlDEV(...)
+            let is_inlined_qrl = match &call.callee {
+                Expression::Identifier(ident) => {
+                    ident.name == "inlinedQrl" || ident.name == "inlinedQrlDEV"
+                }
+                _ => false,
+            };
+
+            if is_inlined_qrl && !call.arguments.is_empty() {
+                // Extract the segment name from the second argument (string literal)
+                let seg_name = if call.arguments.len() >= 2 {
+                    match &call.arguments[1] {
+                        Argument::StringLiteral(lit) => Some(lit.value.to_string()),
+                        _ => None,
+                    }
+                } else {
+                    None
+                };
+
+                if let Some(name) = seg_name {
+                    // Extract the first argument (callback expression)
+                    let placeholder = Argument::from(
+                        ctx.ast.expression_identifier(SPAN, ctx.ast.atom(name.as_str())),
+                    );
+                    let callback_arg = std::mem::replace(&mut call.arguments[0], placeholder);
+
+                    // Convert Argument to Expression
+                    let callback_expr = argument_to_expression(callback_arg, ctx);
+
+                    // Build: const name = callback;
+                    let binding = ctx.ast.binding_pattern_binding_identifier(
+                        SPAN,
+                        ctx.ast.atom(name.as_str()),
+                    );
+                    let declarator = ctx.ast.variable_declarator(
+                        SPAN,
+                        VariableDeclarationKind::Const,
+                        binding,
+                        None::<oxc::allocator::Box<'a, TSTypeAnnotation<'a>>>,
+                        Some(callback_expr),
+                        false,
+                    );
+                    let declaration = ctx.ast.variable_declaration(
+                        SPAN,
+                        VariableDeclarationKind::Const,
+                        ctx.ast.vec1(declarator),
+                        false,
+                    );
+                    let const_stmt = Statement::from(Declaration::VariableDeclaration(
+                        ctx.ast.alloc(declaration),
+                    ));
+                    extracted.push(const_stmt);
+                }
+            } else {
+                // Not inlinedQrl -- recurse into arguments
+                for arg in call.arguments.iter_mut() {
+                    match arg {
+                        Argument::SpreadElement(_) => {}
+                        _ => {
+                            let arg_expr = arg.as_expression_mut();
+                            if let Some(e) = arg_expr {
+                                extract_inlined_qrl_from_expr(e, extracted, ctx);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        _ => {}
     }
 }
 
