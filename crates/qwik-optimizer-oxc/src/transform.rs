@@ -109,6 +109,11 @@ pub(crate) struct ImportTracker {
     /// Saved/restored around children processing to avoid leaking between siblings.
     /// Mirrors SWC's jsx_mutable.
     pub jsx_mutable: bool,
+
+    /// Set of identifier names known to be const-bound (imports + const declarations).
+    /// Used for scope-aware JSX prop/children immutability classification.
+    /// Mirrors SWC's ConstCollector which tracks imports and const bindings.
+    pub const_bindings: HashSet<String>,
 }
 
 /// The core Qwik transform traversal state.
@@ -347,6 +352,16 @@ impl QwikTransform {
             }
         }
 
+        // Build const_bindings from all import specifier names.
+        // Imports are always const in JavaScript -- they cannot be reassigned.
+        // This mirrors SWC's ConstCollector which includes all imports.
+        let mut const_bindings = HashSet::new();
+        for imp in &collected.module_imports {
+            for spec in &imp.specifiers {
+                const_bindings.insert(spec.clone());
+            }
+        }
+
         Self {
             options: options.clone(),
             collected,
@@ -355,6 +370,7 @@ impl QwikTransform {
             diagnostics: Vec::new(),
             import_tracker: ImportTracker {
                 immutable_function_cmp,
+                const_bindings,
                 ..ImportTracker::default()
             },
             segment_counter: 0,
@@ -1544,6 +1560,24 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         // If we're inside a $()-body, collect the identifier name for capture analysis.
         if let Some(frame) = self.capture_stack.last_mut() {
             frame.0.push(ident.name.as_str().to_string());
+        }
+    }
+
+    fn enter_variable_declaration(
+        &mut self,
+        decl: &mut VariableDeclaration<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // Populate const_bindings from `const` declarations.
+        // This mirrors SWC's ConstCollector which tracks const bindings for
+        // scope-aware JSX prop/children immutability classification.
+        if decl.kind == VariableDeclarationKind::Const {
+            for declarator in &decl.declarations {
+                collect_const_binding_names(
+                    &declarator.id,
+                    &mut self.import_tracker.const_bindings,
+                );
+            }
         }
     }
 
@@ -2837,6 +2871,38 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         program.body = new_body;
+    }
+}
+
+/// Collect all binding names from a binding pattern into a HashSet.
+///
+/// Used to populate `const_bindings` from `const` declarations.
+/// Handles simple identifiers, object/array destructuring patterns,
+/// and assignment patterns (defaults).
+fn collect_const_binding_names(pattern: &BindingPattern<'_>, set: &mut HashSet<String>) {
+    match pattern {
+        BindingPattern::BindingIdentifier(ident) => {
+            set.insert(ident.name.as_str().to_string());
+        }
+        BindingPattern::ObjectPattern(obj) => {
+            for prop in &obj.properties {
+                collect_const_binding_names(&prop.value, set);
+            }
+            if let Some(rest) = &obj.rest {
+                collect_const_binding_names(&rest.argument, set);
+            }
+        }
+        BindingPattern::ArrayPattern(arr) => {
+            for elem in arr.elements.iter().flatten() {
+                collect_const_binding_names(elem, set);
+            }
+            if let Some(rest) = &arr.rest {
+                collect_const_binding_names(&rest.argument, set);
+            }
+        }
+        BindingPattern::AssignmentPattern(assign) => {
+            collect_const_binding_names(&assign.left, set);
+        }
     }
 }
 
