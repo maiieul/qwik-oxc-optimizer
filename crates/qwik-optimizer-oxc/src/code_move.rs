@@ -103,7 +103,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             imported_name: None,
         });
     }
-    if body_code.contains("_fnSignal") || !hoisted_stmts.is_empty() {
+    if body_code.contains("_fnSignal") {
         imports.push(SegmentImportEntry {
             local_name: "_fnSignal".to_string(),
             source: core.clone(),
@@ -266,10 +266,25 @@ pub(crate) fn build_segment_code_with_hoisted(
         ));
     }
 
-    // --- Phase 5: Hoisted function declarations ---
+    // --- Phase 5: Hoisted function declarations (filtered per-segment) ---
+    // Only inject _hf* declarations that this segment's body actually references.
+    // SWC injects ALL extra_top_items then relies on DCE to remove unused ones.
+    // We filter upfront since OXC has no DCE.
     for (fn_code, str_code) in hoisted_stmts {
-        parts.push(fn_code.clone());
-        parts.push(str_code.clone());
+        // Extract variable name from "const _hfN = ..." pattern
+        if let Some(var_name) = fn_code
+            .strip_prefix("const ")
+            .and_then(|s| s.split(|c: char| c == ' ' || c == '=').next())
+        {
+            if body_code.contains(var_name) {
+                parts.push(fn_code.clone());
+                parts.push(str_code.clone());
+            }
+        } else {
+            // Fallback: include if we can't parse the variable name
+            parts.push(fn_code.clone());
+            parts.push(str_code.clone());
+        }
     }
 
     // --- Phase 6: Capture restoration + export ---
