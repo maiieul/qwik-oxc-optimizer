@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 8 verified and complete. 20/20 plans across 8 phases executed. 135 snapshot files differ with ~4117 diff lines (down from ~4222 pre-08-03). Flag mismatches reduced from 108 to 33 (69% reduction).
+**Current focus:** Phase 9 in progress. 21/25 plans across 9 phases executed. 131 snapshot files differ with ~4180 diff lines (down from ~4208 pre-09-01). 3 new exact golden matches gained.
 
 ## Current Position
 
-Phase: 8 of 9 (JSX Flags & Iteration Variables)
-Plan: 3 of 3 complete in phase 8
-Status: Phase complete
-Last activity: 2026-02-21 - Completed 08-03-PLAN.md (JSX flag audit & SWC=2/OXC=3 fixes)
+Phase: 9 of 9 (JSX Keys & Final Parity)
+Plan: 1 of 5 complete in phase 9
+Status: In progress
+Last activity: 2026-02-21 - Completed 09-01-PLAN.md (const assignment, entry field, windows paths, event naming)
 
-Progress: [████████████████████] 20/20 plans (100%)
+Progress: [█████████████████████░░░░] 21/25 plans (84%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
+- Total plans completed: 21
 - Average duration: 15min
-- Total execution time: 5.13 hours
+- Total execution time: 5.88 hours
 
 **By Phase:**
 
@@ -35,10 +35,11 @@ Progress: [████████████████████] 20/20 p
 | 06-import-ordering-cleanup | 3/3 | 39min | 13min |
 | 07-entry-module-emission | 1/1 | 3min | 3min |
 | 08-jsx-flags-iteration-variables | 3/3 | 41min | 14min |
+| 09-jsx-keys-final-parity | 1/5 | 45min | 45min |
 
 **Recent Trend:**
-- Last 5 plans: 07-01 (3min), 08-01 (5min), 08-02 (13min), 08-03 (23min)
-- Trend: Deeper investigation work in 08-03 (comprehensive flag audit).
+- Last 5 plans: 08-01 (5min), 08-02 (13min), 08-03 (23min), 09-01 (45min)
+- Trend: Deeper investigation work as remaining issues are more complex and interconnected.
 
 *Updated after each plan completion*
 
@@ -122,6 +123,10 @@ Recent decisions affecting current work:
 - [08-03]: q:p/q:ps always go to var_props regardless of const_bindings scope
 - [08-03]: static_listeners false when q-e:* keys exist in var_props (non-const event handlers)
 - [08-03]: 33 remaining flag mismatches all caused by upstream prop/transform differences, not flag computation bugs
+- [09-01]: Pure flag check for DCE: only drop unused var decls with CallExpression.pure=true init (not all call inits)
+- [09-01]: Export specifier references collected by collect_referenced_idents to prevent incorrect DCE
+- [09-01]: EntryStrategy::Hook mapped same as Segment (returns None for entry field)
+- [09-01]: JSX event rename in exit_expression AFTER segment extraction (not in exit_jsx_attribute which breaks extraction)
 
 ### Pending Todos
 
@@ -148,7 +153,11 @@ None.
 - q:p injection RESOLVED (08-02): per-element injection via iter_var_usage_by_handler, static_listeners cleared when q:p present
 - useResource$ _rawProps RESOLVED (08-02): full props destructuring rewrite for useResource$ hooks
 - JSX flag computation RESOLVED (08-03): static_subtree/static_listeners corrected, event handler const classification, q:p forced to var_props
-- Remaining 135 snapshot files differ (with ~4117 diff lines):
+- Pure var DCE RESOLVED (09-01): simplify_unused_pure_var_decls checks CallExpression.pure flag (16 files improved)
+- Entry field computation RESOLVED (09-01): compute_entry_field from EntryStrategy
+- Windows path normalization RESOLVED (09-01): backslash-to-forward-slash in hash, origin, JSX keys
+- JSX event attr rename RESOLVED (09-01): post-processing pass after segment extraction (5 files improved, 3 exact matches)
+- Remaining 131 snapshot files differ (with ~4180 diff lines):
   - Capture list differences (iteration variables in captures, missing/extra captures)
   - _fnSignal hoisting to module level vs segment level
   - _fnSignal children dep constness (OXC treats all _fnSignal as immutable, SWC checks deps)
@@ -158,9 +167,10 @@ None.
   - Segment body code differences (_hf naming per-segment counter, _fnSignal usage)
   - 33 flag mismatches remaining (all caused by upstream prop/transform differences)
   - 1 deferred naming issue (should_extract_single_qrl_2 dedup suffix)
+  - Lazy import ordering within entry modules (minor formatting diffs)
 
 ## Session Continuity
 
-Last session: 2026-02-21T12:08:37Z
-Stopped at: Completed 08-03-PLAN.md (JSX flag audit & SWC=2/OXC=3 fixes) - Phase 8 complete
+Last session: 2026-02-21T14:58:26Z
+Stopped at: Completed 09-01-PLAN.md (const assignment, entry field, windows paths, event naming)
 Resume file: None
