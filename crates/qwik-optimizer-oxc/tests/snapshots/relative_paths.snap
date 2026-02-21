@@ -2,6 +2,13 @@
 source: crates/qwik-optimizer-oxc/tests/test.rs
 expression: output
 ---
+=== INPUT ===
+import { component$, $ } from "@qwik.dev/core";
+import { state } from "./sibling";
+
+export const Local = component$(() => {
+  return <div>{state}</div>;
+});
 
 === ../../node_modules/dep/dist/lib.mjs ===
 import { qrl } from "@qwik.dev/core";
