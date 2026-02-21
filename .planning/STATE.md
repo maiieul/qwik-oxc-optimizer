@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 9 in progress. 22/25 plans across 9 phases executed. 129 snapshot files differ with ~5292 diff lines. 2 new exact golden matches gained in 09-02.
+**Current focus:** Phase 9 in progress. 23/25 plans across 9 phases executed. 128 snapshot files differ with ~3735 diff lines. 1 new exact golden match gained in 09-03 (example_jsx_keyed_dev).
 
 ## Current Position
 
 Phase: 9 of 9 (JSX Keys & Final Parity)
-Plan: 2 of 5 complete in phase 9
+Plan: 3 of 5 complete in phase 9
 Status: In progress
-Last activity: 2026-02-21 - Completed 09-02-PLAN.md (signal wrapping, className, captures, import set)
+Last activity: 2026-02-21 - Completed 09-03-PLAN.md (dev mode QRL emission, C02 diagnostics)
 
-Progress: [██████████████████████░░░] 22/25 plans (88%)
+Progress: [███████████████████████░░] 23/25 plans (92%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22
-- Average duration: 16min
-- Total execution time: 6.63 hours
+- Total plans completed: 23
+- Average duration: 17min
+- Total execution time: 7.21 hours
 
 **By Phase:**
 
@@ -35,11 +35,11 @@ Progress: [██████████████████████░
 | 06-import-ordering-cleanup | 3/3 | 39min | 13min |
 | 07-entry-module-emission | 1/1 | 3min | 3min |
 | 08-jsx-flags-iteration-variables | 3/3 | 41min | 14min |
-| 09-jsx-keys-final-parity | 2/5 | 90min | 45min |
+| 09-jsx-keys-final-parity | 3/5 | 125min | 42min |
 
 **Recent Trend:**
-- Last 5 plans: 08-02 (13min), 08-03 (23min), 09-01 (45min), 09-02 (45min)
-- Trend: Deeper investigation work as remaining issues are more complex and interconnected.
+- Last 5 plans: 08-03 (23min), 09-01 (45min), 09-02 (45min), 09-03 (35min)
+- Trend: Deep investigation work on complex interconnected issues.
 
 *Updated after each plan completion*
 
@@ -132,6 +132,11 @@ Recent decisions affecting current work:
 - [09-02]: WrapPropNamed(String, bool) carries is_const flag: true for const locals, false for props/_rawProps
 - [09-02]: Entry module synthetic import ordering left as encounter-order mismatch (only 1 purely import-order diff remaining)
 - [09-02]: Locally-defined Qrl functions reclassified from segment_qrl_names to needed_imports as self-imports
+- [09-03]: body_span uses first argument span (arrow fn), not call expression span -- matches SWC's first_arg.span()
+- [09-03]: SWC BytePos is 1-based; OXC spans are 0-based -- add 1 to lo/hi for dev metadata parity
+- [09-03]: Function/class declarations tracked in invalid_decl_stack, excluded from captures, emit C02 diagnostics
+- [09-03]: Diagnostic field order matches SWC: category, code, file, message, highlights, suggestions, scope
+- [09-03]: Dev mode file path: dev_abs_path() = src_dir + "/" + filename; test config differences accepted as non-code-bug
 
 ### Pending Todos
 
@@ -165,21 +170,26 @@ None.
 - _wrapProp generic local variable wrapping RESOLVED (09-02): const_bindings + is_import check, is_text_only, is_const flag
 - Capture chained const format RESOLVED (09-02): single VariableDeclaration matching SWC
 - Local Qrl self-imports RESOLVED (09-02): module_level_decls check routes to self-import path
-- Remaining 129 snapshot files differ (with ~5292 diff lines):
-  - Capture list differences (iteration variables in captures, missing/extra captures, capture analysis bugs)
+- Dev mode QRL emission RESOLVED (09-03): qrlDEV/inlinedQrlDEV/_noopQrlDEV with { file, lo, hi, displayName } metadata
+- JSX dev location RESOLVED (09-03): { fileName, lineNumber, columnNumber } on _jsxSorted/_jsxSplit calls
+- C02 diagnostics RESOLVED (09-03): function/class references excluded from captures with error diagnostics
+- Remaining 128 snapshot files differ (with ~3735 diff lines):
+  - Prop classification differences: var_props vs const_props ordering (~82 positions, most common)
+  - Capture list differences (iteration variables, _rawProps, missing/extra captures)
   - _fnSignal hoisting to module level vs segment level
   - _fnSignal children dep constness (OXC treats all _fnSignal as immutable, SWC checks deps)
-  - Prop classification differences (var_props vs const_props for some expressions)
-  - Missing transforms: _noopQrl, dev mode metadata, code stripping, inline component _fnSignal wrapping
+  - DCE differences (if(false) stripping, unused declaration removal) -- 3 files
+  - Dev mode file path test config differences -- 5 files
   - Text normalization (trailing spaces in JSX text nodes)
-  - Segment body code differences (_hf naming per-segment counter, _fnSignal usage)
+  - Segment body code differences (_hf naming per-segment counter)
   - Inlined segment rendering (SWC hoists function body to const, OXC inlines directly)
   - Entry module import encounter-order (1 purely import-order diff remaining)
-  - Import assertions (`with { type: "json" }`) being stripped
+  - Import assertions (`with { type: "json" }`) being stripped -- 1 file
+  - Comment preservation -- 1 file
   - 1 deferred naming issue (should_extract_single_qrl_2 dedup suffix)
 
 ## Session Continuity
 
-Last session: 2026-02-21T15:33:24Z
-Stopped at: Completed 09-02-PLAN.md (signal wrapping, className, captures, import set)
+Last session: 2026-02-21T17:10:22Z
+Stopped at: Completed 09-03-PLAN.md (dev mode QRL emission, C02 diagnostics)
 Resume file: None
