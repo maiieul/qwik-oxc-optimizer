@@ -1462,6 +1462,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     // so that _getVarProps(source) is inserted at the correct position
     // (matching SWC's source-order prop interleaving in _jsxSplit).
     let mut spread_insert_idx: Option<usize> = None;
+    // Also track const_props length at the time the first spread is seen,
+    // so in _jsxSplit mode we can merge explicit const_props into the
+    // var_props object at their correct source position.
+    let mut const_spread_insert_idx: Option<usize> = None;
 
     // Take attributes out of the opening element
     let mut attrs = ctx.ast.vec();
@@ -1476,9 +1480,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         match attr_item {
             JSXAttributeItem::SpreadAttribute(spread) => {
                 if !has_spread {
-                    // Record the current var_props length so we know where to insert
+                    // Record the current var_props and const_props lengths so we know where to insert
                     // ..._getVarProps(source) in the _jsxSplit output.
                     spread_insert_idx = Some(var_props.len());
+                    const_spread_insert_idx = Some(const_props.len());
                 }
                 has_spread = true;
                 spread_args.push(spread.unbox().argument);
@@ -1893,12 +1898,54 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         } else {
             ctx.ast.expression_identifier(SPAN, "undefined")
         };
+        // Extract spread source name for creating multiple identifier references
+        let spread_source_name: String = if let Expression::Identifier(ref ident) = spread_source {
+            ident.name.as_str().to_string()
+        } else {
+            "props".to_string()
+        };
+        // We no longer need the original spread_source expression for single-spread case
+        // because we'll create fresh identifiers from spread_source_name.
+        let _ = spread_source;
 
         // Build varProps = { ...before, ..._getVarProps(source), ...after }
-        // Interleave explicit var_props with _getVarProps(source) at the position
-        // where the spread appeared in source, matching SWC's prop ordering.
-        let mut var_obj_props = ctx.ast.vec_with_capacity(1 + var_props.len());
-        let insert_at = spread_insert_idx.unwrap_or(0);
+        // Interleave explicit var_props AND const_props with _getVarProps(source) at the
+        // position where the spread appeared in source, matching SWC's prop ordering.
+        //
+        // In _jsxSplit mode, ALL explicit props go into the var_props object in source
+        // order. The const_props/var_props classification is irrelevant for explicit
+        // attributes -- only _getConstProps(source) handles the spread source's const
+        // props. For multiple spreads, _getConstProps is also inlined and const_props arg
+        // is null.
+        let has_multiple_spreads = spread_args.len() > 0; // remaining after first was removed
+        let var_insert_at = spread_insert_idx.unwrap_or(0);
+        let const_insert_at = const_spread_insert_idx.unwrap_or(0);
+
+        // Merge explicit const_props into var_props at their source positions.
+        // const_props before the spread go before _getVarProps, after var_props before spread.
+        // const_props after the spread go after _getVarProps, before var_props after spread.
+        // We build a single ordered list of all explicit props.
+        let mut all_before: Vec<(String, Expression<'a>)> = Vec::new();
+        let mut all_after: Vec<(String, Expression<'a>)> = Vec::new();
+
+        // Drain const_props before spread
+        let const_before: Vec<_> = const_props.drain(..const_insert_at.min(const_props.len())).collect();
+        // Drain var_props before spread
+        let var_before: Vec<_> = var_props.drain(..var_insert_at.min(var_props.len())).collect();
+        // Remaining are "after spread"
+        let const_after: Vec<_> = const_props.drain(..).collect();
+        let var_after: Vec<_> = var_props.drain(..).collect();
+
+        // Interleave: const_props_before first (they appear before var_props_before in source
+        // since const props like string literals are processed before event handlers),
+        // then var_props_before. Similarly for after.
+        all_before.extend(const_before);
+        all_before.extend(var_before);
+        all_after.extend(const_after);
+        all_after.extend(var_after);
+
+        let total_props = all_before.len() + all_after.len() + 2 + if has_multiple_spreads { 1 + spread_args.len() } else { 0 };
+        let mut var_obj_props = ctx.ast.vec_with_capacity(total_props);
 
         // Helper closure: build an ObjectProperty from (name, value)
         let build_var_prop = |name: &str, value: Expression<'a>, ctx: &mut TraverseCtx<'a, ()>| -> ObjectPropertyKind<'a> {
@@ -1920,23 +1967,17 @@ pub(crate) fn transform_jsx_element_inner<'a>(
             )
         };
 
-        // Add var props that appeared BEFORE the spread
-        for (name, value) in var_props.drain(..insert_at) {
+        // Add explicit props that appeared BEFORE the spread
+        for (name, value) in all_before {
             var_obj_props.push(build_var_prop(&name, value, ctx));
         }
 
         // _getVarProps(source) spread
         let get_var_callee = ctx.ast.expression_identifier(SPAN, "_getVarProps");
         let mut get_var_args = ctx.ast.vec_with_capacity(1);
-        let spread_source_clone = ctx.ast.expression_identifier(
-            SPAN,
-            if let Expression::Identifier(ref ident) = spread_source {
-                ctx.ast.atom(ident.name.as_str())
-            } else {
-                ctx.ast.atom("props")
-            },
-        );
-        get_var_args.push(Argument::from(spread_source_clone));
+        get_var_args.push(Argument::from(
+            ctx.ast.expression_identifier(SPAN, ctx.ast.atom(&spread_source_name)),
+        ));
         let get_var_call = ctx.ast.expression_call(
             SPAN,
             get_var_callee,
@@ -1949,24 +1990,65 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                 .object_property_kind_spread_property(SPAN, get_var_call),
         );
 
-        // Add var props that appeared AFTER the spread
-        for (name, value) in var_props {
-            var_obj_props.push(build_var_prop(&name, value, ctx));
-        }
+        // For multiple spreads: add _getConstProps(source) spread inline + remaining spread args
+        let const_props_expr = if has_multiple_spreads {
+            // _getConstProps(source) as spread inside var_props object
+            let get_const_callee = ctx.ast.expression_identifier(SPAN, "_getConstProps");
+            let mut get_const_args = ctx.ast.vec_with_capacity(1);
+            get_const_args.push(Argument::from(
+                ctx.ast.expression_identifier(SPAN, ctx.ast.atom(&spread_source_name)),
+            ));
+            let get_const_call = ctx.ast.expression_call(
+                SPAN,
+                get_const_callee,
+                None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                get_const_args,
+                false,
+            );
+            var_obj_props.push(
+                ctx.ast
+                    .object_property_kind_spread_property(SPAN, get_const_call),
+            );
+
+            // Add explicit props that appeared AFTER the first spread
+            // (these come between _getConstProps and remaining spread args)
+            for (name, value) in all_after {
+                var_obj_props.push(build_var_prop(&name, value, ctx));
+            }
+
+            // Add remaining spread args as spreads
+            for extra_spread in spread_args {
+                var_obj_props.push(
+                    ctx.ast
+                        .object_property_kind_spread_property(SPAN, extra_spread),
+                );
+            }
+
+            // const_props arg is null for multiple spreads
+            ctx.ast.expression_null_literal(SPAN)
+        } else {
+            // Single spread: _getConstProps(source) is the separate const_props argument
+            let get_const_callee = ctx.ast.expression_identifier(SPAN, "_getConstProps");
+            let mut get_const_args = ctx.ast.vec_with_capacity(1);
+            get_const_args.push(Argument::from(
+                ctx.ast.expression_identifier(SPAN, ctx.ast.atom(&spread_source_name)),
+            ));
+
+            // Add explicit props that appeared AFTER the spread
+            for (name, value) in all_after {
+                var_obj_props.push(build_var_prop(&name, value, ctx));
+            }
+
+            ctx.ast.expression_call(
+                SPAN,
+                get_const_callee,
+                None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                get_const_args,
+                false,
+            )
+        };
 
         let var_props_expr = ctx.ast.expression_object(SPAN, var_obj_props);
-
-        // Build _getConstProps(source) for constProps argument
-        let get_const_callee = ctx.ast.expression_identifier(SPAN, "_getConstProps");
-        let mut get_const_args = ctx.ast.vec_with_capacity(1);
-        get_const_args.push(Argument::from(spread_source));
-        let const_props_expr = ctx.ast.expression_call(
-            SPAN,
-            get_const_callee,
-            None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
-            get_const_args,
-            false,
-        );
 
         let callee = ctx.ast.expression_identifier(SPAN, "_jsxSplit");
         let capacity = if tracker.jsx_dev_file_name.is_some() { 7 } else { 6 };
