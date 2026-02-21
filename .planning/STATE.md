@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 8 in progress. 18/19 plans across 8 phases executed. 138 snapshot files differ with ~3809 diff lines (down from 4405).
+**Current focus:** Phase 8 in progress. 19/20 plans across 8 phases executed. 138 snapshot files differ with ~3213 diff lines (down from 3809).
 
 ## Current Position
 
 Phase: 8 of 9 (JSX Flags & Iteration Variables)
-Plan: 1 of 3 complete in phase 8
+Plan: 2 of 3 complete in phase 8
 Status: In progress
-Last activity: 2026-02-21 - Completed 08-01-PLAN.md (scope-aware JSX flag classification)
+Last activity: 2026-02-21 - Completed 08-02-PLAN.md (q:p injection & iteration variable fixes)
 
-Progress: [██████████████████░] 18/19 plans (95%)
+Progress: [███████████████████░] 19/20 plans (95%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 18
+- Total plans completed: 19
 - Average duration: 15min
-- Total execution time: 4.53 hours
+- Total execution time: 4.75 hours
 
 **By Phase:**
 
@@ -34,11 +34,11 @@ Progress: [██████████████████░] 18/19 plan
 | 05-jsx-keys-flags | 3/3 | 36min | 12min |
 | 06-import-ordering-cleanup | 3/3 | 39min | 13min |
 | 07-entry-module-emission | 1/1 | 3min | 3min |
-| 08-jsx-flags-iteration-variables | 1/3 | 5min | 5min |
+| 08-jsx-flags-iteration-variables | 2/3 | 18min | 9min |
 
 **Recent Trend:**
-- Last 5 plans: 06-02 (8min), 06-03 (11min), 07-01 (3min), 08-01 (5min)
-- Trend: Continued fast execution with targeted scope-aware fixes.
+- Last 5 plans: 06-03 (11min), 07-01 (3min), 08-01 (5min), 08-02 (13min)
+- Trend: Steady execution with deeper bug-fixing work in 08-02.
 
 *Updated after each plan completion*
 
@@ -111,6 +111,12 @@ Recent decisions affecting current work:
 - [08-01]: const_bindings populated from imports at init + from const declarations via enter_variable_declaration hook
 - [08-01]: is_const_expression_with_scope is fully recursive for compound expressions (binary, conditional, template literal, etc.)
 - [08-01]: Member expressions in children use const_bindings instead of module_imports scan for consistency
+- [08-02]: q:p injection moved to replace_jsx_element_handlers for correct element-level injection (not top-level via transform_jsx_element_inner)
+- [08-02]: Deep ident scan (analyze_lambda_deep_ident_refs) descends into nested functions for iteration variable detection
+- [08-02]: iter_var_usage_by_handler keyed by lambda span start enables per-handler tracking
+- [08-02]: useResource$ gets full props destructuring rewrite (param + body), not just parameter replacement
+- [08-02]: Body-level destructuring detection gated to component$ only
+- [08-02]: Child segment capture reclassification gated to component$ only
 
 ### Pending Todos
 
@@ -134,11 +140,13 @@ None.
 - Entry module lazy import ordering RESOLVED (06-03): sorted by hash (matching SWC BTreeMap<Id> key) + filtered by referenced-ident analysis
 - Entry module _hf* emission RESOLVED (07-01): conditional injection for segment strategy + per-segment filtering + _fnSignal false-positive fix
 - JSX flag scope analysis RESOLVED (08-01): const_bindings scope tracking fixes 29 flag mismatches (21->fewer remaining)
-- Remaining 138 snapshot files differ (but with ~596 fewer diff lines after 08-01):
+- q:p injection RESOLVED (08-02): per-element injection via iter_var_usage_by_handler, static_listeners cleared when q:p present
+- useResource$ _rawProps RESOLVED (08-02): full props destructuring rewrite for useResource$ hooks
+- Remaining 138 snapshot files differ (with ~3213 diff lines, down from ~3809 after 08-01):
   - Capture list differences (iteration variables in captures, missing/extra captures)
   - _fnSignal hoisting to module level vs segment level
-  - q:p / var_props ordering differences
-  - JSX flag differences (reduced from 21 to ~5 remaining scope-analysis edge cases)
+  - q:p / var_props ordering differences (q:p now in var_props but may differ in position from SWC)
+  - JSX flag differences (reduced further by static_listeners clearing)
   - Text normalization (trailing spaces in JSX text nodes)
   - Segment body code differences (_hf naming per-segment counter, _fnSignal usage)
   - Prop classification differences (var_props vs const_props for some expressions)
@@ -146,6 +154,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-21T11:23:42Z
-Stopped at: Completed 08-01-PLAN.md (scope-aware JSX flag classification)
+Last session: 2026-02-21T11:42:10Z
+Stopped at: Completed 08-02-PLAN.md (q:p injection & iteration variable fixes)
 Resume file: None
