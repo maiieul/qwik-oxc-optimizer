@@ -1701,11 +1701,23 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                     match detect_signal_wrap(&value, destructured_props, props_param_name, module_imports, &tracker.const_bindings) {
                         SignalWrapResult::WrapPropSignal => {
                             // Extract the signal identifier from X.value
+                            // SWC: is_const depends on compute_scoped_idents.
+                            // For const vars (useSignal()) → const_props.
+                            // For non-const (function params) → var_props.
                             if let Expression::StaticMemberExpression(member) = value {
+                                let root_is_const = if let Expression::Identifier(ref obj_ident) = member.object {
+                                    tracker.const_bindings.contains(obj_ident.name.as_str())
+                                } else {
+                                    false
+                                };
                                 let signal_obj = member.unbox().object;
                                 let wrapped = import_rewrite::build_wrap_prop_call(signal_obj, ctx);
                                 tracker.needs_wrap_prop = true;
-                                const_props.push((attr_name, wrapped));
+                                if is_fn || root_is_const {
+                                    const_props.push((attr_name, wrapped));
+                                } else {
+                                    var_props.push((attr_name, wrapped));
+                                }
                                 continue;
                             }
                         }
@@ -2378,10 +2390,21 @@ pub(crate) fn transform_jsx_children<'a>(
                                     match detect_signal_wrap(&other, destructured_props, props_param_name, module_imports, &tracker.const_bindings) {
                                         SignalWrapResult::WrapPropSignal => {
                                             // signal.value -> _wrapProp(signal)
-                                            // SWC: is_const = true (immutable)
+                                            // SWC: is_const depends on compute_scoped_idents.
+                                            // For local const vars from useSignal() → Var(true) → is_const=true.
+                                            // For function params (e.g., .map(v => ...)) → Var(false) → is_const=false.
                                             if let Expression::StaticMemberExpression(member) =
                                                 other
                                             {
+                                                // Check if the signal root is const-bound
+                                                let root_is_const = if let Expression::Identifier(ref obj_ident) = member.object {
+                                                    tracker.const_bindings.contains(obj_ident.name.as_str())
+                                                } else {
+                                                    false
+                                                };
+                                                if !root_is_const {
+                                                    any_child_mutable = true;
+                                                }
                                                 let signal_obj = member.unbox().object;
                                                 let wrapped =
                                                     import_rewrite::build_wrap_prop_call(
