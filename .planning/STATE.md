@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 7 complete. 17/19 plans across 7 phases executed. 138 snapshot files differ with ~4405 diff lines (down from 4554).
+**Current focus:** Phase 8 in progress. 18/19 plans across 8 phases executed. 138 snapshot files differ with ~3809 diff lines (down from 4405).
 
 ## Current Position
 
-Phase: 7 of 9 (Entry Module Emission Fixes)
-Plan: 1 of 1 complete in phase 7
-Status: Phase complete
-Last activity: 2026-02-21 - Completed 07-01-PLAN.md (entry module _hf* filtering and _fnSignal import fix)
+Phase: 8 of 9 (JSX Flags & Iteration Variables)
+Plan: 1 of 3 complete in phase 8
+Status: In progress
+Last activity: 2026-02-21 - Completed 08-01-PLAN.md (scope-aware JSX flag classification)
 
-Progress: [█████████████████░░] 17/19 plans (89%)
+Progress: [██████████████████░] 18/19 plans (95%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 17
+- Total plans completed: 18
 - Average duration: 15min
-- Total execution time: 4.45 hours
+- Total execution time: 4.53 hours
 
 **By Phase:**
 
@@ -34,10 +34,11 @@ Progress: [█████████████████░░] 17/19 plan
 | 05-jsx-keys-flags | 3/3 | 36min | 12min |
 | 06-import-ordering-cleanup | 3/3 | 39min | 13min |
 | 07-entry-module-emission | 1/1 | 3min | 3min |
+| 08-jsx-flags-iteration-variables | 1/3 | 5min | 5min |
 
 **Recent Trend:**
-- Last 5 plans: 06-01 (20min), 06-02 (8min), 06-03 (11min), 07-01 (3min)
-- Trend: Phase 7 executed in 3min -- targeted fixes with clear scope.
+- Last 5 plans: 06-02 (8min), 06-03 (11min), 07-01 (3min), 08-01 (5min)
+- Trend: Continued fast execution with targeted scope-aware fixes.
 
 *Updated after each plan completion*
 
@@ -107,6 +108,9 @@ Recent decisions affecting current work:
 - [07-01]: New is_inline_like_strategy variable before main_code block gates _hf* injection (segment strategy skips entry module injection)
 - [07-01]: body_code.contains(var_name) for per-segment _hf* filtering -- extracts var name from "const _hfN = ..." via strip_prefix + split
 - [07-01]: _fnSignal import: removed || !hoisted_stmts.is_empty() proxy -- body_code.contains("_fnSignal") is sufficient alone
+- [08-01]: const_bindings populated from imports at init + from const declarations via enter_variable_declaration hook
+- [08-01]: is_const_expression_with_scope is fully recursive for compound expressions (binary, conditional, template literal, etc.)
+- [08-01]: Member expressions in children use const_bindings instead of module_imports scan for consistency
 
 ### Pending Todos
 
@@ -129,17 +133,19 @@ None.
 - QRL hoisting RESOLVED (06-03): loop-context QRL calls hoisted to enclosing function body (10 more snapshots fixed, 148->138)
 - Entry module lazy import ordering RESOLVED (06-03): sorted by hash (matching SWC BTreeMap<Id> key) + filtered by referenced-ident analysis
 - Entry module _hf* emission RESOLVED (07-01): conditional injection for segment strategy + per-segment filtering + _fnSignal false-positive fix
-- Remaining 138 snapshot files differ (but with ~149 fewer diff lines after 07-01):
+- JSX flag scope analysis RESOLVED (08-01): const_bindings scope tracking fixes 29 flag mismatches (21->fewer remaining)
+- Remaining 138 snapshot files differ (but with ~596 fewer diff lines after 08-01):
   - Capture list differences (iteration variables in captures, missing/extra captures)
   - _fnSignal hoisting to module level vs segment level
   - q:p / var_props ordering differences
-  - JSX flag differences (21 scope-analysis issues)
+  - JSX flag differences (reduced from 21 to ~5 remaining scope-analysis edge cases)
   - Text normalization (trailing spaces in JSX text nodes)
   - Segment body code differences (_hf naming per-segment counter, _fnSignal usage)
+  - Prop classification differences (var_props vs const_props for some expressions)
   - 1 deferred naming issue (should_extract_single_qrl_2 dedup suffix)
 
 ## Session Continuity
 
-Last session: 2026-02-21T09:41:53Z
-Stopped at: Completed 07-01-PLAN.md (entry module emission fixes)
+Last session: 2026-02-21T11:23:42Z
+Stopped at: Completed 08-01-PLAN.md (scope-aware JSX flag classification)
 Resume file: None
