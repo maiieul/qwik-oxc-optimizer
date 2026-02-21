@@ -2,7 +2,7 @@
 
 ## Overview
 
-This roadmap drives the OXC optimizer from 160/162 snapshot diffs to zero, achieving full parity with the SWC golden reference. The 6 phases follow an initial cascade hypothesis: naming fixes clear the most diff noise first, metadata is simple plumbing, bugs must be fixed before features (missing segments block testing transforms inside them), features fix their own missing imports as side effects, JSX is localized, and import ordering is a clean final pass once all correct imports exist.
+This roadmap drives the OXC optimizer from 160/162 snapshot diffs to zero, achieving full parity with the SWC golden reference. Phases 1-6 follow an initial cascade hypothesis: naming fixes clear the most diff noise first, metadata is simple plumbing, bugs must be fixed before features, features fix their own missing imports as side effects, JSX is localized, and import ordering is a clean final pass. Phases 7-9 are gap closure phases added after the v1.0 milestone audit (138/162 still differing, 24 exact matches).
 
 **Adaptive replanning:** After each phase completes, reassess the remaining diff landscape. The phase ordering is a starting hypothesis — real diffs may reveal that some later-phase work is trivially fixable earlier, or that phases are entangled differently than expected. Reorder, merge, or split remaining phases based on what the snapshot diffs actually show after each phase lands.
 
@@ -20,6 +20,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Signal & Props Transforms** - Implement _fnSignal, _wrapProp, props destructuring, QRL hoisting
 - [x] **Phase 5: JSX Keys & Flags** - Fix key generation and immutability flag values
 - [x] **Phase 6: Import Ordering & Cleanup** - Sort imports, fix scoping, hoist QRLs, final cleanup pass
+- [ ] **Phase 7: Entry Module Emission Fixes** - Filter _hf* leakage, fix _fnSignal import false-positive, fix lazy import ordering
+- [ ] **Phase 8: JSX Flags & Iteration Variables** - Identifier scope analysis, logical && propagation, q:p injection, loop static_listeners
+- [ ] **Phase 9: JSX Keys & Final Parity** - Logical && keys, counter ordering, relative_paths, remaining capture/formatting diffs
 
 ## Phase Details
 
@@ -118,10 +121,50 @@ Plans:
 - [x] 06-02-PLAN.md — Fix segment module import ordering: alphabetical sort by local name matching SWC's local_idents.sort()
 - [x] 06-03-PLAN.md — QRL hoisting inside function bodies + entry module lazy import ordering
 
+### Phase 7: Entry Module Emission Fixes
+**Goal**: Fix entry module output to eliminate _hf* leakage, false-positive imports, and lazy import ordering — the three largest categories of remaining snapshot diffs
+**Depends on**: Phase 6 (import infrastructure must exist)
+**Requirements**: QRL-01, IMP-01, IMP-02 (partial)
+**Gap Closure**: GAP-1 (critical), GAP-7 (minor), GAP-2 (significant)
+**Success Criteria** (what must be TRUE):
+  1. `_hf*` declarations (const _hf0, const _hf0_str) only appear in segment files, never in entry module output
+  2. `_fnSignal` import only added to segment files whose body_code actually contains `_fnSignal` (no false positives from global hoisted_stmts check)
+  3. Lazy import ordering in entry module matches SWC's BTreeMap<Id> ordering (sort by identifier name, not import path)
+  4. Snapshot diff count reduced from 138 to ≤80
+**Plans**: TBD
+
+### Phase 8: JSX Flags & Iteration Variables
+**Goal**: Fix JSX immutability flags to match SWC exactly by implementing identifier scope analysis, logical && propagation, loop event handler detection, and completing q:p injection
+**Depends on**: Phase 7 (entry module must be clean to isolate JSX-only diffs)
+**Requirements**: JSX-02, META-01
+**Gap Closure**: GAP-3 (significant), GAP-5 flags (significant), GAP-6 (moderate), GAP-4 (minor)
+**Success Criteria** (what must be TRUE):
+  1. Identifier references in JSX children classified as immutable only when they are imports or const bindings (local reactive vars marked mutable), eliminating 45 OXC=1/SWC=3 mismatches
+  2. Elements inside logical `&&` expressions correctly propagate mutability to parent elements, eliminating 29 OXC=3/SWC=1 mismatches
+  3. Event handlers inside loops that use iteration variables have `static_listeners=false` (flag bit 0 cleared), eliminating 19 OXC=3/SWC=0 and OXC=1/SWC=0 mismatches
+  4. `q:p` and `q:ps` iteration variable props injected into var_props for all 18 missing cases
+  5. `_rawProps` override applies to `useResource$` and other hooks (not just `component$`), fixing 1 paramNames mismatch
+  6. JSX flag mismatches reduced from 108 to ≤15
+**Plans**: TBD
+
+### Phase 9: JSX Keys & Final Parity
+**Goal**: Fix remaining JSX key mismatches, resolve structural test differences, and close all remaining snapshot gaps to achieve 0/162 diffs
+**Depends on**: Phase 8 (flag fixes may affect key counter ordering)
+**Requirements**: JSX-01, IMP-03, IMP-02 (final)
+**Gap Closure**: GAP-5 keys (significant), GAP-8 (minor), remaining diffs
+**Success Criteria** (what must be TRUE):
+  1. Native elements inside logical `&&` expressions receive generated keys matching SWC
+  2. Key counter ordering matches SWC across all tests (no swapped counters between sibling elements)
+  3. Windows path hash computation matches SWC ("KD" not "9H")
+  4. `relative_paths` test produces output matching SWC structure (segment extraction, not inlinedQrl)
+  5. Capture list differences resolved (iteration variables in captures match SWC)
+  6. All 162 snapshots match SWC golden reference exactly (0 diffs)
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 (Subject to reassessment after each phase -- see Overview)
 
 | Phase | Plans Complete | Status | Completed |
@@ -132,3 +175,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 4. Signal & Props Transforms | 4/4 | Complete | 2026-02-20 |
 | 5. JSX Keys & Flags | 3/3 | Complete (gaps remain) | 2026-02-20 |
 | 6. Import Ordering & Cleanup | 3/3 | Complete | 2026-02-21 |
+| 7. Entry Module Emission Fixes | 0/? | Not started | — |
+| 8. JSX Flags & Iteration Variables | 0/? | Not started | — |
+| 9. JSX Keys & Final Parity | 0/? | Not started | — |
