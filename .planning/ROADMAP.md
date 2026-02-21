@@ -131,7 +131,10 @@ Plans:
   2. `_fnSignal` import only added to segment files whose body_code actually contains `_fnSignal` (no false positives from global hoisted_stmts check)
   3. Lazy import ordering in entry module matches SWC's BTreeMap<Id> ordering (sort by identifier name, not import path)
   4. Snapshot diff count reduced from 138 to ≤80
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 07-01-PLAN.md — Fix _hf* leakage in entry module (conditional skip for segment strategy), _fnSignal false-positive removal, per-segment _hf* filtering
 
 ### Phase 8: JSX Flags & Iteration Variables
 **Goal**: Fix JSX immutability flags to match SWC exactly by implementing identifier scope analysis, logical && propagation, loop event handler detection, and completing q:p injection
@@ -175,6 +178,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 | 4. Signal & Props Transforms | 4/4 | Complete | 2026-02-20 |
 | 5. JSX Keys & Flags | 3/3 | Complete (gaps remain) | 2026-02-20 |
 | 6. Import Ordering & Cleanup | 3/3 | Complete | 2026-02-21 |
-| 7. Entry Module Emission Fixes | 0/? | Not started | — |
+| 7. Entry Module Emission Fixes | 0/1 | Not started | — |
 | 8. JSX Flags & Iteration Variables | 0/? | Not started | — |
 | 9. JSX Keys & Final Parity | 0/? | Not started | — |
