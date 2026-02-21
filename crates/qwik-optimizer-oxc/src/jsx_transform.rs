@@ -283,21 +283,21 @@ fn is_child_expression_immutable(
         // Let/var bindings and function params are mutable.
         Expression::Identifier(ident) => const_bindings.contains(ident.name.as_str()),
 
-        // Member expressions: mutable by default (SWC ConstCollector.visit_member_expr).
-        // Exception: if the base object is a const binding, treat as immutable.
-        // SWC wraps import member access as _wrapProp(import, "prop") which is const.
+        // Member expressions: check if the root identifier is a const binding.
+        // SWC's create_synthetic_qqsegment returns is_const based on compute_scoped_idents:
+        // if all referenced local variables are Var(true), is_const = true.
+        // Imports/globals don't count as scoped idents, so expressions that ONLY
+        // reference imports (like `dep.thing`) have empty scoped_idents → is_const = true.
         Expression::StaticMemberExpression(member) => {
             if let Expression::Identifier(obj_ident) = &member.object {
-                let name = obj_ident.name.as_str();
-                const_bindings.contains(name)
+                const_bindings.contains(obj_ident.name.as_str())
             } else {
                 false
             }
         }
         Expression::ComputedMemberExpression(member) => {
             if let Expression::Identifier(obj_ident) = &member.object {
-                let name = obj_ident.name.as_str();
-                const_bindings.contains(name)
+                const_bindings.contains(obj_ident.name.as_str())
             } else {
                 false
             }
@@ -2459,6 +2459,13 @@ pub(crate) fn transform_jsx_children<'a>(
                                         hoisted_stmts.push((fn_code, str_code));
                                         child_exprs.push(wrapped);
                                         continue;
+                                    } else if !deps.is_empty() && has_non_reactive {
+                                        // Expression has reactive deps (local vars) mixed with
+                                        // non-reactive refs (imports/globals). SWC's
+                                        // create_synthetic_qqsegment returns (None, false):
+                                        // scoped_idents is non-empty + contains_side_effect.
+                                        // This makes jsx_mutable=true.
+                                        any_child_mutable = true;
                                     }
                                 }
                                 // Check if tracker.jsx_mutable was set by an inner JSX element
