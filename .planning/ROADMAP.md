@@ -167,7 +167,14 @@ Plans:
   4. `relative_paths` test produces output matching SWC structure (segment extraction, not inlinedQrl)
   5. Capture list differences resolved (iteration variables in captures match SWC)
   6. All 162 snapshots match SWC golden reference exactly (0 diffs)
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — Fix const assignment preservation, entry field computation, windows path normalization, onClick$/q-e: event naming
+- [ ] 09-02-PLAN.md — Fix _wrapProp/_fnSignal wrapping gaps, className->class transform, import ordering, capture formatting
+- [ ] 09-03-PLAN.md — Implement dev mode QRL emission (qrlDEV/inlinedQrlDEV/_noopQrlDEV), fix captures, dead code, body code
+- [ ] 09-04-PLAN.md — Implement Hoist strategy extraction, fix _hf counters, exports, JSX formatting
+- [ ] 09-05-PLAN.md — Fix relative_paths multi-input test, final audit to close all 162 diffs to 0
 
 ## Progress
 
