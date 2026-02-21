@@ -27,11 +27,15 @@ pub(crate) fn compute_segment_hash(
     rel_path: &str,
     display_name: &str,
 ) -> String {
+    // Normalize Windows backslashes to forward slashes before hashing.
+    // SWC uses `rel_path.to_slash_lossy()` which converts backslashes,
+    // so the hash input must use forward slashes to match.
+    let normalized_path = rel_path.replace('\\', "/");
     let mut hasher = DefaultHasher::new();
     if let Some(scope) = scope {
         hasher.write(scope.as_bytes());
     }
-    hasher.write(rel_path.as_bytes());
+    hasher.write(normalized_path.as_bytes());
     hasher.write(display_name.as_bytes());
     let hash = hasher.finish();
 

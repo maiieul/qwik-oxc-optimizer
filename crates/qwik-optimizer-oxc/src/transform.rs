@@ -278,11 +278,13 @@ impl QwikTransform {
             use std::collections::hash_map::DefaultHasher;
             use std::hash::Hasher;
 
+            // Normalize Windows backslashes before hashing to match SWC
+            let normalized_filename = filename.replace('\\', "/");
             let mut hasher = DefaultHasher::new();
             if let Some(ref scope) = options.scope {
                 hasher.write(scope.as_bytes());
             }
-            hasher.write(filename.as_bytes());
+            hasher.write(normalized_filename.as_bytes());
             let file_hash = hasher.finish();
 
             // Base64url encode first 2 chars of LE bytes
@@ -2688,6 +2690,21 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         // ---------------------------------------------------------------
+        // Phase 1b: Simplify unused pure-annotated variable declarations
+        // ---------------------------------------------------------------
+        // When MinifyMode::Simplify, convert non-exported variable declarations
+        // whose init is a PURE-annotated call expression AND whose binding is
+        // unreferenced in the module body into expression statements.
+        // This matches SWC's tree-shaker/DCE behavior:
+        //   `const App = /* @__PURE__ */ componentQrl(...)` -> `componentQrl(...);`
+        //   `const Header = /* @__PURE__ */ qrl(...)` -> `qrl(...);`
+        // But non-pure calls are kept:
+        //   `const renderHeader = component(qrl(...))` -> preserved as-is
+        if matches!(self.options.minify, crate::types::MinifyMode::Simplify) {
+            simplify_unused_pure_var_decls(&mut non_import_stmts, ctx);
+        }
+
+        // ---------------------------------------------------------------
         // Phase 2: Collect referenced identifiers from the entry module body
         // ---------------------------------------------------------------
         // Scan non-import statements to find which identifiers are actually
@@ -3080,6 +3097,75 @@ fn escape_sym(str: &str) -> String {
         .0
 }
 
+/// Simplify unused variable declarations in the module body.
+///
+/// Simplified tree-shaker: drop unused pure-annotated variable declarations.
+///
+/// When a non-exported VariableDeclaration has a single declarator whose
+/// init is a PURE-annotated CallExpression (`/* @__PURE__ */`), and the
+/// declared name is not referenced elsewhere in the module body, convert
+/// the VariableDeclaration to an ExpressionStatement (dropping the binding).
+///
+/// This matches SWC's tree-shaker/DCE behavior for `MinifyMode::Simplify`:
+/// - `const App = /* @__PURE__ */ componentQrl(...)` -> `componentQrl(...);`
+/// - `const Header = /* @__PURE__ */ qrl(...)` -> `qrl(...);`
+///
+/// Non-pure calls are NOT affected:
+/// - `const renderHeader = component(qrl(...))` -> preserved
+fn simplify_unused_pure_var_decls<'a>(
+    stmts: &mut std::vec::Vec<Statement<'a>>,
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    // 1. Collect all referenced identifiers across all statements.
+    let all_refs = collect_referenced_idents(stmts);
+
+    // 2. For each bare VariableDeclaration (not wrapped in export),
+    //    check if it qualifies for removal.
+    let mut i = 0;
+    while i < stmts.len() {
+        let should_unwrap = if let Statement::VariableDeclaration(ref var_decl) = stmts[i] {
+            if var_decl.declarations.len() == 1 {
+                if let BindingPattern::BindingIdentifier(ref ident) = var_decl.declarations[0].id {
+                    let name = ident.name.as_str();
+                    // Init must be a PURE-annotated call expression
+                    let has_pure_call_init = var_decl.declarations[0]
+                        .init
+                        .as_ref()
+                        .is_some_and(|init| {
+                            matches!(init, Expression::CallExpression(call) if call.pure)
+                        });
+                    // Name must not be referenced elsewhere in the module
+                    let is_referenced = all_refs.contains(name);
+                    has_pure_call_init && !is_referenced
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        } else {
+            false
+        };
+
+        if should_unwrap {
+            let stmt = std::mem::replace(
+                &mut stmts[i],
+                Statement::EmptyStatement(ctx.ast.alloc(oxc::ast::ast::EmptyStatement { span: SPAN })),
+            );
+            if let Statement::VariableDeclaration(mut var_decl) = stmt {
+                if let Some(init) = var_decl.declarations[0].init.take() {
+                    let expr_stmt = ctx.ast.alloc(ExpressionStatement {
+                        span: SPAN,
+                        expression: init,
+                    });
+                    stmts[i] = Statement::ExpressionStatement(expr_stmt);
+                }
+            }
+        }
+        i += 1;
+    }
+}
+
 /// Convert a JSX event attribute name to its HTML attribute equivalent.
 ///
 /// Only applies when the attribute name ends with `$` and starts with `on`.
@@ -3290,6 +3376,12 @@ fn collect_idents_from_statement(stmt: &Statement<'_>, idents: &mut HashSet<Stri
         }
         // ExportNamedDeclaration and ExportDefaultDeclaration
         Statement::ExportNamedDeclaration(export) => {
+            // Collect references from export specifiers: `export { X, Y as Z }`
+            // The `local` name of each specifier references a module-level binding.
+            for spec in &export.specifiers {
+                let local_name = spec.local.name().as_str();
+                idents.insert(local_name.to_string());
+            }
             if let Some(decl) = &export.declaration {
                 match decl {
                     Declaration::VariableDeclaration(var_decl) => {

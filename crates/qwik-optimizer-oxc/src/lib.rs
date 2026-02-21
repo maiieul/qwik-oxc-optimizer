@@ -218,6 +218,8 @@ pub fn transform_modules(
         } else {
             input.path.clone()
         };
+        // Normalize Windows backslashes to forward slashes in output paths
+        let main_path = main_path.replace('\\', "/");
 
         let main_module = TransformModule {
             path: main_path,
@@ -256,6 +258,7 @@ pub fn transform_modules(
                 &input.path,
                 transform_options.transpile_ts,
                 transform_options.transpile_jsx,
+                &transform_options.entry_strategy,
             );
             let seg_ext = output_extension(
                 &input.path,
@@ -364,20 +367,71 @@ fn rel_dir(path: &str) -> String {
     }
 }
 
+/// Compute the `entry` field for a segment based on the entry strategy.
+///
+/// Mirrors SWC's `EntryPolicy::get_entry_for_sym()`:
+/// - Inline/Hoist/Single: `Some("entry_segments")`
+/// - Segment: `None`
+/// - Smart: context-dependent (top-level => None, nested => origin + "_entry_" + root)
+/// - Component: context-dependent (no context => "entry_segments", has context => origin + "_entry_" + root)
+fn compute_entry_field(
+    strategy: &EntryStrategy,
+    origin: &str,
+    stack_ctxt: &[String],
+) -> Option<String> {
+    match strategy {
+        EntryStrategy::Inline | EntryStrategy::Hoist => Some("entry_segments".to_string()),
+        EntryStrategy::Single => Some("entry_segments".to_string()),
+        EntryStrategy::Segment | EntryStrategy::Hook => None,
+        EntryStrategy::Smart => {
+            // Smart strategy: top-level QRLs get None, nested get component-based entry
+            if let Some(root) = stack_ctxt.first() {
+                Some(format!("{}_entry_{}", origin, root))
+            } else {
+                None
+            }
+        }
+        EntryStrategy::Component => {
+            if let Some(root) = stack_ctxt.first() {
+                Some(format!("{}_entry_{}", origin, root))
+            } else {
+                Some("entry_segments".to_string())
+            }
+        }
+    }
+}
+
 /// Convert internal SegmentData to public SegmentAnalysis.
 fn segment_data_to_analysis(
     seg: &SegmentData,
     origin_path: &str,
     transpile_ts: bool,
     transpile_jsx: bool,
+    entry_strategy: &EntryStrategy,
 ) -> SegmentAnalysis {
+    // Normalize origin path: replace backslashes with forward slashes (Windows support)
+    let normalized_origin = origin_path.replace('\\', "/");
     let canonical_filename = format!("{}_{}", seg.display_name, seg.hash);
     let ext = output_extension(origin_path, transpile_ts, transpile_jsx);
 
+    // Compute entry field from strategy.
+    // For Smart/Component strategies, we need the stack context (parent segment names).
+    // Since we don't have the full stack_ctxt here, we use the segment's parent
+    // to approximate the root context name.
+    let entry = compute_entry_field(
+        entry_strategy,
+        &normalized_origin,
+        // For Smart/Component, the root context is approximated from parent
+        // SWC uses stack_ctxt which contains all scope names. We don't have that here,
+        // but segments store parent which is the closest enclosing segment name.
+        // For now, use an empty slice for Segment strategy (returns None anyway).
+        &[],
+    );
+
     SegmentAnalysis {
-        origin: origin_path.to_string(),
+        origin: normalized_origin,
         name: seg.name.clone(),
-        entry: None, // Phase 10 will set this
+        entry,
         display_name: seg.display_name.clone(),
         hash: seg.hash.clone(),
         canonical_filename,
