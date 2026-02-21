@@ -116,6 +116,50 @@ fn is_const_jsx_value(
     crate::is_const::is_const_expression_with_scope(value, const_bindings)
 }
 
+/// Check if an event handler value should be classified as const for prop placement.
+///
+/// SWC puts event handler values in const_props when they are stable references
+/// (qrl() calls, inlinedQrl() calls, const identifier references to hoisted QRLs).
+/// Non-const event handlers (_qrlSync, serverQrl, props.onClick$, ternary with
+/// mutable parts) go to var_props, which sets static_listeners=false.
+///
+/// This is different from `is_const_jsx_value` because qrl() calls (CallExpression)
+/// are treated as const here even though they're not pure compile-time constants --
+/// they produce stable QRL references that don't change between renders.
+fn is_const_event_handler(
+    value: &Expression<'_>,
+    const_bindings: &std::collections::HashSet<String>,
+) -> bool {
+    use oxc::ast::ast::*;
+    match value {
+        // Identifier: const if it's a known const binding (hoisted QRL const)
+        // or if it's `undefined` (used as ternary alternate for optional handlers)
+        Expression::Identifier(ident) => {
+            ident.name == "undefined" || const_bindings.contains(ident.name.as_str())
+        }
+
+        // Call expression: only qrl() and inlinedQrl() are const.
+        // _qrlSync(), serverQrl(), and other calls are non-const.
+        Expression::CallExpression(call) => {
+            if let Expression::Identifier(ref callee) = call.callee {
+                matches!(callee.name.as_str(), "qrl" | "inlinedQrl")
+            } else {
+                false
+            }
+        }
+
+        // Conditional: const only if test is const AND both branches are const event handlers
+        Expression::ConditionalExpression(cond) => {
+            is_const_jsx_value(&cond.test, const_bindings)
+                && is_const_event_handler(&cond.consequent, const_bindings)
+                && is_const_event_handler(&cond.alternate, const_bindings)
+        }
+
+        // Everything else (member expressions, _qrlSync, serverQrl, etc.) is non-const
+        _ => false,
+    }
+}
+
 /// Check if a child expression is immutable for JSX flag computation.
 ///
 /// This determines whether a child expression breaks `static_subtree`.
@@ -1295,7 +1339,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
 
                 // Check for event handler attributes
                 if let Some(event_name) = transform_event_attr_name(&attr_name) {
-                    // Event handler: value goes into const props with renamed key
+                    // Event handler: classify based on value constness.
+                    // qrl() and inlinedQrl() calls go to const_props (stable QRL references).
+                    // _qrlSync(), serverQrl(), props.onClick$, and other non-const values
+                    // go to var_props (SWC sets static_listeners=false for these).
                     let value = if let Some(val) = attr.value {
                         jsx_attr_value_to_expression(
                             val,
@@ -1312,7 +1359,11 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
-                    const_props.push((event_name, value));
+                    if is_const_event_handler(&value, &tracker.const_bindings) {
+                        const_props.push((event_name, value));
+                    } else {
+                        var_props.push((event_name, value));
+                    }
                     continue;
                 }
 
@@ -1395,6 +1446,33 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             continue;
                         }
                     }
+                }
+
+                // q:p and q:ps attributes ALWAYS go to var_props unconditionally.
+                // These are iteration variable bindings injected for loop event handlers.
+                // Even though the value may be a const-declared loop variable
+                // (e.g., `for (const item of ...)` where `item` is in const_bindings),
+                // the q:p value changes per iteration and must be in var_props.
+                // SWC always puts q:p/q:ps in var_props.
+                if attr_name == "q:p" || attr_name == "q:ps" {
+                    let value = if let Some(val) = attr.value {
+                        jsx_attr_value_to_expression(
+                            val,
+                            tracker,
+                            ctx,
+                            destructured_props,
+                            module_imports,
+                            hoisted_stmts,
+                            loop_depth,
+                            iteration_vars,
+                            props_param_name,
+                            key_prefix,
+                        )
+                    } else {
+                        ctx.ast.expression_boolean_literal(SPAN, true)
+                    };
+                    var_props.push((attr_name, value));
+                    continue;
                 }
 
                 // Regular attribute
@@ -1511,15 +1589,19 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     );
 
     // Compute immutability flags (mirrors SWC transform.rs lines 1570-1571, 1931-1937)
-    // When q:p/q:ps is present, event handlers depend on iteration variables and are NOT static.
+    //
+    // SWC flag semantics:
+    //   static_listeners (bit 0): false if spread, q:p present, or event handlers (q-e:*) in var_props
+    //   static_subtree (bit 1): false if spread or children are mutable
+    //
+    // NOTE: var_props presence does NOT affect static_subtree. In SWC, elements with
+    // event handlers or non-const props in var_props can still have static_subtree=true
+    // as long as children are immutable. The var_props presence DOES propagate jsx_mutable
+    // to the parent element (see below), which breaks the parent's static_subtree.
     let has_qp = var_props.iter().any(|(key, _)| key == "q:p" || key == "q:ps");
-    let static_listeners = !has_spread && !has_qp;
+    let has_event_in_var_props = var_props.iter().any(|(key, _)| key.starts_with("q-e:"));
+    let static_listeners = !has_spread && !has_qp && !has_event_in_var_props;
     let mut static_subtree = !has_spread;
-
-    // var_props existence breaks static_subtree (SWC line 1469)
-    if !var_props.is_empty() {
-        static_subtree = false;
-    }
 
     // Children mutability breaks static_subtree
     if children_mutable {
