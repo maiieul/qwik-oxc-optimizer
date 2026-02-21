@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 9 in progress. 24/25 plans across 9 phases executed. 125 snapshot files differ. 37 exact golden matches (3 new from 09-04: example_import_assertion, example_jsx_keyed, example_jsx_keyed_dev).
+**Current focus:** Phase 9 complete. 25/25 plans across 9 phases executed. 100 snapshot files differ. 62 exact golden matches.
 
 ## Current Position
 
 Phase: 9 of 9 (JSX Keys & Final Parity)
-Plan: 4 of 5 complete in phase 9
-Status: In progress
-Last activity: 2026-02-21 - Completed 09-04-PLAN.md (Hoist extraction, key ordering, import assertions)
+Plan: 5 of 5 complete in phase 9
+Status: Phase complete (partial parity: 62/162 exact matches)
+Last activity: 2026-02-21 - Completed 09-05-PLAN.md (Final audit, reduced 125->100 diffs)
 
-Progress: [████████████████████████░] 24/25 plans (96%)
+Progress: [█████████████████████████] 25/25 plans (100%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 24
-- Average duration: 17min
-- Total execution time: 7.59 hours
+- Total plans completed: 25
+- Average duration: 19min
+- Total execution time: 10.59 hours
 
 **By Phase:**
 
@@ -35,11 +35,11 @@ Progress: [███████████████████████
 | 06-import-ordering-cleanup | 3/3 | 39min | 13min |
 | 07-entry-module-emission | 1/1 | 3min | 3min |
 | 08-jsx-flags-iteration-variables | 3/3 | 41min | 14min |
-| 09-jsx-keys-final-parity | 4/5 | 148min | 37min |
+| 09-jsx-keys-final-parity | 5/5 | 328min | 66min |
 
 **Recent Trend:**
-- Last 5 plans: 09-01 (45min), 09-02 (45min), 09-03 (35min), 09-04 (23min)
-- Trend: Deep investigation work on complex interconnected issues.
+- Last 5 plans: 09-01 (45min), 09-02 (45min), 09-03 (35min), 09-04 (23min), 09-05 (180min)
+- Trend: Final audit required deep investigation of remaining edge cases across 3 context windows.
 
 *Updated after each plan completion*
 
@@ -141,10 +141,20 @@ Recent decisions affecting current work:
 - [09-04]: SWC key counter assignment is bottom-up (children get lower counter values than parent) -- OXC bottom-up exit_expression naturally matches
 - [09-04]: SWC fold_cond_expr/fold_bin_expr set root_jsx_mode=true -- OXC needs enter_conditional_expression and enter_logical_expression hooks
 - [09-04]: Import assertions stored as Vec<(String, String)> key-value pairs threaded through ImportInfo -> ReemittedImport -> SegmentImportEntry
+- [09-05]: Member expressions (StaticMemberExpression, ComputedMemberExpression) and call expressions always return false for is_const_expression_with_scope (matches SWC ConstCollector)
+- [09-05]: _fnSignal deps constness determines prop placement: all_deps_const -> const_props, else -> var_props
+- [09-05]: Event handler merging via merge_or_add_to_props: deduplicates q-e:input handlers into array expressions
+- [09-05]: Mixed reactive+import deps in children marked mutable when collect_reactive_deps returns deps + has_non_reactive
+- [09-05]: _wrapProp root constness: function params are non-const (SWC Var(false)), useSignal/useStore results are const
+- [09-05]: _jsxSplit: all explicit props go into var_props object in source order; const_props classification irrelevant for explicit attrs
+- [09-05]: Multi-spread _jsxSplit: _getConstProps inlined as spread, const_props arg null, explicit props between spreads ordered before remaining spread args
+- [09-05]: TS type assertion lookahead: unwrap TSAsExpression, TSSatisfiesExpression, TSNonNullExpression, ParenthesizedExpression for signal wrapping
+- [09-05]: Sync QRL strings minified via CodegenOptions { minify: true } + post-processing for semicolons and outer parens
+- [09-05]: OXC codegen shorthand behavior: ignores shorthand=false flag, auto-converts {key: value} to {key} when names match -- fundamental OXC limitation
 
 ### Pending Todos
 
-None.
+None -- all 25 plans executed.
 
 ### Blockers/Concerns
 
@@ -154,49 +164,18 @@ None.
 - BUG-04 (segment ordering) RESOLVED -- span-based sort before output iteration
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
-- Gap 1 (non-destructured props) RESOLVED -- 04-04 gap closure plan
-- Gap 2 (flag propagation) RESOLVED -- 05-03 gap closure plan (122->21 mismatches)
-- Phase 5 DONE: JSX key generation (05-01), immutability flags (05-02), flag propagation (05-03)
-- Post-formatting restored (cherry-picked from sort-format-fix): 2-space indent, object expansion, JSX-aware parsing
-- Segment import ordering RESOLVED (06-02): 0 ordering-only diffs, 48 set diffs remain (other phase issues)
-- Entry module extra imports RESOLVED (06-01): post-hoc filtering eliminates segment-only imports (8 snapshots fixed, 156->148)
-- QRL hoisting RESOLVED (06-03): loop-context QRL calls hoisted to enclosing function body (10 more snapshots fixed, 148->138)
-- Entry module lazy import ordering RESOLVED (06-03): sorted by hash (matching SWC BTreeMap<Id> key) + filtered by referenced-ident analysis
-- Entry module _hf* emission RESOLVED (07-01): conditional injection for segment strategy + per-segment filtering + _fnSignal false-positive fix
-- JSX flag scope analysis RESOLVED (08-01): const_bindings scope tracking fixes 29 flag mismatches (21->fewer remaining)
-- q:p injection RESOLVED (08-02): per-element injection via iter_var_usage_by_handler, static_listeners cleared when q:p present
-- useResource$ _rawProps RESOLVED (08-02): full props destructuring rewrite for useResource$ hooks
-- JSX flag computation RESOLVED (08-03): static_subtree/static_listeners corrected, event handler const classification, q:p forced to var_props
-- Pure var DCE RESOLVED (09-01): simplify_unused_pure_var_decls checks CallExpression.pure flag (16 files improved)
-- Entry field computation RESOLVED (09-01): compute_entry_field from EntryStrategy
-- Windows path normalization RESOLVED (09-01): backslash-to-forward-slash in hash, origin, JSX keys
-- JSX event attr rename RESOLVED (09-01): post-processing pass after segment extraction (5 files improved, 3 exact matches)
-- _wrapProp generic local variable wrapping RESOLVED (09-02): const_bindings + is_import check, is_text_only, is_const flag
-- Capture chained const format RESOLVED (09-02): single VariableDeclaration matching SWC
-- Local Qrl self-imports RESOLVED (09-02): module_level_decls check routes to self-import path
-- Dev mode QRL emission RESOLVED (09-03): qrlDEV/inlinedQrlDEV/_noopQrlDEV with { file, lo, hi, displayName } metadata
-- JSX dev location RESOLVED (09-03): { fileName, lineNumber, columnNumber } on _jsxSorted/_jsxSplit calls
-- C02 diagnostics RESOLVED (09-03): function/class references excluded from captures with error diagnostics
-- Hoist extraction RESOLVED (09-04): inlinedQrl callbacks extracted to named const declarations for EntryStrategy::Hoist
-- root_jsx_mode save/restore RESOLVED (09-04): enter/exit_jsx_element + enter/exit_jsx_fragment save/restore pattern
-- Conditional/logical key hooks RESOLVED (09-04): enter_conditional_expression and enter_logical_expression set root_jsx_mode=true
-- Import assertions RESOLVED (09-04): with { type: "json" } preserved through collection, capture, emission
-- JSX text normalization RESOLVED (09-04): cleanJSXElementLiteralChild algorithm matching Babel/SWC
-- Remaining 125 snapshot files differ:
-  - Prop classification differences: var_props vs const_props ordering (~82 positions, most common)
-  - Capture list differences (iteration variables, _rawProps, missing/extra captures)
-  - _fnSignal wrapping completeness (OXC misses some wrapping cases SWC catches)
-  - _fnSignal children dep constness (OXC treats all _fnSignal as immutable, SWC checks deps)
-  - _auto_ export rename pattern not implemented (affects ~10 tests)
-  - DCE differences (if(false) stripping, unused declaration removal) -- 3 files
-  - Dev mode file path test config differences -- 5 files
-  - _captures import and usage in Hoist/Inline strategy -- several files
-  - Codegen formatting (if return without braces, multi-line JSX attributes)
-  - Comment preservation -- 1 file
-  - 1 deferred naming issue (should_extract_single_qrl_2 dedup suffix)
+- All phase-level gaps RESOLVED through phases 1-9
+- Remaining 100 snapshot diffs:
+  - OXC codegen shorthand auto-detection (~60+ tests, fundamental OXC behavior)
+  - OXC codegen line wrapping differences (~15 tests)
+  - _captures mechanism not implemented (~20 tests)
+  - _auto_ export rename not implemented (~8 tests)
+  - _fnSignal wrapping gaps (~10 tests)
+  - DCE differences (~5 tests)
+  - Entry field, ctxKind, QRL hoisting, comment preservation, const folding (misc ~10 tests)
 
 ## Session Continuity
 
-Last session: 2026-02-21T20:36:00Z
-Stopped at: Completed 09-04-PLAN.md (Hoist extraction, key ordering, import assertions)
+Last session: 2026-02-21T22:03:45Z
+Stopped at: Completed 09-05-PLAN.md (Final audit, 125->100 diffs, 62 exact matches)
 Resume file: None
