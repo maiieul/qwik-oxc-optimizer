@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 9 in progress. 21/25 plans across 9 phases executed. 131 snapshot files differ with ~4180 diff lines (down from ~4208 pre-09-01). 3 new exact golden matches gained.
+**Current focus:** Phase 9 in progress. 22/25 plans across 9 phases executed. 129 snapshot files differ with ~5292 diff lines. 2 new exact golden matches gained in 09-02.
 
 ## Current Position
 
 Phase: 9 of 9 (JSX Keys & Final Parity)
-Plan: 1 of 5 complete in phase 9
+Plan: 2 of 5 complete in phase 9
 Status: In progress
-Last activity: 2026-02-21 - Completed 09-01-PLAN.md (const assignment, entry field, windows paths, event naming)
+Last activity: 2026-02-21 - Completed 09-02-PLAN.md (signal wrapping, className, captures, import set)
 
-Progress: [█████████████████████░░░░] 21/25 plans (84%)
+Progress: [██████████████████████░░░] 22/25 plans (88%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 21
-- Average duration: 15min
-- Total execution time: 5.88 hours
+- Total plans completed: 22
+- Average duration: 16min
+- Total execution time: 6.63 hours
 
 **By Phase:**
 
@@ -35,10 +35,10 @@ Progress: [█████████████████████░░
 | 06-import-ordering-cleanup | 3/3 | 39min | 13min |
 | 07-entry-module-emission | 1/1 | 3min | 3min |
 | 08-jsx-flags-iteration-variables | 3/3 | 41min | 14min |
-| 09-jsx-keys-final-parity | 1/5 | 45min | 45min |
+| 09-jsx-keys-final-parity | 2/5 | 90min | 45min |
 
 **Recent Trend:**
-- Last 5 plans: 08-01 (5min), 08-02 (13min), 08-03 (23min), 09-01 (45min)
+- Last 5 plans: 08-02 (13min), 08-03 (23min), 09-01 (45min), 09-02 (45min)
 - Trend: Deeper investigation work as remaining issues are more complex and interconnected.
 
 *Updated after each plan completion*
@@ -127,6 +127,11 @@ Recent decisions affecting current work:
 - [09-01]: Export specifier references collected by collect_referenced_idents to prevent incorrect DCE
 - [09-01]: EntryStrategy::Hook mapped same as Segment (returns None for entry field)
 - [09-01]: JSX event rename in exit_expression AFTER segment extraction (not in exit_jsx_attribute which breaks extraction)
+- [09-02]: Generic local variable wrapping uses const_bindings (not full scope analysis) to identify known local declarations for _wrapProp
+- [09-02]: is_text_only elements (title, textarea, script, etc.) skip all signal wrapping and mark children as mutable
+- [09-02]: WrapPropNamed(String, bool) carries is_const flag: true for const locals, false for props/_rawProps
+- [09-02]: Entry module synthetic import ordering left as encounter-order mismatch (only 1 purely import-order diff remaining)
+- [09-02]: Locally-defined Qrl functions reclassified from segment_qrl_names to needed_imports as self-imports
 
 ### Pending Todos
 
@@ -157,20 +162,24 @@ None.
 - Entry field computation RESOLVED (09-01): compute_entry_field from EntryStrategy
 - Windows path normalization RESOLVED (09-01): backslash-to-forward-slash in hash, origin, JSX keys
 - JSX event attr rename RESOLVED (09-01): post-processing pass after segment extraction (5 files improved, 3 exact matches)
-- Remaining 131 snapshot files differ (with ~4180 diff lines):
-  - Capture list differences (iteration variables in captures, missing/extra captures)
+- _wrapProp generic local variable wrapping RESOLVED (09-02): const_bindings + is_import check, is_text_only, is_const flag
+- Capture chained const format RESOLVED (09-02): single VariableDeclaration matching SWC
+- Local Qrl self-imports RESOLVED (09-02): module_level_decls check routes to self-import path
+- Remaining 129 snapshot files differ (with ~5292 diff lines):
+  - Capture list differences (iteration variables in captures, missing/extra captures, capture analysis bugs)
   - _fnSignal hoisting to module level vs segment level
   - _fnSignal children dep constness (OXC treats all _fnSignal as immutable, SWC checks deps)
   - Prop classification differences (var_props vs const_props for some expressions)
   - Missing transforms: _noopQrl, dev mode metadata, code stripping, inline component _fnSignal wrapping
   - Text normalization (trailing spaces in JSX text nodes)
   - Segment body code differences (_hf naming per-segment counter, _fnSignal usage)
-  - 33 flag mismatches remaining (all caused by upstream prop/transform differences)
+  - Inlined segment rendering (SWC hoists function body to const, OXC inlines directly)
+  - Entry module import encounter-order (1 purely import-order diff remaining)
+  - Import assertions (`with { type: "json" }`) being stripped
   - 1 deferred naming issue (should_extract_single_qrl_2 dedup suffix)
-  - Lazy import ordering within entry modules (minor formatting diffs)
 
 ## Session Continuity
 
-Last session: 2026-02-21T14:58:26Z
-Stopped at: Completed 09-01-PLAN.md (const assignment, entry field, windows paths, event naming)
+Last session: 2026-02-21T15:33:24Z
+Stopped at: Completed 09-02-PLAN.md (signal wrapping, className, captures, import set)
 Resume file: None
