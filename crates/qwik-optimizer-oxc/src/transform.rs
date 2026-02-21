@@ -1458,6 +1458,91 @@ impl QwikTransform {
             }
         }
     }
+
+    /// When transpile_jsx is false, rename $-suffixed event handler attributes
+    /// on native JSX elements to their HTML form (e.g., onClick$ -> q-e:click).
+    /// This runs AFTER segment extraction and QRL value replacement, so it
+    /// doesn't interfere with those processes.
+    fn rename_jsx_event_attrs<'a>(
+        expr: &mut Expression<'a>,
+        ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        match expr {
+            Expression::JSXElement(el) => {
+                Self::rename_jsx_element_event_attrs(el, ctx);
+            }
+            Expression::JSXFragment(frag) => {
+                Self::rename_jsx_children_event_attrs(&mut frag.children, ctx);
+            }
+            _ => {}
+        }
+    }
+
+    /// Rename event handler attributes on a single JSXElement and recurse
+    /// into its children.
+    fn rename_jsx_element_event_attrs<'a>(
+        el: &mut JSXElement<'a>,
+        ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        // Determine if this is a native element (lowercase first char)
+        let is_native = match &el.opening_element.name {
+            JSXElementName::Identifier(ident) => {
+                ident.name.as_str().chars().next().is_some_and(|c| c.is_lowercase())
+            }
+            JSXElementName::IdentifierReference(ident) => {
+                ident.name.as_str().chars().next().is_some_and(|c| c.is_lowercase())
+            }
+            _ => false,
+        };
+
+        if is_native {
+            for attr_item in &mut el.opening_element.attributes {
+                if let JSXAttributeItem::Attribute(attr) = attr_item {
+                    if let JSXAttributeName::Identifier(ident) = &attr.name {
+                        if let Some(html_attr) = jsx_event_to_html_attribute(ident.name.as_str()) {
+                            if let Some(colon_pos) = html_attr.find(':') {
+                                let ns_part = &html_attr[..colon_pos];
+                                let name_part = &html_attr[colon_pos + 1..];
+                                let ns_atom = ctx.ast.atom(ns_part);
+                                let name_atom = ctx.ast.atom(name_part);
+                                let ns_ident = JSXIdentifier { span: SPAN, name: ns_atom };
+                                let name_ident = JSXIdentifier { span: SPAN, name: name_atom };
+                                let ns_name = JSXNamespacedName {
+                                    span: SPAN,
+                                    namespace: ns_ident,
+                                    name: name_ident,
+                                };
+                                attr.name = JSXAttributeName::NamespacedName(
+                                    ctx.ast.alloc(ns_name),
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Recurse into children
+        Self::rename_jsx_children_event_attrs(&mut el.children, ctx);
+    }
+
+    /// Recurse into JSX children to rename event handler attributes.
+    fn rename_jsx_children_event_attrs<'a>(
+        children: &mut oxc::allocator::Vec<'a, JSXChild<'a>>,
+        ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        for child in children.iter_mut() {
+            match child {
+                JSXChild::Element(child_el) => {
+                    Self::rename_jsx_element_event_attrs(child_el, ctx);
+                }
+                JSXChild::Fragment(frag) => {
+                    Self::rename_jsx_children_event_attrs(&mut frag.children, ctx);
+                }
+                _ => {}
+            }
+        }
+    }
 }
 
 impl<'a> Traverse<'a, ()> for QwikTransform {
@@ -2154,6 +2239,17 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         // BEFORE the JSX transform runs, so the _jsxSorted output has the correct values.
         if !self.jsx_event_replacements.is_empty() {
             self.replace_jsx_event_handler_values(expr, ctx);
+        }
+
+        // When transpile_jsx is false, rename $-suffixed event handler attributes
+        // to their HTML form (e.g., onClick$ -> q-e:click as NamespacedName).
+        // This MUST run AFTER create_jsx_event_segments_recursive and
+        // replace_jsx_event_handler_values, which rely on the $ suffix to identify
+        // event handler attributes for segment extraction and QRL wrapping.
+        // When transpile_jsx is true, the JSX transform module handles this
+        // during _jsxSorted() call construction.
+        if !self.options.transpile_jsx {
+            Self::rename_jsx_event_attrs(expr, ctx);
         }
 
         if self.options.transpile_jsx {
