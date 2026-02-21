@@ -5168,6 +5168,8 @@ fn is_tree_shakeable_dollar_call(name: &str) -> bool {
 
 /// Minify a function string for sync$ serialization.
 /// Removes comments and normalizes whitespace via parse+codegen roundtrip.
+/// Uses minified codegen to match SWC's sync QRL string format
+/// (no spaces, no newlines, no tabs).
 fn minify_fn_string(source: &str) -> String {
     let parse_source = format!("var x = {}", source);
     let parse_alloc = oxc::allocator::Allocator::default();
@@ -5184,9 +5186,30 @@ fn minify_fn_string(source: &str) -> String {
     if let Some(Statement::VariableDeclaration(decl)) = parse_result.program.body.first() {
         if let Some(declarator) = decl.declarations.first() {
             if let Some(ref init) = declarator.init {
-                let mut codegen = oxc::codegen::Codegen::new();
+                let options = oxc::codegen::CodegenOptions {
+                    minify: true,
+                    ..Default::default()
+                };
+                let mut codegen = oxc::codegen::Codegen::new().with_options(options);
                 codegen.print_expression(init);
-                return codegen.into_source_text();
+                let mut result = codegen.into_source_text();
+
+                // Post-process to match SWC's sync QRL string format:
+                // 1. Strip outer parentheses that OXC adds around function expressions
+                //    (SWC prints `function(...){}` not `(function(...){})`).
+                if (result.starts_with("(function") || result.starts_with("(async function"))
+                    && result.ends_with(')')
+                {
+                    result = result[1..result.len() - 1].to_string();
+                }
+                // 2. OXC minified mode omits trailing semicolons in block bodies.
+                //    SWC includes them. Add `;` before each `}` that follows a
+                //    statement (not after `{` which would be an empty block).
+                //    Simple heuristic: replace `)}` with `);}` when preceded by
+                //    a statement-ending character.
+                result = result.replace(")}", ");}");
+
+                return result;
             }
         }
     }
