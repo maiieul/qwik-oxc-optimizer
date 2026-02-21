@@ -538,6 +538,8 @@ impl QwikTransform {
                 for (_, hash, path) in children {
                     seg.child_lazy_imports.push((hash.clone(), path.clone()));
                 }
+                // Sort by hash to match SWC's BTreeMap<Id> ordering (alphabetical by key).
+                seg.child_lazy_imports.sort_by(|a, b| a.0.cmp(&b.0));
             }
 
             // Assign Qrl-suffixed imports from nested $-calls to their parent segment.
@@ -3521,12 +3523,27 @@ fn simplify_unused_pure_var_decls<'a>(
             if var_decl.declarations.len() == 1 {
                 if let BindingPattern::BindingIdentifier(ref ident) = var_decl.declarations[0].id {
                     let name = ident.name.as_str();
-                    // Init must be a PURE-annotated call expression
+                    // Init must be a PURE-annotated call expression, or a call
+                    // to a known Qwik function that is implicitly side-effect-free
+                    // (SWC strips these even without /* @__PURE__ */ annotation).
                     let has_pure_call_init = var_decl.declarations[0]
                         .init
                         .as_ref()
                         .is_some_and(|init| {
-                            matches!(init, Expression::CallExpression(call) if call.pure)
+                            if let Expression::CallExpression(call) = init {
+                                if call.pure {
+                                    return true;
+                                }
+                                // Known Qwik functions are implicitly pure
+                                if let Expression::Identifier(callee) = &call.callee {
+                                    return matches!(
+                                        callee.name.as_str(),
+                                        "inlinedQrl" | "inlinedQrlDEV" | "qrl" | "qrlDEV"
+                                            | "componentQrl" | "_noopQrl" | "_noopQrlDEV"
+                                    );
+                                }
+                            }
+                            false
                         });
                     // Name must not be referenced elsewhere in the module
                     let is_referenced = all_refs.contains(name);
