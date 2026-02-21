@@ -1876,15 +1876,26 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         decl: &mut VariableDeclaration<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
-        // Populate const_bindings from `const` declarations.
-        // This mirrors SWC's ConstCollector which tracks const bindings for
-        // scope-aware JSX prop/children immutability classification.
+        // Populate const_bindings from `const` declarations whose initializer is
+        // "return-static". This mirrors SWC's fold_var_decl which only marks a const
+        // binding as `Var(true)` when `is_const && is_static`.
+        //
+        // SWC's `is_return_static` classifies an initializer as static when it is:
+        //   - A call to a function ending with `$` (component$, $, etc.)
+        //   - A call to a function ending with `Qrl` (inlinedQrl, componentQrl, etc.)
+        //   - A call to a function starting with `use` (useSignal, useStore, etc.)
+        //   - No initializer (None)
+        //
+        // This means `const x = signal.value + "foo"` is NOT treated as const,
+        // while `const sig = useSignal()` IS treated as const.
         if decl.kind == VariableDeclarationKind::Const {
             for declarator in &decl.declarations {
-                collect_const_binding_names(
-                    &declarator.id,
-                    &mut self.import_tracker.const_bindings,
-                );
+                if is_init_return_static(&declarator.init) {
+                    collect_const_binding_names(
+                        &declarator.id,
+                        &mut self.import_tracker.const_bindings,
+                    );
+                }
             }
         }
     }
@@ -3232,8 +3243,35 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         // ---------------------------------------------------------------
-        // Phase 4: Filter synthetic imports -- keep only those referenced
+        // Phase 4: Sort and filter synthetic imports
         // ---------------------------------------------------------------
+        // SWC emits imports from two sources:
+        // 1. User-derived Qrl-suffixed imports (componentQrl, etc.) -- from ensure_import
+        // 2. Framework-internal synthetic imports (_jsxSorted, inlinedQrl, etc.) -- from ensure_import
+        // Both go through ensure_import which uses a BTreeMap<Id>, so the final
+        // order is alphabetical by local name. However, Qrl-suffixed user imports
+        // always come first because SWC processes them during fold_module_item
+        // (before synthetic imports are added in fold_jsx_opening_element).
+        //
+        // Our approach: sort the Qrl-suffixed imports (step 3a) separately from the
+        // framework-internal imports (step 3b), maintaining the Qrl-first ordering.
+        // Within each group, sort alphabetically.
+
+        // Split: qrl_imports (componentQrl, etc.) are added first (indices 0..qrl_count)
+        let qrl_count = self.import_tracker.qrl_imports.len();
+        let (mut qrl_group, mut framework_group): (Vec<_>, Vec<_>) = synthetic_imports
+            .into_iter()
+            .enumerate()
+            .partition::<Vec<_>, _>(|(i, _)| *i < qrl_count);
+        // Sort each group by name
+        qrl_group.sort_by(|a, b| (a.1).0.cmp((b.1).0));
+        framework_group.sort_by(|a, b| (a.1).0.cmp((b.1).0));
+        let synthetic_imports: Vec<_> = qrl_group
+            .into_iter()
+            .chain(framework_group)
+            .map(|(_, item)| item)
+            .collect();
+
         // For segment strategy, many framework imports (e.g., _jsxSorted,
         // _wrapProp, _fnSignal) are only used inside segment bodies that
         // become separate files. Remove them from the entry module.
@@ -3377,6 +3415,35 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         program.body = new_body;
+    }
+}
+
+/// Check if a variable declarator's initializer is "return-static" per SWC semantics.
+///
+/// Port of SWC's `is_return_static` from `crates/swc-optimizer/core/src/transform.rs:3750`.
+/// A `const` declaration is only treated as a const binding (for JSX prop classification)
+/// when its initializer is:
+///   - A call to a function whose name ends with `$` (component$, $, etc.)
+///   - A call to a function whose name ends with `Qrl` (inlinedQrl, componentQrl, etc.)
+///   - A call to a function whose name starts with `use` (useSignal, useStore, etc.)
+///   - No initializer (None)
+///
+/// This means `const x = signal.value + "foo"` or `const x = a + b` are NOT static,
+/// while `const sig = useSignal()` and `const cmp = component$(() => {})` ARE static.
+fn is_init_return_static(init: &Option<Expression<'_>>) -> bool {
+    match init {
+        Some(Expression::CallExpression(call)) => {
+            // Check the callee name
+            if let Expression::Identifier(ident) = &call.callee {
+                let name = ident.name.as_str();
+                return name.ends_with('$')
+                    || name.ends_with("Qrl")
+                    || name.starts_with("use");
+            }
+            false
+        }
+        Some(_) => false,
+        None => true,
     }
 }
 

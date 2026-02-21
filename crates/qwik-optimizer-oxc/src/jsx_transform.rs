@@ -115,43 +115,75 @@ fn normalize_jsx_text(raw: &str) -> String {
 ///
 /// Returns None if the attribute is not a transformable event handler.
 fn transform_event_attr_name(attr_name: &str) -> Option<String> {
-    if let Some(rest) = attr_name.strip_prefix("document:") {
-        if rest.starts_with("on") && rest.ends_with('$') {
-            let event_part = &rest[2..rest.len() - 1];
-            return Some(format!("q-d:{}", event_part.to_lowercase()));
-        }
-        return None;
-    }
-    if let Some(rest) = attr_name.strip_prefix("window:") {
-        if rest.starts_with("on") && rest.ends_with('$') {
-            let event_part = &rest[2..rest.len() - 1];
-            return Some(format!("q-w:{}", event_part.to_lowercase()));
-        }
-        return None;
-    }
-    if attr_name.starts_with("host:") {
-        // host: prefix is kept as-is (deprecated)
-        return None;
-    }
+    // Port of SWC's jsx_event_to_html_attribute + get_event_scope_data_from_jsx_event.
+    //
+    // Determines the prefix and starting index of the event name portion:
+    //   - window:onXxx$ -> prefix "q-w:", name starts at 9
+    //   - document:onXxx$ -> prefix "q-d:", name starts at 11
+    //   - onXxx$ -> prefix "q-e:", name starts at 2
+    //   - host:xxx -> kept as-is (deprecated, return None)
 
-    if attr_name.starts_with("on") && attr_name.ends_with('$') {
+    let (prefix, name) = if let Some(rest) = attr_name.strip_prefix("window:") {
+        if rest.starts_with("on") && rest.ends_with('$') {
+            ("q-w:", &rest[2..rest.len() - 1])
+        } else {
+            return None;
+        }
+    } else if let Some(rest) = attr_name.strip_prefix("document:") {
+        if rest.starts_with("on") && rest.ends_with('$') {
+            ("q-d:", &rest[2..rest.len() - 1])
+        } else {
+            return None;
+        }
+    } else if attr_name.starts_with("host:") {
+        return None;
+    } else if attr_name.starts_with("on") && attr_name.ends_with('$') {
         let event_part = &attr_name[2..attr_name.len() - 1];
-
+        // Handle onDocument:xxx$ and onWindow:xxx$ (colon-based scope)
         if let Some(colon_pos) = event_part.find(':') {
             let scope = &event_part[..colon_pos];
             let event = &event_part[colon_pos + 1..];
-            return Some(format!(
-                "q-e:{}:{}",
-                scope.to_lowercase(),
-                event.to_lowercase()
+            return Some(create_event_name(
+                &event.to_lowercase(),
+                &format!("q-e:{}:", scope.to_lowercase()),
             ));
         }
+        ("q-e:", event_part)
+    } else {
+        return None;
+    };
 
-        let event_lower = event_part.to_lowercase();
-        return Some(format!("q-e:{}", event_lower));
+    // Special case: DOMContentLoaded
+    if name == "DOMContentLoaded" {
+        return Some(format!("{}-d-o-m-content-loaded", prefix));
     }
 
-    None
+    // Leading dash is a case-sensitive event name marker:
+    // on-cLick$ -> strip the dash, keep the case, then camelCase-to-kebab.
+    let processed_name = if let Some(stripped) = name.strip_prefix('-') {
+        stripped.to_string()
+    } else {
+        name.to_lowercase()
+    };
+
+    Some(create_event_name(&processed_name, prefix))
+}
+
+/// Convert a processed event name from camelCase to kebab-case.
+///
+/// Port of SWC's `create_event_name` / `fromCamelToKebabCase`:
+/// uppercase letters and dashes are both converted to "-{lower}".
+fn create_event_name(name: &str, prefix: &str) -> String {
+    let mut result = String::from(prefix);
+    for c in name.chars() {
+        if c.is_ascii_uppercase() || c == '-' {
+            result.push('-');
+            result.push(c.to_ascii_lowercase());
+        } else {
+            result.push(c);
+        }
+    }
+    result
 }
 
 /// Check if an element name is a text-only element.
