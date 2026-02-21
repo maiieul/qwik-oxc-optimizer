@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 6 complete. All 16 plans across 6 phases executed. 24/162 snapshots match exactly, 138 remaining diffs.
+**Current focus:** Phase 7 plan 1 complete. Entry module emission fixes applied. 138 snapshot files still differ but with fewer diff lines.
 
 ## Current Position
 
-Phase: 6 of 6 (Import Ordering & Cleanup)
-Plan: 3 of 3 complete in phase 6 (all plans done)
-Status: Phase complete -- ALL PHASES COMPLETE
-Last activity: 2026-02-20 - Completed 06-03-PLAN.md (QRL hoisting and lazy import ordering)
+Phase: 7 of 9 (Entry Module Emission Fixes)
+Plan: 1 of 1 complete in phase 7
+Status: Phase complete
+Last activity: 2026-02-21 - Completed 07-01-PLAN.md (entry module _hf* filtering and _fnSignal import fix)
 
-Progress: [████████████████] 100%
+Progress: [█████████████████░░] 17/19 plans (89%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
+- Total plans completed: 17
 - Average duration: 15min
-- Total execution time: 4.4 hours
+- Total execution time: 4.45 hours
 
 **By Phase:**
 
@@ -33,10 +33,11 @@ Progress: [████████████████] 100%
 | 04-signal-props-transforms | 4/4 | 77min | 19min |
 | 05-jsx-keys-flags | 3/3 | 36min | 12min |
 | 06-import-ordering-cleanup | 3/3 | 39min | 13min |
+| 07-entry-module-emission | 1/1 | 3min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 05-03 (13min), 06-02 (8min), 06-01 (20min), 06-03 (11min)
-- Trend: Final phase plans executed efficiently. QRL hoisting + lazy import ordering completed in 11min.
+- Last 5 plans: 06-01 (20min), 06-02 (8min), 06-03 (11min), 07-01 (3min)
+- Trend: Phase 7 executed in 3min -- targeted fixes with clear scope.
 
 *Updated after each plan completion*
 
@@ -103,6 +104,9 @@ Recent decisions affecting current work:
 - [06-03]: Insert hoisted const declarations after variable declarations at function body top (matches SWC positioning)
 - [06-03]: Forward iteration order for hoists matches SWC BTreeMap alphabetical ordering
 - [06-03]: Lazy imports filtered by referenced-ident analysis in exit_program (critical for correct entry module with hoisted QRLs)
+- [07-01]: New is_inline_like_strategy variable before main_code block gates _hf* injection (segment strategy skips entry module injection)
+- [07-01]: body_code.contains(var_name) for per-segment _hf* filtering -- extracts var name from "const _hfN = ..." via strip_prefix + split
+- [07-01]: _fnSignal import: removed || !hoisted_stmts.is_empty() proxy -- body_code.contains("_fnSignal") is sufficient alone
 
 ### Pending Todos
 
@@ -124,17 +128,18 @@ None.
 - Entry module extra imports RESOLVED (06-01): post-hoc filtering eliminates segment-only imports (8 snapshots fixed, 156->148)
 - QRL hoisting RESOLVED (06-03): loop-context QRL calls hoisted to enclosing function body (10 more snapshots fixed, 148->138)
 - Entry module lazy import ordering RESOLVED (06-03): sorted by hash (matching SWC BTreeMap<Id> key) + filtered by referenced-ident analysis
-- Remaining 138 snapshot diffs are beyond scope of current 6-phase plan:
+- Entry module _hf* emission RESOLVED (07-01): conditional injection for segment strategy + per-segment filtering + _fnSignal false-positive fix
+- Remaining 138 snapshot files differ (but with ~149 fewer diff lines after 07-01):
   - Capture list differences (iteration variables in captures, missing/extra captures)
   - _fnSignal hoisting to module level vs segment level
   - q:p / var_props ordering differences
   - JSX flag differences (21 scope-analysis issues)
   - Text normalization (trailing spaces in JSX text nodes)
-  - Segment body code differences (_hf naming, _fnSignal usage)
+  - Segment body code differences (_hf naming per-segment counter, _fnSignal usage)
   - 1 deferred naming issue (should_extract_single_qrl_2 dedup suffix)
 
 ## Session Continuity
 
-Last session: 2026-02-21T00:15:00Z
-Stopped at: Phase 6 complete. All 6 phases executed. Lazy import sort key fixed (hash instead of path).
+Last session: 2026-02-21T09:41:53Z
+Stopped at: Completed 07-01-PLAN.md (entry module emission fixes)
 Resume file: None
