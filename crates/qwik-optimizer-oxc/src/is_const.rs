@@ -104,14 +104,12 @@ pub(crate) fn is_const_expression_with_scope(
         // Identifiers: const if they're in the const_bindings set (imports or const declarations)
         Expression::Identifier(ident) => const_bindings.contains(ident.name.as_str()),
 
-        // Static member expression: X.prop is const if X is a const binding
-        Expression::StaticMemberExpression(member) => {
-            if let Expression::Identifier(obj) = &member.object {
-                const_bindings.contains(obj.name.as_str())
-            } else {
-                false
-            }
-        }
+        // Member expressions are NEVER const (matches SWC's ConstCollector::visit_member_expr).
+        // Even if the object is a const binding, the member access itself is dynamic.
+        Expression::StaticMemberExpression(_) | Expression::ComputedMemberExpression(_) => false,
+
+        // Call expressions are NEVER const (matches SWC's ConstCollector::visit_call_expr).
+        Expression::CallExpression(_) => false,
 
         // Template literals: const if no expressions or all expressions are scope-const
         Expression::TemplateLiteral(tpl) => {

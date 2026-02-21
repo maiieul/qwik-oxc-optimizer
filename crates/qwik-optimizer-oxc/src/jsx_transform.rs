@@ -1709,6 +1709,12 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                     let (deps, has_non_reactive) =
                         collect_reactive_deps(&value, destructured_props, module_imports, props_param_name);
                     if !deps.is_empty() && !has_non_reactive {
+                        // Check if all dep roots are const-bound.
+                        // SWC's compute_scoped_idents returns is_const=false
+                        // when any dep is Var(false) (e.g., loop vars, function params).
+                        let all_deps_const = deps.iter().all(|dep| {
+                            tracker.const_bindings.contains(&dep.root_name)
+                        });
                         // Wrap with _fnSignal
                         let (wrapped, fn_code, str_code) = build_fn_signal_wrapping(
                             value,
@@ -1720,7 +1726,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                         );
                         tracker.needs_fn_signal = true;
                         hoisted_stmts.push((fn_code, str_code));
-                        const_props.push((attr_name, wrapped));
+                        // SWC: convert_to_getter returns is_const from compute_scoped_idents.
+                        // For is_fn (component) elements, always const_props.
+                        // For native elements: const if all deps const, var otherwise.
+                        if is_fn || all_deps_const {
+                            const_props.push((attr_name, wrapped));
+                        } else {
+                            var_props.push((attr_name, wrapped));
+                        }
                     } else {
                         var_props.push((attr_name, value));
                     }
@@ -2370,7 +2383,10 @@ pub(crate) fn transform_jsx_children<'a>(
                                 }
                                 // Check for _fnSignal wrapping (complex reactive
                                 // expressions)
-                                // SWC: _fnSignal result is const (immutable)
+                                // SWC: _fnSignal is_const depends on whether all deps
+                                // are const-bound (imports or const declarations with
+                                // static initializers). If any dep is non-const (e.g.,
+                                // a function parameter like `props`), jsx_mutable=true.
                                 if !is_call_on_value(&other)
                                     && !contains_function_call(&other)
                                 {
@@ -2381,6 +2397,15 @@ pub(crate) fn transform_jsx_children<'a>(
                                         props_param_name,
                                     );
                                     if !deps.is_empty() && !has_non_reactive {
+                                        // Check if all dep roots are const-bound.
+                                        // SWC's compute_scoped_idents returns is_const=false
+                                        // when any dep is Var(false) (e.g., function params).
+                                        let all_deps_const = deps.iter().all(|dep| {
+                                            tracker.const_bindings.contains(&dep.root_name)
+                                        });
+                                        if !all_deps_const {
+                                            any_child_mutable = true;
+                                        }
                                         let (wrapped, fn_code, str_code) =
                                             build_fn_signal_wrapping(
                                                 other,
