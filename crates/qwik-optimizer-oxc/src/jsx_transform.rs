@@ -105,6 +105,17 @@ fn transform_event_attr_name(attr_name: &str) -> Option<String> {
     None
 }
 
+/// Check if an element name is a text-only element.
+/// Text-only elements (like <title>, <textarea>) have their children kept as-is
+/// without signal wrapping. SWC sets jsx_mutable=true for their children.
+/// Matches SWC's is_text_only() function.
+fn is_text_only_element(name: &str) -> bool {
+    matches!(
+        name,
+        "text" | "textarea" | "title" | "option" | "script" | "style" | "noscript"
+    )
+}
+
 /// Check if a JSX attribute value is a compile-time constant for prop classification.
 ///
 /// Uses scope-aware classification: identifiers that are imports or const declarations
@@ -345,8 +356,11 @@ enum SignalWrapResult {
     /// The String is the signal identifier name (object of .value).
     WrapPropSignal,
     /// Expression should be wrapped with _wrapProp(source, "propName") -- Form 2.
-    /// The Strings are (source_name, prop_name).
-    WrapPropNamed(String),
+    /// The String is the prop name. The bool indicates whether the result is const
+    /// (true for const-declared local variables like `const state = useStore(...)`,
+    /// false for non-const sources like `_rawProps`, function params, destructured props).
+    /// When is_const=false, SWC sets jsx_mutable=true, breaking parent static_subtree.
+    WrapPropNamed(String, bool),
     /// No signal wrapping needed; use normal var/const classification.
     None,
 }
@@ -358,6 +372,9 @@ enum SignalWrapResult {
 ///   BUT NOT `X.value()` (call on .value)
 /// - `_rawProps.propName` where _rawProps is the props parameter -> WrapPropNamed
 /// - Identifier matching a destructured prop key -> WrapPropNamed (with original key)
+/// - `X.Y` where X is a local variable (not import, not global) -> WrapPropNamed
+///   This matches SWC's create_synthetic_qqsegment which wraps ANY ident.prop
+///   member expression with _wrapProp when the ident is a scoped variable.
 ///
 /// `destructured_props` is an optional map of (local_alias, original_key) pairs
 /// from active props destructuring. If an identifier matches a local alias,
@@ -366,6 +383,8 @@ fn detect_signal_wrap(
     value: &Expression<'_>,
     destructured_props: Option<&[(String, String)]>,
     props_param_name: Option<&str>,
+    module_imports: &[crate::types::ImportInfo],
+    const_bindings: &std::collections::HashSet<String>,
 ) -> SignalWrapResult {
     match value {
         Expression::StaticMemberExpression(member) => {
@@ -388,13 +407,36 @@ fn detect_signal_wrap(
             }
 
             if let Expression::Identifier(ident) = &member.object {
-                if ident.name.as_str() == "_rawProps" && prop_name != "value" {
-                    return SignalWrapResult::WrapPropNamed(prop_name.to_string());
+                let obj_name = ident.name.as_str();
+
+                if obj_name == "_rawProps" && prop_name != "value" {
+                    // _rawProps is a function parameter, so is_const=false
+                    return SignalWrapResult::WrapPropNamed(prop_name.to_string(), false);
                 }
                 // Non-destructured props param: props.class -> _wrapProp(props, "class")
                 if let Some(param_name) = props_param_name {
-                    if ident.name.as_str() == param_name && prop_name != "value" {
-                        return SignalWrapResult::WrapPropNamed(prop_name.to_string());
+                    if obj_name == param_name && prop_name != "value" {
+                        // props param is a function parameter, so is_const=false
+                        return SignalWrapResult::WrapPropNamed(prop_name.to_string(), false);
+                    }
+                }
+
+                // Generic local variable member access: state.text -> _wrapProp(state, "text")
+                // SWC wraps ANY ident.prop where ident is a scoped variable (in decl_stack).
+                // SWC's is_const_expr treats all member expressions as non-const, so they
+                // go through create_synthetic_qqsegment which produces _wrapProp for ident.prop.
+                // We approximate "scoped variable" by checking: the ident is in const_bindings
+                // (known declaration) but NOT an import. Unknown free variables (not declared
+                // in scope) are NOT wrapped -- SWC would bail with (None, false).
+                // is_const=true because const_bindings only contains const declarations.
+                if prop_name != "value" {
+                    let is_import = is_imported_identifier(obj_name, module_imports);
+                    let is_known_local = const_bindings.contains(obj_name) && !is_import;
+                    let is_prop_alias = destructured_props
+                        .map(|props| props.iter().any(|(local, _)| local == obj_name))
+                        .unwrap_or(false);
+                    if is_known_local && !is_prop_alias {
+                        return SignalWrapResult::WrapPropNamed(prop_name.to_string(), true);
                     }
                 }
             }
@@ -407,7 +449,7 @@ fn detect_signal_wrap(
                 if let Expression::Identifier(ident) = &member.object {
                     if ident.name.as_str() == param_name {
                         if let Expression::StringLiteral(s) = &member.expression {
-                            return SignalWrapResult::WrapPropNamed(s.value.to_string());
+                            return SignalWrapResult::WrapPropNamed(s.value.to_string(), false);
                         }
                     }
                 }
@@ -416,7 +458,7 @@ fn detect_signal_wrap(
             if let Expression::Identifier(ident) = &member.object {
                 if ident.name.as_str() == "_rawProps" {
                     if let Expression::StringLiteral(s) = &member.expression {
-                        return SignalWrapResult::WrapPropNamed(s.value.to_string());
+                        return SignalWrapResult::WrapPropNamed(s.value.to_string(), false);
                     }
                 }
             }
@@ -428,7 +470,8 @@ fn detect_signal_wrap(
                 let name = ident.name.as_str();
                 for (local_alias, original_key) in props {
                     if local_alias == name {
-                        return SignalWrapResult::WrapPropNamed(original_key.clone());
+                        // Destructured props are from function params, so is_const=false
+                        return SignalWrapResult::WrapPropNamed(original_key.clone(), false);
                     }
                 }
             }
@@ -1311,12 +1354,19 @@ pub(crate) fn transform_jsx_element_inner<'a>(
             }
             JSXAttributeItem::Attribute(attr) => {
                 let attr = attr.unbox();
-                let attr_name = match &attr.name {
+                let mut attr_name = match &attr.name {
                     JSXAttributeName::Identifier(ident) => ident.name.as_str().to_string(),
                     JSXAttributeName::NamespacedName(ns) => {
                         format!("{}:{}", ns.namespace.name, ns.name.name)
                     }
                 };
+
+                // className -> class for native HTML elements (lowercase tag name).
+                // Component elements (uppercase first letter) keep className as-is.
+                // Matches SWC behavior in the className transform.
+                if attr_name == "className" && !is_fn {
+                    attr_name = "class".to_string();
+                }
 
                 // Handle key attribute
                 if attr_name == "key" {
@@ -1501,7 +1551,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                 // _rawProps.propName -> _wrapProp(_rawProps, "propName") in const props
                 // But NOT signal.value() (function call on .value)
                 if !is_call_on_value(&value) {
-                    match detect_signal_wrap(&value, destructured_props, props_param_name) {
+                    match detect_signal_wrap(&value, destructured_props, props_param_name, module_imports, &tracker.const_bindings) {
                         SignalWrapResult::WrapPropSignal => {
                             // Extract the signal identifier from X.value
                             if let Expression::StaticMemberExpression(member) = value {
@@ -1512,8 +1562,8 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                                 continue;
                             }
                         }
-                        SignalWrapResult::WrapPropNamed(prop_name) => {
-                            // Build _wrapProp(source, "propName") in const props.
+                        SignalWrapResult::WrapPropNamed(prop_name, wrap_is_const) => {
+                            // Build _wrapProp(source, "propName").
                             // Source is either the props param or _rawProps, extracted from
                             // a StaticMemberExpression/ComputedMemberExpression (for props.X or props["key"]).
                             let raw_props_fallback = props_param_name.unwrap_or("_rawProps");
@@ -1531,7 +1581,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                                 source_obj, &prop_name, ctx,
                             );
                             tracker.needs_wrap_prop = true;
-                            const_props.push((attr_name, wrapped));
+                            // SWC places _wrapProp result in const_props when is_const=true
+                            // (const local variables) or when the element is a component (is_fn).
+                            // For non-const sources on native elements, it goes to var_props.
+                            if wrap_is_const || is_fn {
+                                const_props.push((attr_name, wrapped));
+                            } else {
+                                var_props.push((attr_name, wrapped));
+                            }
                             continue;
                         }
                         SignalWrapResult::None => {}
@@ -1574,6 +1631,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     // The q:p/q:ps attributes are injected as JSX attributes on the element,
     // and will be classified into var_props above.
 
+    // Detect text-only elements (SWC's is_text_only). For these elements,
+    // children are NOT signal-wrapped; they keep the original expression and
+    // the subtree is marked mutable. Matches SWC behavior (transform.rs ~1647).
+    let is_text_only = match &element.opening_element.name {
+        JSXElementName::Identifier(ident) => is_text_only_element(ident.name.as_str()),
+        _ => false,
+    };
+
     // Build children
     let (children_expr, _children_count, children_mutable) = transform_jsx_children(
         &mut element.children,
@@ -1586,6 +1651,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         iteration_vars,
         props_param_name,
         key_prefix,
+        is_text_only,
     );
 
     // Compute immutability flags (mirrors SWC transform.rs lines 1570-1571, 1931-1937)
@@ -1843,7 +1909,7 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
 
     let tag = ctx.ast.expression_identifier(SPAN, "_Fragment");
 
-    // Build children
+    // Build children (fragments are never text-only)
     let (children_expr, _children_count, children_mutable) = transform_jsx_children(
         &mut fragment.children,
         tracker,
@@ -1855,6 +1921,7 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
         iteration_vars,
         props_param_name,
         key_prefix,
+        false,
     );
 
     // Fragment has no props, no spread, no event handlers
@@ -1916,6 +1983,7 @@ pub(crate) fn transform_jsx_children<'a>(
     iteration_vars: &[String],
     props_param_name: Option<&str>,
     key_prefix: &str,
+    is_text_only: bool,
 ) -> (Option<Expression<'a>>, usize, bool) {
     let mut child_exprs: Vec<Expression<'a>> = Vec::new();
     let mut any_child_mutable = false;
@@ -2075,6 +2143,14 @@ pub(crate) fn transform_jsx_children<'a>(
                                 child_exprs.push(result);
                             }
                             other => {
+                                // For text-only elements (title, textarea, etc.),
+                                // SWC skips signal wrapping and marks children as mutable.
+                                // (SWC transform.rs ~1647: is_text_only branch)
+                                if is_text_only {
+                                    any_child_mutable = true;
+                                    child_exprs.push(other);
+                                    continue;
+                                }
                                 // Check for signal wrapping in children.
                                 // SWC's convert_to_signal_item returns (is_const, expr):
                                 // - WrapPropSignal (signal.value): is_const=true
@@ -2082,7 +2158,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                 // - _fnSignal wrapping: is_const=true (const call)
                                 // - No wrapping: check is_const_expression
                                 if !is_call_on_value(&other) {
-                                    match detect_signal_wrap(&other, destructured_props, props_param_name) {
+                                    match detect_signal_wrap(&other, destructured_props, props_param_name, module_imports, &tracker.const_bindings) {
                                         SignalWrapResult::WrapPropSignal => {
                                             // signal.value -> _wrapProp(signal)
                                             // SWC: is_const = true (immutable)
@@ -2099,11 +2175,15 @@ pub(crate) fn transform_jsx_children<'a>(
                                                 continue;
                                             }
                                         }
-                                        SignalWrapResult::WrapPropNamed(prop_name) => {
-                                            // _rawProps.propName, props.X, props["X"], or destructured prop ->
+                                        SignalWrapResult::WrapPropNamed(prop_name, wrap_is_const) => {
+                                            // _rawProps.propName, props.X, props["X"], destructured prop,
+                                            // or local variable member access ->
                                             // _wrapProp(source, "propName")
-                                            // SWC: is_const = false (mutable)
-                                            any_child_mutable = true;
+                                            // SWC: is_const depends on the source variable's constness.
+                                            // When is_const=false, SWC sets jsx_mutable=true.
+                                            if !wrap_is_const {
+                                                any_child_mutable = true;
+                                            }
                                             let raw_props_fallback = props_param_name.unwrap_or("_rawProps");
                                             let source_obj = if let Expression::StaticMemberExpression(member) = other {
                                                 member.unbox().object
@@ -2314,7 +2394,7 @@ fn transform_jsx_element_custom_source<'a>(
         }
     }
 
-    // Process children: add as `children` prop if present
+    // Process children: add as `children` prop if present (custom source never text-only)
     let (children_expr, _children_count, _children_mutable) = transform_jsx_children(
         &mut element.children,
         tracker,
@@ -2326,6 +2406,7 @@ fn transform_jsx_element_custom_source<'a>(
         iteration_vars,
         props_param_name,
         key_prefix,
+        false,
     );
 
     if let Some(children) = children_expr {
