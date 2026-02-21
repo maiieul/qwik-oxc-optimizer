@@ -1426,6 +1426,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     let mut spread_args: Vec<Expression<'a>> = Vec::new();
     let mut _has_only_events = true;
     let mut _has_any_visible_prop = false;
+    // Track where the first spread attribute occurs in var_props,
+    // so that _getVarProps(source) is inserted at the correct position
+    // (matching SWC's source-order prop interleaving in _jsxSplit).
+    let mut spread_insert_idx: Option<usize> = None;
 
     // Take attributes out of the opening element
     let mut attrs = ctx.ast.vec();
@@ -1439,6 +1443,11 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     for attr_item in attrs {
         match attr_item {
             JSXAttributeItem::SpreadAttribute(spread) => {
+                if !has_spread {
+                    // Record the current var_props length so we know where to insert
+                    // ..._getVarProps(source) in the _jsxSplit output.
+                    spread_insert_idx = Some(var_props.len());
+                }
                 has_spread = true;
                 spread_args.push(spread.unbox().argument);
             }
@@ -1820,16 +1829,42 @@ pub(crate) fn transform_jsx_element_inner<'a>(
             ctx.ast.expression_identifier(SPAN, "undefined")
         };
 
-        // Build varProps = { ..._getVarProps(source), ...otherVarProps }
+        // Build varProps = { ...before, ..._getVarProps(source), ...after }
+        // Interleave explicit var_props with _getVarProps(source) at the position
+        // where the spread appeared in source, matching SWC's prop ordering.
         let mut var_obj_props = ctx.ast.vec_with_capacity(1 + var_props.len());
+        let insert_at = spread_insert_idx.unwrap_or(0);
+
+        // Helper closure: build an ObjectProperty from (name, value)
+        let build_var_prop = |name: &str, value: Expression<'a>, ctx: &mut TraverseCtx<'a, ()>| -> ObjectPropertyKind<'a> {
+            let key = if name.contains(':') || name.contains('-') || name.contains('$') {
+                let atom = ctx.ast.atom(name);
+                PropertyKey::from(ctx.ast.expression_string_literal(SPAN, atom, None))
+            } else {
+                ctx.ast
+                    .property_key_static_identifier(SPAN, ctx.ast.atom(name))
+            };
+            ctx.ast.object_property_kind_object_property(
+                SPAN,
+                PropertyKind::Init,
+                key,
+                value,
+                false,
+                false,
+                false,
+            )
+        };
+
+        // Add var props that appeared BEFORE the spread
+        for (name, value) in var_props.drain(..insert_at) {
+            var_obj_props.push(build_var_prop(&name, value, ctx));
+        }
 
         // _getVarProps(source) spread
         let get_var_callee = ctx.ast.expression_identifier(SPAN, "_getVarProps");
         let mut get_var_args = ctx.ast.vec_with_capacity(1);
-        // Clone the spread source expression for _getVarProps
         let spread_source_clone = ctx.ast.expression_identifier(
             SPAN,
-            // Try to extract name from spread_source
             if let Expression::Identifier(ref ident) = spread_source {
                 ctx.ast.atom(ident.name.as_str())
             } else {
@@ -1849,25 +1884,9 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                 .object_property_kind_spread_property(SPAN, get_var_call),
         );
 
-        // Add non-spread var props
+        // Add var props that appeared AFTER the spread
         for (name, value) in var_props {
-            // Use string literal key for names with special chars (bind:, q:p, etc.)
-            let key = if name.contains(':') || name.contains('-') || name.contains('$') {
-                let atom = ctx.ast.atom(&name);
-                PropertyKey::from(ctx.ast.expression_string_literal(SPAN, atom, None))
-            } else {
-                ctx.ast
-                    .property_key_static_identifier(SPAN, ctx.ast.atom(&name))
-            };
-            var_obj_props.push(ctx.ast.object_property_kind_object_property(
-                SPAN,
-                PropertyKind::Init,
-                key,
-                value,
-                false,
-                false,
-                false,
-            ));
+            var_obj_props.push(build_var_prop(&name, value, ctx));
         }
 
         let var_props_expr = ctx.ast.expression_object(SPAN, var_obj_props);
