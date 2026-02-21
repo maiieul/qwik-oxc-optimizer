@@ -147,6 +147,11 @@ pub(crate) struct QwikTransform {
     /// Pushed on entering a $()-call, popped on exiting.
     capture_stack: Vec<(Vec<String>, HashSet<String>)>,
 
+    /// Stack of "invalid declaration" names (function/class declarations) per $()-body.
+    /// In SWC, these go to `invalid_decl` and are NOT captured -- instead C02 diagnostics
+    /// are emitted. Matches SWC's partition of decl_stack into (decl_collect, invalid_decl).
+    invalid_decl_stack: Vec<HashSet<String>>,
+
     /// Serialized body code for each segment (segment strategy only).
     /// Keyed by call span.start for matching to SegmentData.
     segment_body_codes: Vec<(u32, String)>,
@@ -408,6 +413,7 @@ impl QwikTransform {
             pending_dollar_calls: HashSet::new(),
             active_props_info: None,
             capture_stack: Vec::new(),
+            invalid_decl_stack: Vec::new(),
             segment_body_codes: Vec::new(),
             hoisted_function_stmts: Vec::new(),
             stripped_segments: HashSet::new(),
@@ -1197,6 +1203,13 @@ impl QwikTransform {
                                 // `export default ({data}) => <div onClick$={...}/>`),
                                 // keep all captures since compute_captures() already
                                 // filtered against module-level declarations/imports.
+                                // Collect parent scope's invalid (fn/class) declarations
+                                let all_invalid_decls: HashSet<String> = self
+                                    .invalid_decl_stack
+                                    .iter()
+                                    .flat_map(|s| s.iter().cloned())
+                                    .collect();
+
                                 let capture_result = if !self.capture_stack.is_empty() {
                                     // Merge all local declarations from all capture stack frames
                                     let all_parent_decls: HashSet<String> = self
@@ -1208,8 +1221,9 @@ impl QwikTransform {
                                         .capture_names
                                         .into_iter()
                                         .filter(|name| {
-                                            all_parent_decls.contains(name)
-                                                || self.collected.module_level_decls.contains(name)
+                                            !all_invalid_decls.contains(name)
+                                                && (all_parent_decls.contains(name)
+                                                    || self.collected.module_level_decls.contains(name))
                                         })
                                         .collect();
                                     collector::CaptureAnalysisResult {
@@ -1744,6 +1758,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             if name == "sync$" {
                 self.pending_sync_calls.insert(call.span.start);
                 self.capture_stack.push((Vec::new(), HashSet::new()));
+                self.invalid_decl_stack.push(HashSet::new());
                 return;
             }
             if name == "component$" || name == "useResource$" {
@@ -1784,6 +1799,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         self.capture_stack.push((Vec::new(), HashSet::new()));
+        self.invalid_decl_stack.push(HashSet::new());
 
         if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first() {
             for param in &arrow.params.items {
@@ -1900,7 +1916,14 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         // (mirrors SWC's fold_fn_decl)
         self.fn_decl_ctxt_depths.push(self.stack_ctxt.len());
         if let Some(ref id) = func.id {
-            self.stack_ctxt.push(id.name.as_str().to_string());
+            let name = id.name.as_str().to_string();
+            self.stack_ctxt.push(name.clone());
+            // Track function declarations as "invalid" for capture purposes.
+            // SWC treats IdentType::Fn as invalid_decl: they're NOT captured
+            // but emit C02 diagnostics instead.
+            if let Some(frame) = self.invalid_decl_stack.last_mut() {
+                frame.insert(name);
+            }
         }
         // Save and set root_jsx_mode for function bodies (mirrors SWC fold_fn_expr)
         self.root_jsx_mode_stack.push(self.root_jsx_mode);
@@ -1920,6 +1943,17 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             if let Some(ref mut body) = func.body {
                 let hoists = std::mem::take(&mut self.pending_loop_qrl_hoists);
                 flush_qrl_hoists_to_body(&mut body.statements, &hoists, ctx);
+            }
+        }
+    }
+
+    fn enter_class(&mut self, class: &mut Class<'a>, _ctx: &mut TraverseCtx<'a, ()>) {
+        // Track class declarations as "invalid" for capture purposes.
+        // SWC treats IdentType::Class as invalid_decl: they're NOT captured
+        // but emit C02 diagnostics instead (matching function declarations).
+        if let Some(ref id) = class.id {
+            if let Some(frame) = self.invalid_decl_stack.last_mut() {
+                frame.insert(id.name.as_str().to_string());
             }
         }
     }
@@ -2445,6 +2479,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             // Handle sync$() calls -- replace with _qrlSync(fn, "stringified_fn")
             if self.pending_sync_calls.remove(&call.span.start) {
                 self.capture_stack.pop();
+                self.invalid_decl_stack.pop();
 
                 let body_expr = if !call.arguments.is_empty() {
                     let placeholder =
@@ -2680,12 +2715,47 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
 
             let (body_ident_refs, body_local_decls) = self.capture_stack.pop().unwrap_or_default();
+            self.invalid_decl_stack.pop();
 
             // enclosing function scope.
             let is_top_level_dollar_call = self.capture_stack.is_empty();
 
             let capture_result =
                 collector::compute_captures(&body_ident_refs, &body_local_decls, &self.collected);
+
+            // Emit C02 diagnostics for function/class references captured inside $() scope.
+            // SWC partitions declarations into (decl_collect, invalid_decl) where invalid_decl
+            // contains function/class declarations. These are NOT captured but emit errors.
+            // We check parent scope's invalid_decl_stack to find references to fn/class decls.
+            let parent_invalid_decls: HashSet<String> = self.invalid_decl_stack
+                .iter()
+                .flat_map(|s| s.iter().cloned())
+                .collect();
+            let mut filtered_captures = Vec::new();
+            for name in &capture_result.capture_names {
+                if parent_invalid_decls.contains(name) {
+                    // Emit C02 diagnostic matching SWC's "FunctionReference" error
+                    self.diagnostics.push(crate::types::Diagnostic {
+                        scope: "optimizer".to_string(),
+                        category: crate::types::DiagnosticCategory::Error,
+                        code: Some("C02".to_string()),
+                        file: self.filename.clone(),
+                        message: format!(
+                            "Reference to identifier '{}' can not be used inside a Qrl($) scope because it's a function",
+                            name
+                        ),
+                        highlights: None,
+                        suggestions: None,
+                    });
+                } else {
+                    filtered_captures.push(name.clone());
+                }
+            }
+            let capture_result = collector::CaptureAnalysisResult {
+                capture_names: filtered_captures,
+                reemitted_imports: capture_result.reemitted_imports,
+                diagnostics: capture_result.diagnostics,
+            };
 
             // Reclassify module-level declarations from captures to needed_imports
             // (self-imports from the parent module). This matches SWC behavior where
