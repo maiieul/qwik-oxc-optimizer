@@ -244,6 +244,12 @@ pub(crate) struct QwikTransform {
     /// QRL replacement while loop_depth > 0.
     /// Flushed in exit_function / exit_arrow_function_expression when loop_depth == 0.
     pending_loop_qrl_hoists: Vec<(String, String, Vec<String>)>,
+
+    /// Iteration variables used by each event handler, keyed by lambda span start.
+    /// Populated during enter_call_expression when processing JSX event handler
+    /// lambdas inside loops. Consumed during replace_jsx_element_handlers for
+    /// q:p/q:ps attribute injection at the correct element level.
+    iter_var_usage_by_handler: HashMap<u32, Vec<String>>,
 }
 
 /// Info needed to build a qrl()/inlinedQrl() call for a JSX event handler.
@@ -402,6 +408,7 @@ impl QwikTransform {
             root_jsx_mode_stack: Vec::new(),
             jsx_key_prefix,
             pending_loop_qrl_hoists: Vec::new(),
+            iter_var_usage_by_handler: HashMap::new(),
         }
     }
 
@@ -1031,9 +1038,16 @@ impl QwikTransform {
                                 // (mirrors SWC's transform_event_handler_with_iter_var).
                                 if self.loop_depth > 0 {
                                     let iter_vars = self.current_iteration_vars();
+                                    // Use deep scan for iteration variable detection.
+                                    // body_ident_refs doesn't descend into nested functions,
+                                    // but iteration variables can be captured by nested closures.
+                                    // SWC's body_contains_ident does a full deep scan.
+                                    let deep_refs = analyze_lambda_deep_ident_refs(
+                                        &self.source_code, span,
+                                    );
                                     let used_iter_vars: Vec<String> = iter_vars
                                         .iter()
-                                        .filter(|v| body_ident_refs.contains(v))
+                                        .filter(|v| deep_refs.contains(*v))
                                         .cloned()
                                         .collect();
                                     if !used_iter_vars.is_empty() {
@@ -1046,6 +1060,11 @@ impl QwikTransform {
                                         for var_name in &used_iter_vars {
                                             param_names.push(var_name.clone());
                                         }
+                                        // Record used iteration variables keyed by lambda span
+                                        // start for q:p injection at the correct element level
+                                        // during replace_jsx_element_handlers.
+                                        self.iter_var_usage_by_handler
+                                            .insert(span.0, used_iter_vars.clone());
                                     }
                                 }
 
@@ -1239,11 +1258,16 @@ impl QwikTransform {
     }
 
     /// Replace event handler lambdas in a JSXElement and recurse into children.
+    /// Also injects q:p/q:ps attributes for iteration variables used by handlers.
     fn replace_jsx_element_handlers<'a>(
         &mut self,
         el: &mut JSXElement<'a>,
         ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        // Collect iteration variables used by handlers on THIS element.
+        // We accumulate these during attribute processing and inject q:p/q:ps after.
+        let mut element_used_iter_vars: Vec<String> = Vec::new();
+
         // Process this element's attributes
         for attr_item in &mut el.opening_element.attributes {
             if let JSXAttributeItem::Attribute(attr) = attr_item {
@@ -1274,6 +1298,15 @@ impl QwikTransform {
                 });
 
                 if let Some(span_start) = lambda_span_start {
+                    // Check if this handler uses iteration variables (for q:p injection)
+                    if let Some(used_vars) = self.iter_var_usage_by_handler.get(&span_start) {
+                        for var_name in used_vars {
+                            if !element_used_iter_vars.contains(var_name) {
+                                element_used_iter_vars.push(var_name.clone());
+                            }
+                        }
+                    }
+
                     if let Some(info) = self.jsx_event_replacements.get(&span_start).cloned() {
                         let replacement = if info.is_inline {
                             // inlinedQrl(handler_expr, "name", [captures])
@@ -1343,6 +1376,60 @@ impl QwikTransform {
                         ));
                     }
                 }
+            }
+        }
+
+        // Inject q:p/q:ps attributes for iteration variables used by event handlers
+        // on this element. This must happen here (before JSX transform) because by the
+        // time transform_jsx_element_inner runs, the handler lambdas are already replaced
+        // by QRL identifiers and we can't scan them for iteration variable usage.
+        if !element_used_iter_vars.is_empty() {
+            if element_used_iter_vars.len() == 1 {
+                // q:p={iterVar}
+                let var_name = &element_used_iter_vars[0];
+                let ident_expr = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(var_name));
+                let container = ctx.ast.jsx_expression_container(
+                    SPAN,
+                    JSXExpression::from(ident_expr),
+                );
+                let ns_name = ctx.ast.jsx_namespaced_name(
+                    SPAN,
+                    ctx.ast.jsx_identifier(SPAN, "q"),
+                    ctx.ast.jsx_identifier(SPAN, "p"),
+                );
+                let qp_attr = ctx.ast.jsx_attribute(
+                    SPAN,
+                    JSXAttributeName::NamespacedName(ctx.ast.alloc(ns_name)),
+                    Some(JSXAttributeValue::ExpressionContainer(ctx.ast.alloc(container))),
+                );
+                el.opening_element.attributes.push(
+                    JSXAttributeItem::Attribute(ctx.ast.alloc(qp_attr)),
+                );
+            } else {
+                // q:ps={[var1, var2, ...]}
+                let mut elements = ctx.ast.vec();
+                for var_name in &element_used_iter_vars {
+                    let ident = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(var_name));
+                    elements.push(ArrayExpressionElement::from(ident));
+                }
+                let arr = ctx.ast.expression_array(SPAN, elements);
+                let container = ctx.ast.jsx_expression_container(
+                    SPAN,
+                    JSXExpression::from(arr),
+                );
+                let ns_name = ctx.ast.jsx_namespaced_name(
+                    SPAN,
+                    ctx.ast.jsx_identifier(SPAN, "q"),
+                    ctx.ast.jsx_identifier(SPAN, "ps"),
+                );
+                let qps_attr = ctx.ast.jsx_attribute(
+                    SPAN,
+                    JSXAttributeName::NamespacedName(ctx.ast.alloc(ns_name)),
+                    Some(JSXAttributeValue::ExpressionContainer(ctx.ast.alloc(container))),
+                );
+                el.opening_element.attributes.push(
+                    JSXAttributeItem::Attribute(ctx.ast.alloc(qps_attr)),
+                );
             }
         }
 
@@ -3603,6 +3690,232 @@ fn collect_idents_from_assignment_target(
         AssignmentTarget::ComputedMemberExpression(member) => {
             collect_idents_from_expression(&member.object, idents);
             collect_idents_from_expression(&member.expression, idents);
+        }
+        _ => {}
+    }
+}
+
+/// Deep scan a lambda's source code for ALL identifier references, including inside
+/// nested arrow/function expressions. Used for iteration variable detection where
+/// variables can be captured by nested closures.
+/// Unlike `analyze_lambda_captures` which respects function scoping (doesn't descend
+/// into nested functions), this descends everywhere to match SWC's `body_contains_ident`.
+fn analyze_lambda_deep_ident_refs(source_code: &str, span: (u32, u32)) -> HashSet<String> {
+    let start = span.0 as usize;
+    let end = span.1 as usize;
+    if start >= source_code.len() || end > source_code.len() || start >= end {
+        return HashSet::new();
+    }
+    let lambda_source = &source_code[start..end];
+
+    let parse_source = format!("var x = {}", lambda_source);
+    let alloc = oxc::allocator::Allocator::default();
+    let source_ref = alloc.alloc_str(&parse_source);
+
+    let parser = oxc::parser::Parser::new(&alloc, source_ref, oxc::span::SourceType::tsx());
+    let parse_result = parser.parse();
+
+    if parse_result.program.body.is_empty() {
+        return HashSet::new();
+    }
+
+    let mut ident_refs = HashSet::new();
+
+    if let Some(Statement::VariableDeclaration(decl)) = parse_result.program.body.first() {
+        if let Some(declarator) = decl.declarations.first() {
+            if let Some(ref init) = declarator.init {
+                walk_expression_deep_idents(init, &mut ident_refs);
+            }
+        }
+    }
+
+    ident_refs
+}
+
+/// Walk an expression tree collecting ALL identifier references, descending into
+/// nested arrow/function expressions (unlike `walk_expression_for_captures`).
+fn walk_expression_deep_idents(expr: &Expression<'_>, idents: &mut HashSet<String>) {
+    match expr {
+        Expression::Identifier(ident) => {
+            idents.insert(ident.name.as_str().to_string());
+        }
+        Expression::CallExpression(call) => {
+            walk_expression_deep_idents(&call.callee, idents);
+            for arg in &call.arguments {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        walk_expression_deep_idents(&spread.argument, idents);
+                    }
+                    _ => {
+                        if let Some(e) = arg.as_expression() {
+                            walk_expression_deep_idents(e, idents);
+                        }
+                    }
+                }
+            }
+        }
+        Expression::StaticMemberExpression(member) => {
+            walk_expression_deep_idents(&member.object, idents);
+        }
+        Expression::ComputedMemberExpression(member) => {
+            walk_expression_deep_idents(&member.object, idents);
+            walk_expression_deep_idents(&member.expression, idents);
+        }
+        Expression::BinaryExpression(binary) => {
+            walk_expression_deep_idents(&binary.left, idents);
+            walk_expression_deep_idents(&binary.right, idents);
+        }
+        Expression::LogicalExpression(logical) => {
+            walk_expression_deep_idents(&logical.left, idents);
+            walk_expression_deep_idents(&logical.right, idents);
+        }
+        Expression::AssignmentExpression(assign) => {
+            walk_assignment_target_deep_idents(&assign.left, idents);
+            walk_expression_deep_idents(&assign.right, idents);
+        }
+        Expression::UnaryExpression(unary) => {
+            walk_expression_deep_idents(&unary.argument, idents);
+        }
+        Expression::UpdateExpression(update) => {
+            match &update.argument {
+                SimpleAssignmentTarget::AssignmentTargetIdentifier(ident) => {
+                    idents.insert(ident.name.as_str().to_string());
+                }
+                SimpleAssignmentTarget::StaticMemberExpression(member) => {
+                    walk_expression_deep_idents(&member.object, idents);
+                }
+                SimpleAssignmentTarget::ComputedMemberExpression(member) => {
+                    walk_expression_deep_idents(&member.object, idents);
+                    walk_expression_deep_idents(&member.expression, idents);
+                }
+                _ => {}
+            }
+        }
+        Expression::ConditionalExpression(cond) => {
+            walk_expression_deep_idents(&cond.test, idents);
+            walk_expression_deep_idents(&cond.consequent, idents);
+            walk_expression_deep_idents(&cond.alternate, idents);
+        }
+        Expression::TemplateLiteral(tmpl) => {
+            for e in &tmpl.expressions {
+                walk_expression_deep_idents(e, idents);
+            }
+        }
+        Expression::ArrayExpression(arr) => {
+            for elem in &arr.elements {
+                match elem {
+                    ArrayExpressionElement::SpreadElement(spread) => {
+                        walk_expression_deep_idents(&spread.argument, idents);
+                    }
+                    ArrayExpressionElement::Elision(_) => {}
+                    _ => {
+                        if let Some(e) = elem.as_expression() {
+                            walk_expression_deep_idents(e, idents);
+                        }
+                    }
+                }
+            }
+        }
+        Expression::ObjectExpression(obj) => {
+            for prop in &obj.properties {
+                match prop {
+                    ObjectPropertyKind::ObjectProperty(p) => {
+                        walk_expression_deep_idents(&p.value, idents);
+                    }
+                    ObjectPropertyKind::SpreadProperty(spread) => {
+                        walk_expression_deep_idents(&spread.argument, idents);
+                    }
+                }
+            }
+        }
+        // Descend into nested functions (unlike walk_expression_for_captures)
+        Expression::ArrowFunctionExpression(arrow) => {
+            for stmt in &arrow.body.statements {
+                walk_statement_deep_idents(stmt, idents);
+            }
+        }
+        Expression::FunctionExpression(func) => {
+            if let Some(body) = &func.body {
+                for stmt in &body.statements {
+                    walk_statement_deep_idents(stmt, idents);
+                }
+            }
+        }
+        Expression::ParenthesizedExpression(paren) => {
+            walk_expression_deep_idents(&paren.expression, idents);
+        }
+        Expression::SequenceExpression(seq) => {
+            for e in &seq.expressions {
+                walk_expression_deep_idents(e, idents);
+            }
+        }
+        Expression::AwaitExpression(await_expr) => {
+            walk_expression_deep_idents(&await_expr.argument, idents);
+        }
+        _ => {}
+    }
+}
+
+/// Walk a statement collecting all identifier references (deep -- descends into nested functions).
+fn walk_statement_deep_idents(stmt: &Statement<'_>, idents: &mut HashSet<String>) {
+    match stmt {
+        Statement::VariableDeclaration(var_decl) => {
+            for declarator in &var_decl.declarations {
+                if let Some(init) = &declarator.init {
+                    walk_expression_deep_idents(init, idents);
+                }
+            }
+        }
+        Statement::ExpressionStatement(expr_stmt) => {
+            walk_expression_deep_idents(&expr_stmt.expression, idents);
+        }
+        Statement::ReturnStatement(ret) => {
+            if let Some(arg) = &ret.argument {
+                walk_expression_deep_idents(arg, idents);
+            }
+        }
+        Statement::BlockStatement(block) => {
+            for s in &block.body {
+                walk_statement_deep_idents(s, idents);
+            }
+        }
+        Statement::IfStatement(if_stmt) => {
+            walk_expression_deep_idents(&if_stmt.test, idents);
+            walk_statement_deep_idents(&if_stmt.consequent, idents);
+            if let Some(alt) = &if_stmt.alternate {
+                walk_statement_deep_idents(alt, idents);
+            }
+        }
+        Statement::ForStatement(for_stmt) => {
+            if let Some(init) = &for_stmt.init {
+                if let Some(expr) = init.as_expression() {
+                    walk_expression_deep_idents(expr, idents);
+                }
+            }
+            if let Some(test) = &for_stmt.test {
+                walk_expression_deep_idents(test, idents);
+            }
+            if let Some(update) = &for_stmt.update {
+                walk_expression_deep_idents(update, idents);
+            }
+            walk_statement_deep_idents(&for_stmt.body, idents);
+        }
+        _ => {}
+    }
+}
+
+/// Walk an assignment target collecting identifier references (deep scan).
+fn walk_assignment_target_deep_idents(target: &AssignmentTarget<'_>, idents: &mut HashSet<String>) {
+    match target {
+        AssignmentTarget::AssignmentTargetIdentifier(ident) => {
+            idents.insert(ident.name.as_str().to_string());
+        }
+        AssignmentTarget::StaticMemberExpression(member) => {
+            walk_expression_deep_idents(&member.object, idents);
+        }
+        AssignmentTarget::ComputedMemberExpression(member) => {
+            walk_expression_deep_idents(&member.object, idents);
+            walk_expression_deep_idents(&member.expression, idents);
         }
         _ => {}
     }

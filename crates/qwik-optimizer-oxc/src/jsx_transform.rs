@@ -1489,46 +1489,12 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         }
     }
 
-    // Inject q:p / q:ps for iteration variables used by event handlers in loops
-    if loop_depth > 0 && !iteration_vars.is_empty() {
-        let mut used_iter_vars: Vec<String> = Vec::new();
-        for iter_var in iteration_vars {
-            // Check if any event handler (q-e:*, q-d:*, q-w:*) var_prop or const_prop uses this variable.
-            // In SWC, the check is on var_props (q-e: keys), but the handler value could be
-            // in either var_props or const_props depending on whether it's already been replaced
-            // by a qrl() call. Check both.
-            let is_used = const_props.iter().any(|(key, value)| {
-                key.starts_with("q-") && expr_uses_ident(value, iter_var)
-            }) || var_props.iter().any(|(key, value)| {
-                key.starts_with("q-") && expr_uses_ident(value, iter_var)
-            });
-            if is_used && !used_iter_vars.contains(iter_var) {
-                used_iter_vars.push(iter_var.clone());
-            }
-        }
-
-        if !used_iter_vars.is_empty() {
-            if used_iter_vars.len() == 1 {
-                // q:p = iterVar (identifier reference)
-                let var_name = &used_iter_vars[0];
-                let ident_expr = ctx
-                    .ast
-                    .expression_identifier(SPAN, ctx.ast.atom(var_name));
-                var_props.push(("q:p".to_string(), ident_expr));
-            } else {
-                // q:ps = [var1, var2, ...] (array expression)
-                let mut elements = ctx.ast.vec();
-                for var_name in &used_iter_vars {
-                    let ident = ctx
-                        .ast
-                        .expression_identifier(SPAN, ctx.ast.atom(var_name));
-                    elements.push(ArrayExpressionElement::from(ident));
-                }
-                let arr = ctx.ast.expression_array(SPAN, elements);
-                var_props.push(("q:ps".to_string(), arr));
-            }
-        }
-    }
+    // NOTE: q:p/q:ps injection for iteration variables is handled earlier in
+    // replace_jsx_element_handlers (transform.rs), where we still have access to
+    // the original lambda bodies before QRL replacement. By this point, handler
+    // lambdas are already replaced by QRL identifiers, so we can't scan them.
+    // The q:p/q:ps attributes are injected as JSX attributes on the element,
+    // and will be classified into var_props above.
 
     // Build children
     let (children_expr, _children_count, children_mutable) = transform_jsx_children(
@@ -1545,7 +1511,9 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     );
 
     // Compute immutability flags (mirrors SWC transform.rs lines 1570-1571, 1931-1937)
-    let static_listeners = !has_spread;
+    // When q:p/q:ps is present, event handlers depend on iteration variables and are NOT static.
+    let has_qp = var_props.iter().any(|(key, _)| key == "q:p" || key == "q:ps");
+    let static_listeners = !has_spread && !has_qp;
     let mut static_subtree = !has_spread;
 
     // var_props existence breaks static_subtree (SWC line 1469)
@@ -2166,110 +2134,6 @@ pub(crate) fn transform_jsx_children<'a>(
                 count,
                 any_child_mutable,
             )
-        }
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Expression identifier checking for q:p injection
-// ---------------------------------------------------------------------------
-
-/// Recursively check if an expression references an identifier by name.
-fn expr_uses_ident(expr: &Expression<'_>, name: &str) -> bool {
-    match expr {
-        Expression::Identifier(ident) => ident.name.as_str() == name,
-        Expression::StaticMemberExpression(mem) => expr_uses_ident(&mem.object, name),
-        Expression::ComputedMemberExpression(mem) => {
-            expr_uses_ident(&mem.object, name) || expr_uses_ident(&mem.expression, name)
-        }
-        Expression::BinaryExpression(bin) => {
-            expr_uses_ident(&bin.left, name) || expr_uses_ident(&bin.right, name)
-        }
-        Expression::CallExpression(call) => {
-            expr_uses_ident(&call.callee, name)
-                || call.arguments.iter().any(|a| arg_uses_ident(a, name))
-        }
-        Expression::ConditionalExpression(cond) => {
-            expr_uses_ident(&cond.test, name)
-                || expr_uses_ident(&cond.consequent, name)
-                || expr_uses_ident(&cond.alternate, name)
-        }
-        Expression::TemplateLiteral(tpl) => {
-            tpl.expressions.iter().any(|e| expr_uses_ident(e, name))
-        }
-        Expression::UnaryExpression(u) => expr_uses_ident(&u.argument, name),
-        Expression::LogicalExpression(log) => {
-            expr_uses_ident(&log.left, name) || expr_uses_ident(&log.right, name)
-        }
-        Expression::AssignmentExpression(assign) => expr_uses_ident(&assign.right, name),
-        Expression::ParenthesizedExpression(paren) => expr_uses_ident(&paren.expression, name),
-        Expression::ArrayExpression(arr) => arr.elements.iter().any(|elem| match elem {
-            ArrayExpressionElement::SpreadElement(s) => expr_uses_ident(&s.argument, name),
-            ArrayExpressionElement::Elision(_) => false,
-            _ => {
-                if let Some(expr) = elem.as_expression() {
-                    expr_uses_ident(expr, name)
-                } else {
-                    false
-                }
-            }
-        }),
-        Expression::ObjectExpression(obj) => obj.properties.iter().any(|prop| match prop {
-            ObjectPropertyKind::ObjectProperty(p) => expr_uses_ident(&p.value, name),
-            ObjectPropertyKind::SpreadProperty(s) => expr_uses_ident(&s.argument, name),
-        }),
-        Expression::ArrowFunctionExpression(arrow) => {
-            // Check the body of arrow functions (used for event handler iteration var detection)
-            match &arrow.body.statements.as_slice() {
-                [Statement::ExpressionStatement(stmt)] => expr_uses_ident(&stmt.expression, name),
-                _ => {
-                    // For block bodies, check all statements for identifier usage
-                    arrow.body.statements.iter().any(|stmt| stmt_uses_ident(stmt, name))
-                }
-            }
-        }
-        Expression::FunctionExpression(func) => {
-            if let Some(body) = &func.body {
-                body.statements.iter().any(|stmt| stmt_uses_ident(stmt, name))
-            } else {
-                false
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Check if a statement references an identifier by name.
-fn stmt_uses_ident(stmt: &Statement<'_>, name: &str) -> bool {
-    match stmt {
-        Statement::ExpressionStatement(s) => expr_uses_ident(&s.expression, name),
-        Statement::ReturnStatement(s) => {
-            s.argument.as_ref().is_some_and(|e| expr_uses_ident(e, name))
-        }
-        Statement::VariableDeclaration(s) => s.declarations.iter().any(|d| {
-            d.init.as_ref().is_some_and(|e| expr_uses_ident(e, name))
-        }),
-        Statement::IfStatement(s) => {
-            expr_uses_ident(&s.test, name)
-                || stmt_uses_ident(&s.consequent, name)
-                || s.alternate.as_ref().is_some_and(|a| stmt_uses_ident(a, name))
-        }
-        Statement::BlockStatement(s) => s.body.iter().any(|stmt| stmt_uses_ident(stmt, name)),
-        _ => false,
-    }
-}
-
-/// Check if an Argument references an identifier by name.
-fn arg_uses_ident(arg: &Argument<'_>, name: &str) -> bool {
-    match arg {
-        Argument::SpreadElement(s) => expr_uses_ident(&s.argument, name),
-        _ => {
-            // Argument inherits Expression variants
-            if let Some(expr) = arg.as_expression() {
-                expr_uses_ident(expr, name)
-            } else {
-                false
-            }
         }
     }
 }
