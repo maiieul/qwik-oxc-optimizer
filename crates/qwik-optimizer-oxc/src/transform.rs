@@ -495,6 +495,7 @@ impl QwikTransform {
 
         // Transfer pending Qrl-suffixed imports to parent segments
         let pending_qrl_imports = std::mem::take(&mut self.pending_segment_qrl_imports);
+        let self_import_source = self.self_import_source();
 
         for seg in self.segments.iter_mut() {
             // Parent field now stores segment name with hash (e.g., "renderHeader_XXXXXXXXXXXX"),
@@ -511,10 +512,31 @@ impl QwikTransform {
                 }
             }
 
-            // Assign Qrl-suffixed imports from nested $-calls to their parent segment
+            // Assign Qrl-suffixed imports from nested $-calls to their parent segment.
+            // If the Qrl name is a locally-defined export (not a framework import),
+            // add it as a self-import in needed_imports instead of segment_qrl_names.
+            // This matches SWC's behavior where local_idents found in global.exports
+            // become self-imports (import from "./filename") rather than core imports.
             for (parent_name, qrl_name) in &pending_qrl_imports {
                 if parent_name == &seg.display_name && !seg.segment_qrl_names.contains(qrl_name) {
-                    seg.segment_qrl_names.push(qrl_name.clone());
+                    if self.collected.module_level_decls.contains(qrl_name.as_str()) {
+                        // Locally-defined Qrl function: import from self module
+                        let already_imported = seg.needed_imports.iter().any(|imp| {
+                            imp.specifiers.contains(qrl_name)
+                        });
+                        if !already_imported {
+                            seg.needed_imports.push(crate::types::ImportInfo {
+                                source: self_import_source.clone(),
+                                specifiers: vec![qrl_name.clone()],
+                                specifier_kinds: vec![crate::types::ImportKind::Named],
+                                specifier_aliases: std::collections::HashMap::new(),
+                                is_qwik_core: false,
+                                span: (0, 0),
+                            });
+                        }
+                    } else {
+                        seg.segment_qrl_names.push(qrl_name.clone());
+                    }
                 }
             }
         }
@@ -2816,8 +2838,12 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         // _jsxSorted, etc.) Each entry is (local_name, statement).
 
         // 3a: Qrl-suffixed imports (componentQrl, useStylesQrl, etc.)
+        // Skip locally-defined Qrl functions (they're module-level exports, not framework imports).
         let mut synthetic_imports: std::vec::Vec<(&str, Statement<'a>)> = std::vec::Vec::new();
         for qrl_name in &self.import_tracker.qrl_imports {
+            if self.collected.module_level_decls.contains(qrl_name.as_str()) {
+                continue; // Locally-defined Qrl function, not a framework import
+            }
             let stmt = import_rewrite::build_named_import(qrl_name, core_module, ctx);
             synthetic_imports.push((qrl_name.as_str(), stmt));
         }
@@ -2827,6 +2853,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             let mut emitted_qrl_names: std::collections::HashSet<String> =
                 self.import_tracker.qrl_imports.iter().cloned().collect();
             for (_parent_name, qrl_name) in &self.pending_segment_qrl_imports {
+                if self.collected.module_level_decls.contains(qrl_name.as_str()) {
+                    continue; // Locally-defined Qrl function
+                }
                 if emitted_qrl_names.insert(qrl_name.clone()) {
                     let stmt =
                         import_rewrite::build_named_import(qrl_name, core_module, ctx);

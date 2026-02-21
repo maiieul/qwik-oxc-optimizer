@@ -290,12 +290,17 @@ pub(crate) fn build_segment_code_with_hoisted(
     // --- Phase 6: Capture restoration + export ---
     let segment_name = &segment.name;
     if has_captures {
-        let capture_stmts: Vec<String> = segment
+        // SWC emits captures as a single chained const declaration:
+        //   const a = _captures[0], b = _captures[1];
+        // This matches SWC's emit_program_body which builds a single
+        // VariableDeclaration with multiple declarators.
+        let capture_decls: Vec<String> = segment
             .capture_names
             .iter()
             .enumerate()
-            .map(|(i, name)| format!("const {} = _captures[{}]", name, i))
+            .map(|(i, name)| format!("{} = _captures[{}]", name, i))
             .collect();
+        let capture_stmts = vec![format!("const {}", capture_decls.join(", "))];
 
         let modified_body = inject_captures_into_body(body_code, &capture_stmts);
         parts.push(format!("export const {} = {}", segment_name, modified_body));
