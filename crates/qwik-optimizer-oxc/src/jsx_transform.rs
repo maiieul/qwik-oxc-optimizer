@@ -1418,6 +1418,38 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         }
     }
 
+    /// Merge or add an event handler to a props list.
+    /// If a handler with the same key already exists, merge into an array.
+    /// This matches SWC's `merge_or_add_event_handler` behavior.
+    fn merge_or_add_to_props<'b>(
+        props: &mut Vec<(String, Expression<'b>)>,
+        key: String,
+        handler: Expression<'b>,
+        ast: &oxc::ast::AstBuilder<'b>,
+    ) {
+        let existing_idx = props.iter().position(|(k, _)| k == &key);
+        if let Some(idx) = existing_idx {
+            let (existing_key, existing_handler) = props.remove(idx);
+            let _ = existing_key;
+            // Create an array with both handlers
+            use oxc::ast::ast::*;
+            let mut elements = ast.vec();
+            // Check if existing handler is already an array
+            if let Expression::ArrayExpression(arr) = existing_handler {
+                for elem in arr.unbox().elements.into_iter() {
+                    elements.push(elem);
+                }
+            } else {
+                elements.push(ArrayExpressionElement::from(existing_handler));
+            }
+            elements.push(ArrayExpressionElement::from(handler));
+            let array = ast.expression_array(SPAN, elements);
+            props.push((key, array));
+        } else {
+            props.push((key, handler));
+        }
+    }
+
     // Classify attributes: detect spreads, separate key, classify var/const props
     let mut has_spread = false;
     let mut key_value: Option<Expression<'a>> = None;
@@ -1509,9 +1541,18 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
                     if is_const_event_handler(&value, &tracker.const_bindings) {
-                        const_props.push((event_name, value));
+                        // Use merge for q-e:input since bind:value/checked also generates q-e:input
+                        if event_name == "q-e:input" {
+                            merge_or_add_to_props(&mut const_props, event_name, value, &ctx.ast);
+                        } else {
+                            const_props.push((event_name, value));
+                        }
                     } else {
-                        var_props.push((event_name, value));
+                        if event_name == "q-e:input" {
+                            merge_or_add_to_props(&mut var_props, event_name, value, &ctx.ast);
+                        } else {
+                            var_props.push((event_name, value));
+                        }
                     }
                     continue;
                 }
@@ -1572,29 +1613,28 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             // bind:value={signal} ->
                             //   "value": signal (const prop)
                             //   "q-e:input": inlinedQrl(_val, "_val", [signal]) (const prop)
+                            // If there's already a q-e:input handler, merge into an array.
                             tracker.needs_val = true;
                             tracker.needs_inlined_qrl = true;
 
-                            // Build inlinedQrl(_val, "_val", [signal])
-                            // We need to clone the signal expression for the captures array.
-                            // Since we can't clone AST nodes, we serialize and re-identify.
                             let signal_name = extract_identifier_name(&signal_value);
                             let event_handler = build_bind_event_handler("_val", &signal_name, ctx);
                             const_props.push(("value".to_string(), signal_value));
-                            const_props.push(("q-e:input".to_string(), event_handler));
+                            merge_or_add_to_props(&mut const_props, "q-e:input".to_string(), event_handler, &ctx.ast);
                             continue;
                         }
                         "checked" => {
                             // bind:checked={signal} ->
                             //   "checked": signal (const prop)
                             //   "q-e:input": inlinedQrl(_chk, "_chk", [signal]) (const prop)
+                            // If there's already a q-e:input handler, merge into an array.
                             tracker.needs_chk = true;
                             tracker.needs_inlined_qrl = true;
 
                             let signal_name = extract_identifier_name(&signal_value);
                             let event_handler = build_bind_event_handler("_chk", &signal_name, ctx);
                             const_props.push(("checked".to_string(), signal_value));
-                            const_props.push(("q-e:input".to_string(), event_handler));
+                            merge_or_add_to_props(&mut const_props, "q-e:input".to_string(), event_handler, &ctx.ast);
                             continue;
                         }
                         _ => {
