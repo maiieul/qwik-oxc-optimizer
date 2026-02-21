@@ -106,29 +106,32 @@ fn transform_event_attr_name(attr_name: &str) -> Option<String> {
 }
 
 /// Check if a JSX attribute value is a compile-time constant for prop classification.
-fn is_const_jsx_value(value: &Expression<'_>) -> bool {
-    crate::is_const::is_const_expression(value)
+///
+/// Uses scope-aware classification: identifiers that are imports or const declarations
+/// are treated as const, while let/var bindings and function params are non-const.
+fn is_const_jsx_value(
+    value: &Expression<'_>,
+    const_bindings: &std::collections::HashSet<String>,
+) -> bool {
+    crate::is_const::is_const_expression_with_scope(value, const_bindings)
 }
 
 /// Check if a child expression is immutable for JSX flag computation.
 ///
 /// This determines whether a child expression breaks `static_subtree`.
-/// SWC uses scope analysis to check if identifiers are in-scope (const) vs
-/// unresolved globals (mutable). Without full scope info, we approximate:
-/// - Identifiers are treated as immutable (most JSX children reference local
-///   variables or imports, which are in-scope)
-/// - Member expressions: immutable only if base object is a known import
-///   (matches SWC's ConstCollector which treats member_expr as !const,
-///   except import member access becomes _wrapProp which is const)
+/// SWC uses scope analysis (ConstCollector) to check if identifiers are
+/// const-bound (imports, const declarations) vs mutable (let/var, params).
+/// We use `const_bindings` for the same purpose:
+/// - Identifiers in const_bindings (imports, const declarations) are immutable
+/// - Identifiers NOT in const_bindings (let/var, function params) are mutable
+/// - Member expressions: immutable only if base object is a const binding
 /// - Function calls are mutable UNLESS they're known immutable calls
 /// - Tagged template expressions are mutable
 /// - Literals and template literals (without expressions) are immutable
-///
-/// This is a conservative approximation that may miss some global references,
-/// but matches SWC's behavior for the vast majority of real-world patterns.
 fn is_child_expression_immutable(
     expr: &Expression<'_>,
     module_imports: &[crate::types::ImportInfo],
+    const_bindings: &std::collections::HashSet<String>,
 ) -> bool {
     match expr {
         // Literals are always immutable
@@ -139,22 +142,18 @@ fn is_child_expression_immutable(
         | Expression::BigIntLiteral(_)
         | Expression::RegExpLiteral(_) => true,
 
-        // Identifiers: treated as immutable (local vars, imports are in-scope).
-        // SWC uses scope analysis; we approximate by treating all identifiers as const.
-        // This may incorrectly mark some global references as const, but those are rare
-        // in JSX children and the alternative (marking all identifiers as mutable) would
-        // cause many more mismatches.
-        Expression::Identifier(_) => true,
+        // Identifiers: immutable only if they are const-bound (imports or const declarations).
+        // This matches SWC's ConstCollector which tracks imports and const bindings.
+        // Let/var bindings and function params are mutable.
+        Expression::Identifier(ident) => const_bindings.contains(ident.name.as_str()),
 
         // Member expressions: mutable by default (SWC ConstCollector.visit_member_expr).
-        // Exception: if the base object is a known import identifier, treat as immutable.
+        // Exception: if the base object is a const binding, treat as immutable.
         // SWC wraps import member access as _wrapProp(import, "prop") which is const.
         Expression::StaticMemberExpression(member) => {
             if let Expression::Identifier(obj_ident) = &member.object {
                 let name = obj_ident.name.as_str();
-                module_imports
-                    .iter()
-                    .any(|imp| imp.specifiers.iter().any(|spec| spec == name))
+                const_bindings.contains(name)
             } else {
                 false
             }
@@ -162,9 +161,7 @@ fn is_child_expression_immutable(
         Expression::ComputedMemberExpression(member) => {
             if let Expression::Identifier(obj_ident) = &member.object {
                 let name = obj_ident.name.as_str();
-                module_imports
-                    .iter()
-                    .any(|imp| imp.specifiers.iter().any(|spec| spec == name))
+                const_bindings.contains(name)
             } else {
                 false
             }
@@ -176,37 +173,37 @@ fn is_child_expression_immutable(
                 || tpl
                     .expressions
                     .iter()
-                    .all(|e| is_child_expression_immutable(e, module_imports))
+                    .all(|e| is_child_expression_immutable(e, module_imports, const_bindings))
         }
 
         // Unary expressions: typeof is always const, others check inner
         Expression::UnaryExpression(unary) => {
             matches!(unary.operator, UnaryOperator::Typeof)
-                || is_child_expression_immutable(&unary.argument, module_imports)
+                || is_child_expression_immutable(&unary.argument, module_imports, const_bindings)
         }
 
         // Binary expressions: const if both sides are const
         Expression::BinaryExpression(bin) => {
-            is_child_expression_immutable(&bin.left, module_imports)
-                && is_child_expression_immutable(&bin.right, module_imports)
+            is_child_expression_immutable(&bin.left, module_imports, const_bindings)
+                && is_child_expression_immutable(&bin.right, module_imports, const_bindings)
         }
 
         // Conditional expressions: const if all parts are const
         Expression::ConditionalExpression(cond) => {
-            is_child_expression_immutable(&cond.test, module_imports)
-                && is_child_expression_immutable(&cond.consequent, module_imports)
-                && is_child_expression_immutable(&cond.alternate, module_imports)
+            is_child_expression_immutable(&cond.test, module_imports, const_bindings)
+                && is_child_expression_immutable(&cond.consequent, module_imports, const_bindings)
+                && is_child_expression_immutable(&cond.alternate, module_imports, const_bindings)
         }
 
         // Logical expressions: const if both sides are const
         Expression::LogicalExpression(log) => {
-            is_child_expression_immutable(&log.left, module_imports)
-                && is_child_expression_immutable(&log.right, module_imports)
+            is_child_expression_immutable(&log.left, module_imports, const_bindings)
+                && is_child_expression_immutable(&log.right, module_imports, const_bindings)
         }
 
         // Parenthesized: check inner
         Expression::ParenthesizedExpression(paren) => {
-            is_child_expression_immutable(&paren.expression, module_imports)
+            is_child_expression_immutable(&paren.expression, module_imports, const_bindings)
         }
 
         // Known immutable function calls (transform-generated)
@@ -1463,7 +1460,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                     }
                 }
 
-                if is_const_jsx_value(&value) {
+                if is_const_jsx_value(&value, &tracker.const_bindings) {
                     const_props.push((attr_name, value));
                 } else if !contains_function_call(&value) {
                     // Reactive deps without non-reactive refs -> _fnSignal wrapping
@@ -2118,12 +2115,11 @@ pub(crate) fn transform_jsx_children<'a>(
                                     tracker.jsx_mutable = false;
                                 }
                                 // No wrapping happened. Check the expression itself
-                                // for mutability. SWC uses scope analysis to
-                                // determine if identifiers are const (in-scope vs
-                                // global). We approximate: function calls and tagged
-                                // templates are mutable; everything else delegates to
-                                // is_child_expression_immutable.
-                                if !is_child_expression_immutable(&other, module_imports) {
+                                // for mutability using scope-aware classification.
+                                // Identifiers are checked against const_bindings
+                                // (imports + const declarations) to determine if
+                                // they're const or mutable.
+                                if !is_child_expression_immutable(&other, module_imports, &tracker.const_bindings) {
                                     any_child_mutable = true;
                                 }
                                 // Check for already-transformed _jsxSorted calls with

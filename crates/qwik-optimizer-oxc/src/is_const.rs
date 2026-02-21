@@ -13,6 +13,7 @@
 /// This is used for the var/const prop split in JSX transformation.
 /// Signal wrapping logic (_wrapProp, _fnSignal) handles reactive cases
 /// independently and may promote expressions from var to const after wrapping.
+#[allow(dead_code)]
 pub(crate) fn is_const_expression(expr: &oxc::ast::ast::Expression<'_>) -> bool {
     use oxc::ast::ast::*;
     match expr {
@@ -71,6 +72,102 @@ pub(crate) fn is_const_expression(expr: &oxc::ast::ast::Expression<'_>) -> bool 
         Expression::ParenthesizedExpression(paren) => is_const_expression(&paren.expression),
 
         // Everything else (identifiers, member exprs, calls, arrows, etc.) is NOT const
+        _ => false,
+    }
+}
+
+/// Scope-aware variant of `is_const_expression` that classifies identifiers
+/// based on whether they appear in the `const_bindings` set.
+///
+/// This mirrors SWC's `ConstCollector` which tracks imports and `const` declarations
+/// and uses that information during JSX prop classification. Identifiers that are
+/// imports or const-declared are treated as const; others (let/var, function params)
+/// are treated as non-const.
+///
+/// Compound expressions (binary, conditional, template literal, etc.) recurse
+/// with scope awareness so that `dep.thing + "stuff"` is correctly classified
+/// as const when `dep` is an import.
+pub(crate) fn is_const_expression_with_scope(
+    expr: &oxc::ast::ast::Expression<'_>,
+    const_bindings: &std::collections::HashSet<String>,
+) -> bool {
+    use oxc::ast::ast::*;
+    match expr {
+        // Literals are always const
+        Expression::StringLiteral(_)
+        | Expression::NumericLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_) => true,
+
+        // Identifiers: const if they're in the const_bindings set (imports or const declarations)
+        Expression::Identifier(ident) => const_bindings.contains(ident.name.as_str()),
+
+        // Static member expression: X.prop is const if X is a const binding
+        Expression::StaticMemberExpression(member) => {
+            if let Expression::Identifier(obj) = &member.object {
+                const_bindings.contains(obj.name.as_str())
+            } else {
+                false
+            }
+        }
+
+        // Template literals: const if no expressions or all expressions are scope-const
+        Expression::TemplateLiteral(tpl) => {
+            tpl.expressions.is_empty()
+                || tpl
+                    .expressions
+                    .iter()
+                    .all(|e| is_const_expression_with_scope(e, const_bindings))
+        }
+
+        // typeof is always a string; other unary ops check inner with scope
+        Expression::UnaryExpression(unary) => {
+            matches!(unary.operator, UnaryOperator::Typeof)
+                || is_const_expression_with_scope(&unary.argument, const_bindings)
+        }
+
+        // Ternary: const if all three parts are scope-const
+        Expression::ConditionalExpression(cond) => {
+            is_const_expression_with_scope(&cond.test, const_bindings)
+                && is_const_expression_with_scope(&cond.consequent, const_bindings)
+                && is_const_expression_with_scope(&cond.alternate, const_bindings)
+        }
+
+        // Binary expressions: const if both sides are scope-const
+        Expression::BinaryExpression(bin) => {
+            is_const_expression_with_scope(&bin.left, const_bindings)
+                && is_const_expression_with_scope(&bin.right, const_bindings)
+        }
+
+        // Object expressions: const if all property values are scope-const
+        Expression::ObjectExpression(obj) => obj.properties.iter().all(|prop| match prop {
+            ObjectPropertyKind::ObjectProperty(p) => {
+                is_const_expression_with_scope(&p.value, const_bindings)
+            }
+            ObjectPropertyKind::SpreadProperty(_) => false,
+        }),
+
+        // Array expressions: const if all elements are scope-const
+        Expression::ArrayExpression(arr) => arr.elements.iter().all(|elem| match elem {
+            ArrayExpressionElement::SpreadElement(_) => false,
+            ArrayExpressionElement::Elision(_) => true,
+            ArrayExpressionElement::BooleanLiteral(_)
+            | ArrayExpressionElement::NullLiteral(_)
+            | ArrayExpressionElement::NumericLiteral(_)
+            | ArrayExpressionElement::BigIntLiteral(_)
+            | ArrayExpressionElement::RegExpLiteral(_)
+            | ArrayExpressionElement::StringLiteral(_) => true,
+            _ => false,
+        }),
+
+        // Parenthesized expressions: const if inner is scope-const
+        Expression::ParenthesizedExpression(paren) => {
+            is_const_expression_with_scope(&paren.expression, const_bindings)
+        }
+
+        // Everything else (calls, arrows, etc.) is NOT const
         _ => false,
     }
 }
