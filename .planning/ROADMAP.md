@@ -148,7 +148,11 @@ Plans:
   4. `q:p` and `q:ps` iteration variable props injected into var_props for all 18 missing cases
   5. `_rawProps` override applies to `useResource$` and other hooks (not just `component$`), fixing 1 paramNames mismatch
   6. JSX flag mismatches reduced from 108 to ≤15
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Build const_bindings scope analysis, update is_const_jsx_value and is_child_expression_immutable for scope-aware identifier classification
+- [ ] 08-02-PLAN.md — Fix q:p injection via pre-recorded iteration vars, clear static_listeners when q:p present, extend _rawProps to useResource$
 
 ### Phase 9: JSX Keys & Final Parity
 **Goal**: Fix remaining JSX key mismatches, resolve structural test differences, and close all remaining snapshot gaps to achieve 0/162 diffs
@@ -179,5 +183,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 | 5. JSX Keys & Flags | 3/3 | Complete (gaps remain) | 2026-02-20 |
 | 6. Import Ordering & Cleanup | 3/3 | Complete | 2026-02-21 |
 | 7. Entry Module Emission Fixes | 1/1 | Complete | 2026-02-21 |
-| 8. JSX Flags & Iteration Variables | 0/? | Not started | — |
+| 8. JSX Flags & Iteration Variables | 0/2 | Not started | — |
 | 9. JSX Keys & Final Parity | 0/? | Not started | — |
