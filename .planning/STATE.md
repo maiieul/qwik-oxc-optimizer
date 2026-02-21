@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 8 complete. 20/20 plans across 8 phases executed. 135 snapshot files differ with ~4117 diff lines (down from ~4222 pre-08-03).
+**Current focus:** Phase 8 verified and complete. 20/20 plans across 8 phases executed. 135 snapshot files differ with ~4117 diff lines (down from ~4222 pre-08-03). Flag mismatches reduced from 108 to 33 (69% reduction).
 
 ## Current Position
 
