@@ -38,6 +38,8 @@ pub(crate) struct ReemittedImport {
     /// For aliased named imports, the original imported name (e.g., "bar" for `import { bar as bbar }`).
     /// None if the local name matches the imported name.
     pub imported_name: Option<String>,
+    /// Import assertion/attribute clause (e.g., `with { type: "json" }`).
+    pub assertion: Vec<(String, String)>,
 }
 
 /// Result of capture analysis for a single $()-body.
@@ -212,6 +214,7 @@ pub(crate) fn compute_captures(
                     source: import_info.source.clone(),
                     kind,
                     imported_name,
+                    assertion: import_info.assertion.clone(),
                 });
                 is_import = true;
                 break;
@@ -475,6 +478,23 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
         }
     }
 
+    // Collect import assertion/attribute clause (e.g., `with { type: "json" }`)
+    let assertion = if let Some(ref with_clause) = import.with_clause {
+        with_clause
+            .with_entries
+            .iter()
+            .filter_map(|entry| {
+                let key = match &entry.key {
+                    ImportAttributeKey::Identifier(id) => id.name.as_str().to_string(),
+                    ImportAttributeKey::StringLiteral(s) => s.value.to_string(),
+                };
+                Some((key, entry.value.value.to_string()))
+            })
+            .collect()
+    } else {
+        Vec::new()
+    };
+
     ctx.module_imports.push(ImportInfo {
         source: source.to_string(),
         specifiers: specifiers_vec,
@@ -482,6 +502,7 @@ fn collect_import(ctx: &mut CollectContext, import: &ImportDeclaration<'_>) {
         specifier_aliases,
         is_qwik_core,
         span: (import.span.start, import.span.end),
+        assertion,
     });
 }
 

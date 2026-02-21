@@ -474,6 +474,10 @@ pub(crate) struct ImportInfo {
 
     /// Byte offset span of the import declaration.
     pub span: (u32, u32),
+
+    /// Import assertion/attribute clause, e.g., `with { type: "json" }`.
+    /// Stored as key-value pairs: `[("type", "json")]`.
+    pub assertion: Vec<(String, String)>,
 }
 
 /// Recorded export declaration from the source module.

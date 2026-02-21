@@ -57,20 +57,42 @@ pub(crate) fn get_jsx_lambda_span(expr: &JSXExpression<'_>) -> Option<(u32, u32)
 
 /// Normalize JSX text: collapse whitespace, strip leading/trailing newlines.
 /// Returns empty string for whitespace-only text.
+///
+/// Matches Babel/SWC JSX text normalization (`cleanJSXElementLiteralChild`):
+/// - First line: preserve start, trim end (unless also last line)
+/// - Last line: trim start (unless also first line), preserve end
+/// - Middle lines: trim both start and end
+/// - Single-line text (first AND last): no trimming
+/// - Empty lines after trimming are removed
+/// - Remaining lines joined with a space
 fn normalize_jsx_text(raw: &str) -> String {
     let lines: Vec<&str> = raw.split('\n').collect();
     let mut parts: Vec<String> = Vec::new();
+    let is_single_line = lines.len() == 1;
 
     for (i, line) in lines.iter().enumerate() {
-        let trimmed = if i == 0 {
-            line.trim_end()
-        } else if i == lines.len() - 1 {
-            line.trim_start()
+        let is_first = i == 0;
+        let is_last = i == lines.len() - 1;
+
+        // Replace tabs with spaces (matching Babel/SWC)
+        let line_str = line.replace('\t', " ");
+
+        let trimmed = if is_single_line {
+            // Single-line: no trimming at all
+            line_str
+        } else if is_first {
+            // First line of multi-line: trim end only
+            line_str.trim_end().to_string()
+        } else if is_last {
+            // Last line of multi-line: trim start only
+            line_str.trim_start().to_string()
         } else {
-            line.trim()
+            // Middle lines: trim both
+            line_str.trim().to_string()
         };
+
         if !trimmed.is_empty() {
-            parts.push(trimmed.to_string());
+            parts.push(trimmed);
         }
     }
 

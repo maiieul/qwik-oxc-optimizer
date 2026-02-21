@@ -22,6 +22,9 @@ struct SegmentImportEntry {
     kind: ImportKind,
     /// For aliased imports, the original imported name (e.g., "Fragment" for "_Fragment").
     imported_name: Option<String>,
+    /// Import assertion/attribute clause, e.g., `with { type: "json" }`.
+    /// Stored as key-value pairs: `[("type", "json")]`.
+    assertion: Vec<(String, String)>,
 }
 
 /// Build a segment's JavaScript source code with optional hoisted function declarations.
@@ -69,6 +72,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
 
@@ -79,6 +83,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
 
@@ -91,6 +96,7 @@ pub(crate) fn build_segment_code_with_hoisted(
                 source: format!("{}/jsx-runtime", jsx_source),
                 kind: ImportKind::Named,
                 imported_name: Some("jsx".to_string()),
+                assertion: Vec::new(),
             });
         }
     } else if body_code.contains("_jsxSorted") {
@@ -99,6 +105,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_jsxSplit") {
@@ -107,6 +114,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_fnSignal") {
@@ -115,6 +123,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_wrapProp") {
@@ -123,6 +132,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_Fragment") {
@@ -131,6 +141,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: jsx_runtime.clone(),
             kind: ImportKind::Named,
             imported_name: Some("Fragment".to_string()),
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("inlinedQrlDEV") {
@@ -139,6 +150,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     } else if body_code.contains("inlinedQrl") {
         imports.push(SegmentImportEntry {
@@ -146,6 +158,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_noopQrlDEV") {
@@ -154,6 +167,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     } else if body_code.contains("_noopQrl") {
         imports.push(SegmentImportEntry {
@@ -161,6 +175,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_qrlSync") {
@@ -169,6 +184,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_getVarProps") {
@@ -177,6 +193,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_getConstProps") {
@@ -185,6 +202,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_restProps") {
@@ -193,6 +211,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_chk") {
@@ -201,6 +220,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
     if body_code.contains("_val") {
@@ -209,6 +229,7 @@ pub(crate) fn build_segment_code_with_hoisted(
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
+            assertion: Vec::new(),
         });
     }
 
@@ -231,6 +252,7 @@ pub(crate) fn build_segment_code_with_hoisted(
                 source: import_info.source.clone(),
                 kind: kind.clone(),
                 imported_name,
+                assertion: import_info.assertion.clone(),
             });
         }
     }
@@ -249,29 +271,30 @@ pub(crate) fn build_segment_code_with_hoisted(
 
     // Emit remaining sorted imports (one per identifier, no merging -- matches SWC).
     for entry in &imports {
+        let with_clause = format_with_clause(&entry.assertion);
         match entry.kind {
             ImportKind::Default => {
                 parts.push(format!(
-                    "import {} from \"{}\";",
-                    entry.local_name, entry.source
+                    "import {} from \"{}\"{};",
+                    entry.local_name, entry.source, with_clause
                 ));
             }
             ImportKind::Namespace => {
                 parts.push(format!(
-                    "import * as {} from \"{}\";",
-                    entry.local_name, entry.source
+                    "import * as {} from \"{}\"{};",
+                    entry.local_name, entry.source, with_clause
                 ));
             }
             ImportKind::Named => {
                 if let Some(ref imported) = entry.imported_name {
                     parts.push(format!(
-                        "import {{ {} as {} }} from \"{}\";",
-                        imported, entry.local_name, entry.source
+                        "import {{ {} as {} }} from \"{}\"{};",
+                        imported, entry.local_name, entry.source, with_clause
                     ));
                 } else {
                     parts.push(format!(
-                        "import {{ {} }} from \"{}\";",
-                        entry.local_name, entry.source
+                        "import {{ {} }} from \"{}\"{};",
+                        entry.local_name, entry.source, with_clause
                     ));
                 }
             }
@@ -451,4 +474,17 @@ pub(crate) fn emit_segment_with_map(
     let map = codegen_result.map.map(|sm| sm.to_json_string());
     let code = crate::emit::expand_single_prop_objects(&codegen_result.code);
     (code, map)
+}
+
+/// Format an import assertion/attribute clause for emission.
+/// Returns ` with { type: "json" }` for non-empty assertions, or empty string.
+fn format_with_clause(assertion: &[(String, String)]) -> String {
+    if assertion.is_empty() {
+        return String::new();
+    }
+    let entries: Vec<String> = assertion
+        .iter()
+        .map(|(key, value)| format!("{}: \"{}\"", key, value))
+        .collect();
+    format!(" with {{ {} }}", entries.join(", "))
 }

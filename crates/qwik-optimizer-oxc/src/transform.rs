@@ -560,6 +560,7 @@ impl QwikTransform {
                                 specifier_aliases: std::collections::HashMap::new(),
                                 is_qwik_core: false,
                                 span: (0, 0),
+                                assertion: Vec::new(),
                             });
                         }
                     } else {
@@ -778,6 +779,7 @@ impl QwikTransform {
                     specifier_aliases: std::collections::HashMap::new(),
                     is_qwik_core: false,
                     span: (0, 0),
+                    assertion: Vec::new(),
                 });
             } else {
                 true_captures.push(name);
@@ -1261,6 +1263,7 @@ impl QwikTransform {
                                                 specifier_aliases: aliases,
                                                 is_qwik_core: false,
                                                 span: (0, 0),
+                                                assertion: ri.assertion.clone(),
                                             }
                                         })
                                         .collect();
@@ -2054,6 +2057,16 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 self.jsx_element_is_native.push(false);
             }
         }
+
+        // Save root_jsx_mode and set to false for children processing.
+        // SWC's handle_jsx (lines 877-878): saves prev, sets root_jsx_mode=false for children.
+        // After children are processed, SWC restores root_jsx_mode (line 919).
+        // In OXC bottom-up traversal, enter_jsx_element runs top-down, so this correctly
+        // ensures children see root_jsx_mode=false. The restore in exit_jsx_element
+        // happens after all children's exit_expression calls, so when the parent's
+        // exit_expression runs it sees the restored value.
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = false;
     }
 
     fn exit_jsx_element(
@@ -2068,6 +2081,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             self.stack_ctxt.pop();
         }
         self.jsx_element_is_native.pop();
+
+        // Restore root_jsx_mode (mirrors SWC handle_jsx line 919: root_jsx_mode = prev)
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
     }
 
     fn enter_jsx_fragment(
@@ -2082,6 +2100,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         if self.options.transpile_jsx {
             self.stack_ctxt.push("Fragment".to_string());
         }
+
+        // Save/restore root_jsx_mode for fragment children (mirrors SWC save/restore pattern)
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = false;
     }
 
     fn exit_jsx_fragment(
@@ -2091,6 +2113,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
     ) {
         if self.options.transpile_jsx {
             self.stack_ctxt.pop();
+        }
+        // Restore root_jsx_mode
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
         }
     }
 
@@ -2362,6 +2388,48 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
     }
 
+    // SWC's fold_cond_expr sets root_jsx_mode=true for ternary expression branches.
+    // This ensures JSX elements inside `cond ? <A/> : <B/>` get auto-generated keys.
+    fn enter_conditional_expression(
+        &mut self,
+        _expr: &mut ConditionalExpression<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
+    }
+
+    fn exit_conditional_expression(
+        &mut self,
+        _expr: &mut ConditionalExpression<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
+    }
+
+    // SWC's fold_bin_expr sets root_jsx_mode=true for binary/logical expressions.
+    // This ensures JSX elements inside `cond && <A/>` get auto-generated keys.
+    fn enter_logical_expression(
+        &mut self,
+        _expr: &mut LogicalExpression<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        self.root_jsx_mode_stack.push(self.root_jsx_mode);
+        self.root_jsx_mode = true;
+    }
+
+    fn exit_logical_expression(
+        &mut self,
+        _expr: &mut LogicalExpression<'a>,
+        _ctx: &mut TraverseCtx<'a, ()>,
+    ) {
+        if let Some(prev) = self.root_jsx_mode_stack.pop() {
+            self.root_jsx_mode = prev;
+        }
+    }
+
     fn exit_expression(&mut self, expr: &mut Expression<'a>, ctx: &mut TraverseCtx<'a, ()>) {
         // Pre-scan JSX elements for $-suffixed event handler attributes.
         match expr {
@@ -2443,7 +2511,12 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         );
                         *expr = result;
                     }
-                    self.root_jsx_mode = false;
+                    // SWC saves/restores root_jsx_mode inside handle_jsx (line 877/919),
+                    // so root_jsx_mode is unchanged after processing. In bottom-up traversal,
+                    // children have already been processed, so we must NOT set root_jsx_mode=false
+                    // here (it would affect parent/sibling elements incorrectly).
+                    // Children already receive root_jsx_mode=false via the parameter in
+                    // transform_jsx_children (line 2123 passes false).
                     self.hoisted_function_stmts = hoisted_stmts;
                     return;
                 }
@@ -2466,7 +2539,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         );
                         *expr = result;
                     }
-                    self.root_jsx_mode = false;
                     self.hoisted_function_stmts = hoisted_stmts;
                     return;
                 }
@@ -2780,6 +2852,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         specifier_aliases: aliases,
                         is_qwik_core: false,
                         span: (0, 0),
+                        assertion: ri.assertion.clone(),
                     }
                 })
                 .collect();
