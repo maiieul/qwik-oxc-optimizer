@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 9 in progress. 23/25 plans across 9 phases executed. 128 snapshot files differ with ~3735 diff lines. 1 new exact golden match gained in 09-03 (example_jsx_keyed_dev).
+**Current focus:** Phase 9 in progress. 24/25 plans across 9 phases executed. 125 snapshot files differ. 37 exact golden matches (3 new from 09-04: example_import_assertion, example_jsx_keyed, example_jsx_keyed_dev).
 
 ## Current Position
 
 Phase: 9 of 9 (JSX Keys & Final Parity)
-Plan: 3 of 5 complete in phase 9
+Plan: 4 of 5 complete in phase 9
 Status: In progress
-Last activity: 2026-02-21 - Completed 09-03-PLAN.md (dev mode QRL emission, C02 diagnostics)
+Last activity: 2026-02-21 - Completed 09-04-PLAN.md (Hoist extraction, key ordering, import assertions)
 
-Progress: [███████████████████████░░] 23/25 plans (92%)
+Progress: [████████████████████████░] 24/25 plans (96%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 23
+- Total plans completed: 24
 - Average duration: 17min
-- Total execution time: 7.21 hours
+- Total execution time: 7.59 hours
 
 **By Phase:**
 
@@ -35,10 +35,10 @@ Progress: [███████████████████████
 | 06-import-ordering-cleanup | 3/3 | 39min | 13min |
 | 07-entry-module-emission | 1/1 | 3min | 3min |
 | 08-jsx-flags-iteration-variables | 3/3 | 41min | 14min |
-| 09-jsx-keys-final-parity | 3/5 | 125min | 42min |
+| 09-jsx-keys-final-parity | 4/5 | 148min | 37min |
 
 **Recent Trend:**
-- Last 5 plans: 08-03 (23min), 09-01 (45min), 09-02 (45min), 09-03 (35min)
+- Last 5 plans: 09-01 (45min), 09-02 (45min), 09-03 (35min), 09-04 (23min)
 - Trend: Deep investigation work on complex interconnected issues.
 
 *Updated after each plan completion*
@@ -137,6 +137,10 @@ Recent decisions affecting current work:
 - [09-03]: Function/class declarations tracked in invalid_decl_stack, excluded from captures, emit C02 diagnostics
 - [09-03]: Diagnostic field order matches SWC: category, code, file, message, highlights, suggestions, scope
 - [09-03]: Dev mode file path: dev_abs_path() = src_dir + "/" + filename; test config differences accepted as non-code-bug
+- [09-04]: SWC handle_jsx saves/restores root_jsx_mode (not just sets false) -- OXC needs enter/exit_jsx_element save/restore
+- [09-04]: SWC key counter assignment is bottom-up (children get lower counter values than parent) -- OXC bottom-up exit_expression naturally matches
+- [09-04]: SWC fold_cond_expr/fold_bin_expr set root_jsx_mode=true -- OXC needs enter_conditional_expression and enter_logical_expression hooks
+- [09-04]: Import assertions stored as Vec<(String, String)> key-value pairs threaded through ImportInfo -> ReemittedImport -> SegmentImportEntry
 
 ### Pending Todos
 
@@ -173,23 +177,26 @@ None.
 - Dev mode QRL emission RESOLVED (09-03): qrlDEV/inlinedQrlDEV/_noopQrlDEV with { file, lo, hi, displayName } metadata
 - JSX dev location RESOLVED (09-03): { fileName, lineNumber, columnNumber } on _jsxSorted/_jsxSplit calls
 - C02 diagnostics RESOLVED (09-03): function/class references excluded from captures with error diagnostics
-- Remaining 128 snapshot files differ (with ~3735 diff lines):
+- Hoist extraction RESOLVED (09-04): inlinedQrl callbacks extracted to named const declarations for EntryStrategy::Hoist
+- root_jsx_mode save/restore RESOLVED (09-04): enter/exit_jsx_element + enter/exit_jsx_fragment save/restore pattern
+- Conditional/logical key hooks RESOLVED (09-04): enter_conditional_expression and enter_logical_expression set root_jsx_mode=true
+- Import assertions RESOLVED (09-04): with { type: "json" } preserved through collection, capture, emission
+- JSX text normalization RESOLVED (09-04): cleanJSXElementLiteralChild algorithm matching Babel/SWC
+- Remaining 125 snapshot files differ:
   - Prop classification differences: var_props vs const_props ordering (~82 positions, most common)
   - Capture list differences (iteration variables, _rawProps, missing/extra captures)
-  - _fnSignal hoisting to module level vs segment level
+  - _fnSignal wrapping completeness (OXC misses some wrapping cases SWC catches)
   - _fnSignal children dep constness (OXC treats all _fnSignal as immutable, SWC checks deps)
+  - _auto_ export rename pattern not implemented (affects ~10 tests)
   - DCE differences (if(false) stripping, unused declaration removal) -- 3 files
   - Dev mode file path test config differences -- 5 files
-  - Text normalization (trailing spaces in JSX text nodes)
-  - Segment body code differences (_hf naming per-segment counter)
-  - Inlined segment rendering (SWC hoists function body to const, OXC inlines directly)
-  - Entry module import encounter-order (1 purely import-order diff remaining)
-  - Import assertions (`with { type: "json" }`) being stripped -- 1 file
+  - _captures import and usage in Hoist/Inline strategy -- several files
+  - Codegen formatting (if return without braces, multi-line JSX attributes)
   - Comment preservation -- 1 file
   - 1 deferred naming issue (should_extract_single_qrl_2 dedup suffix)
 
 ## Session Continuity
 
-Last session: 2026-02-21T17:10:22Z
-Stopped at: Completed 09-03-PLAN.md (dev mode QRL emission, C02 diagnostics)
+Last session: 2026-02-21T20:36:00Z
+Stopped at: Completed 09-04-PLAN.md (Hoist extraction, key ordering, import assertions)
 Resume file: None
