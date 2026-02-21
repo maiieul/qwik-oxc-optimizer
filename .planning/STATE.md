@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 8 in progress. 19/20 plans across 8 phases executed. 138 snapshot files differ with ~3213 diff lines (down from 3809).
+**Current focus:** Phase 8 complete. 20/20 plans across 8 phases executed. 135 snapshot files differ with ~4117 diff lines (down from ~4222 pre-08-03).
 
 ## Current Position
 
 Phase: 8 of 9 (JSX Flags & Iteration Variables)
-Plan: 2 of 3 complete in phase 8
-Status: In progress
-Last activity: 2026-02-21 - Completed 08-02-PLAN.md (q:p injection & iteration variable fixes)
+Plan: 3 of 3 complete in phase 8
+Status: Phase complete
+Last activity: 2026-02-21 - Completed 08-03-PLAN.md (JSX flag audit & SWC=2/OXC=3 fixes)
 
-Progress: [███████████████████░] 19/20 plans (95%)
+Progress: [████████████████████] 20/20 plans (100%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
+- Total plans completed: 20
 - Average duration: 15min
-- Total execution time: 4.75 hours
+- Total execution time: 5.13 hours
 
 **By Phase:**
 
@@ -34,11 +34,11 @@ Progress: [███████████████████░] 19/20 p
 | 05-jsx-keys-flags | 3/3 | 36min | 12min |
 | 06-import-ordering-cleanup | 3/3 | 39min | 13min |
 | 07-entry-module-emission | 1/1 | 3min | 3min |
-| 08-jsx-flags-iteration-variables | 2/3 | 18min | 9min |
+| 08-jsx-flags-iteration-variables | 3/3 | 41min | 14min |
 
 **Recent Trend:**
-- Last 5 plans: 06-03 (11min), 07-01 (3min), 08-01 (5min), 08-02 (13min)
-- Trend: Steady execution with deeper bug-fixing work in 08-02.
+- Last 5 plans: 07-01 (3min), 08-01 (5min), 08-02 (13min), 08-03 (23min)
+- Trend: Deeper investigation work in 08-03 (comprehensive flag audit).
 
 *Updated after each plan completion*
 
@@ -117,6 +117,11 @@ Recent decisions affecting current work:
 - [08-02]: useResource$ gets full props destructuring rewrite (param + body), not just parameter replacement
 - [08-02]: Body-level destructuring detection gated to component$ only
 - [08-02]: Child segment capture reclassification gated to component$ only
+- [08-03]: static_subtree NOT affected by var_props presence -- SWC only uses spread + children_mutable
+- [08-03]: Event handler values classified by is_const_event_handler: qrl/inlinedQrl = const, _qrlSync/serverQrl = non-const
+- [08-03]: q:p/q:ps always go to var_props regardless of const_bindings scope
+- [08-03]: static_listeners false when q-e:* keys exist in var_props (non-const event handlers)
+- [08-03]: 33 remaining flag mismatches all caused by upstream prop/transform differences, not flag computation bugs
 
 ### Pending Todos
 
@@ -142,18 +147,20 @@ None.
 - JSX flag scope analysis RESOLVED (08-01): const_bindings scope tracking fixes 29 flag mismatches (21->fewer remaining)
 - q:p injection RESOLVED (08-02): per-element injection via iter_var_usage_by_handler, static_listeners cleared when q:p present
 - useResource$ _rawProps RESOLVED (08-02): full props destructuring rewrite for useResource$ hooks
-- Remaining 138 snapshot files differ (with ~3213 diff lines, down from ~3809 after 08-01):
+- JSX flag computation RESOLVED (08-03): static_subtree/static_listeners corrected, event handler const classification, q:p forced to var_props
+- Remaining 135 snapshot files differ (with ~4117 diff lines):
   - Capture list differences (iteration variables in captures, missing/extra captures)
   - _fnSignal hoisting to module level vs segment level
-  - q:p / var_props ordering differences (q:p now in var_props but may differ in position from SWC)
-  - JSX flag differences (reduced further by static_listeners clearing)
+  - _fnSignal children dep constness (OXC treats all _fnSignal as immutable, SWC checks deps)
+  - Prop classification differences (var_props vs const_props for some expressions)
+  - Missing transforms: _noopQrl, dev mode metadata, code stripping, inline component _fnSignal wrapping
   - Text normalization (trailing spaces in JSX text nodes)
   - Segment body code differences (_hf naming per-segment counter, _fnSignal usage)
-  - Prop classification differences (var_props vs const_props for some expressions)
+  - 33 flag mismatches remaining (all caused by upstream prop/transform differences)
   - 1 deferred naming issue (should_extract_single_qrl_2 dedup suffix)
 
 ## Session Continuity
 
-Last session: 2026-02-21T11:42:10Z
-Stopped at: Completed 08-02-PLAN.md (q:p injection & iteration variable fixes)
+Last session: 2026-02-21T12:08:37Z
+Stopped at: Completed 08-03-PLAN.md (JSX flag audit & SWC=2/OXC=3 fixes) - Phase 8 complete
 Resume file: None
