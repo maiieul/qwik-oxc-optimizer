@@ -1544,7 +1544,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 self.capture_stack.push((Vec::new(), HashSet::new()));
                 return;
             }
-            if name == "component$" {
+            if name == "component$" || name == "useResource$" {
                 if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first() {
                     // Build set of import names for const-checking default values
                     let import_names: HashSet<String> = self
@@ -1562,22 +1562,20 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             self.import_tracker.needs_rest_props = true;
                         }
                         self.active_props_info = Some(info);
-                    } else if let Some(ref param_name) = info.props_param_name {
-                        // Non-destructured props param (e.g., `(props) =>`).
-                        // Detect body destructuring early so prop_keys are available
-                        // for JSX transforms (which run before component$ exit_expression).
-                        let body_destr = props_destructuring::detect_body_destructuring(
-                            &arrow.body.statements,
-                            param_name,
-                        );
-                        if let Some(ref body_info) = body_destr {
-                            // Populate prop_keys from body destructuring so that
-                            // detect_signal_wrap can recognize destructured aliases
-                            // in JSX contexts (e.g., `bindValue` -> _wrapProp(props, "bind:value"))
-                            info.prop_keys = body_info.prop_keys.clone();
-                            info.rest_name = body_info.rest_name.clone();
+                    } else if name == "component$" {
+                        // Non-destructured props param body destructuring detection
+                        // only applies to component$ (not useResource$ or other hooks).
+                        if let Some(ref param_name) = info.props_param_name {
+                            let body_destr = props_destructuring::detect_body_destructuring(
+                                &arrow.body.statements,
+                                param_name,
+                            );
+                            if let Some(ref body_info) = body_destr {
+                                info.prop_keys = body_info.prop_keys.clone();
+                                info.rest_name = body_info.rest_name.clone();
+                            }
+                            self.active_props_info = Some(info);
                         }
-                        self.active_props_info = Some(info);
                     }
                 }
             }
@@ -2284,13 +2282,13 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
             let is_component_exit =
                 matches!(&kind, DollarCallKind::Named(name) if name == "component$");
-            let props_info = if is_component_exit {
+            let is_props_rewrite_exit =
+                matches!(&kind, DollarCallKind::Named(name) if name == "component$" || name == "useResource$");
+            let props_info = if is_props_rewrite_exit {
                 self.active_props_info.take()
             } else {
                 None
             };
-            // props_info is only Some when is_component_exit is true, so the
-            // inner kind/name checks are unnecessary -- flatten to one level.
             if let Some(ref info) = props_info {
                 if info.needs_transform {
                     // Standard destructured props: replace parameter, rewrite references
@@ -2351,9 +2349,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             );
                         }
                     }
-                } else if let Some(ref param_name) = info.props_param_name {
+                } else if is_component_exit {
+                    if let Some(ref param_name) = info.props_param_name {
                     // Non-destructured props param (e.g., `(props) =>`).
                     // Check for body destructuring: `const { "bind:value": bindValue } = props;`
+                    // This only applies to component$ (not useResource$ or other hooks).
                     if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first_mut() {
                         let body_destr = props_destructuring::detect_body_destructuring(
                             &arrow.body.statements,
@@ -2413,6 +2413,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         }
                     }
                 }
+                }
 
                 if let Some(seg) = self
                     .segments
@@ -2422,40 +2423,45 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     seg.param_names = vec![info.raw_props_name.clone()];
                 }
 
-                let local_aliases: HashSet<String> = info
-                    .prop_keys
-                    .iter()
-                    .map(|(_, local)| local.clone())
-                    .collect();
+                // Reclassify child segment captures: replace prop alias captures
+                // with _rawProps. Only for component$ -- useResource$ and other hooks
+                // don't have user props that child segments would capture.
+                if is_component_exit {
+                    let local_aliases: HashSet<String> = info
+                        .prop_keys
+                        .iter()
+                        .map(|(_, local)| local.clone())
+                        .collect();
 
-                let component_span = (call.span.start, call.span.end);
-                // Use segment name (with hash) for parent matching since
-                // seg.parent now stores segment_name, not display_name.
-                let component_segment_name = self
-                    .segments
-                    .iter()
-                    .find(|s| s.span == component_span)
-                    .map(|s| s.name.clone());
+                    let component_span = (call.span.start, call.span.end);
+                    // Use segment name (with hash) for parent matching since
+                    // seg.parent now stores segment_name, not display_name.
+                    let component_segment_name = self
+                        .segments
+                        .iter()
+                        .find(|s| s.span == component_span)
+                        .map(|s| s.name.clone());
 
-                if let Some(parent_name) = component_segment_name {
-                    for seg in self.segments.iter_mut() {
-                        if seg.parent.as_ref() != Some(&parent_name) || seg.capture_names.is_empty()
-                        {
-                            continue;
-                        }
-                        let mut needs_rawprops = false;
-                        seg.capture_names.retain(|name| {
-                            if local_aliases.contains(name) {
-                                needs_rawprops = true;
-                                false
-                            } else {
-                                true
+                    if let Some(parent_name) = component_segment_name {
+                        for seg in self.segments.iter_mut() {
+                            if seg.parent.as_ref() != Some(&parent_name) || seg.capture_names.is_empty()
+                            {
+                                continue;
                             }
-                        });
-                        if needs_rawprops && !seg.capture_names.contains(&info.raw_props_name) {
-                            seg.capture_names.insert(0, info.raw_props_name.clone());
+                            let mut needs_rawprops = false;
+                            seg.capture_names.retain(|name| {
+                                if local_aliases.contains(name) {
+                                    needs_rawprops = true;
+                                    false
+                                } else {
+                                    true
+                                }
+                            });
+                            if needs_rawprops && !seg.capture_names.contains(&info.raw_props_name) {
+                                seg.capture_names.insert(0, info.raw_props_name.clone());
+                            }
+                            seg.captures = !seg.capture_names.is_empty();
                         }
-                        seg.captures = !seg.capture_names.is_empty();
                     }
                 }
             }
