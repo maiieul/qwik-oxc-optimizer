@@ -472,7 +472,23 @@ fn detect_signal_wrap(
             let prop_name = member.property.name.as_str();
 
             if prop_name == "value" {
-                if let Expression::Identifier(ident) = &member.object {
+                // Look through TSAsExpression wrappers to find the underlying identifier.
+                // e.g. `(count as any).value` -> `count.value` after TS stripping.
+                let object = {
+                    let mut obj = &member.object;
+                    loop {
+                        match obj {
+                            Expression::TSAsExpression(ts) => obj = &ts.expression,
+                            Expression::TSSatisfiesExpression(ts) => obj = &ts.expression,
+                            Expression::TSNonNullExpression(ts) => obj = &ts.expression,
+                            Expression::TSTypeAssertion(ts) => obj = &ts.expression,
+                            Expression::ParenthesizedExpression(paren) => obj = &paren.expression,
+                            _ => break,
+                        }
+                    }
+                    obj
+                };
+                if let Expression::Identifier(ident) = object {
                     let name = ident.name.as_str();
                     // If the object is a body-destructured prop alias (e.g., `test` from
                     // `const { test, ...rest } = props`), don't wrap as WrapPropSignal.
@@ -2478,11 +2494,25 @@ pub(crate) fn transform_jsx_children<'a>(
                                             if let Expression::StaticMemberExpression(member) =
                                                 other
                                             {
-                                                // Check if the signal root is const-bound
-                                                let root_is_const = if let Expression::Identifier(ref obj_ident) = member.object {
-                                                    tracker.const_bindings.contains(obj_ident.name.as_str())
-                                                } else {
-                                                    false
+                                                // Check if the signal root is const-bound.
+                                                // Look through TS wrappers (TSAsExpression etc.) to find the underlying ident.
+                                                let root_is_const = {
+                                                    let mut obj = &member.object;
+                                                    loop {
+                                                        match obj {
+                                                            Expression::TSAsExpression(ts) => obj = &ts.expression,
+                                                            Expression::TSSatisfiesExpression(ts) => obj = &ts.expression,
+                                                            Expression::TSNonNullExpression(ts) => obj = &ts.expression,
+                                                            Expression::TSTypeAssertion(ts) => obj = &ts.expression,
+                                                            Expression::ParenthesizedExpression(paren) => obj = &paren.expression,
+                                                            _ => break,
+                                                        }
+                                                    }
+                                                    if let Expression::Identifier(obj_ident) = obj {
+                                                        tracker.const_bindings.contains(obj_ident.name.as_str())
+                                                    } else {
+                                                        false
+                                                    }
                                                 };
                                                 if !root_is_const {
                                                     any_child_mutable = true;
