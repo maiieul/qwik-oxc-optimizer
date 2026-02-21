@@ -166,7 +166,12 @@ pub fn transform_modules(
 
         // Prepend hoisted function declarations between imports and module body
         let hoisted_stmts: Vec<(String, String)> = qwik_transform.hoisted_function_stmts().to_vec();
-        let main_code = if !hoisted_stmts.is_empty() {
+        // Only inject _hf* into entry module for inline/hoist strategies where the component
+        // body stays in the entry module and references them. For segment strategy, _hf*
+        // declarations go exclusively into segment files via code_move.rs.
+        let is_inline_like_strategy = entry_strategy::should_inline(&transform_options.entry_strategy)
+            || matches!(transform_options.entry_strategy, EntryStrategy::Hoist);
+        let main_code = if !hoisted_stmts.is_empty() && is_inline_like_strategy {
             let mut hoisted_code = String::new();
             for (fn_code, str_code) in &hoisted_stmts {
                 hoisted_code.push_str(fn_code);
