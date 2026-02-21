@@ -2678,7 +2678,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         // Filter to only include lazy imports whose identifier is actually referenced
         // in the entry module body. With QRL hoisting, event handler lazy imports
         // may only be referenced inside segment bodies, not the entry module.
-        self.import_tracker.lazy_imports.sort_by(|a, b| a.1.cmp(&b.1));
+        // Sort lazy imports by hash (first element) to match SWC's BTreeMap<Id> ordering
+        // where keys are i_{hash} identifiers. BTreeMap sorts alphabetically by key.
+        self.import_tracker.lazy_imports.sort_by(|a, b| a.0.cmp(&b.0));
         let mut lazy_imports: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
         for (hash, import_path) in &self.import_tracker.lazy_imports {
             let ident_name = format!("i_{}", hash);
