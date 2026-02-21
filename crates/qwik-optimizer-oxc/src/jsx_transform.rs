@@ -1399,6 +1399,11 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     let mut attrs = ctx.ast.vec();
     std::mem::swap(&mut element.opening_element.attributes, &mut attrs);
 
+    // Pre-scan: detect if ANY spread attribute exists.
+    // This is needed because bind:value/bind:checked should not be transformed
+    // when a spread is present (_jsxSplit path), even if the bind appears before the spread.
+    let any_spread = attrs.iter().any(|a| matches!(a, JSXAttributeItem::SpreadAttribute(_)));
+
     for attr_item in attrs {
         match attr_item {
             JSXAttributeItem::SpreadAttribute(spread) => {
@@ -1512,6 +1517,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                     } else {
                         ctx.ast.expression_boolean_literal(SPAN, true)
                     };
+
+                    // When a spread is present (_jsxSplit), don't transform bind:value/bind:checked.
+                    // Pass them through as-is in var_props. The runtime handles them.
+                    // SWC: "should_not_transform_bind_value_in_var_props_for_jsx_split"
+                    if any_spread {
+                        var_props.push((attr_name, signal_value));
+                        continue;
+                    }
 
                     match bind_prop {
                         "value" => {
@@ -1806,9 +1819,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
 
         // Add non-spread var props
         for (name, value) in var_props {
-            let key = ctx
-                .ast
-                .property_key_static_identifier(SPAN, ctx.ast.atom(&name));
+            // Use string literal key for names with special chars (bind:, q:p, etc.)
+            let key = if name.contains(':') || name.contains('-') || name.contains('$') {
+                let atom = ctx.ast.atom(&name);
+                PropertyKey::from(ctx.ast.expression_string_literal(SPAN, atom, None))
+            } else {
+                ctx.ast
+                    .property_key_static_identifier(SPAN, ctx.ast.atom(&name))
+            };
             var_obj_props.push(ctx.ast.object_property_kind_object_property(
                 SPAN,
                 PropertyKind::Init,
