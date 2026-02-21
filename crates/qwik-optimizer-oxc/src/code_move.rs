@@ -56,10 +56,16 @@ pub(crate) fn build_segment_code_with_hoisted(
 
     let mut imports: Vec<SegmentImportEntry> = Vec::new();
 
-    // qrl import (needed when segment has child $()-calls)
+    // qrl/qrlDEV import (needed when segment has child $()-calls)
     if segment.needs_qrl_import {
+        // Detect DEV variant: if body contains "qrlDEV" use that, else "qrl"
+        let qrl_name = if body_code.contains("qrlDEV") {
+            "qrlDEV"
+        } else {
+            "qrl"
+        };
         imports.push(SegmentImportEntry {
-            local_name: "qrl".to_string(),
+            local_name: qrl_name.to_string(),
             source: core.clone(),
             kind: ImportKind::Named,
             imported_name: None,
@@ -127,7 +133,14 @@ pub(crate) fn build_segment_code_with_hoisted(
             imported_name: Some("Fragment".to_string()),
         });
     }
-    if body_code.contains("inlinedQrl") {
+    if body_code.contains("inlinedQrlDEV") {
+        imports.push(SegmentImportEntry {
+            local_name: "inlinedQrlDEV".to_string(),
+            source: core.clone(),
+            kind: ImportKind::Named,
+            imported_name: None,
+        });
+    } else if body_code.contains("inlinedQrl") {
         imports.push(SegmentImportEntry {
             local_name: "inlinedQrl".to_string(),
             source: core.clone(),
@@ -135,7 +148,14 @@ pub(crate) fn build_segment_code_with_hoisted(
             imported_name: None,
         });
     }
-    if body_code.contains("_noopQrl") {
+    if body_code.contains("_noopQrlDEV") {
+        imports.push(SegmentImportEntry {
+            local_name: "_noopQrlDEV".to_string(),
+            source: core.clone(),
+            kind: ImportKind::Named,
+            imported_name: None,
+        });
+    } else if body_code.contains("_noopQrl") {
         imports.push(SegmentImportEntry {
             local_name: "_noopQrl".to_string(),
             source: core.clone(),

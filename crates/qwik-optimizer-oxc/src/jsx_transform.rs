@@ -10,6 +10,33 @@ use oxc_traverse::TraverseCtx;
 use crate::import_rewrite;
 use crate::transform::ImportTracker;
 
+/// Compute a JSX dev location from a byte offset in source code.
+fn compute_jsx_dev_location(
+    file_name: &str,
+    source_code: &str,
+    span_start: u32,
+) -> import_rewrite::JsxDevLocation {
+    let offset = span_start as usize;
+    let mut line: u32 = 1;
+    let mut col: u32 = 1;
+    for (i, ch) in source_code.char_indices() {
+        if i >= offset {
+            break;
+        }
+        if ch == '\n' {
+            line += 1;
+            col = 1;
+        } else {
+            col += 1;
+        }
+    }
+    import_rewrite::JsxDevLocation {
+        file_name: file_name.to_string(),
+        line_number: line,
+        column_number: col,
+    }
+}
+
 /// Get the span of a JSXExpression's inner expression, but ONLY for arrow/function
 /// expressions that represent inline lambda bodies needing segment extraction.
 ///
@@ -1300,6 +1327,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         );
     }
 
+    // Capture the element's opening tag span for dev mode location metadata.
+    // Must be done before consuming the element.
+    let element_span_start = element.opening_element.span.start;
+
     let tag = build_tag_expression(&element.opening_element.name, ctx);
 
     // Determine if this is a component (function) tag -- uppercase first char or member expression
@@ -1782,7 +1813,8 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         );
 
         let callee = ctx.ast.expression_identifier(SPAN, "_jsxSplit");
-        let mut arguments = ctx.ast.vec_with_capacity(6);
+        let capacity = if tracker.jsx_dev_file_name.is_some() { 7 } else { 6 };
+        let mut arguments = ctx.ast.vec_with_capacity(capacity);
         arguments.push(Argument::from(tag));
         arguments.push(Argument::from(var_props_expr));
         arguments.push(Argument::from(const_props_expr));
@@ -1796,6 +1828,18 @@ pub(crate) fn transform_jsx_element_inner<'a>(
             NumberBase::Decimal,
         )));
         arguments.push(Argument::from(key_expr));
+
+        // Dev mode: append { fileName, lineNumber, columnNumber }
+        if let Some(ref dev_file) = tracker.jsx_dev_file_name {
+            let loc = compute_jsx_dev_location(
+                dev_file,
+                tracker.jsx_dev_source_code.as_deref().unwrap_or(""),
+                element_span_start,
+            );
+            arguments.push(Argument::from(
+                import_rewrite::build_jsx_dev_location(&loc, ctx),
+            ));
+        }
 
         ctx.ast.expression_call_with_pure(
             SPAN,
@@ -1864,7 +1908,8 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         };
 
         let callee = ctx.ast.expression_identifier(SPAN, "_jsxSorted");
-        let mut arguments = ctx.ast.vec_with_capacity(6);
+        let capacity = if tracker.jsx_dev_file_name.is_some() { 7 } else { 6 };
+        let mut arguments = ctx.ast.vec_with_capacity(capacity);
         arguments.push(Argument::from(tag));
         arguments.push(Argument::from(var_props_arg));
         arguments.push(Argument::from(const_props_arg));
@@ -1878,6 +1923,18 @@ pub(crate) fn transform_jsx_element_inner<'a>(
             NumberBase::Decimal,
         )));
         arguments.push(Argument::from(key_expr));
+
+        // Dev mode: append { fileName, lineNumber, columnNumber }
+        if let Some(ref dev_file) = tracker.jsx_dev_file_name {
+            let loc = compute_jsx_dev_location(
+                dev_file,
+                tracker.jsx_dev_source_code.as_deref().unwrap_or(""),
+                element_span_start,
+            );
+            arguments.push(Argument::from(
+                import_rewrite::build_jsx_dev_location(&loc, ctx),
+            ));
+        }
 
         ctx.ast.expression_call_with_pure(
             SPAN,
@@ -1904,6 +1961,9 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
     _root_jsx_mode: bool,
     key_prefix: &str,
 ) -> Expression<'a> {
+    // Capture fragment span for dev mode location metadata
+    let fragment_span_start = fragment.opening_fragment.span.start;
+
     tracker.needs_jsx_sorted = true;
     tracker.needs_fragment = true;
 
@@ -1944,7 +2004,8 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
     let key_expr = ctx.ast.expression_string_literal(SPAN, key_atom, None);
 
     let callee = ctx.ast.expression_identifier(SPAN, "_jsxSorted");
-    let mut arguments = ctx.ast.vec_with_capacity(6);
+    let capacity = if tracker.jsx_dev_file_name.is_some() { 7 } else { 6 };
+    let mut arguments = ctx.ast.vec_with_capacity(capacity);
     arguments.push(Argument::from(tag));
     arguments.push(Argument::from(ctx.ast.expression_null_literal(SPAN)));
     arguments.push(Argument::from(ctx.ast.expression_null_literal(SPAN)));
@@ -1958,6 +2019,18 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
         NumberBase::Decimal,
     )));
     arguments.push(Argument::from(key_expr));
+
+    // Dev mode: append { fileName, lineNumber, columnNumber }
+    if let Some(ref dev_file) = tracker.jsx_dev_file_name {
+        let loc = compute_jsx_dev_location(
+            dev_file,
+            tracker.jsx_dev_source_code.as_deref().unwrap_or(""),
+            fragment_span_start,
+        );
+        arguments.push(Argument::from(
+            import_rewrite::build_jsx_dev_location(&loc, ctx),
+        ));
+    }
 
     ctx.ast.expression_call_with_pure(
         SPAN,

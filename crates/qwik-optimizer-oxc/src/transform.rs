@@ -114,6 +114,14 @@ pub(crate) struct ImportTracker {
     /// Used for scope-aware JSX prop/children immutability classification.
     /// Mirrors SWC's ConstCollector which tracks imports and const bindings.
     pub const_bindings: HashSet<String>,
+
+    /// In dev mode, the fileName for JSX dev location metadata.
+    /// When Some, `_jsxSorted` calls get an extra `{ fileName, lineNumber, columnNumber }` argument.
+    pub jsx_dev_file_name: Option<String>,
+
+    /// Source code for computing line/column from byte offsets (dev mode only).
+    /// Stored as a String reference to avoid lifetime issues.
+    pub jsx_dev_source_code: Option<String>,
 }
 
 /// The core Qwik transform traversal state.
@@ -263,6 +271,10 @@ pub(crate) struct JsxEventReplacement {
     pub capture_names: Vec<String>,
     /// Whether to use inlinedQrl (true) or qrl (false)
     pub is_inline: bool,
+    /// The full display name for dev mode metadata (e.g., "test.tsx_App_component_Cmp_p_q_e_click")
+    pub display_name: String,
+    /// The body span (lo, hi) for dev mode metadata
+    pub body_span: (u32, u32),
 }
 
 impl QwikTransform {
@@ -379,6 +391,16 @@ impl QwikTransform {
             import_tracker: ImportTracker {
                 immutable_function_cmp,
                 const_bindings,
+                jsx_dev_file_name: if matches!(options.mode, crate::types::EmitMode::Dev) {
+                    Some(filename.to_string())
+                } else {
+                    None
+                },
+                jsx_dev_source_code: if matches!(options.mode, crate::types::EmitMode::Dev) {
+                    Some(source_code.to_string())
+                } else {
+                    None
+                },
                 ..ImportTracker::default()
             },
             segment_counter: 0,
@@ -651,6 +673,62 @@ impl QwikTransform {
         self.filename.rsplit('.').next().unwrap_or("js").to_string()
     }
 
+    /// Whether the current emit mode is Dev.
+    fn is_dev_mode(&self) -> bool {
+        matches!(self.options.mode, crate::types::EmitMode::Dev)
+    }
+
+    /// Compute the absolute file path for dev mode metadata.
+    /// Matches SWC's `path_data.abs_path.to_slash_lossy()`: `normalize_path(src_dir.join(filename))`
+    fn dev_abs_path(&self) -> String {
+        let src_dir = &self.options.src_dir;
+        let filename = &self.filename;
+        if src_dir == "." || src_dir.is_empty() {
+            format!("./{}", filename)
+        } else {
+            let src = src_dir.trim_end_matches('/');
+            format!("{}/{}", src, filename)
+        }
+    }
+
+    /// Build dev metadata for a QRL call, or None if not in dev mode.
+    /// - `lo`/`hi`: byte offsets of the $()-call body (0-based, from OXC spans)
+    /// - `display_name`: the full display name of the segment
+    ///
+    /// SWC uses 1-based byte positions (BytePos), so we add 1 to match golden output.
+    fn make_qrl_dev_meta(
+        &self,
+        lo: u32,
+        hi: u32,
+        display_name: &str,
+    ) -> Option<import_rewrite::QrlDevMetadata> {
+        if !self.is_dev_mode() {
+            return None;
+        }
+        Some(import_rewrite::QrlDevMetadata {
+            file: self.dev_abs_path(),
+            lo: lo + 1,
+            hi: hi + 1,
+            display_name: display_name.to_string(),
+        })
+    }
+
+    /// Build dev metadata for a _noopQrl call (lo and hi are always 0).
+    fn make_noop_dev_meta(
+        &self,
+        display_name: &str,
+    ) -> Option<import_rewrite::QrlDevMetadata> {
+        if !self.is_dev_mode() {
+            return None;
+        }
+        Some(import_rewrite::QrlDevMetadata {
+            file: self.dev_abs_path(),
+            lo: 0,
+            hi: 0,
+            display_name: display_name.to_string(),
+        })
+    }
+
     /// Compute the self-import source path for module-level declaration re-imports.
     ///
     /// When a nested segment references a module-level declaration (const, function,
@@ -827,7 +905,13 @@ impl QwikTransform {
             capture_names: vec![],  // Computed in exit_expression
             needed_imports: vec![], // Populated by finalize_segments
             segment_qrl_names: vec![],
-            body_span: (call.span.start, call.span.end),
+            body_span: if let Some(first_arg) = call.arguments.first() {
+                use oxc::span::GetSpan;
+                let s = first_arg.span();
+                (s.start, s.end)
+            } else {
+                (call.span.start, call.span.end)
+            },
             param_names: if let Some(first_arg) = call.arguments.first() {
                 extract_param_names_from_argument(first_arg)
             } else {
@@ -1214,6 +1298,8 @@ impl QwikTransform {
                                             hash: seg_info.hash.clone(),
                                             capture_names: seg_info.capture_names.clone(),
                                             is_inline,
+                                            display_name: seg_info.display_name.clone(),
+                                            body_span: seg_info.body_span,
                                         },
                                     );
                                 }
@@ -1332,6 +1418,11 @@ impl QwikTransform {
                     }
 
                     if let Some(info) = self.jsx_event_replacements.get(&span_start).cloned() {
+                        let dev_meta = self.make_qrl_dev_meta(
+                            info.body_span.0,
+                            info.body_span.1,
+                            &info.display_name,
+                        );
                         let replacement = if info.is_inline {
                             // inlinedQrl(handler_expr, "name", [captures])
                             let handler_expr =
@@ -1360,6 +1451,7 @@ impl QwikTransform {
                                 handler_expr,
                                 &info.segment_name,
                                 &info.capture_names,
+                                dev_meta.as_ref(),
                                 ctx,
                             )
                         } else if self.loop_depth > 0 {
@@ -1386,6 +1478,7 @@ impl QwikTransform {
                                 &import_ident,
                                 &info.segment_name,
                                 &info.capture_names,
+                                dev_meta.as_ref(),
                                 ctx,
                             )
                         };
@@ -2687,9 +2780,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
             let replacement = if is_stripped {
                 self.import_tracker.needs_noop_qrl = true;
+                let noop_meta = self.make_noop_dev_meta(&segment_info.display_name);
                 import_rewrite::build_noop_qrl_call(
                     &segment_info.name,
                     &capture_result.capture_names,
+                    noop_meta.as_ref(),
                     ctx,
                 )
             } else if is_inline {
@@ -2708,18 +2803,30 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     _ => argument_to_expression(body_expr, ctx),
                 };
 
+                let dev_meta = self.make_qrl_dev_meta(
+                    segment_info.body_span.0,
+                    segment_info.body_span.1,
+                    &segment_info.display_name,
+                );
                 import_rewrite::build_inlined_qrl_call(
                     body_as_expr,
                     &segment_info.name,
                     &segment_info.capture_names,
+                    dev_meta.as_ref(),
                     ctx,
                 )
             } else {
                 let import_ident = format!("i_{}", segment_info.hash);
+                let dev_meta = self.make_qrl_dev_meta(
+                    segment_info.body_span.0,
+                    segment_info.body_span.1,
+                    &segment_info.display_name,
+                );
                 import_rewrite::build_qrl_call(
                     &import_ident,
                     &segment_info.name,
                     &segment_info.capture_names,
+                    dev_meta.as_ref(),
                     ctx,
                 )
             };
@@ -2864,14 +2971,17 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
         }
 
-        // 3b: Other framework imports (qrl, inlinedQrl, _captures, etc.)
+        // 3b: Other framework imports (qrl/qrlDEV, inlinedQrl/inlinedQrlDEV, _captures, etc.)
+        let is_dev = self.is_dev_mode();
         if self.import_tracker.needs_qrl {
-            let stmt = import_rewrite::build_named_import("qrl", core_module, ctx);
-            synthetic_imports.push(("qrl", stmt));
+            let name = if is_dev { "qrlDEV" } else { "qrl" };
+            let stmt = import_rewrite::build_named_import(name, core_module, ctx);
+            synthetic_imports.push((name, stmt));
         }
         if self.import_tracker.needs_inlined_qrl {
-            let stmt = import_rewrite::build_named_import("inlinedQrl", core_module, ctx);
-            synthetic_imports.push(("inlinedQrl", stmt));
+            let name = if is_dev { "inlinedQrlDEV" } else { "inlinedQrl" };
+            let stmt = import_rewrite::build_named_import(name, core_module, ctx);
+            synthetic_imports.push((name, stmt));
         }
         if self.import_tracker.needs_captures {
             let stmt = import_rewrite::build_named_import("_captures", core_module, ctx);
@@ -2925,8 +3035,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             synthetic_imports.push(("_chk", stmt));
         }
         if self.import_tracker.needs_noop_qrl {
-            let stmt = import_rewrite::build_named_import("_noopQrl", core_module, ctx);
-            synthetic_imports.push(("_noopQrl", stmt));
+            let name = if is_dev { "_noopQrlDEV" } else { "_noopQrl" };
+            let stmt = import_rewrite::build_named_import(name, core_module, ctx);
+            synthetic_imports.push((name, stmt));
         }
         if self.import_tracker.needs_qrl_sync {
             let stmt = import_rewrite::build_named_import("_qrlSync", core_module, ctx);
@@ -3169,7 +3280,7 @@ fn flush_qrl_hoists_to_body<'a>(
     // the same order they were pushed (which matches SWC's source-order hoisting).
     let mut idx = insert_idx;
     for (import_ident, seg_name, captures) in hoists.iter() {
-        let qrl_call = import_rewrite::build_qrl_call(import_ident, seg_name, captures, ctx);
+        let qrl_call = import_rewrite::build_qrl_call(import_ident, seg_name, captures, None, ctx);
 
         let binding = ctx
             .ast
