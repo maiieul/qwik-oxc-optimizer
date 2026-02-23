@@ -195,7 +195,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Segment imports re-exported with `_auto_` prefix in entry module (e.g. `export { Component as _auto_Component }`)
   2. ~8 tests with _auto_ export diffs resolved (excluding aesthetic-only diffs)
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 11-01-PLAN.md — Track exported local names, populate auto_exports, emit _auto_ exports in entry module, thread _auto_ alias to segment self-imports, fix self_import_source for explicit_extensions
 
 ### Phase 12: Remaining Incremental Fixes
 **Goal**: Close remaining actionable semantic diffs — _fnSignal wrapping gaps, DCE improvements, ctxKind classification, entry field edge cases, QRL hoisting on component elements
@@ -227,5 +230,5 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 9 -> 10 -> 11 -> 12
 | 8. JSX Flags & Iteration Variables | 3/3 | Complete | 2026-02-21 |
 | 9. JSX Keys & Final Parity | 5/5 | Complete (62/162 exact) | 2026-02-21 |
 | 10. Captures Mechanism | 1/1 | Complete | 2026-02-23 |
-| 11. Auto Export Rename | 0/? | Not started | — |
+| 11. Auto Export Rename | 0/1 | Not started | — |
 | 12. Remaining Incremental Fixes | 0/? | Not started | — |
