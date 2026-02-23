@@ -1594,6 +1594,14 @@ fn replace_identifier_in_code(code: &str, old_name: &str, new_name: &str) -> Str
             let after_ok = i + old_len >= chars.len() || !is_ident_char(chars[i + old_len]);
 
             if before_ok && after_ok {
+                // Skip replacement if this identifier is at an object property key position.
+                // E.g., `{props: props.fromProps}` -> the first `props` is a key, keep it;
+                // only replace the second `props` (the value).
+                if is_object_key_position(&chars, i, old_len) {
+                    result.push_str(old_name);
+                    i += old_len;
+                    continue;
+                }
                 result.push_str(new_name);
                 i += old_len;
                 continue;
@@ -1604,6 +1612,46 @@ fn replace_identifier_in_code(code: &str, old_name: &str, new_name: &str) -> Str
     }
 
     result
+}
+
+/// Check if the identifier at position `pos` (length `len`) is in an object key position.
+/// Object key position: preceded by `{` or `,` (ignoring whitespace) AND followed by `:` (but not `::`).
+fn is_object_key_position(chars: &[char], pos: usize, len: usize) -> bool {
+    // Check after: must be followed by `:` (ignoring whitespace), but not `::`
+    let mut after = pos + len;
+    while after < chars.len()
+        && (chars[after] == ' '
+            || chars[after] == '\t'
+            || chars[after] == '\n'
+            || chars[after] == '\r')
+    {
+        after += 1;
+    }
+    if after >= chars.len() || chars[after] != ':' {
+        return false;
+    }
+    // Not `::` (scope resolution)
+    if after + 1 < chars.len() && chars[after + 1] == ':' {
+        return false;
+    }
+
+    // Check before: must be preceded by `{`, `,`, or start of string (ignoring whitespace/newlines)
+    if pos == 0 {
+        return false; // Can't be object key at very start of code (no enclosing {)
+    }
+    let mut before = pos - 1;
+    loop {
+        let c = chars[before];
+        if c == ' ' || c == '\t' || c == '\n' || c == '\r' {
+            if before == 0 {
+                return false;
+            }
+            before -= 1;
+        } else {
+            break;
+        }
+    }
+    matches!(chars[before], '{' | ',')
 }
 
 fn is_ident_char(c: char) -> bool {
