@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 12 gap closure in progress. Executing plans 04-06. Plan 04 complete.
+**Current focus:** Phase 12 gap closure in progress. Executing plans 04-06. Plan 05 complete.
 
 ## Current Position
 
 Phase: 12 of 14 (Signal Wrapping Gaps)
-Plan: 4 of 6 in phase 12
+Plan: 5 of 6 in phase 12
 Status: In progress
-Last activity: 2026-02-23 - Completed 12-04-PLAN.md
+Last activity: 2026-02-23 - Completed 12-05-PLAN.md
 
-Progress: [██████████████████████████████] 31/? plans
+Progress: [██████████████████████████████] 32/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 31
+- Total plans completed: 32
 - Average duration: 19min
-- Total execution time: 11.6 hours
+- Total execution time: 11.9 hours
 
 **By Phase:**
 
@@ -38,11 +38,11 @@ Progress: [███████████████████████
 | 09-jsx-keys-final-parity | 5/5 | 328min | 66min |
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
-| 12-signal-wrapping-gaps | 4/6 | 32min | 8min |
+| 12-signal-wrapping-gaps | 5/6 | 51min | 10min |
 
 **Recent Trend:**
-- Last 5 plans: 12-01 (10min), 12-02 (5min), 12-03 (3min), 12-04 (14min)
-- Trend: Phase 12 gap closure progressing. Plan 04 took longer due to external tooling contamination.
+- Last 5 plans: 12-01 (10min), 12-02 (5min), 12-03 (3min), 12-04 (14min), 12-05 (19min)
+- Trend: Phase 12 gap closure progressing. Plan 05 involved complex const_bindings threading.
 
 *Updated after each plan completion*
 
@@ -176,10 +176,13 @@ Recent decisions affecting current work:
 - [12-04]: When _rawProps dep comes from destructured prop alias detection (destructured_props non-empty), bypass is_any_dep_used_as_object check entirely
 - [12-04]: Object key position detected by looking for { or , before identifier and : after it (heuristic, conservative)
 - [12-04]: Scope resolution :: excluded from object key detection to avoid false positives
+- [12-05]: const_bindings used as scope-analysis proxy for reactive dep detection in collect_reactive_deps
+- [12-05]: Depth >= 2 chains bypass const_bindings check (unambiguously store chains)
+- [12-05]: Depth 1 chains require const_bindings membership (prevents false positives on free variables like state.thing)
 
 ### Pending Todos
 
-Plans 05 and 06 of phase 12 remaining.
+Plan 06 of phase 12 remaining.
 
 ### Blockers/Concerns
 
@@ -194,10 +197,9 @@ Plans 05 and 06 of phase 12 remaining.
   - ACCEPTED (aesthetic): OXC codegen shorthand auto-detection (~60+ tests), line wrapping (~15 tests)
   - Phase 12: _fnSignal wrapping gaps (~10 tests), DCE (~5 tests), ctxKind/entry field/misc (~10 tests)
   - Pre-transformed inlinedQrl tests (3 tests) -- OXC doesn't extract segments from pre-transformed code
-- TOOLING: External process (likely rust-analyzer) modifies jsx_transform.rs by adding const_bindings parameter. Must be careful with git operations.
 
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 12-04-PLAN.md
+Stopped at: Completed 12-05-PLAN.md
 Resume file: None
