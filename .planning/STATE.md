@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 9 closed. 25/25 plans across 9 phases executed. 100 snapshot files differ (most are aesthetic). 62 exact golden matches. Phases 10-12 target remaining actionable gaps.
+**Current focus:** Phase 10 in progress. 26 plans completed across 10 phases. 100 snapshot files differ (same count, but iteration variable diffs fixed within tests). Phases 11-12 target remaining actionable gaps.
 
 ## Current Position
 
 Phase: 10 of 12 (Captures Mechanism)
-Plan: 0 of ? in phase 10
-Status: Not started
-Last activity: 2026-02-23 - Closed Phase 9, added Phases 10-12 for remaining actionable work
+Plan: 1 of ? in phase 10
+Status: In progress
+Last activity: 2026-02-23 - Completed 10-01-PLAN.md (iteration variable captures + params)
 
-Progress: [█████████████████████░░░░] 25/? plans
+Progress: [██████████████████████░░░] 26/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 25
+- Total plans completed: 26
 - Average duration: 19min
-- Total execution time: 10.59 hours
+- Total execution time: 10.81 hours
 
 **By Phase:**
 
@@ -36,10 +36,11 @@ Progress: [█████████████████████░░
 | 07-entry-module-emission | 1/1 | 3min | 3min |
 | 08-jsx-flags-iteration-variables | 3/3 | 41min | 14min |
 | 09-jsx-keys-final-parity | 5/5 | 328min | 66min |
+| 10-captures-mechanism | 1/? | 13min | 13min |
 
 **Recent Trend:**
-- Last 5 plans: 09-01 (45min), 09-02 (45min), 09-03 (35min), 09-04 (23min), 09-05 (180min)
-- Trend: Final audit required deep investigation of remaining edge cases across 3 context windows.
+- Last 5 plans: 09-03 (35min), 09-04 (23min), 09-05 (180min), 10-01 (13min)
+- Trend: Clean targeted fix after thorough research phase.
 
 *Updated after each plan completion*
 
@@ -151,10 +152,13 @@ Recent decisions affecting current work:
 - [09-05]: TS type assertion lookahead: unwrap TSAsExpression, TSSatisfiesExpression, TSNonNullExpression, ParenthesizedExpression for signal wrapping
 - [09-05]: Sync QRL strings minified via CodegenOptions { minify: true } + post-processing for semicolons and outer parens
 - [09-05]: OXC codegen shorthand behavior: ignores shorthand=false flag, auto-converts {key: value} to {key} when names match -- fundamental OXC limitation
+- [10-01]: current_iteration_vars() uses iteration_var_stack.last() (innermost loop only), matching SWC -- outer loop vars become captures
+- [10-01]: paramNames metadata keeps duplicate "_" (SWC stores ["_", "_", "row"]); de-duplication to _1 only in code generation
+- [10-01]: inject_iteration_params() runs before inject_captures_into_body() to avoid arrow position shift issues
 
 ### Pending Todos
 
-None -- all 25 plans executed.
+None -- all 26 plans executed.
 
 ### Blockers/Concerns
 
@@ -174,5 +178,5 @@ None -- all 25 plans executed.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Closed Phase 9, restructured remaining work into Phases 10-12
+Stopped at: Completed 10-01-PLAN.md
 Resume file: None
