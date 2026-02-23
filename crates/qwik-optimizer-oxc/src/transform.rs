@@ -1349,6 +1349,31 @@ impl QwikTransform {
                                     seg_mut.capture_names =
                                         capture_result.capture_names.clone();
                                     seg_mut.needed_imports = needed_imports;
+
+                                    // Remap captures for inline component prop aliases.
+                                    // If active_props_info is set (inline component),
+                                    // replace destructured prop aliases with the raw props name.
+                                    // E.g., capture "data" -> "_rawProps" when ({ data }) => ...
+                                    if let Some(ref info) = self.active_props_info {
+                                        if !info.prop_keys.is_empty() {
+                                            let raw_name = &info.raw_props_name;
+                                            let mut changed = false;
+                                            for name in seg_mut.capture_names.iter_mut() {
+                                                for (_, local_alias) in &info.prop_keys {
+                                                    if name == local_alias {
+                                                        *name = raw_name.clone();
+                                                        changed = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            if changed {
+                                                seg_mut.capture_names.sort();
+                                                seg_mut.capture_names.dedup();
+                                                seg_mut.captures = !seg_mut.capture_names.is_empty();
+                                            }
+                                        }
+                                    }
                                 }
 
                                 // Serialize the lambda body code for the segment module.
@@ -1361,10 +1386,22 @@ impl QwikTransform {
                                     crate::types::EntryStrategy::Hoist
                                 );
                                 if !is_inline {
-                                    let body_code = serialize_jsx_lambda_from_source(
+                                    let mut body_code = serialize_jsx_lambda_from_source(
                                         &self.source_code,
                                         span,
                                     );
+                                    // Post-process body code for inline component prop aliases.
+                                    // Body code is captured from original source text, so it still
+                                    // has the original destructured prop aliases (e.g., `data.X`).
+                                    // Replace them with `_rawProps.data.X` (or `props.data.X`).
+                                    if let Some(ref info) = self.active_props_info {
+                                        if !info.prop_keys.is_empty() {
+                                            for (original_key, local_alias) in &info.prop_keys {
+                                                let replacement = format!("{}.{}", info.raw_props_name, original_key);
+                                                body_code = replace_identifier_in_body(&body_code, local_alias, &replacement);
+                                            }
+                                        }
+                                    }
                                     if !body_code.is_empty() {
                                         self.segment_body_codes
                                             .push((seg_span_0, body_code));
@@ -2144,11 +2181,131 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
     fn exit_export_default_declaration(
         &mut self,
-        _decl: &mut ExportDefaultDeclaration<'a>,
-        _ctx: &mut TraverseCtx<'a, ()>,
+        decl: &mut ExportDefaultDeclaration<'a>,
+        ctx: &mut TraverseCtx<'a, ()>,
     ) {
         if let Some(depth) = self.export_default_ctxt_depths.pop() {
             self.stack_ctxt.truncate(depth);
+        }
+
+        // Inline component _rawProps rewrite.
+        // Mirrors the logic in exit_expression for component$ calls (lines ~2692-2750),
+        // adapted for ExportDefaultDeclaration.
+        let props_info = self.active_props_info.take();
+        if let Some(ref info) = props_info {
+            if let ExportDefaultDeclarationKind::ArrowFunctionExpression(arrow) = &mut decl.declaration {
+                if info.needs_transform {
+                    // 1. Replace the destructured parameter with _rawProps
+                    if !arrow.params.items.is_empty() {
+                        let new_pattern = ctx.ast.binding_pattern_binding_identifier(
+                            SPAN,
+                            ctx.ast.atom(&info.raw_props_name),
+                        );
+                        let new_param = ctx.ast.formal_parameter(
+                            SPAN,
+                            ctx.ast.vec(),
+                            new_pattern,
+                            None::<oxc::allocator::Box<'a, TSTypeAnnotation<'a>>>,
+                            None::<oxc::allocator::Box<'a, Expression<'a>>>,
+                            false,
+                            None,
+                            false,
+                            false,
+                        );
+                        arrow.params.items[0] = new_param;
+                        arrow.params.rest = None;
+                    }
+
+                    // 2. If rest pattern: insert const rest = _restProps(_rawProps, [...])
+                    if let Some(ref rest_name) = info.rest_name {
+                        self.import_tracker.needs_rest_props = true;
+                        let excluded_keys: Vec<String> =
+                            info.prop_keys.iter().map(|(key, _)| key.clone()).collect();
+                        let rest_stmt = props_destructuring::build_rest_props_declaration(
+                            rest_name,
+                            &info.raw_props_name,
+                            &excluded_keys,
+                            ctx,
+                        );
+                        let mut old_stmts = ctx.ast.vec();
+                        std::mem::swap(&mut arrow.body.statements, &mut old_stmts);
+                        let mut new_stmts = ctx.ast.vec_with_capacity(1 + old_stmts.len());
+                        new_stmts.push(rest_stmt);
+                        for s in old_stmts {
+                            new_stmts.push(s);
+                        }
+                        arrow.body.statements = new_stmts;
+                    }
+
+                    // 3. Rewrite body references: data -> _rawProps.data
+                    let prop_map: Vec<(String, String)> = info
+                        .prop_keys
+                        .iter()
+                        .map(|(key, local)| (local.clone(), key.clone()))
+                        .collect();
+
+                    if !prop_map.is_empty() {
+                        props_destructuring::rewrite_body_statements(
+                            &mut arrow.body.statements,
+                            &prop_map,
+                            &info.raw_props_name,
+                            &info.prop_defaults,
+                            ctx,
+                        );
+                    }
+                } else if info.props_param_name.is_some() && !info.prop_keys.is_empty() {
+                    // Body destructuring: (props) => { const { data } = props; ... }
+                    // Detect and rewrite, similar to the component$ body destructuring logic.
+                    let param_name = info.props_param_name.as_ref().unwrap();
+                    let body_destr = props_destructuring::detect_body_destructuring(
+                        &arrow.body.statements,
+                        param_name,
+                    );
+
+                    if let Some(body_info) = body_destr {
+                        // Remove the destructuring statement
+                        let removed_stmt = arrow.body.statements.remove(body_info.stmt_index);
+                        let _ = removed_stmt;
+
+                        // If rest pattern: insert const rest = _restProps(props, [...])
+                        if let Some(ref rest_name) = body_info.rest_name {
+                            self.import_tracker.needs_rest_props = true;
+                            let excluded_keys: Vec<String> =
+                                body_info.prop_keys.iter().map(|(key, _)| key.clone()).collect();
+                            let rest_stmt = props_destructuring::build_rest_props_declaration(
+                                rest_name,
+                                param_name,
+                                &excluded_keys,
+                                ctx,
+                            );
+                            arrow.body.statements.insert(body_info.stmt_index, rest_stmt);
+                        }
+
+                        // Rewrite body references: data -> props.data
+                        let prop_map: Vec<(String, String)> = body_info
+                            .prop_keys
+                            .iter()
+                            .map(|(key, local)| (local.clone(), key.clone()))
+                            .collect();
+
+                        if !prop_map.is_empty() {
+                            props_destructuring::rewrite_body_statements(
+                                &mut arrow.body.statements,
+                                &prop_map,
+                                param_name,
+                                &info.prop_defaults,
+                                ctx,
+                            );
+                        }
+                    }
+                }
+
+                // Note: segment body strings and capture names are post-processed
+                // inline during create_jsx_event_segments_recursive (when segment
+                // bodies and captures are first created), not here. This ensures
+                // the JSX transform sees the correct capture names when building
+                // qrl() calls in exit_expression.
+            }
         }
     }
 
@@ -5290,6 +5447,42 @@ fn serialize_jsx_lambda_from_source(source_code: &str, span: (u32, u32)) -> Stri
 
 /// Check if a dollar-suffixed call name produces a tree-shakeable wrapper.
 ///
+/// Word-boundary-aware identifier replacement in body code strings.
+///
+/// Replaces standalone occurrences of `old_name` with `new_name`, respecting
+/// word boundaries (preceding/following chars must not be identifier chars).
+/// Used to post-process segment body strings for inline component prop alias
+/// replacement (e.g., `data.X` -> `_rawProps.data.X`).
+fn replace_identifier_in_body(code: &str, old_name: &str, new_name: &str) -> String {
+    let mut result = String::with_capacity(code.len());
+    let chars: Vec<char> = code.chars().collect();
+    let old_chars: Vec<char> = old_name.chars().collect();
+    let old_len = old_chars.len();
+    let mut i = 0;
+
+    while i < chars.len() {
+        if i + old_len <= chars.len() && &chars[i..i + old_len] == old_chars.as_slice() {
+            let before_ok = i == 0 || !is_ident_char_body(chars[i - 1]);
+            let after_ok = i + old_len >= chars.len() || !is_ident_char_body(chars[i + old_len]);
+
+            if before_ok && after_ok {
+                result.push_str(new_name);
+                i += old_len;
+                continue;
+            }
+        }
+        result.push(chars[i]);
+        i += 1;
+    }
+
+    result
+}
+
+/// Check if a character is a valid identifier character (alphanumeric or underscore or $).
+fn is_ident_char_body(c: char) -> bool {
+    c.is_alphanumeric() || c == '_' || c == '$'
+}
+
 /// Only `component$` produces a side-effect-free wrapper (`componentQrl`).
 /// All other wrappers (useStylesQrl, useTaskQrl, useVisibleTaskQrl,
 /// serverStuffQrl, serverLoaderQrl, useResourceQrl, etc.) are side-effectful

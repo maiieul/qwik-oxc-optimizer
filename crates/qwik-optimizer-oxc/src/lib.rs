@@ -166,12 +166,23 @@ pub fn transform_modules(
 
         // Prepend hoisted function declarations between imports and module body
         let hoisted_stmts: Vec<(String, String)> = qwik_transform.hoisted_function_stmts().to_vec();
-        // Only inject _hf* into entry module for inline/hoist strategies where the component
-        // body stays in the entry module and references them. For segment strategy, _hf*
-        // declarations go exclusively into segment files via code_move.rs.
+        // Only inject _hf* into entry module when the entry module code actually
+        // references them. For inline/hoist strategies, the component body stays in the
+        // entry module. For segment strategy, _hf* usually go into segment files
+        // via code_move.rs -- but inline components (export default arrow with JSX)
+        // keep their body in the entry module and may reference _hf* there.
         let is_inline_like_strategy = entry_strategy::should_inline(&transform_options.entry_strategy)
             || matches!(transform_options.entry_strategy, EntryStrategy::Hoist);
-        let main_code = if !hoisted_stmts.is_empty() && is_inline_like_strategy {
+        // Also inject when the entry module code references any _hf* variable
+        // (e.g., inline components that use _fnSignal with hoisted functions).
+        let entry_code_refs_hf = !is_inline_like_strategy && hoisted_stmts.iter().any(|(fn_code, _)| {
+            if let Some(var_name) = fn_code.strip_prefix("const ").and_then(|s| s.split(|c: char| !c.is_alphanumeric() && c != '_').next()) {
+                emit_result.code.contains(var_name)
+            } else {
+                false
+            }
+        });
+        let main_code = if !hoisted_stmts.is_empty() && (is_inline_like_strategy || entry_code_refs_hf) {
             let mut hoisted_code = String::new();
             for (fn_code, str_code) in &hoisted_stmts {
                 hoisted_code.push_str(fn_code);
