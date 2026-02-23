@@ -483,9 +483,15 @@ impl QwikTransform {
         self.custom_jsx_import_source.as_deref()
     }
 
-    /// Get all current iteration variables, flattened from all loop scopes.
+    /// Get current iteration variables from the innermost loop scope only.
+    /// SWC uses `self.iteration_var_stack.last()` -- only the innermost loop's
+    /// variables are considered for param injection and q:p attributes. Variables
+    /// from outer loops that are used in event handlers become captures instead.
     pub(crate) fn current_iteration_vars(&self) -> Vec<String> {
-        self.iteration_var_stack.iter().flatten().cloned().collect()
+        self.iteration_var_stack
+            .last()
+            .map(|v| v.clone())
+            .unwrap_or_default()
     }
 
     /// Check if a ctx name should be stripped based on strip_ctx_name config.
@@ -1186,6 +1192,15 @@ impl QwikTransform {
                                     }
                                 }
 
+                                // Save iteration variable param names for capture filtering.
+                                // param_names is moved into record_jsx_event_segment, so
+                                // extract the iter var portion (positions 2+) before the move.
+                                let iter_var_param_names: Vec<String> = if param_names.len() > 2 {
+                                    param_names[2..].to_vec()
+                                } else {
+                                    Vec::new()
+                                };
+
                                 let seg =
                                     self.record_jsx_event_segment(span, &ctx_name, param_names);
                                 let seg_span_0 = seg.span.0;
@@ -1244,6 +1259,28 @@ impl QwikTransform {
                                 // to needed_imports (self-imports from the parent module).
                                 let (capture_result, module_decl_imports) =
                                     self.reclassify_module_level_decl_captures(capture_result);
+
+                                // Filter iteration variable params from captures.
+                                // SWC: scoped_idents.retain(|id| !param_idents.contains(id))
+                                // Iteration variables are passed as function params (via q:p),
+                                // not captured via _captures. Only applies to JSX event handlers --
+                                // for $() calls, analyze_lambda_captures already adds arrow params
+                                // to body_local_decls so compute_captures filters them naturally.
+                                let capture_result = if !iter_var_param_names.is_empty() {
+                                    let iter_var_set: HashSet<&str> =
+                                        iter_var_param_names.iter().map(|s| s.as_str()).collect();
+                                    collector::CaptureAnalysisResult {
+                                        capture_names: capture_result
+                                            .capture_names
+                                            .into_iter()
+                                            .filter(|name| !iter_var_set.contains(name.as_str()))
+                                            .collect(),
+                                        reemitted_imports: capture_result.reemitted_imports,
+                                        diagnostics: capture_result.diagnostics,
+                                    }
+                                } else {
+                                    capture_result
+                                };
 
                                 // Convert reemitted imports to ImportInfo for needed_imports
                                 let mut needed_imports: Vec<crate::types::ImportInfo> =
