@@ -27,7 +27,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 9: JSX Keys & Final Parity** - DCE, dev mode QRL, hoist strategy, key ordering, signal wrapping gaps, event merging, TS assertion lookahead (62/162 exact matches)
 - [x] **Phase 10: Captures Mechanism** - Implement _captures[N] array access pattern for extracted segments
 - [x] **Phase 11: Auto Export Rename** - Implement _auto_ prefix for segment import re-exports
-- [ ] **Phase 12: Signal Wrapping Gaps** - Fix _fnSignal and _wrapProp wrapping across ~25 tests
+- [x] **Phase 12: Signal Wrapping Gaps** - Fix _fnSignal and _wrapProp wrapping across ~25 tests
 - [ ] **Phase 13: Captures & DCE** - Fix captures edge cases and dead code elimination across ~20 tests
 - [ ] **Phase 14: Final Parity** - Fix ctxKind, entry field, dev mode, file ext, JSX import source, spread props, misc across ~15 tests
 
@@ -216,9 +216,9 @@ Plans:
 - [x] 12-01-PLAN.md — Core dependency collection fixes: dep sorting, missing expression types, harmless globals, accept_call_expr for props
 - [x] 12-02-PLAN.md — is_used_as_object check for _fnSignal gating + .value detection for complex expressions (logical OR, computed member)
 - [x] 12-03-PLAN.md — _hf hoisted function deduplication by body string
-- [ ] 12-04-PLAN.md — [Gap closure] Fix is_any_dep_used_as_object bypass for destructured prop aliases + object key preservation in _fnSignal body strings
-- [ ] 12-05-PLAN.md — [Gap closure] Fix store chain depth requirement (reduce from 2 to 1) for single-level store member access
-- [ ] 12-06-PLAN.md — [Gap closure] Implement inline component _rawProps rewrite for export default arrow patterns
+- [x] 12-04-PLAN.md — [Gap closure] Fix is_any_dep_used_as_object bypass for destructured prop aliases + object key preservation in _fnSignal body strings
+- [x] 12-05-PLAN.md — [Gap closure] Fix store chain depth requirement (reduce from 2 to 1) for single-level store member access
+- [x] 12-06-PLAN.md — [Gap closure] Implement inline component _rawProps rewrite for export default arrow patterns
 
 ### Phase 13: Captures & DCE
 **Goal**: Fix captures edge cases and dead code elimination to match SWC
@@ -263,6 +263,6 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 9 -> 10 -> 11 -> 12 -> 13 -> 1
 | 9. JSX Keys & Final Parity | 5/5 | Complete (62/162 exact) | 2026-02-21 |
 | 10. Captures Mechanism | 1/1 | Complete | 2026-02-23 |
 | 11. Auto Export Rename | 1/1 | Complete | 2026-02-23 |
-| 12. Signal Wrapping Gaps | 3/6 | Gap closure | — |
+| 12. Signal Wrapping Gaps | 6/6 | Complete | 2026-02-23 |
 | 13. Captures & DCE | 0/? | Not started | — |
 | 14. Final Parity | 0/? | Not started | — |
