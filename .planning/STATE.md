@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 11 complete. 27 plans completed across 11 phases. _auto_ export rename mechanism implemented. Remaining work split into 3 phases: signal wrapping (12), captures+DCE (13), final parity (14). 99 diffs remaining, 63 exact matches.
+**Current focus:** Phase 12 in progress. 28 plans completed across 12 phases. Core dep collection fixes landed (sorting, expression types, globals, props call gate). Remaining: 2 plans in phase 12, then phases 13-14.
 
 ## Current Position
 
-Phase: 11 of 14 (Auto Export Rename)
-Plan: 1 of 1 in phase 11
-Status: Phase complete
-Last activity: 2026-02-23 - Roadmap updated: phase 12 split into phases 12-14
+Phase: 12 of 14 (Signal Wrapping Gaps)
+Plan: 1 of 3 in phase 12
+Status: In progress
+Last activity: 2026-02-23 - Completed 12-01-PLAN.md
 
-Progress: [███████████████████████░░] 27/? plans
+Progress: [████████████████████████░] 28/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 27
+- Total plans completed: 28
 - Average duration: 19min
-- Total execution time: 11.03 hours
+- Total execution time: 11.2 hours
 
 **By Phase:**
 
@@ -38,9 +38,10 @@ Progress: [███████████████████████
 | 09-jsx-keys-final-parity | 5/5 | 328min | 66min |
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
+| 12-signal-wrapping-gaps | 1/3 | 10min | 10min |
 
 **Recent Trend:**
-- Last 5 plans: 09-04 (23min), 09-05 (180min), 10-01 (13min), 11-01 (13min)
+- Last 5 plans: 09-05 (180min), 10-01 (13min), 11-01 (13min), 12-01 (10min)
 - Trend: Clean targeted fixes with good research foundation.
 
 *Updated after each plan completion*
@@ -160,10 +161,15 @@ Recent decisions affecting current work:
 - [11-01]: Destructured pattern exports tracked via collect_binding_pattern_names_into (not just simple bindings)
 - [11-01]: Stripped segments excluded from auto_exports via is_stripped parameter
 - [11-01]: TS enum _auto_ exports accepted as known OXC limitation (SWC inlines enum values)
+- [12-01]: Dep sorting: primary_deps.sort_by root_name AFTER local_deps merge, re-assign pN param names after sort
+- [12-01]: Direct CallExpression = side effect (has_non_reactive_non_const = true), ChainExpression calls = NOT side effect (allows signal.formData?.get() wrapping)
+- [12-01]: Harmless globals (undefined, NaN, Infinity) don't block wrapping -- classified separately from other KNOWN_GLOBALS
+- [12-01]: Props path: removed contains_function_call gate; children path retains it (matches SWC accept_call_expr=true vs false)
+- [12-01]: TaggedTemplateExpression unconditionally sets has_non_reactive in dep collection AND added to contains_function_call
 
 ### Pending Todos
 
-None -- all 27 plans executed.
+None -- all 28 plans executed.
 
 ### Blockers/Concerns
 
@@ -182,5 +188,5 @@ None -- all 27 plans executed.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 11-01-PLAN.md
+Stopped at: Completed 12-01-PLAN.md
 Resume file: None
