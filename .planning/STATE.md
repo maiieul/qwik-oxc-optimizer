@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 11 complete. 27 plans completed across 11 phases. _auto_ export rename mechanism implemented. Phase 12 targets remaining actionable gaps.
+**Current focus:** Phase 11 complete. 27 plans completed across 11 phases. _auto_ export rename mechanism implemented. Remaining work split into 3 phases: signal wrapping (12), captures+DCE (13), final parity (14). 99 diffs remaining, 63 exact matches.
 
 ## Current Position
 
-Phase: 11 of 12 (Auto Export Rename)
+Phase: 11 of 14 (Auto Export Rename)
 Plan: 1 of 1 in phase 11
 Status: Phase complete
-Last activity: 2026-02-23 - Completed 11-01-PLAN.md (_auto_ export rename mechanism)
+Last activity: 2026-02-23 - Roadmap updated: phase 12 split into phases 12-14
 
 Progress: [███████████████████████░░] 27/? plans
 
