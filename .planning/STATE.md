@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 12 complete. 30 plans completed across 12 phases. All signal wrapping gaps closed (dep sorting, expression recursion, harmless globals, accept_call_expr, is_used_as_object, .value detection, _hf dedup). Remaining: phases 13-14.
+**Current focus:** Phase 12 gap closure in progress. Executing plans 04-06. Plan 04 complete.
 
 ## Current Position
 
 Phase: 12 of 14 (Signal Wrapping Gaps)
-Plan: 3 of 3 in phase 12
-Status: Phase complete
-Last activity: 2026-02-23 - Completed 12-03-PLAN.md
+Plan: 4 of 6 in phase 12
+Status: In progress
+Last activity: 2026-02-23 - Completed 12-04-PLAN.md
 
-Progress: [██████████████████████████] 30/? plans
+Progress: [██████████████████████████████] 31/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 30
+- Total plans completed: 31
 - Average duration: 19min
-- Total execution time: 11.4 hours
+- Total execution time: 11.6 hours
 
 **By Phase:**
 
@@ -38,11 +38,11 @@ Progress: [███████████████████████
 | 09-jsx-keys-final-parity | 5/5 | 328min | 66min |
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
-| 12-signal-wrapping-gaps | 3/3 | 18min | 6min |
+| 12-signal-wrapping-gaps | 4/6 | 32min | 8min |
 
 **Recent Trend:**
-- Last 5 plans: 11-01 (13min), 12-01 (10min), 12-02 (5min), 12-03 (3min)
-- Trend: Clean targeted fixes with good research foundation. Phase 12 complete.
+- Last 5 plans: 12-01 (10min), 12-02 (5min), 12-03 (3min), 12-04 (14min)
+- Trend: Phase 12 gap closure progressing. Plan 04 took longer due to external tooling contamination.
 
 *Updated after each plan completion*
 
@@ -173,10 +173,13 @@ Recent decisions affecting current work:
 - [12-03]: _hf dedup key is full arrow source "(p0) => p0.errors.test" -- params + body distinguishes different arities
 - [12-03]: Caller-side dedup via hoisted_stmts.iter().any() -- simpler than return-flag, works at both props and children call sites
 - [12-03]: HashMap<String, u32> on ImportTracker leverages #[derive(Default)] for automatic empty-map init
+- [12-04]: When _rawProps dep comes from destructured prop alias detection (destructured_props non-empty), bypass is_any_dep_used_as_object check entirely
+- [12-04]: Object key position detected by looking for { or , before identifier and : after it (heuristic, conservative)
+- [12-04]: Scope resolution :: excluded from object key detection to avoid false positives
 
 ### Pending Todos
 
-None -- all 30 plans executed.
+Plans 05 and 06 of phase 12 remaining.
 
 ### Blockers/Concerns
 
@@ -191,9 +194,10 @@ None -- all 30 plans executed.
   - ACCEPTED (aesthetic): OXC codegen shorthand auto-detection (~60+ tests), line wrapping (~15 tests)
   - Phase 12: _fnSignal wrapping gaps (~10 tests), DCE (~5 tests), ctxKind/entry field/misc (~10 tests)
   - Pre-transformed inlinedQrl tests (3 tests) -- OXC doesn't extract segments from pre-transformed code
+- TOOLING: External process (likely rust-analyzer) modifies jsx_transform.rs by adding const_bindings parameter. Must be careful with git operations.
 
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 12-03-PLAN.md (Phase 12 complete)
+Stopped at: Completed 12-04-PLAN.md
 Resume file: None
