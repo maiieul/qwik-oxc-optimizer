@@ -2103,6 +2103,43 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         self.stack_ctxt.push(file_stem);
+
+        // Detect inline component pattern: export default ({ data }) => ...
+        // SWC rewrites destructured props to _rawProps for inline components too.
+        // This sets up active_props_info BEFORE the JSX transform runs (which
+        // happens bottom-up in exit hooks), enabling _fnSignal wrapping for
+        // prop member expressions.
+        if let ExportDefaultDeclarationKind::ArrowFunctionExpression(arrow) = &_decl.declaration {
+            let import_names: HashSet<String> = self
+                .collected
+                .module_imports
+                .iter()
+                .flat_map(|imp| imp.specifiers.iter().cloned())
+                .collect();
+            let mut info = props_destructuring::analyze_props_destructuring(
+                &arrow.params,
+                &import_names,
+            );
+            if info.needs_transform {
+                // Parameter destructuring: ({ data }) => ...
+                if info.rest_name.is_some() {
+                    self.import_tracker.needs_rest_props = true;
+                }
+                self.active_props_info = Some(info);
+            } else if let Some(ref param_name) = info.props_param_name {
+                // Non-destructured param with possible body destructuring:
+                // (props) => { const { data } = props; ... }
+                let body_destr = props_destructuring::detect_body_destructuring(
+                    &arrow.body.statements,
+                    param_name,
+                );
+                if let Some(ref body_info) = body_destr {
+                    info.prop_keys = body_info.prop_keys.clone();
+                    info.rest_name = body_info.rest_name.clone();
+                }
+                self.active_props_info = Some(info);
+            }
+        }
     }
 
     fn exit_export_default_declaration(
