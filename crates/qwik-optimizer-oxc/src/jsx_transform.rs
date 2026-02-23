@@ -2293,7 +2293,16 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                         // standalone identifiers or array indices, skip wrapping.
                         let dep_names: Vec<&str> =
                             deps.iter().map(|d| d.root_name.as_str()).collect();
-                        if is_any_dep_used_as_object(&value, &dep_names) {
+                        // When _rawProps is a dep from destructured prop alias detection,
+                        // bypass the is_any_dep_used_as_object check. The expression still
+                        // has the original alias (e.g., `fromProps`) which will be rewritten
+                        // to `_rawProps.fromProps` in the body string. After rewriting,
+                        // _rawProps IS used as object, so we can safely skip the check.
+                        let has_destructured_raw_props = destructured_props
+                            .map(|props| !props.is_empty())
+                            .unwrap_or(false)
+                            && deps.iter().any(|d| d.root_name == "_rawProps");
+                        if has_destructured_raw_props || is_any_dep_used_as_object(&value, &dep_names) {
                             // Check if all dep roots are const-bound.
                             // SWC's compute_scoped_idents returns is_const=false
                             // when any dep is Var(false) (e.g., loop vars, function params).
@@ -3093,7 +3102,13 @@ pub(crate) fn transform_jsx_children<'a>(
                                         // a member expression.
                                         let dep_names: Vec<&str> =
                                             deps.iter().map(|d| d.root_name.as_str()).collect();
-                                        if is_any_dep_used_as_object(&other, &dep_names) {
+                                        // When _rawProps is a dep from destructured prop alias detection,
+                                        // bypass the is_any_dep_used_as_object check (see props path).
+                                        let has_destructured_raw_props = destructured_props
+                                            .map(|props| !props.is_empty())
+                                            .unwrap_or(false)
+                                            && deps.iter().any(|d| d.root_name == "_rawProps");
+                                        if has_destructured_raw_props || is_any_dep_used_as_object(&other, &dep_names) {
                                             // Check if all dep roots are const-bound.
                                             // SWC's compute_scoped_idents returns is_const=false
                                             // when any dep is Var(false) (e.g., function params).
