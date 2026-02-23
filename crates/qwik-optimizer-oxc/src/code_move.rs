@@ -332,6 +332,22 @@ pub(crate) fn build_segment_code_with_hoisted(
 
     // --- Phase 6: Capture restoration + export ---
     let segment_name = &segment.name;
+
+    // Step 1: Inject iteration variable params into function signature.
+    // When param_names has 3+ entries, positions 2+ are iteration variables that
+    // must appear as function params (not captures). The serialized body code
+    // from raw source only has the original params (typically "()" for event handlers).
+    // SWC preserves params via `..arrow` spread; we inject them here.
+    // De-duplicate placeholder names: SWC uses private_ident!("_") for both event
+    // and element placeholders, and codegen de-duplicates to "_", "_1".
+    let body_code_owned = if segment.param_names.len() > 2 {
+        inject_iteration_params(body_code, &segment.param_names)
+    } else {
+        body_code.to_string()
+    };
+    let body_code = &body_code_owned;
+
+    // Step 2: Inject captures + emit export
     if has_captures {
         // SWC emits captures as a single chained const declaration:
         //   const a = _captures[0], b = _captures[1];
@@ -389,6 +405,56 @@ fn inject_captures_into_body(body_code: &str, capture_stmts: &[String]) -> Strin
         return format!("{} {{\n{}return {};\n}}", prefix, capture_code, expr_body);
     }
 
+    body_code.to_string()
+}
+
+/// Inject iteration variable parameters into an arrow function's parameter list.
+///
+/// For a body like `() => { ... }`, replaces the params to get `(_, _1, row) => { ... }`.
+/// Uses param_names which has format `[event_placeholder, element_placeholder, iter_var1, ...]`.
+///
+/// SWC uses `private_ident!("_")` for both placeholder params (positions 0 and 1),
+/// and codegen auto-de-duplicates to `_` and `_1`. We replicate this behavior for
+/// plain string param names.
+fn inject_iteration_params(body_code: &str, param_names: &[String]) -> String {
+    if let Some(arrow_pos) = find_arrow_position(body_code) {
+        let before_arrow = &body_code[..arrow_pos];
+        let after_arrow = &body_code[arrow_pos..]; // includes "=> ..."
+
+        if let Some(open_paren) = before_arrow.find('(') {
+            if let Some(close_paren_pos) = before_arrow.rfind(')') {
+                // De-duplicate placeholder names to match SWC codegen behavior.
+                // SWC uses private_ident!("_") for both positions 0 and 1, and codegen
+                // de-duplicates to "_", "_1". We do the same for plain strings.
+                let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+                let deduped_params: Vec<String> = param_names
+                    .iter()
+                    .map(|name| {
+                        if seen.contains(name) {
+                            // Find a unique suffix: try _1, _2, etc.
+                            let mut suffix = 1;
+                            loop {
+                                let candidate = format!("{}{}",name, suffix);
+                                if !seen.contains(&candidate) {
+                                    seen.insert(candidate.clone());
+                                    return candidate;
+                                }
+                                suffix += 1;
+                            }
+                        } else {
+                            seen.insert(name.clone());
+                            name.clone()
+                        }
+                    })
+                    .collect();
+
+                let param_str = deduped_params.join(", ");
+                let prefix = &body_code[..open_paren + 1]; // up to and including "("
+                let between = &before_arrow[close_paren_pos + 1..];
+                return format!("{}{}){}{}", prefix, param_str, between, after_arrow);
+            }
+        }
+    }
     body_code.to_string()
 }
 
