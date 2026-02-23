@@ -754,6 +754,21 @@ fn collect_reactive_deps_inner(
                         }
                     }
                     return; // Don't recurse further
+                } else {
+                    // .value accessed on a complex expression (e.g., (count || count2).value)
+                    // where get_root_identifier returns None. Collect ALL identifiers
+                    // from the object as primary deps. This matches SWC where
+                    // IdentCollector finds all idents and they get classified as
+                    // scoped variables.
+                    collect_all_idents_as_primary_deps(
+                        &member.object,
+                        destructured_props,
+                        collected_imports,
+                        primary_deps,
+                        seen,
+                        props_param_name,
+                    );
+                    return;
                 }
             }
 
@@ -1255,6 +1270,199 @@ fn is_imported_identifier(name: &str, imports: &[crate::types::ImportInfo]) -> b
     imports
         .iter()
         .any(|imp| imp.specifiers.iter().any(|spec| spec == name))
+}
+
+/// Check if any of the given dep names is used as the OBJECT of a member expression
+/// (static or computed) within the expression tree.
+///
+/// SWC's `is_used_as_object_or_call()` checks this to decide whether _fnSignal
+/// wrapping is needed. If a dep is only used as a standalone identifier or as a
+/// computed member KEY (array index), wrapping is skipped.
+///
+/// Also checks through || (logical OR) and parenthesized wrappers, because
+/// `(a || b).value` means both `a` and `b` are "used as object".
+fn is_any_dep_used_as_object(expr: &Expression<'_>, dep_names: &[&str]) -> bool {
+    match expr {
+        Expression::StaticMemberExpression(member) => {
+            // Check if the object is (or contains) one of our dep names
+            if is_dep_or_contains_dep(&member.object, dep_names) {
+                return true;
+            }
+            // Also recurse into the object (for nested member chains)
+            is_any_dep_used_as_object(&member.object, dep_names)
+        }
+        Expression::ComputedMemberExpression(member) => {
+            // Check if the OBJECT is a dep (not the computed key!)
+            if is_dep_or_contains_dep(&member.object, dep_names) {
+                return true;
+            }
+            // Recurse into object
+            if is_any_dep_used_as_object(&member.object, dep_names) {
+                return true;
+            }
+            // Recurse into the computed key expression
+            is_any_dep_used_as_object(&member.expression, dep_names)
+        }
+        Expression::BinaryExpression(bin) => {
+            is_any_dep_used_as_object(&bin.left, dep_names)
+                || is_any_dep_used_as_object(&bin.right, dep_names)
+        }
+        Expression::ConditionalExpression(cond) => {
+            is_any_dep_used_as_object(&cond.test, dep_names)
+                || is_any_dep_used_as_object(&cond.consequent, dep_names)
+                || is_any_dep_used_as_object(&cond.alternate, dep_names)
+        }
+        Expression::UnaryExpression(unary) => {
+            is_any_dep_used_as_object(&unary.argument, dep_names)
+        }
+        Expression::ParenthesizedExpression(paren) => {
+            is_any_dep_used_as_object(&paren.expression, dep_names)
+        }
+        Expression::LogicalExpression(logic) => {
+            is_any_dep_used_as_object(&logic.left, dep_names)
+                || is_any_dep_used_as_object(&logic.right, dep_names)
+        }
+        Expression::ObjectExpression(obj) => {
+            obj.properties.iter().any(|prop| match prop {
+                ObjectPropertyKind::ObjectProperty(p) => {
+                    is_any_dep_used_as_object(&p.value, dep_names)
+                }
+                ObjectPropertyKind::SpreadProperty(s) => {
+                    is_any_dep_used_as_object(&s.argument, dep_names)
+                }
+            })
+        }
+        Expression::ArrayExpression(arr) => {
+            arr.elements.iter().any(|elem| match elem {
+                ArrayExpressionElement::SpreadElement(s) => {
+                    is_any_dep_used_as_object(&s.argument, dep_names)
+                }
+                ArrayExpressionElement::Elision(_) => false,
+                _ => {
+                    if let Some(e) = elem.as_expression() {
+                        is_any_dep_used_as_object(e, dep_names)
+                    } else {
+                        false
+                    }
+                }
+            })
+        }
+        Expression::TemplateLiteral(tpl) => {
+            tpl.expressions
+                .iter()
+                .any(|e| is_any_dep_used_as_object(e, dep_names))
+        }
+        Expression::CallExpression(call) => {
+            is_any_dep_used_as_object(&call.callee, dep_names)
+                || call.arguments.iter().any(|arg| {
+                    arg.as_expression()
+                        .map(|e| is_any_dep_used_as_object(e, dep_names))
+                        .unwrap_or(false)
+                })
+        }
+        Expression::ChainExpression(chain) => match &chain.expression {
+            ChainElement::CallExpression(call) => {
+                is_any_dep_used_as_object(&call.callee, dep_names)
+                    || call.arguments.iter().any(|arg| {
+                        arg.as_expression()
+                            .map(|e| is_any_dep_used_as_object(e, dep_names))
+                            .unwrap_or(false)
+                    })
+            }
+            ChainElement::StaticMemberExpression(member) => {
+                if is_dep_or_contains_dep(&member.object, dep_names) {
+                    return true;
+                }
+                is_any_dep_used_as_object(&member.object, dep_names)
+            }
+            ChainElement::ComputedMemberExpression(member) => {
+                if is_dep_or_contains_dep(&member.object, dep_names) {
+                    return true;
+                }
+                is_any_dep_used_as_object(&member.object, dep_names)
+                    || is_any_dep_used_as_object(&member.expression, dep_names)
+            }
+            _ => false,
+        },
+        _ => false,
+    }
+}
+
+/// Check if an expression IS a dep identifier (possibly wrapped in || or parens).
+/// SWC checks through LogicalExpression (||) and ParenthesizedExpression.
+fn is_dep_or_contains_dep(expr: &Expression<'_>, dep_names: &[&str]) -> bool {
+    match expr {
+        Expression::Identifier(ident) => dep_names.contains(&ident.name.as_str()),
+        Expression::ParenthesizedExpression(paren) => {
+            is_dep_or_contains_dep(&paren.expression, dep_names)
+        }
+        Expression::LogicalExpression(logic) => {
+            // (a || b) - both sides count as "the object"
+            is_dep_or_contains_dep(&logic.left, dep_names)
+                || is_dep_or_contains_dep(&logic.right, dep_names)
+        }
+        _ => false,
+    }
+}
+
+/// Collect all identifiers from an expression as primary deps.
+/// Used when `.value` is accessed on a complex expression like `(count || count2).value`
+/// where `get_root_identifier` returns None.
+fn collect_all_idents_as_primary_deps(
+    expr: &Expression<'_>,
+    _destructured_props: Option<&[(String, String)]>,
+    collected_imports: &[crate::types::ImportInfo],
+    primary_deps: &mut Vec<ReactiveDep>,
+    seen: &mut std::collections::HashSet<String>,
+    _props_param_name: Option<&str>,
+) {
+    match expr {
+        Expression::Identifier(ident) => {
+            let name = ident.name.as_str();
+            if is_imported_identifier(name, collected_imports)
+                || crate::collector::KNOWN_GLOBALS.contains(name)
+            {
+                return;
+            }
+            if !seen.contains(name) {
+                let param = format!("p{}", primary_deps.len());
+                seen.insert(name.to_string());
+                primary_deps.push(ReactiveDep {
+                    root_name: name.to_string(),
+                    param_name: param,
+                });
+            }
+        }
+        Expression::LogicalExpression(logic) => {
+            collect_all_idents_as_primary_deps(
+                &logic.left,
+                _destructured_props,
+                collected_imports,
+                primary_deps,
+                seen,
+                _props_param_name,
+            );
+            collect_all_idents_as_primary_deps(
+                &logic.right,
+                _destructured_props,
+                collected_imports,
+                primary_deps,
+                seen,
+                _props_param_name,
+            );
+        }
+        Expression::ParenthesizedExpression(paren) => {
+            collect_all_idents_as_primary_deps(
+                &paren.expression,
+                _destructured_props,
+                collected_imports,
+                primary_deps,
+                seen,
+                _props_param_name,
+            );
+        }
+        _ => {}
+    }
 }
 
 /// Build an _fnSignal call and hoisted function declarations.
@@ -2066,30 +2274,41 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                     let (deps, has_non_reactive) =
                         collect_reactive_deps(&value, destructured_props, module_imports, props_param_name);
                     if !deps.is_empty() && !has_non_reactive {
-                        // Check if all dep roots are const-bound.
-                        // SWC's compute_scoped_idents returns is_const=false
-                        // when any dep is Var(false) (e.g., loop vars, function params).
-                        let all_deps_const = deps.iter().all(|dep| {
-                            tracker.const_bindings.contains(&dep.root_name)
-                        });
-                        // Wrap with _fnSignal
-                        let (wrapped, fn_code, str_code) = build_fn_signal_wrapping(
-                            value,
-                            &deps,
-                            destructured_props,
-                            tracker,
-                            ctx,
-                            props_param_name,
-                        );
-                        tracker.needs_fn_signal = true;
-                        hoisted_stmts.push((fn_code, str_code));
-                        // SWC: convert_to_getter returns is_const from compute_scoped_idents.
-                        // For is_fn (component) elements, always const_props.
-                        // For native elements: const if all deps const, var otherwise.
-                        if is_fn || all_deps_const {
-                            const_props.push((attr_name, wrapped));
+                        // SWC's convert_inlined_fn checks is_used_as_object_or_call():
+                        // only wrap with _fnSignal if at least one dep is used as the
+                        // object of a member expression. If deps are only used as
+                        // standalone identifiers or array indices, skip wrapping.
+                        let dep_names: Vec<&str> =
+                            deps.iter().map(|d| d.root_name.as_str()).collect();
+                        if is_any_dep_used_as_object(&value, &dep_names) {
+                            // Check if all dep roots are const-bound.
+                            // SWC's compute_scoped_idents returns is_const=false
+                            // when any dep is Var(false) (e.g., loop vars, function params).
+                            let all_deps_const = deps.iter().all(|dep| {
+                                tracker.const_bindings.contains(&dep.root_name)
+                            });
+                            // Wrap with _fnSignal
+                            let (wrapped, fn_code, str_code) = build_fn_signal_wrapping(
+                                value,
+                                &deps,
+                                destructured_props,
+                                tracker,
+                                ctx,
+                                props_param_name,
+                            );
+                            tracker.needs_fn_signal = true;
+                            hoisted_stmts.push((fn_code, str_code));
+                            // SWC: convert_to_getter returns is_const from compute_scoped_idents.
+                            // For is_fn (component) elements, always const_props.
+                            // For native elements: const if all deps const, var otherwise.
+                            if is_fn || all_deps_const {
+                                const_props.push((attr_name, wrapped));
+                            } else {
+                                var_props.push((attr_name, wrapped));
+                            }
                         } else {
-                            var_props.push((attr_name, wrapped));
+                            // No dep used as object -> skip _fnSignal, treat as var
+                            var_props.push((attr_name, value));
                         }
                     } else {
                         var_props.push((attr_name, value));
@@ -2854,28 +3073,39 @@ pub(crate) fn transform_jsx_children<'a>(
                                         props_param_name,
                                     );
                                     if !deps.is_empty() && !has_non_reactive {
-                                        // Check if all dep roots are const-bound.
-                                        // SWC's compute_scoped_idents returns is_const=false
-                                        // when any dep is Var(false) (e.g., function params).
-                                        let all_deps_const = deps.iter().all(|dep| {
-                                            tracker.const_bindings.contains(&dep.root_name)
-                                        });
-                                        if !all_deps_const {
+                                        // SWC's convert_inlined_fn checks is_used_as_object_or_call():
+                                        // only wrap if at least one dep is used as the object of
+                                        // a member expression.
+                                        let dep_names: Vec<&str> =
+                                            deps.iter().map(|d| d.root_name.as_str()).collect();
+                                        if is_any_dep_used_as_object(&other, &dep_names) {
+                                            // Check if all dep roots are const-bound.
+                                            // SWC's compute_scoped_idents returns is_const=false
+                                            // when any dep is Var(false) (e.g., function params).
+                                            let all_deps_const = deps.iter().all(|dep| {
+                                                tracker.const_bindings.contains(&dep.root_name)
+                                            });
+                                            if !all_deps_const {
+                                                any_child_mutable = true;
+                                            }
+                                            let (wrapped, fn_code, str_code) =
+                                                build_fn_signal_wrapping(
+                                                    other,
+                                                    &deps,
+                                                    destructured_props,
+                                                    tracker,
+                                                    ctx,
+                                                    props_param_name,
+                                                );
+                                            tracker.needs_fn_signal = true;
+                                            hoisted_stmts.push((fn_code, str_code));
+                                            child_exprs.push(wrapped);
+                                            continue;
+                                        } else {
+                                            // No dep used as object -> skip _fnSignal,
+                                            // but mark mutable since we have deps
                                             any_child_mutable = true;
                                         }
-                                        let (wrapped, fn_code, str_code) =
-                                            build_fn_signal_wrapping(
-                                                other,
-                                                &deps,
-                                                destructured_props,
-                                                tracker,
-                                                ctx,
-                                                props_param_name,
-                                            );
-                                        tracker.needs_fn_signal = true;
-                                        hoisted_stmts.push((fn_code, str_code));
-                                        child_exprs.push(wrapped);
-                                        continue;
                                     } else if !deps.is_empty() && has_non_reactive {
                                         // Expression has reactive deps (local vars) mixed with
                                         // non-reactive refs (imports/globals). SWC's
