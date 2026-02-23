@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 12 gap closure in progress. Executing plans 04-06. Plan 05 complete.
+**Current focus:** Phase 12 gap closure complete. All 6 plans executed.
 
 ## Current Position
 
 Phase: 12 of 14 (Signal Wrapping Gaps)
-Plan: 5 of 6 in phase 12
-Status: In progress
-Last activity: 2026-02-23 - Completed 12-05-PLAN.md
+Plan: 6 of 6 in phase 12
+Status: Phase complete
+Last activity: 2026-02-23 - Completed 12-06-PLAN.md
 
-Progress: [██████████████████████████████] 32/? plans
+Progress: [██████████████████████████████] 33/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 32
+- Total plans completed: 33
 - Average duration: 19min
-- Total execution time: 11.9 hours
+- Total execution time: 12.3 hours
 
 **By Phase:**
 
@@ -38,11 +38,11 @@ Progress: [███████████████████████
 | 09-jsx-keys-final-parity | 5/5 | 328min | 66min |
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
-| 12-signal-wrapping-gaps | 5/6 | 51min | 10min |
+| 12-signal-wrapping-gaps | 6/6 | 72min | 12min |
 
 **Recent Trend:**
-- Last 5 plans: 12-01 (10min), 12-02 (5min), 12-03 (3min), 12-04 (14min), 12-05 (19min)
-- Trend: Phase 12 gap closure progressing. Plan 05 involved complex const_bindings threading.
+- Last 5 plans: 12-02 (5min), 12-03 (3min), 12-04 (14min), 12-05 (19min), 12-06 (21min)
+- Trend: Phase 12 complete. Plan 06 added inline component _rawProps rewrite with _fnSignal wrapping.
 
 *Updated after each plan completion*
 
@@ -179,10 +179,16 @@ Recent decisions affecting current work:
 - [12-05]: const_bindings used as scope-analysis proxy for reactive dep detection in collect_reactive_deps
 - [12-05]: Depth >= 2 chains bypass const_bindings check (unambiguously store chains)
 - [12-05]: Depth 1 chains require const_bindings membership (prevents false positives on free variables like state.thing)
+- [12-06]: Inline component detected via ExportDefaultDeclarationKind::ArrowFunctionExpression (no TS wrapper needed since TS stripping runs first)
+- [12-06]: Capture name remapping done early in create_jsx_event_segments_recursive (not exit_export_default_declaration) to avoid timing issues
+- [12-06]: Segment body post-processing done inline at body capture time (not deferred to exit hook)
+- [12-06]: has_destructured_raw_props bypass extended: covers both _rawProps and named props params (body destructuring case)
+- [12-06]: Identifier branch in collect_reactive_deps_inner uses props_param_name.unwrap_or("_rawProps") instead of hardcoded _rawProps
+- [12-06]: Hoisted _hf* functions injected into entry module when entry code references var_name (enables segment strategy inline components)
 
 ### Pending Todos
 
-Plan 06 of phase 12 remaining.
+Phase 12 complete. No pending plans.
 
 ### Blockers/Concerns
 
@@ -201,5 +207,5 @@ Plan 06 of phase 12 remaining.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 12-05-PLAN.md
+Stopped at: Completed 12-06-PLAN.md (Phase 12 complete)
 Resume file: None
