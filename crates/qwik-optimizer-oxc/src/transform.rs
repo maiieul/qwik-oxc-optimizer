@@ -98,6 +98,14 @@ pub(crate) struct ImportTracker {
     /// Monotonic counter for hoisted function names (_hf0, _hf1, ...).
     pub hoisted_fn_counter: u32,
 
+    /// Deduplication map for hoisted _fnSignal functions.
+    /// Key: the arrow function source after parameter substitution (e.g., "(p0) => p0.errors.test").
+    /// Value: the _hf index that was assigned.
+    /// SWC deduplicates identical hoisted functions by their body string, so when
+    /// multiple expressions like store.errors.test share the same parameterized body,
+    /// only one _hfN is emitted and reused for all occurrences.
+    pub hoisted_fn_dedup: std::collections::HashMap<String, u32>,
+
     /// Set of identifier names that are considered "immutable" component tags.
     /// Using these as JSX element tags does NOT set jsx_mutable = true.
     /// Built from imports: Fragment, RenderOnce, Link, and any import from ?jsx or .md sources.

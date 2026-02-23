@@ -1477,12 +1477,7 @@ fn build_fn_signal_wrapping<'a>(
     ctx: &mut TraverseCtx<'a, ()>,
     props_param_name: Option<&str>,
 ) -> (Expression<'a>, String, String) {
-    let hf_index = tracker.hoisted_fn_counter;
-    tracker.hoisted_fn_counter += 1;
-
-    let hf_name = format!("_hf{}", hf_index);
-    let hf_str_name = format!("_hf{}_str", hf_index);
-
+    // 1. Build the body string FIRST (before allocating _hf index)
     let mut codegen = oxc::codegen::Codegen::new();
     codegen.print_expression(&expr);
     let mut body_str = codegen.into_source_text();
@@ -1518,6 +1513,23 @@ fn build_fn_signal_wrapping<'a>(
         body_str.clone()
     };
 
+    // 2. Build dedup key and check for existing _hf with same body
+    let dedup_key = format!("({}) => {}", params_str, body_for_fn);
+
+    let hf_index =
+        if let Some(&existing_index) = tracker.hoisted_fn_dedup.get(&dedup_key) {
+            existing_index
+        } else {
+            let new_index = tracker.hoisted_fn_counter;
+            tracker.hoisted_fn_counter += 1;
+            tracker.hoisted_fn_dedup.insert(dedup_key, new_index);
+            new_index
+        };
+
+    let hf_name = format!("_hf{}", hf_index);
+    let hf_str_name = format!("_hf{}_str", hf_index);
+
+    // 3. Build fn_code and str_code (hoisted const declarations)
     let fn_code = format!("const {} = ({}) => {};", hf_name, params_str, body_for_fn);
 
     // For the string representation, strip wrapping parens that OXC codegen
@@ -1535,6 +1547,7 @@ fn build_fn_signal_wrapping<'a>(
         escape_string_literal(&minified)
     );
 
+    // 4. Build the _fnSignal call expression
     let callee = ctx.ast.expression_identifier(SPAN, "_fnSignal");
     let mut arguments = ctx.ast.vec_with_capacity(3);
 
@@ -2297,7 +2310,9 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                                 props_param_name,
                             );
                             tracker.needs_fn_signal = true;
-                            hoisted_stmts.push((fn_code, str_code));
+                            if !hoisted_stmts.iter().any(|(fc, _)| fc == &fn_code) {
+                                hoisted_stmts.push((fn_code, str_code));
+                            }
                             // SWC: convert_to_getter returns is_const from compute_scoped_idents.
                             // For is_fn (component) elements, always const_props.
                             // For native elements: const if all deps const, var otherwise.
@@ -3098,7 +3113,10 @@ pub(crate) fn transform_jsx_children<'a>(
                                                     props_param_name,
                                                 );
                                             tracker.needs_fn_signal = true;
-                                            hoisted_stmts.push((fn_code, str_code));
+                                            if !hoisted_stmts.iter().any(|(fc, _)| fc == &fn_code)
+                                            {
+                                                hoisted_stmts.push((fn_code, str_code));
+                                            }
                                             child_exprs.push(wrapped);
                                             continue;
                                         } else {
