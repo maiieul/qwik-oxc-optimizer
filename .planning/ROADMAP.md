@@ -25,7 +25,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7: Entry Module Emission Fixes** - Filter _hf* leakage, fix _fnSignal import false-positive, fix lazy import ordering
 - [x] **Phase 8: JSX Flags & Iteration Variables** - Identifier scope analysis, logical && propagation, q:p injection, loop static_listeners
 - [x] **Phase 9: JSX Keys & Final Parity** - DCE, dev mode QRL, hoist strategy, key ordering, signal wrapping gaps, event merging, TS assertion lookahead (62/162 exact matches)
-- [ ] **Phase 10: Captures Mechanism** - Implement _captures[N] array access pattern for extracted segments
+- [x] **Phase 10: Captures Mechanism** - Implement _captures[N] array access pattern for extracted segments
 - [ ] **Phase 11: Auto Export Rename** - Implement _auto_ prefix for segment import re-exports
 - [ ] **Phase 12: Remaining Incremental Fixes** - _fnSignal wrapping gaps, DCE improvements, ctxKind, entry field edge cases
 
@@ -186,7 +186,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 10-01-PLAN.md — Filter iteration var params from captures + inject params into segment function signatures
+- [x] 10-01-PLAN.md — Filter iteration var params from captures + inject params into segment function signatures
 
 ### Phase 11: Auto Export Rename
 **Goal**: Implement `_auto_` prefix for segment import re-exports matching SWC output
@@ -226,6 +226,6 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 9 -> 10 -> 11 -> 12
 | 7. Entry Module Emission Fixes | 1/1 | Complete | 2026-02-21 |
 | 8. JSX Flags & Iteration Variables | 3/3 | Complete | 2026-02-21 |
 | 9. JSX Keys & Final Parity | 5/5 | Complete (62/162 exact) | 2026-02-21 |
-| 10. Captures Mechanism | 0/1 | Planned | — |
+| 10. Captures Mechanism | 1/1 | Complete | 2026-02-23 |
 | 11. Auto Export Rename | 0/? | Not started | — |
 | 12. Remaining Incremental Fixes | 0/? | Not started | — |
