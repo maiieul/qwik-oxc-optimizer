@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 12 in progress. 28 plans completed across 12 phases. Core dep collection fixes landed (sorting, expression types, globals, props call gate). Remaining: 2 plans in phase 12, then phases 13-14.
+**Current focus:** Phase 12 in progress. 29 plans completed across 12 phases. is_used_as_object gate and .value detection fixes landed. Remaining: 1 plan in phase 12, then phases 13-14.
 
 ## Current Position
 
 Phase: 12 of 14 (Signal Wrapping Gaps)
-Plan: 1 of 3 in phase 12
+Plan: 2 of 3 in phase 12
 Status: In progress
-Last activity: 2026-02-23 - Completed 12-01-PLAN.md
+Last activity: 2026-02-23 - Completed 12-02-PLAN.md
 
-Progress: [████████████████████████░] 28/? plans
+Progress: [█████████████████████████░] 29/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 28
+- Total plans completed: 29
 - Average duration: 19min
-- Total execution time: 11.2 hours
+- Total execution time: 11.3 hours
 
 **By Phase:**
 
@@ -38,10 +38,10 @@ Progress: [███████████████████████
 | 09-jsx-keys-final-parity | 5/5 | 328min | 66min |
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
-| 12-signal-wrapping-gaps | 1/3 | 10min | 10min |
+| 12-signal-wrapping-gaps | 2/3 | 15min | 8min |
 
 **Recent Trend:**
-- Last 5 plans: 09-05 (180min), 10-01 (13min), 11-01 (13min), 12-01 (10min)
+- Last 5 plans: 10-01 (13min), 11-01 (13min), 12-01 (10min), 12-02 (5min)
 - Trend: Clean targeted fixes with good research foundation.
 
 *Updated after each plan completion*
@@ -166,10 +166,14 @@ Recent decisions affecting current work:
 - [12-01]: Harmless globals (undefined, NaN, Infinity) don't block wrapping -- classified separately from other KNOWN_GLOBALS
 - [12-01]: Props path: removed contains_function_call gate; children path retains it (matches SWC accept_call_expr=true vs false)
 - [12-01]: TaggedTemplateExpression unconditionally sets has_non_reactive in dep collection AND added to contains_function_call
+- [12-02]: is_any_dep_used_as_object gate checks if dep is used as member expression object before _fnSignal wrapping (matches SWC is_used_as_object_or_call)
+- [12-02]: is_dep_or_contains_dep sees through LogicalExpression and ParenthesizedExpression for (a||b).value patterns
+- [12-02]: collect_all_idents_as_primary_deps handles .value on non-identifier-chain expressions (e.g., (count||count2).value)
+- [12-02]: Children path: deps exist but no dep used as object -> mark mutable without _fnSignal wrapping
 
 ### Pending Todos
 
-None -- all 28 plans executed.
+None -- all 29 plans executed.
 
 ### Blockers/Concerns
 
@@ -188,5 +192,5 @@ None -- all 28 plans executed.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 12-01-PLAN.md
+Stopped at: Completed 12-02-PLAN.md
 Resume file: None
