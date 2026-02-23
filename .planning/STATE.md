@@ -4,17 +4,17 @@
 
 See: .planning/PROJECT.md (updated 2026-02-19)
 
-**Core value:** Snapshot parity with the SWC optimizer across all 162 test cases
-**Current focus:** Phase 9 complete. 25/25 plans across 9 phases executed. 100 snapshot files differ. 62 exact golden matches.
+**Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
+**Current focus:** Phase 9 closed. 25/25 plans across 9 phases executed. 100 snapshot files differ (most are aesthetic). 62 exact golden matches. Phases 10-12 target remaining actionable gaps.
 
 ## Current Position
 
-Phase: 9 of 9 (JSX Keys & Final Parity)
-Plan: 5 of 5 complete in phase 9
-Status: Phase complete (partial parity: 62/162 exact matches)
-Last activity: 2026-02-21 - Completed 09-05-PLAN.md (Final audit, reduced 125->100 diffs)
+Phase: 10 of 12 (Captures Mechanism)
+Plan: 0 of ? in phase 10
+Status: Not started
+Last activity: 2026-02-23 - Closed Phase 9, added Phases 10-12 for remaining actionable work
 
-Progress: [█████████████████████████] 25/25 plans (100%)
+Progress: [█████████████████████░░░░] 25/? plans
 
 ## Performance Metrics
 
@@ -165,17 +165,14 @@ None -- all 25 plans executed.
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
 - All phase-level gaps RESOLVED through phases 1-9
-- Remaining 100 snapshot diffs:
-  - OXC codegen shorthand auto-detection (~60+ tests, fundamental OXC behavior)
-  - OXC codegen line wrapping differences (~15 tests)
-  - _captures mechanism not implemented (~20 tests)
-  - _auto_ export rename not implemented (~8 tests)
-  - _fnSignal wrapping gaps (~10 tests)
-  - DCE differences (~5 tests)
-  - Entry field, ctxKind, QRL hoisting, comment preservation, const folding (misc ~10 tests)
+- Remaining 100 snapshot diffs (post-Phase 9):
+  - ACCEPTED (aesthetic): OXC codegen shorthand auto-detection (~60+ tests), line wrapping (~15 tests)
+  - Phase 10: _captures mechanism (~20 tests)
+  - Phase 11: _auto_ export rename (~8 tests)
+  - Phase 12: _fnSignal wrapping gaps (~10 tests), DCE (~5 tests), ctxKind/entry field/misc (~10 tests)
 
 ## Session Continuity
 
-Last session: 2026-02-21T22:03:45Z
-Stopped at: Completed 09-05-PLAN.md (Final audit, 125->100 diffs, 62 exact matches)
+Last session: 2026-02-23
+Stopped at: Closed Phase 9, restructured remaining work into Phases 10-12
 Resume file: None
