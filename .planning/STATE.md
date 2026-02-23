@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 10 complete. 26 plans completed across 10 phases. Iteration variable captures/params mechanism implemented. Phases 11-12 target remaining actionable gaps.
+**Current focus:** Phase 11 complete. 27 plans completed across 11 phases. _auto_ export rename mechanism implemented. Phase 12 targets remaining actionable gaps.
 
 ## Current Position
 
-Phase: 10 of 12 (Captures Mechanism)
-Plan: 1 of 1 in phase 10
+Phase: 11 of 12 (Auto Export Rename)
+Plan: 1 of 1 in phase 11
 Status: Phase complete
-Last activity: 2026-02-23 - Phase 10 complete (iteration variable captures/params mechanism)
+Last activity: 2026-02-23 - Completed 11-01-PLAN.md (_auto_ export rename mechanism)
 
-Progress: [██████████████████████░░░] 26/? plans
+Progress: [███████████████████████░░] 27/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 26
+- Total plans completed: 27
 - Average duration: 19min
-- Total execution time: 10.81 hours
+- Total execution time: 11.03 hours
 
 **By Phase:**
 
@@ -37,10 +37,11 @@ Progress: [██████████████████████░
 | 08-jsx-flags-iteration-variables | 3/3 | 41min | 14min |
 | 09-jsx-keys-final-parity | 5/5 | 328min | 66min |
 | 10-captures-mechanism | 1/1 | 13min | 13min |
+| 11-auto-export-rename | 1/1 | 13min | 13min |
 
 **Recent Trend:**
-- Last 5 plans: 09-03 (35min), 09-04 (23min), 09-05 (180min), 10-01 (13min)
-- Trend: Clean targeted fix after thorough research phase.
+- Last 5 plans: 09-04 (23min), 09-05 (180min), 10-01 (13min), 11-01 (13min)
+- Trend: Clean targeted fixes with good research foundation.
 
 *Updated after each plan completion*
 
@@ -155,10 +156,14 @@ Recent decisions affecting current work:
 - [10-01]: current_iteration_vars() uses iteration_var_stack.last() (innermost loop only), matching SWC -- outer loop vars become captures
 - [10-01]: paramNames metadata keeps duplicate "_" (SWC stores ["_", "_", "row"]); de-duplication to _1 only in code generation
 - [10-01]: inject_iteration_params() runs before inject_captures_into_body() to avoid arrow position shift issues
+- [11-01]: export default function/class treated as exported for _auto_ purposes (matches SWC)
+- [11-01]: Destructured pattern exports tracked via collect_binding_pattern_names_into (not just simple bindings)
+- [11-01]: Stripped segments excluded from auto_exports via is_stripped parameter
+- [11-01]: TS enum _auto_ exports accepted as known OXC limitation (SWC inlines enum values)
 
 ### Pending Todos
 
-None -- all 26 plans executed.
+None -- all 27 plans executed.
 
 ### Blockers/Concerns
 
@@ -168,15 +173,14 @@ None -- all 26 plans executed.
 - BUG-04 (segment ordering) RESOLVED -- span-based sort before output iteration
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
-- All phase-level gaps RESOLVED through phases 1-9
-- Remaining 100 snapshot diffs (post-Phase 9):
+- All phase-level gaps RESOLVED through phases 1-10
+- Remaining snapshot diffs (post-Phase 11):
   - ACCEPTED (aesthetic): OXC codegen shorthand auto-detection (~60+ tests), line wrapping (~15 tests)
-  - Phase 10: _captures mechanism (~20 tests)
-  - Phase 11: _auto_ export rename (~8 tests)
   - Phase 12: _fnSignal wrapping gaps (~10 tests), DCE (~5 tests), ctxKind/entry field/misc (~10 tests)
+  - Pre-transformed inlinedQrl tests (3 tests) -- OXC doesn't extract segments from pre-transformed code
 
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 10-01-PLAN.md
+Stopped at: Completed 11-01-PLAN.md
 Resume file: None
