@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 12 in progress. 29 plans completed across 12 phases. is_used_as_object gate and .value detection fixes landed. Remaining: 1 plan in phase 12, then phases 13-14.
+**Current focus:** Phase 12 complete. 30 plans completed across 12 phases. All signal wrapping gaps closed (dep sorting, expression recursion, harmless globals, accept_call_expr, is_used_as_object, .value detection, _hf dedup). Remaining: phases 13-14.
 
 ## Current Position
 
 Phase: 12 of 14 (Signal Wrapping Gaps)
-Plan: 2 of 3 in phase 12
-Status: In progress
-Last activity: 2026-02-23 - Completed 12-02-PLAN.md
+Plan: 3 of 3 in phase 12
+Status: Phase complete
+Last activity: 2026-02-23 - Completed 12-03-PLAN.md
 
-Progress: [█████████████████████████░] 29/? plans
+Progress: [██████████████████████████] 30/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 29
+- Total plans completed: 30
 - Average duration: 19min
-- Total execution time: 11.3 hours
+- Total execution time: 11.4 hours
 
 **By Phase:**
 
@@ -38,11 +38,11 @@ Progress: [███████████████████████
 | 09-jsx-keys-final-parity | 5/5 | 328min | 66min |
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
-| 12-signal-wrapping-gaps | 2/3 | 15min | 8min |
+| 12-signal-wrapping-gaps | 3/3 | 18min | 6min |
 
 **Recent Trend:**
-- Last 5 plans: 10-01 (13min), 11-01 (13min), 12-01 (10min), 12-02 (5min)
-- Trend: Clean targeted fixes with good research foundation.
+- Last 5 plans: 11-01 (13min), 12-01 (10min), 12-02 (5min), 12-03 (3min)
+- Trend: Clean targeted fixes with good research foundation. Phase 12 complete.
 
 *Updated after each plan completion*
 
@@ -170,10 +170,13 @@ Recent decisions affecting current work:
 - [12-02]: is_dep_or_contains_dep sees through LogicalExpression and ParenthesizedExpression for (a||b).value patterns
 - [12-02]: collect_all_idents_as_primary_deps handles .value on non-identifier-chain expressions (e.g., (count||count2).value)
 - [12-02]: Children path: deps exist but no dep used as object -> mark mutable without _fnSignal wrapping
+- [12-03]: _hf dedup key is full arrow source "(p0) => p0.errors.test" -- params + body distinguishes different arities
+- [12-03]: Caller-side dedup via hoisted_stmts.iter().any() -- simpler than return-flag, works at both props and children call sites
+- [12-03]: HashMap<String, u32> on ImportTracker leverages #[derive(Default)] for automatic empty-map init
 
 ### Pending Todos
 
-None -- all 29 plans executed.
+None -- all 30 plans executed.
 
 ### Blockers/Concerns
 
@@ -192,5 +195,5 @@ None -- all 29 plans executed.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 12-02-PLAN.md
+Stopped at: Completed 12-03-PLAN.md (Phase 12 complete)
 Resume file: None
