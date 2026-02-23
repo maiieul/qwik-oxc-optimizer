@@ -666,6 +666,7 @@ fn collect_reactive_deps(
     destructured_props: Option<&[(String, String)]>,
     collected_imports: &[crate::types::ImportInfo],
     props_param_name: Option<&str>,
+    const_bindings: &std::collections::HashSet<String>,
 ) -> (Vec<ReactiveDep>, bool) {
     let mut primary_deps: Vec<ReactiveDep> = Vec::new();
     let mut local_deps: Vec<ReactiveDep> = Vec::new();
@@ -681,6 +682,7 @@ fn collect_reactive_deps(
         &mut seen,
         &mut has_non_reactive_non_const,
         props_param_name,
+        const_bindings,
     );
 
     // Local deps only materialize when there are primary deps.
@@ -714,6 +716,7 @@ fn collect_reactive_deps_inner(
     seen: &mut std::collections::HashSet<String>,
     has_non_reactive_non_const: &mut bool,
     props_param_name: Option<&str>,
+    const_bindings: &std::collections::HashSet<String>,
 ) {
     match expr {
         // signal.value -> signal is a reactive dep
@@ -804,7 +807,14 @@ fn collect_reactive_deps_inner(
                     return;
                 }
 
-                if has_chain_depth(expr, 2) {
+                // Store-like member access: panelStore.active, store.stuff, etc.
+                // SWC treats any local ident.prop as a scoped variable (reactive dep).
+                // We use const_bindings as a proxy for "locally declared": it contains
+                // const declarations (useStore/useSignal results) and imports (already
+                // filtered above). For depth >= 2 chains (store.errors.test), we don't
+                // need the const_bindings check as they're unambiguously store chains.
+                let is_known_local = const_bindings.contains(root_name.as_str());
+                if has_chain_depth(expr, 1) && (is_known_local || has_chain_depth(expr, 2)) {
                     if !seen.contains(root_name.as_str()) {
                         let param = format!("p{}", primary_deps.len());
                         seen.insert(root_name.clone());
@@ -826,6 +836,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
 
@@ -894,6 +905,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
             collect_reactive_deps_inner(
                 &bin.right,
@@ -904,6 +916,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
         Expression::ConditionalExpression(cond) => {
@@ -916,6 +929,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
             collect_reactive_deps_inner(
                 &cond.consequent,
@@ -926,6 +940,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
             collect_reactive_deps_inner(
                 &cond.alternate,
@@ -936,6 +951,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
         Expression::UnaryExpression(unary) => {
@@ -948,6 +964,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
         Expression::ObjectExpression(obj) => {
@@ -963,6 +980,7 @@ fn collect_reactive_deps_inner(
                             seen,
                             has_non_reactive_non_const,
                             props_param_name,
+                            const_bindings,
                         );
                     }
                     ObjectPropertyKind::SpreadProperty(s) => {
@@ -975,6 +993,7 @@ fn collect_reactive_deps_inner(
                             seen,
                             has_non_reactive_non_const,
                             props_param_name,
+                            const_bindings,
                         );
                     }
                 }
@@ -990,6 +1009,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
 
@@ -1004,6 +1024,7 @@ fn collect_reactive_deps_inner(
                     seen,
                     has_non_reactive_non_const,
                     props_param_name,
+                    const_bindings,
                 );
             }
         }
@@ -1022,6 +1043,7 @@ fn collect_reactive_deps_inner(
                     seen,
                     has_non_reactive_non_const,
                     props_param_name,
+                    const_bindings,
                 );
             }
         }
@@ -1038,6 +1060,7 @@ fn collect_reactive_deps_inner(
                             seen,
                             has_non_reactive_non_const,
                             props_param_name,
+                            const_bindings,
                         );
                     }
                     ArrayExpressionElement::Elision(_) => {}
@@ -1052,6 +1075,7 @@ fn collect_reactive_deps_inner(
                                 seen,
                                 has_non_reactive_non_const,
                                 props_param_name,
+                                const_bindings,
                             );
                         }
                     }
@@ -1069,6 +1093,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
             collect_reactive_deps_inner(
                 &member.expression,
@@ -1079,6 +1104,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
         Expression::CallExpression(call) => {
@@ -1098,6 +1124,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
             for arg in &call.arguments {
                 if let Some(expr) = arg.as_expression() {
@@ -1110,6 +1137,7 @@ fn collect_reactive_deps_inner(
                         seen,
                         has_non_reactive_non_const,
                         props_param_name,
+                        const_bindings,
                     );
                 }
             }
@@ -1126,6 +1154,7 @@ fn collect_reactive_deps_inner(
                         seen,
                         has_non_reactive_non_const,
                         props_param_name,
+                        const_bindings,
                     );
                     for arg in &call.arguments {
                         if let Some(expr) = arg.as_expression() {
@@ -1138,6 +1167,7 @@ fn collect_reactive_deps_inner(
                                 seen,
                                 has_non_reactive_non_const,
                                 props_param_name,
+                                const_bindings,
                             );
                         }
                     }
@@ -1152,6 +1182,7 @@ fn collect_reactive_deps_inner(
                         seen,
                         has_non_reactive_non_const,
                         props_param_name,
+                        const_bindings,
                     );
                 }
                 ChainElement::ComputedMemberExpression(member) => {
@@ -1164,6 +1195,7 @@ fn collect_reactive_deps_inner(
                         seen,
                         has_non_reactive_non_const,
                         props_param_name,
+                        const_bindings,
                     );
                     collect_reactive_deps_inner(
                         &member.expression,
@@ -1174,6 +1206,7 @@ fn collect_reactive_deps_inner(
                         seen,
                         has_non_reactive_non_const,
                         props_param_name,
+                        const_bindings,
                     );
                 }
                 _ => {}
@@ -1190,6 +1223,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
         Expression::TSSatisfiesExpression(ts) => {
@@ -1202,6 +1236,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
         Expression::TSNonNullExpression(ts) => {
@@ -1214,6 +1249,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
         Expression::LogicalExpression(log) => {
@@ -1226,6 +1262,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
             collect_reactive_deps_inner(
                 &log.right,
@@ -1236,6 +1273,7 @@ fn collect_reactive_deps_inner(
                 seen,
                 has_non_reactive_non_const,
                 props_param_name,
+                const_bindings,
             );
         }
 
@@ -2333,7 +2371,7 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                     // are allowed. The has_non_reactive flag from collect_reactive_deps
                     // provides the correct bailout for non-reactive refs.
                     let (deps, has_non_reactive) =
-                        collect_reactive_deps(&value, destructured_props, module_imports, props_param_name);
+                        collect_reactive_deps(&value, destructured_props, module_imports, props_param_name, &tracker.const_bindings);
                     if !deps.is_empty() && !has_non_reactive {
                         // SWC's convert_inlined_fn checks is_used_as_object_or_call():
                         // only wrap with _fnSignal if at least one dep is used as the
@@ -3143,6 +3181,7 @@ pub(crate) fn transform_jsx_children<'a>(
                                         destructured_props,
                                         module_imports,
                                         props_param_name,
+                                        &tracker.const_bindings,
                                     );
                                     if !deps.is_empty() && !has_non_reactive {
                                         // SWC's convert_inlined_fn checks is_used_as_object_or_call():
