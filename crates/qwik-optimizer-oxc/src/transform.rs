@@ -2995,15 +2995,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                                 );
                             }
 
-                            // Handle `const test = useSignal(...)` where `test` is a destructured prop key:
-                            // Strip the `const test =` to just `useSignal(...)` as expression statement.
-                            // This is for destructure_args_colon_props3 where `test` was a prop key.
-                            let non_rest_aliases: std::collections::HashSet<String> = body_info
-                                .prop_keys
-                                .iter()
-                                .map(|(_, local)| local.clone())
-                                .collect();
-                            strip_prop_alias_bindings(&mut arrow.body.statements, &non_rest_aliases, ctx);
                         }
                     }
                 }
@@ -5777,40 +5768,5 @@ fn rewrite_expr_body_destr<'a>(
             }
         }
         _ => {}
-    }
-}
-
-/// Strip `const <alias> = <expr>` bindings where `<alias>` matches a destructured
-/// prop key, converting them to expression statements containing just `<expr>`.
-///
-/// This handles the `destructure_args_colon_props3` pattern where:
-/// `const test = useSignal(rest["bind:value"])` -> `useSignal(rest["bind:value"])`
-/// because `test` was originally a destructured prop from `const { test, ...rest } = props`.
-fn strip_prop_alias_bindings<'a>(
-    stmts: &mut oxc::allocator::Vec<'a, Statement<'a>>,
-    non_rest_aliases: &std::collections::HashSet<String>,
-    ctx: &mut TraverseCtx<'a, ()>,
-) {
-    let mut indices_to_replace: Vec<(usize, Expression<'a>)> = Vec::new();
-
-    for (i, stmt) in stmts.iter_mut().enumerate() {
-        if let Statement::VariableDeclaration(decl) = stmt {
-            if decl.declarations.len() == 1 {
-                let declarator = &mut decl.declarations[0];
-                if let BindingPattern::BindingIdentifier(ident) = &declarator.id {
-                    if non_rest_aliases.contains(ident.name.as_str()) {
-                        if let Some(init) = declarator.init.take() {
-                            indices_to_replace.push((i, init));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // Replace in reverse order to preserve indices
-    for (i, init_expr) in indices_to_replace.into_iter().rev() {
-        let expr_stmt = ctx.ast.statement_expression(SPAN, init_expr);
-        stmts[i] = expr_stmt;
     }
 }
