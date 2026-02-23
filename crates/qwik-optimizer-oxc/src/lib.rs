@@ -231,6 +231,7 @@ pub fn transform_modules(
         };
         all_modules.push(main_module);
 
+        let auto_exports = qwik_transform.auto_exports().clone();
         let body_codes = qwik_transform.take_segment_body_codes();
         // Sort segments by source span position (ascending) for consistent output order.
         // SWC's fold processes nodes top-down in source order, while OXC's traverse
@@ -288,6 +289,7 @@ pub fn transform_modules(
                         &transform_options,
                         &hoisted_stmts,
                         custom_jsx_src.as_deref(),
+                        &auto_exports,
                     );
                     code_move::emit_segment_with_map(&raw_code, &seg_path, emit_options.source_maps)
                 } else {

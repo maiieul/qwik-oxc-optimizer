@@ -5,6 +5,8 @@
 //! extracted segment. Each segment becomes its own module file containing
 //! the extracted function body as an exported const, with any needed imports.
 
+use std::collections::HashSet;
+
 use crate::emit::swc_codegen_options;
 use crate::types::{ImportKind, SegmentData, TransformOptions};
 
@@ -49,6 +51,7 @@ pub(crate) fn build_segment_code_with_hoisted(
     options: &TransformOptions,
     hoisted_stmts: &[(String, String)],
     custom_jsx_source: Option<&str>,
+    auto_exports: &HashSet<String>,
 ) -> String {
     let core = &options.core_module;
     let jsx_runtime = format!("{}/jsx-runtime", core);
@@ -236,13 +239,19 @@ pub(crate) fn build_segment_code_with_hoisted(
     // User-code imports needed by this segment body.
     // These are imports from the original module that the segment references
     // (e.g., `import dep3 from "dep3/something"`, `import { bar as bbar } from "../state"`).
+    // For self-imports that need _auto_ prefix (non-user-exported module-level decls),
+    // use `import { _auto_X as X }` syntax instead of `import { X }`.
     for import_info in &segment.needed_imports {
         for (idx, spec_name) in import_info.specifiers.iter().enumerate() {
             let kind = import_info
                 .specifier_kinds
                 .get(idx)
                 .unwrap_or(&ImportKind::Named);
-            let imported_name = if matches!(kind, ImportKind::Named) {
+            // _auto_ alias takes priority over regular alias for self-imports
+            // (non-framework imports that match auto_exports).
+            let imported_name = if auto_exports.contains(spec_name.as_str()) && !import_info.is_qwik_core {
+                Some(format!("_auto_{}", spec_name))
+            } else if matches!(kind, ImportKind::Named) {
                 import_info.specifier_aliases.get(spec_name).cloned()
             } else {
                 None
