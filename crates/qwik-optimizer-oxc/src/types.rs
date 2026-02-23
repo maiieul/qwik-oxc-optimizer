@@ -436,6 +436,12 @@ pub(crate) struct CollectResult {
     /// need serialization through `_captures`. Includes variable declarations,
     /// function declarations, and class declarations at the top level.
     pub module_level_decls: HashSet<String>,
+
+    /// Local binding names that are user-exported (via export const/function/class
+    /// or export { X }). Used to determine which module-level decls need `_auto_`
+    /// prefix when re-exported for segment self-imports.
+    /// Does NOT include names from `export default` declarations.
+    pub exported_local_names: HashSet<String>,
 }
 
 /// The kind of import specifier (default, namespace, or named).

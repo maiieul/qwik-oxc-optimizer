@@ -256,6 +256,10 @@ struct CollectContext {
     /// The core module import path(s) to recognize as Qwik imports.
     /// Always includes "@qwik.dev/core"; may also include a custom core_module.
     core_modules: Vec<String>,
+    /// Local binding names that are user-exported (via export const/function/class
+    /// or export { X }). Used to determine which module-level decls need _auto_ prefix
+    /// when re-exported for segment self-imports. Does NOT include `export default`.
+    exported_local_names: HashSet<String>,
 }
 
 impl CollectContext {
@@ -276,6 +280,7 @@ impl CollectContext {
             module_exports: Vec::new(),
             module_level_decls: HashSet::new(),
             core_modules,
+            exported_local_names: HashSet::new(),
         }
     }
 
@@ -427,6 +432,7 @@ pub(crate) fn collect<'a>(
         module_imports: ctx.module_imports,
         module_exports: ctx.module_exports,
         module_level_decls: ctx.module_level_decls,
+        exported_local_names: ctx.exported_local_names,
     }
 }
 
@@ -512,6 +518,13 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
         match decl {
             Declaration::VariableDeclaration(var_decl) => {
                 for declarator in &var_decl.declarations {
+                    // Collect ALL binding names from destructured patterns for exported_local_names
+                    let mut decl_names = HashSet::new();
+                    collect_binding_pattern_names_into(&mut decl_names, &declarator.id);
+                    for dn in &decl_names {
+                        ctx.exported_local_names.insert(dn.clone());
+                    }
+
                     let Some(name) = binding_pattern_name(&declarator.id) else {
                         continue;
                     };
@@ -544,6 +557,8 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
                         is_reexport: false,
                         span: (export.span.start, export.span.end),
                     });
+                    // Track as user-exported for _auto_ prefix determination
+                    ctx.exported_local_names.insert(func_name);
 
                     // Walk function body to find wrap() definitions
                     if let Some(body) = &func.body {
@@ -555,11 +570,14 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
             }
             Declaration::ClassDeclaration(class) => {
                 if let Some(id) = &class.id {
+                    let class_name = id.name.as_str().to_string();
                     ctx.module_exports.push(ExportInfo {
-                        name: id.name.as_str().to_string(),
+                        name: class_name.clone(),
                         is_reexport: false,
                         span: (export.span.start, export.span.end),
                     });
+                    // Track as user-exported for _auto_ prefix determination
+                    ctx.exported_local_names.insert(class_name);
                 }
             }
             _ => {}
@@ -567,6 +585,7 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
     }
 
     if export.source.is_some() {
+        // Re-exports from another module (export { X } from '...')
         for spec in &export.specifiers {
             let name = match &spec.exported {
                 ModuleExportName::IdentifierName(id) => id.name.as_str().to_string(),
@@ -578,6 +597,17 @@ fn collect_named_export(ctx: &mut CollectContext, export: &ExportNamedDeclaratio
                 is_reexport: true,
                 span: (export.span.start, export.span.end),
             });
+        }
+    } else if export.declaration.is_none() {
+        // Specifier-only exports without source (export { X, Y })
+        // These are local re-exports: the local names are user-exported.
+        for spec in &export.specifiers {
+            let local_name = match &spec.local {
+                ModuleExportName::IdentifierName(id) => id.name.as_str().to_string(),
+                ModuleExportName::IdentifierReference(id) => id.name.as_str().to_string(),
+                ModuleExportName::StringLiteral(s) => s.value.as_str().to_string(),
+            };
+            ctx.exported_local_names.insert(local_name);
         }
     }
 }
@@ -593,12 +623,20 @@ fn collect_default_export(ctx: &mut CollectContext, export: &ExportDefaultDeclar
     match &export.declaration {
         ExportDefaultDeclarationKind::FunctionDeclaration(fn_decl) => {
             if let Some(ident) = &fn_decl.id {
-                ctx.module_level_decls.insert(ident.name.as_str().to_string());
+                let name = ident.name.as_str().to_string();
+                ctx.module_level_decls.insert(name.clone());
+                // SWC treats `export default function X` as making X exported
+                // for _auto_ prefix purposes (X won't get _auto_ prefix).
+                ctx.exported_local_names.insert(name);
             }
         }
         ExportDefaultDeclarationKind::ClassDeclaration(class_decl) => {
             if let Some(ident) = &class_decl.id {
-                ctx.module_level_decls.insert(ident.name.as_str().to_string());
+                let name = ident.name.as_str().to_string();
+                ctx.module_level_decls.insert(name.clone());
+                // SWC treats `export default class X` as making X exported
+                // for _auto_ prefix purposes.
+                ctx.exported_local_names.insert(name);
             }
         }
         _ => {

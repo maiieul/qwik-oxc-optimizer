@@ -176,6 +176,12 @@ pub(crate) struct QwikTransform {
     /// because the JSX is not Qwik JSX.
     custom_jsx_import_source: Option<String>,
 
+    /// Set of module-level declaration names that need `_auto_` prefix when
+    /// re-exported for segment self-imports. Populated during reclassify and
+    /// finalize_segments for names that are in module_level_decls but NOT
+    /// in exported_local_names.
+    auto_exports: HashSet<String>,
+
     /// Original source code, used for extracting JSX lambda body code by span.
     source_code: String,
 
@@ -420,6 +426,7 @@ impl QwikTransform {
             pending_sync_calls: HashSet::new(),
             pending_segment_qrl_imports: Vec::new(),
             custom_jsx_import_source: None,
+            auto_exports: HashSet::new(),
             source_code: source_code.to_string(),
             source_comments: Vec::new(),
             jsx_event_replacements: HashMap::new(),
@@ -481,6 +488,11 @@ impl QwikTransform {
     /// Get the custom JSX import source module path, if any.
     pub fn custom_jsx_import_source(&self) -> Option<&str> {
         self.custom_jsx_import_source.as_deref()
+    }
+
+    /// Get the set of auto-exported names (module-level decls that need `_auto_` prefix).
+    pub fn auto_exports(&self) -> &HashSet<String> {
+        &self.auto_exports
     }
 
     /// Get current iteration variables from the innermost loop scope only.
@@ -557,6 +569,10 @@ impl QwikTransform {
                 if parent_name == &seg.display_name && !seg.segment_qrl_names.contains(qrl_name) {
                     if self.collected.module_level_decls.contains(qrl_name.as_str()) {
                         // Locally-defined Qrl function: import from self module
+                        // Track non-user-exported names for _auto_ prefix
+                        if !self.collected.exported_local_names.contains(qrl_name) {
+                            self.auto_exports.insert(qrl_name.clone());
+                        }
                         let already_imported = seg.needed_imports.iter().any(|imp| {
                             imp.specifiers.contains(qrl_name)
                         });
@@ -751,15 +767,13 @@ impl QwikTransform {
     /// capturing it. This method returns the import source path (e.g., "./test"
     /// for a file named "test.tsx").
     fn self_import_source(&self) -> String {
-        let stem = self
-            .filename
-            .rsplit('/')
-            .next()
-            .unwrap_or(&self.filename)
-            .rsplit('.')
-            .last()
-            .unwrap_or(&self.filename);
-        format!("./{}", stem)
+        let basename = self.filename.rsplit('/').next().unwrap_or(&self.filename);
+        if self.options.explicit_extensions {
+            format!("./{}", basename)
+        } else {
+            let stem = basename.rsplit('.').last().unwrap_or(basename);
+            format!("./{}", stem)
+        }
     }
 
     /// Post-process a capture analysis result to convert module-level declarations
@@ -769,8 +783,9 @@ impl QwikTransform {
     /// by re-importing them in the segment module rather than serializing/restoring
     /// them via `_captures[]`. This post-processing step implements that behavior.
     fn reclassify_module_level_decl_captures(
-        &self,
+        &mut self,
         mut capture_result: collector::CaptureAnalysisResult,
+        is_stripped: bool,
     ) -> (collector::CaptureAnalysisResult, Vec<crate::types::ImportInfo>) {
         let self_import_source = self.self_import_source();
         let mut extra_imports: Vec<crate::types::ImportInfo> = Vec::new();
@@ -780,6 +795,12 @@ impl QwikTransform {
         let mut true_captures = Vec::new();
         for name in capture_result.capture_names.drain(..) {
             if self.collected.module_level_decls.contains(&name) {
+                // Track non-user-exported names for _auto_ prefix.
+                // Skip for stripped segments -- they don't produce segment files,
+                // so their self-imports don't need _auto_ re-exports.
+                if !is_stripped && !self.collected.exported_local_names.contains(&name) {
+                    self.auto_exports.insert(name.clone());
+                }
                 extra_imports.push(crate::types::ImportInfo {
                     source: self_import_source.clone(),
                     specifiers: vec![name],
@@ -1257,8 +1278,9 @@ impl QwikTransform {
 
                                 // Reclassify module-level declarations from captures
                                 // to needed_imports (self-imports from the parent module).
+                                // JSX event handlers are never stripped, so is_stripped=false.
                                 let (capture_result, module_decl_imports) =
-                                    self.reclassify_module_level_decl_captures(capture_result);
+                                    self.reclassify_module_level_decl_captures(capture_result, false);
 
                                 // Filter iteration variable params from captures.
                                 // SWC: scoped_idents.retain(|id| !param_idents.contains(id))
@@ -2882,8 +2904,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             // Reclassify module-level declarations from captures to needed_imports
             // (self-imports from the parent module). This matches SWC behavior where
             // module-level declarations are re-imported rather than captured.
+            // Pass is_stripped to avoid adding _auto_ exports for stripped segments.
+            let seg_is_stripped = self.stripped_segments.contains(&call.span.start);
             let (capture_result, module_decl_imports) =
-                self.reclassify_module_level_decl_captures(capture_result);
+                self.reclassify_module_level_decl_captures(capture_result, seg_is_stripped);
 
             // Convert reemitted_imports into ImportInfo entries for the segment's needed_imports.
             // These imports will be emitted in the segment module by code_move.rs.
@@ -3449,6 +3473,32 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         // 5: Non-import code (exports, declarations, expressions)
         for stmt in non_import_stmts {
             new_body.push(stmt);
+        }
+
+        // 6: Emit _auto_ exports for module-level declarations that are
+        // referenced by segments but NOT user-exported. Each gets:
+        //   export { X as _auto_X }
+        // Sorted alphabetically for deterministic output (matches SWC).
+        if !self.auto_exports.is_empty() {
+            let mut auto_export_names: Vec<&String> = self.auto_exports.iter().collect();
+            auto_export_names.sort();
+
+            for name in auto_export_names {
+                let local = ctx.ast.module_export_name_identifier_reference(SPAN, ctx.ast.atom(name.as_str()));
+                let exported_name = format!("_auto_{}", name);
+                let exported = ctx.ast.module_export_name_identifier_name(SPAN, ctx.ast.atom(&exported_name));
+                let specifier = ctx.ast.export_specifier(SPAN, local, exported, ImportOrExportKind::Value);
+                let specifiers = ctx.ast.vec1(specifier);
+                let export_decl = ctx.ast.module_declaration_export_named_declaration(
+                    SPAN,
+                    None, // no declaration
+                    specifiers,
+                    None, // no source
+                    ImportOrExportKind::Value,
+                    None::<oxc::allocator::Box<'a, WithClause<'a>>>,
+                );
+                new_body.push(Statement::from(export_decl));
+            }
         }
 
         program.body = new_body;
