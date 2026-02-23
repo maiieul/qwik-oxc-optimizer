@@ -602,6 +602,8 @@ struct ReactiveDep {
 fn contains_function_call(expr: &Expression<'_>) -> bool {
     match expr {
         Expression::CallExpression(_) => true,
+        // Tagged templates are semantically function calls (the tag is called)
+        Expression::TaggedTemplateExpression(_) => true,
         Expression::BinaryExpression(bin) => {
             contains_function_call(&bin.left) || contains_function_call(&bin.right)
         }
@@ -624,6 +626,21 @@ fn contains_function_call(expr: &Expression<'_>) -> bool {
         Expression::StaticMemberExpression(mem) => contains_function_call(&mem.object),
         Expression::ComputedMemberExpression(mem) => {
             contains_function_call(&mem.object) || contains_function_call(&mem.expression)
+        }
+        Expression::ChainExpression(chain) => match &chain.expression {
+            ChainElement::CallExpression(_) => true,
+            ChainElement::StaticMemberExpression(mem) => contains_function_call(&mem.object),
+            ChainElement::ComputedMemberExpression(mem) => {
+                contains_function_call(&mem.object) || contains_function_call(&mem.expression)
+            }
+            _ => false,
+        },
+        Expression::TemplateLiteral(tpl) => tpl
+            .expressions
+            .iter()
+            .any(|e| contains_function_call(e)),
+        Expression::LogicalExpression(log) => {
+            contains_function_call(&log.left) || contains_function_call(&log.right)
         }
         _ => false,
     }
@@ -764,7 +781,11 @@ fn collect_reactive_deps_inner(
                 }
 
                 if crate::collector::KNOWN_GLOBALS.contains(root_name.as_str()) {
-                    *has_non_reactive_non_const = true;
+                    let is_harmless_global =
+                        matches!(root_name.as_str(), "undefined" | "NaN" | "Infinity");
+                    if !is_harmless_global {
+                        *has_non_reactive_non_const = true;
+                    }
                     return;
                 }
 
@@ -820,7 +841,14 @@ fn collect_reactive_deps_inner(
             }
 
             if crate::collector::KNOWN_GLOBALS.contains(name) {
-                *has_non_reactive_non_const = true;
+                // Harmless constant-like globals should NOT block wrapping.
+                // SWC's IdentCollector treats these as non-scope variables and
+                // they don't appear in scoped_idents, so they don't trigger
+                // contains_side_effect.
+                let is_harmless_global = matches!(name, "undefined" | "NaN" | "Infinity");
+                if !is_harmless_global {
+                    *has_non_reactive_non_const = true;
+                }
                 return;
             }
 
@@ -1039,9 +1067,13 @@ fn collect_reactive_deps_inner(
             );
         }
         Expression::CallExpression(call) => {
-            // SWC's create_synthetic_qqsegment recurses into call args
-            // when accept_call_expr=true (prop context).
-            // For dep collection, we need to find reactive sources inside calls.
+            // A direct call expression is a side effect that prevents wrapping.
+            // SWC's contains_side_effect returns true for CallExpression.
+            // Optional chaining calls (ChainExpression) are handled separately
+            // and do NOT set this flag, matching SWC behavior where
+            // signal.formData?.get("username") IS wrapped but signal.value() is NOT.
+            *has_non_reactive_non_const = true;
+            // Still recurse to collect deps for analysis purposes.
             collect_reactive_deps_inner(
                 &call.callee,
                 destructured_props,
@@ -2027,8 +2059,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
 
                 if is_const_jsx_value(&value, &tracker.const_bindings) {
                     const_props.push((attr_name, value));
-                } else if !contains_function_call(&value) {
-                    // Reactive deps without non-reactive refs -> _fnSignal wrapping
+                } else {
+                    // Props path: SWC uses accept_call_expr=true, so call expressions
+                    // are allowed. The has_non_reactive flag from collect_reactive_deps
+                    // provides the correct bailout for non-reactive refs.
                     let (deps, has_non_reactive) =
                         collect_reactive_deps(&value, destructured_props, module_imports, props_param_name);
                     if !deps.is_empty() && !has_non_reactive {
@@ -2060,8 +2094,6 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                     } else {
                         var_props.push((attr_name, value));
                     }
-                } else {
-                    var_props.push((attr_name, value));
                 }
             }
         }
