@@ -210,7 +210,12 @@ Plans:
   1. All remaining _fnSignal wrapping gaps resolved (~23 tests)
   2. All remaining _wrapProp wrapping gaps resolved (~14 tests)
   3. No regressions in existing exact-match tests
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Core dependency collection fixes: dep sorting, missing expression types, harmless globals, accept_call_expr for props
+- [ ] 12-02-PLAN.md — is_used_as_object check for _fnSignal gating + .value detection for complex expressions (logical OR, computed member)
+- [ ] 12-03-PLAN.md — _hf hoisted function deduplication by body string
 
 ### Phase 13: Captures & DCE
 **Goal**: Fix captures edge cases and dead code elimination to match SWC
@@ -255,6 +260,6 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 9 -> 10 -> 11 -> 12 -> 13 -> 1
 | 9. JSX Keys & Final Parity | 5/5 | Complete (62/162 exact) | 2026-02-21 |
 | 10. Captures Mechanism | 1/1 | Complete | 2026-02-23 |
 | 11. Auto Export Rename | 1/1 | Complete | 2026-02-23 |
-| 12. Signal Wrapping Gaps | 0/? | Not started | — |
+| 12. Signal Wrapping Gaps | 0/3 | Planned | — |
 | 13. Captures & DCE | 0/? | Not started | — |
 | 14. Final Parity | 0/? | Not started | — |
