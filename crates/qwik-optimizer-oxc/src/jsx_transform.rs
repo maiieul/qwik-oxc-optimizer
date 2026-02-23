@@ -807,6 +807,26 @@ fn collect_reactive_deps_inner(
                     return;
                 }
 
+                // Check if root_name is a destructured prop alias (e.g., `data` from `{ data }` destructuring).
+                // For `data.selectedOutputDetail`, push the raw props name as the dep instead of `data`.
+                // This mirrors the Identifier branch logic for bare prop alias references.
+                if let Some(props) = destructured_props {
+                    for (local_alias, _original_key) in props {
+                        if local_alias == root_name.as_str() {
+                            let dep_name = props_param_name.unwrap_or("_rawProps");
+                            if !seen.contains(dep_name) {
+                                let param = format!("p{}", primary_deps.len());
+                                seen.insert(dep_name.to_string());
+                                primary_deps.push(ReactiveDep {
+                                    root_name: dep_name.to_string(),
+                                    param_name: param,
+                                });
+                            }
+                            return;
+                        }
+                    }
+                }
+
                 // Store-like member access: panelStore.active, store.stuff, etc.
                 // SWC treats any local ident.prop as a scoped variable (reactive dep).
                 // We use const_bindings as a proxy for "locally declared": it contains
@@ -846,11 +866,14 @@ fn collect_reactive_deps_inner(
             if let Some(props) = destructured_props {
                 for (local_alias, _original_key) in props {
                     if local_alias == name {
-                        if !seen.contains("_rawProps") {
+                        // Use props_param_name if available (body destructuring with named param),
+                        // otherwise default to "_rawProps" (param destructuring).
+                        let dep_name = props_param_name.unwrap_or("_rawProps");
+                        if !seen.contains(dep_name) {
                             let param = format!("p{}", primary_deps.len());
-                            seen.insert("_rawProps".to_string());
+                            seen.insert(dep_name.to_string());
                             primary_deps.push(ReactiveDep {
-                                root_name: "_rawProps".to_string(),
+                                root_name: dep_name.to_string(),
                                 param_name: param,
                             });
                         }
@@ -2379,15 +2402,20 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                         // standalone identifiers or array indices, skip wrapping.
                         let dep_names: Vec<&str> =
                             deps.iter().map(|d| d.root_name.as_str()).collect();
-                        // When _rawProps is a dep from destructured prop alias detection,
+                        // When a dep comes from destructured prop alias detection,
                         // bypass the is_any_dep_used_as_object check. The expression still
-                        // has the original alias (e.g., `fromProps`) which will be rewritten
-                        // to `_rawProps.fromProps` in the body string. After rewriting,
-                        // _rawProps IS used as object, so we can safely skip the check.
+                        // has the original alias (e.g., `data`) which will be rewritten
+                        // to `_rawProps.data` (or `props.data`) in the body. After rewriting,
+                        // the dep IS used as object, so we can safely skip the check.
+                        // This applies to both _rawProps (param destructuring) and named
+                        // props params like "props" (body destructuring).
                         let has_destructured_raw_props = destructured_props
                             .map(|props| !props.is_empty())
                             .unwrap_or(false)
-                            && deps.iter().any(|d| d.root_name == "_rawProps");
+                            && deps.iter().any(|d| {
+                                d.root_name == "_rawProps"
+                                    || props_param_name.is_some_and(|p| p == d.root_name)
+                            });
                         if has_destructured_raw_props || is_any_dep_used_as_object(&value, &dep_names) {
                             // Check if all dep roots are const-bound.
                             // SWC's compute_scoped_idents returns is_const=false
