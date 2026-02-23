@@ -677,6 +677,14 @@ fn collect_reactive_deps(
         }
     }
 
+    // Sort deps alphabetically by root_name to match SWC's
+    // compute_scoped_idents -> Vec::sort() ordering.
+    primary_deps.sort_by(|a, b| a.root_name.cmp(&b.root_name));
+    // Re-assign param names after sorting to maintain p0, p1, p2... order
+    for (i, dep) in primary_deps.iter_mut().enumerate() {
+        dep.param_name = format!("p{}", i);
+    }
+
     (primary_deps, has_non_reactive_non_const)
 }
 
@@ -932,6 +940,248 @@ fn collect_reactive_deps_inner(
         Expression::ParenthesizedExpression(paren) => {
             collect_reactive_deps_inner(
                 &paren.expression,
+                destructured_props,
+                collected_imports,
+                primary_deps,
+                local_deps,
+                seen,
+                has_non_reactive_non_const,
+                props_param_name,
+            );
+        }
+
+        Expression::TemplateLiteral(tpl) => {
+            for expr in &tpl.expressions {
+                collect_reactive_deps_inner(
+                    expr,
+                    destructured_props,
+                    collected_imports,
+                    primary_deps,
+                    local_deps,
+                    seen,
+                    has_non_reactive_non_const,
+                    props_param_name,
+                );
+            }
+        }
+        Expression::TaggedTemplateExpression(tagged) => {
+            // The tag is a function call -- this is a side effect that prevents wrapping.
+            *has_non_reactive_non_const = true;
+            // Still recurse into quasi expressions to collect deps for analysis,
+            // but the has_non_reactive flag will prevent wrapping.
+            for expr in &tagged.quasi.expressions {
+                collect_reactive_deps_inner(
+                    expr,
+                    destructured_props,
+                    collected_imports,
+                    primary_deps,
+                    local_deps,
+                    seen,
+                    has_non_reactive_non_const,
+                    props_param_name,
+                );
+            }
+        }
+        Expression::ArrayExpression(arr) => {
+            for elem in &arr.elements {
+                match elem {
+                    ArrayExpressionElement::SpreadElement(spread) => {
+                        collect_reactive_deps_inner(
+                            &spread.argument,
+                            destructured_props,
+                            collected_imports,
+                            primary_deps,
+                            local_deps,
+                            seen,
+                            has_non_reactive_non_const,
+                            props_param_name,
+                        );
+                    }
+                    ArrayExpressionElement::Elision(_) => {}
+                    _ => {
+                        if let Some(expr) = elem.as_expression() {
+                            collect_reactive_deps_inner(
+                                expr,
+                                destructured_props,
+                                collected_imports,
+                                primary_deps,
+                                local_deps,
+                                seen,
+                                has_non_reactive_non_const,
+                                props_param_name,
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        Expression::ComputedMemberExpression(member) => {
+            // Recurse into both object and computed key
+            collect_reactive_deps_inner(
+                &member.object,
+                destructured_props,
+                collected_imports,
+                primary_deps,
+                local_deps,
+                seen,
+                has_non_reactive_non_const,
+                props_param_name,
+            );
+            collect_reactive_deps_inner(
+                &member.expression,
+                destructured_props,
+                collected_imports,
+                primary_deps,
+                local_deps,
+                seen,
+                has_non_reactive_non_const,
+                props_param_name,
+            );
+        }
+        Expression::CallExpression(call) => {
+            // SWC's create_synthetic_qqsegment recurses into call args
+            // when accept_call_expr=true (prop context).
+            // For dep collection, we need to find reactive sources inside calls.
+            collect_reactive_deps_inner(
+                &call.callee,
+                destructured_props,
+                collected_imports,
+                primary_deps,
+                local_deps,
+                seen,
+                has_non_reactive_non_const,
+                props_param_name,
+            );
+            for arg in &call.arguments {
+                if let Some(expr) = arg.as_expression() {
+                    collect_reactive_deps_inner(
+                        expr,
+                        destructured_props,
+                        collected_imports,
+                        primary_deps,
+                        local_deps,
+                        seen,
+                        has_non_reactive_non_const,
+                        props_param_name,
+                    );
+                }
+            }
+        }
+        Expression::ChainExpression(chain) => {
+            match &chain.expression {
+                ChainElement::CallExpression(call) => {
+                    collect_reactive_deps_inner(
+                        &call.callee,
+                        destructured_props,
+                        collected_imports,
+                        primary_deps,
+                        local_deps,
+                        seen,
+                        has_non_reactive_non_const,
+                        props_param_name,
+                    );
+                    for arg in &call.arguments {
+                        if let Some(expr) = arg.as_expression() {
+                            collect_reactive_deps_inner(
+                                expr,
+                                destructured_props,
+                                collected_imports,
+                                primary_deps,
+                                local_deps,
+                                seen,
+                                has_non_reactive_non_const,
+                                props_param_name,
+                            );
+                        }
+                    }
+                }
+                ChainElement::StaticMemberExpression(member) => {
+                    collect_reactive_deps_inner(
+                        &member.object,
+                        destructured_props,
+                        collected_imports,
+                        primary_deps,
+                        local_deps,
+                        seen,
+                        has_non_reactive_non_const,
+                        props_param_name,
+                    );
+                }
+                ChainElement::ComputedMemberExpression(member) => {
+                    collect_reactive_deps_inner(
+                        &member.object,
+                        destructured_props,
+                        collected_imports,
+                        primary_deps,
+                        local_deps,
+                        seen,
+                        has_non_reactive_non_const,
+                        props_param_name,
+                    );
+                    collect_reactive_deps_inner(
+                        &member.expression,
+                        destructured_props,
+                        collected_imports,
+                        primary_deps,
+                        local_deps,
+                        seen,
+                        has_non_reactive_non_const,
+                        props_param_name,
+                    );
+                }
+                _ => {}
+            }
+        }
+        // TS type wrappers -- look through to the inner expression
+        Expression::TSAsExpression(ts) => {
+            collect_reactive_deps_inner(
+                &ts.expression,
+                destructured_props,
+                collected_imports,
+                primary_deps,
+                local_deps,
+                seen,
+                has_non_reactive_non_const,
+                props_param_name,
+            );
+        }
+        Expression::TSSatisfiesExpression(ts) => {
+            collect_reactive_deps_inner(
+                &ts.expression,
+                destructured_props,
+                collected_imports,
+                primary_deps,
+                local_deps,
+                seen,
+                has_non_reactive_non_const,
+                props_param_name,
+            );
+        }
+        Expression::TSNonNullExpression(ts) => {
+            collect_reactive_deps_inner(
+                &ts.expression,
+                destructured_props,
+                collected_imports,
+                primary_deps,
+                local_deps,
+                seen,
+                has_non_reactive_non_const,
+                props_param_name,
+            );
+        }
+        Expression::LogicalExpression(log) => {
+            collect_reactive_deps_inner(
+                &log.left,
+                destructured_props,
+                collected_imports,
+                primary_deps,
+                local_deps,
+                seen,
+                has_non_reactive_non_const,
+                props_param_name,
+            );
+            collect_reactive_deps_inner(
+                &log.right,
                 destructured_props,
                 collected_imports,
                 primary_deps,
