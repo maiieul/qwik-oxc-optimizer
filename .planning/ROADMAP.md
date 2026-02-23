@@ -183,7 +183,10 @@ Plans:
   1. Extracted segments access captured variables via `_captures[0]`, `_captures[1]`, etc. instead of function parameters
   2. `_captures` import emitted in segment files that use the mechanism
   3. ~20 tests with capture-mechanism diffs resolved (excluding aesthetic-only diffs)
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 10-01-PLAN.md — Filter iteration var params from captures + inject params into segment function signatures
 
 ### Phase 11: Auto Export Rename
 **Goal**: Implement `_auto_` prefix for segment import re-exports matching SWC output
@@ -223,6 +226,6 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 9 -> 10 -> 11 -> 12
 | 7. Entry Module Emission Fixes | 1/1 | Complete | 2026-02-21 |
 | 8. JSX Flags & Iteration Variables | 3/3 | Complete | 2026-02-21 |
 | 9. JSX Keys & Final Parity | 5/5 | Complete (62/162 exact) | 2026-02-21 |
-| 10. Captures Mechanism | 0/? | Not started | — |
+| 10. Captures Mechanism | 0/1 | Planned | — |
 | 11. Auto Export Rename | 0/? | Not started | — |
 | 12. Remaining Incremental Fixes | 0/? | Not started | — |
