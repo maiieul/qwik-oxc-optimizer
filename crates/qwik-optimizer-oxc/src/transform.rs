@@ -160,6 +160,11 @@ pub(crate) struct QwikTransform {
     /// are emitted. Matches SWC's partition of decl_stack into (decl_collect, invalid_decl).
     invalid_decl_stack: Vec<HashSet<String>>,
 
+    /// Const bindings with simple literal initializers (number, string, boolean).
+    /// Maps binding name to its literal string representation.
+    /// SWC inlines these in segment bodies and doesn't capture them.
+    const_literal_bindings: HashMap<String, String>,
+
     /// Serialized body code for each segment (segment strategy only).
     /// Keyed by call span.start for matching to SegmentData.
     segment_body_codes: Vec<(u32, String)>,
@@ -428,6 +433,7 @@ impl QwikTransform {
             active_props_info: None,
             capture_stack: Vec::new(),
             invalid_decl_stack: Vec::new(),
+            const_literal_bindings: HashMap::new(),
             segment_body_codes: Vec::new(),
             hoisted_function_stmts: Vec::new(),
             stripped_segments: HashSet::new(),
@@ -1312,6 +1318,35 @@ impl QwikTransform {
                                     capture_result
                                 };
 
+                                // Filter out const-literal captures and their re-imports.
+                                // SWC inlines const literals (e.g., `const STEP_2 = 2`) into
+                                // segment bodies instead of capturing them. Also filter
+                                // reemitted_imports when a local const literal shadows an import.
+                                let capture_result = if !self.const_literal_bindings.is_empty() {
+                                    let filtered: Vec<String> = capture_result
+                                        .capture_names
+                                        .into_iter()
+                                        .filter(|name| {
+                                            !self.const_literal_bindings.contains_key(name)
+                                                || self.collected.module_level_decls.contains(name)
+                                        })
+                                        .collect();
+                                    let filtered_imports: Vec<_> = capture_result
+                                        .reemitted_imports
+                                        .into_iter()
+                                        .filter(|ri| {
+                                            !self.const_literal_bindings.contains_key(&ri.local_name)
+                                        })
+                                        .collect();
+                                    collector::CaptureAnalysisResult {
+                                        capture_names: filtered,
+                                        reemitted_imports: filtered_imports,
+                                        diagnostics: capture_result.diagnostics,
+                                    }
+                                } else {
+                                    capture_result
+                                };
+
                                 // Convert reemitted imports to ImportInfo for needed_imports
                                 let mut needed_imports: Vec<crate::types::ImportInfo> =
                                     capture_result
@@ -1400,6 +1435,15 @@ impl QwikTransform {
                                                 let replacement = format!("{}.{}", info.raw_props_name, original_key);
                                                 body_code = replace_identifier_in_body(&body_code, local_alias, &replacement);
                                             }
+                                        }
+                                    }
+                                    // Inline const-literal values in body code.
+                                    // SWC replaces references to const-literal bindings with
+                                    // their values (e.g., STEP_2 -> 2). Skip module-level
+                                    // consts (they're re-imported, not inlined).
+                                    for (name, value) in &self.const_literal_bindings {
+                                        if !self.collected.module_level_decls.contains(name) {
+                                            body_code = replace_identifier_in_body(&body_code, name, value);
                                         }
                                     }
                                     if !body_code.is_empty() {
@@ -1999,6 +2043,16 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         &declarator.id,
                         &mut self.import_tracker.const_bindings,
                     );
+                }
+                // Track const bindings with simple literal initializers.
+                // SWC inlines these in segment bodies and doesn't capture them.
+                if let BindingPattern::BindingIdentifier(ref ident) = declarator.id {
+                    if let Some(ref init) = declarator.init {
+                        if let Some(literal_str) = get_literal_string(init) {
+                            self.const_literal_bindings
+                                .insert(ident.name.as_str().to_string(), literal_str);
+                        }
+                    }
                 }
             }
         }
@@ -3162,6 +3216,35 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             let (capture_result, module_decl_imports) =
                 self.reclassify_module_level_decl_captures(capture_result, seg_is_stripped);
 
+            // Filter out const-literal captures and their re-imports.
+            // SWC inlines const literals (e.g., `const STEP_2 = 2`) into segment bodies
+            // instead of capturing them. Also filter reemitted_imports when a local
+            // const literal shadows an import. Skip module-level consts (handled as re-imports).
+            let capture_result = if !self.const_literal_bindings.is_empty() {
+                let filtered: Vec<String> = capture_result
+                    .capture_names
+                    .into_iter()
+                    .filter(|name| {
+                        !self.const_literal_bindings.contains_key(name)
+                            || self.collected.module_level_decls.contains(name)
+                    })
+                    .collect();
+                let filtered_imports: Vec<_> = capture_result
+                    .reemitted_imports
+                    .into_iter()
+                    .filter(|ri| {
+                        !self.const_literal_bindings.contains_key(&ri.local_name)
+                    })
+                    .collect();
+                collector::CaptureAnalysisResult {
+                    capture_names: filtered,
+                    reemitted_imports: filtered_imports,
+                    diagnostics: capture_result.diagnostics,
+                }
+            } else {
+                capture_result
+            };
+
             // Convert reemitted_imports into ImportInfo entries for the segment's needed_imports.
             // These imports will be emitted in the segment module by code_move.rs.
             let mut needed_imports: Vec<crate::types::ImportInfo> = capture_result
@@ -3237,12 +3320,26 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     };
 
                     if let Some(expr_val) = body_expr {
-                        let body_code = codegen_expression_with_comments(
+                        let mut body_code = codegen_expression_with_comments(
                             expr_val,
                             &self.source_code,
                             &self.source_comments,
                             ctx,
                         );
+                        // Inline const-literal values in CHILD segment body codes.
+                        // SWC replaces references to const-literal bindings with
+                        // their values (e.g., STEP_2 -> 2). Skip module-level
+                        // consts (they're re-imported, not inlined).
+                        // Only for child segments (not top-level): the declaring
+                        // segment keeps the const declaration; child segments inline.
+                        if !is_top_level_dollar_call {
+                            for (name, value) in &self.const_literal_bindings {
+                                if !self.collected.module_level_decls.contains(name) {
+                                    body_code =
+                                        replace_identifier_in_body(&body_code, name, value);
+                                }
+                            }
+                        }
                         self.segment_body_codes.push((call.span.start, body_code));
                     }
                 }
@@ -5967,5 +6064,39 @@ fn rewrite_expr_body_destr<'a>(
             }
         }
         _ => {}
+    }
+}
+
+/// Extract the string representation of a simple literal expression.
+/// Returns `Some(string)` for numeric, string, and boolean literals.
+/// Returns `None` for complex expressions (calls, member access, etc.).
+///
+/// SWC inlines these const-literal values into segment bodies instead of
+/// capturing them, so we need to know their string representations.
+fn get_literal_string(expr: &Expression<'_>) -> Option<String> {
+    match expr {
+        Expression::NumericLiteral(lit) => {
+            // Use raw value if available (preserves original formatting),
+            // otherwise format the f64 value.
+            if let Some(raw) = &lit.raw {
+                Some(raw.to_string())
+            } else {
+                // Format: integers as integers, floats as floats
+                let v = lit.value;
+                if v == (v as i64) as f64 && v.abs() < (i64::MAX as f64) {
+                    Some(format!("{}", v as i64))
+                } else {
+                    Some(format!("{}", v))
+                }
+            }
+        }
+        Expression::StringLiteral(lit) => {
+            // Include quotes for string literals
+            Some(format!("\"{}\"", lit.value))
+        }
+        Expression::BooleanLiteral(lit) => {
+            Some(if lit.value { "true" } else { "false" }.to_string())
+        }
+        _ => None,
     }
 }
