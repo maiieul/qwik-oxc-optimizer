@@ -844,17 +844,20 @@ fn apply_case_overrides(name: &str, case: &mut TestInput) {
             case.transpile_jsx = true;
         }
         "example_dev_mode" => {
+            case.src_dir = "/user/qwik/src/".to_string();
             case.mode = EmitMode::Dev;
             case.transpile_ts = true;
             case.transpile_jsx = true;
         }
         "example_dev_mode_inlined" => {
+            case.src_dir = "/user/qwik/src/".to_string();
             case.entry_strategy = EntryStrategy::Inline;
             case.mode = EmitMode::Dev;
             case.transpile_ts = true;
             case.transpile_jsx = true;
         }
         "example_drop_side_effects" => {
+            case.src_dir = "/user/qwik/src/".to_string();
             case.mode = EmitMode::Dev;
             case.transpile_ts = true;
             case.transpile_jsx = true;
@@ -983,6 +986,7 @@ fn apply_case_overrides(name: &str, case: &mut TestInput) {
             case.explicit_extensions = true;
         }
         "example_noop_dev_mode" => {
+            case.src_dir = "/hello/from/dev/".to_string();
             case.mode = EmitMode::Dev;
             case.transpile_ts = true;
             case.transpile_jsx = true;

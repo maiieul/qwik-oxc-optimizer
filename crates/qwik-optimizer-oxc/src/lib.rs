@@ -238,7 +238,9 @@ pub fn transform_modules(
             transform_options.transpile_ts,
             transform_options.transpile_jsx,
         );
-        let main_path = if transform_options.transpile_ts || transform_options.transpile_jsx {
+        let main_path = if (transform_options.transpile_ts || transform_options.transpile_jsx)
+            && !transform_options.preserve_filenames
+        {
             input
                 .path
                 .rsplit_once('.')
