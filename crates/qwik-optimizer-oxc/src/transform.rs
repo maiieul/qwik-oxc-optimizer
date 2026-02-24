@@ -6165,9 +6165,18 @@ fn rewrite_expr_body_destr<'a>(
 /// This implements SWC's MinifyMode::Simplify behavior for segment bodies:
 /// - Strip unused const/let/var declarations (convert to expression statements if init has side effects)
 /// - Remove unused function/class declarations
-/// - Eliminate if(false) branches
-/// - Fold simple constant arithmetic expressions (e.g., `1 + 2` -> `3`)
+/// - Eliminate if(false) branches and if(true) branches (keep consequent)
+/// - Remove empty try/catch blocks
 /// - Optionally force-remove named function/class declarations (for invalid_decl_stack C02 names)
+///
+/// **Not yet implemented** (deferred to Phase 14 -- minor diffs):
+/// - Const literal propagation: `const key = "A"; f(key)` -> `f("A")` (SWC MinifyMode::Simplify)
+/// - Destructured const chain folding: `const {a} = x; a.b` -> `x.a.b` (SWC MinifyMode::Simplify)
+///
+/// Note: isBrowser/isServer dead branch elimination is handled by the const_replace pre-pass
+/// (const_replace.rs) which runs on the full program AST before segment extraction. The VisitMut
+/// walker recurses into all AST nodes including inlinedQrl callback arguments, so the
+/// replacement reaches inline strategy entry code as well as segment bodies.
 ///
 /// The function parses the body code by wrapping it as `var __body__ = <body_code>`,
 /// transforms the AST, and re-serializes.
