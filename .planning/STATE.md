@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 13 captures & DCE. Plan 01 complete (props reclassification + const literal inlining).
+**Current focus:** Phase 13 captures & DCE. Plans 01-02 complete (props reclassification, const literal inlining, scope-aware capture filtering, C03 diagnostics).
 
 ## Current Position
 
 Phase: 13 of 14 (Captures & DCE)
-Plan: 1 of 4 in phase 13
+Plan: 2 of 4 in phase 13
 Status: In progress
-Last activity: 2026-02-24 - Completed 13-01-PLAN.md
+Last activity: 2026-02-24 - Completed 13-02-PLAN.md
 
-Progress: [██████████████████████████████] 34/? plans
+Progress: [██████████████████████████████] 35/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 34
+- Total plans completed: 35
 - Average duration: 19min
-- Total execution time: 13.1 hours
+- Total execution time: 13.35 hours
 
 **By Phase:**
 
@@ -39,11 +39,11 @@ Progress: [███████████████████████
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
 | 12-signal-wrapping-gaps | 6/6 | 72min | 12min |
-| 13-captures-dce | 1/4 | 45min | 45min |
+| 13-captures-dce | 2/4 | 60min | 30min |
 
 **Recent Trend:**
-- Last 5 plans: 12-04 (14min), 12-05 (19min), 12-06 (21min), 13-01 (45min)
-- Trend: Phase 13 started. Plan 01 was complex due to plan premise correction (SWC captures _rawProps, not individual props).
+- Last 5 plans: 12-05 (19min), 12-06 (21min), 13-01 (45min), 13-02 (15min)
+- Trend: Phase 13 plan 02 faster than plan 01. Scope-aware capture filtering and C03 diagnostics.
 
 *Updated after each plan completion*
 
@@ -193,10 +193,14 @@ Recent decisions affecting current work:
 - [13-01]: Const literal inlining only in child segments (not parent component body) -- DCE deferred
 - [13-01]: Const literal filtering also applies to reemitted_imports when local const shadows module import
 - [13-01]: ArrayExpression elements in props_destructuring handled via index-based iteration (array_element_as_expression_mut was broken)
+- [13-02]: Non-top-level $() captures filtered by all_parent_decls || module_level_decls (excludes unresolved identifiers like `children`)
+- [13-02]: C03 diagnostic emitted for non-function $() arguments that capture local identifiers (clears captures)
+- [13-02]: Hoist strategy segment extraction deferred -- requires Hoist infrastructure, not capture changes
+- [13-02]: _fnSignal wrapping for `results[i]` in loops is Phase 12 scope, not capture issue
 
 ### Pending Todos
 
-Phase 13 plans 02-04 remaining.
+Phase 13 plans 03-04 remaining (DCE: unused declarations, if(false) elimination, invalid declaration removal).
 
 ### Blockers/Concerns
 
@@ -215,5 +219,5 @@ Phase 13 plans 02-04 remaining.
 ## Session Continuity
 
 Last session: 2026-02-24
-Stopped at: Completed 13-01-PLAN.md
+Stopped at: Completed 13-02-PLAN.md
 Resume file: None
