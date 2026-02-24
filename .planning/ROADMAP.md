@@ -253,7 +253,13 @@ Plans:
   6. ctxKind correctly classifies JSX prop events (~1 test)
   7. Diagnostic highlight spans populated (~2 tests)
   8. ~28 new exact matches (72 → ~100/162)
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 14-01-PLAN.md — Fix entry module import ordering to match SWC encounter order (remove alphabetical sorting, reposition _Fragment after lazy imports)
+- [ ] 14-02-PLAN.md — Fix spread props: _getConstProps as separate arg for single-spread, _createElement for simple spread-only elements
+- [ ] 14-03-PLAN.md — Fix entry field metadata, preserve_filenames extension, dev mode test src_dir defaults
+- [ ] 14-04-PLAN.md — Add JSXProp ctxKind variant, diagnostic highlight spans, C05 emission
 
 ### Phase 15: Signal Wrapping & JSX Flags
 **Goal**: Fix remaining _fnSignal/_wrapProp wrapping edge cases and JSX immutability flag mismatches
@@ -320,7 +326,7 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 13 -> 14 -> 15 -> 16 -> 17 -> 
 | 11. Auto Export Rename | 1/1 | Complete | 2026-02-23 |
 | 12. Signal Wrapping Gaps | 6/6 | Complete | 2026-02-23 |
 | 13. Captures & DCE | 4/4 | Complete (72/162 exact) | 2026-02-24 |
-| 14. Cosmetic & Small Fixes | 0/? | Not started | -- |
+| 14. Cosmetic & Small Fixes | 0/4 | Not started | -- |
 | 15. Signal Wrapping & JSX Flags | 0/? | Not started | -- |
 | 16. DCE & Captures | 0/? | Not started | -- |
 | 17. Hoist Strategy | 0/? | Not started | -- |
