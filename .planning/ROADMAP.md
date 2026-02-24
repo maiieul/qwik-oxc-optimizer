@@ -28,7 +28,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 10: Captures Mechanism** - Implement _captures[N] array access pattern for extracted segments
 - [x] **Phase 11: Auto Export Rename** - Implement _auto_ prefix for segment import re-exports
 - [x] **Phase 12: Signal Wrapping Gaps** - Fix _fnSignal and _wrapProp wrapping across ~25 tests
-- [ ] **Phase 13: Captures & DCE** - Fix captures edge cases and dead code elimination across ~26 tests
+- [x] **Phase 13: Captures & DCE** - Fix captures edge cases and dead code elimination across ~26 tests
 - [ ] **Phase 14: Final Parity** - Fix ctxKind, entry field, dev mode, file ext, JSX import source, spread props, misc across ~15 tests
 
 ## Phase Details
@@ -231,10 +231,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 13-01-PLAN.md — Fix props destructuring capture propagation: nested segments capture individual prop names instead of _rawProps
-- [ ] 13-02-PLAN.md — Fix nested scope captures, outer loop var capture, capture ordering, and remaining capture edge cases
-- [ ] 13-03-PLAN.md — Implement segment body DCE: unused declaration stripping, if(false) elimination, invalid_decl removal
-- [ ] 13-04-PLAN.md — Fix remaining DCE (inline strategy, const-fold), final regression check and phase audit
+- [x] 13-01-PLAN.md — Fix props destructuring capture propagation: nested segments capture individual prop names instead of _rawProps
+- [x] 13-02-PLAN.md — Fix nested scope captures, outer loop var capture, capture ordering, and remaining capture edge cases
+- [x] 13-03-PLAN.md — Implement segment body DCE: unused declaration stripping, if(false) elimination, invalid_decl removal
+- [x] 13-04-PLAN.md — Fix remaining DCE (inline strategy, const-fold), final regression check and phase audit
 
 ### Phase 14: Final Parity
 **Goal**: Fix all remaining small-category semantic diffs — ctxKind, entry field, dev mode, file extensions, JSX import source, spread props
@@ -270,5 +270,5 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 9 -> 10 -> 11 -> 12 -> 13 -> 1
 | 10. Captures Mechanism | 1/1 | Complete | 2026-02-23 |
 | 11. Auto Export Rename | 1/1 | Complete | 2026-02-23 |
 | 12. Signal Wrapping Gaps | 6/6 | Complete | 2026-02-23 |
-| 13. Captures & DCE | 0/4 | Not started | -- |
+| 13. Captures & DCE | 4/4 | Complete (67/162 exact) | 2026-02-24 |
 | 14. Final Parity | 0/? | Not started | -- |
