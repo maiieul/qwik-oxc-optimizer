@@ -2247,8 +2247,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             //   "value": signal (const prop)
                             //   "q-e:input": inlinedQrl(_val, "_val", [signal]) (const prop)
                             // If there's already a q-e:input handler, merge into an array.
-                            tracker.needs_val = true;
-                            tracker.needs_inlined_qrl = true;
+                            if !tracker.needs_val {
+                                tracker.needs_val = true;
+                                tracker.record_synthetic_import("_val");
+                            }
+                            if !tracker.needs_inlined_qrl {
+                                tracker.needs_inlined_qrl = true;
+                                tracker.record_synthetic_import(if tracker.jsx_dev_file_name.is_some() { "inlinedQrlDEV" } else { "inlinedQrl" });
+                            }
 
                             let signal_name = extract_identifier_name(&signal_value);
                             let event_handler = build_bind_event_handler("_val", &signal_name, ctx);
@@ -2261,8 +2267,14 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             //   "checked": signal (const prop)
                             //   "q-e:input": inlinedQrl(_chk, "_chk", [signal]) (const prop)
                             // If there's already a q-e:input handler, merge into an array.
-                            tracker.needs_chk = true;
-                            tracker.needs_inlined_qrl = true;
+                            if !tracker.needs_chk {
+                                tracker.needs_chk = true;
+                                tracker.record_synthetic_import("_chk");
+                            }
+                            if !tracker.needs_inlined_qrl {
+                                tracker.needs_inlined_qrl = true;
+                                tracker.record_synthetic_import(if tracker.jsx_dev_file_name.is_some() { "inlinedQrlDEV" } else { "inlinedQrl" });
+                            }
 
                             let signal_name = extract_identifier_name(&signal_value);
                             let event_handler = build_bind_event_handler("_chk", &signal_name, ctx);
@@ -2345,7 +2357,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                                 };
                                 let signal_obj = member.unbox().object;
                                 let wrapped = import_rewrite::build_wrap_prop_call(signal_obj, ctx);
-                                tracker.needs_wrap_prop = true;
+                                if !tracker.needs_wrap_prop {
+                                    tracker.needs_wrap_prop = true;
+                                    tracker.record_synthetic_import("_wrapProp");
+                                }
                                 if is_fn || root_is_const {
                                     const_props.push((attr_name, wrapped));
                                 } else {
@@ -2372,7 +2387,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                             let wrapped = import_rewrite::build_wrap_prop_call_named(
                                 source_obj, &prop_name, ctx,
                             );
-                            tracker.needs_wrap_prop = true;
+                            if !tracker.needs_wrap_prop {
+                                tracker.needs_wrap_prop = true;
+                                tracker.record_synthetic_import("_wrapProp");
+                            }
                             // SWC places _wrapProp result in const_props when is_const=true
                             // (const local variables) or when the element is a component (is_fn).
                             // For non-const sources on native elements, it goes to var_props.
@@ -2432,7 +2450,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                                 ctx,
                                 props_param_name,
                             );
-                            tracker.needs_fn_signal = true;
+                            if !tracker.needs_fn_signal {
+                                tracker.needs_fn_signal = true;
+                                tracker.record_synthetic_import("_fnSignal");
+                            }
                             if !hoisted_stmts.iter().any(|(fc, _)| fc == &fn_code) {
                                 hoisted_stmts.push((fn_code, str_code));
                             }
@@ -2541,10 +2562,21 @@ pub(crate) fn transform_jsx_element_inner<'a>(
     };
 
     if has_spread {
-        // Use _jsxSplit for elements with spread attributes
-        tracker.needs_jsx_split = true;
-        tracker.needs_get_var_props = true;
-        tracker.needs_get_const_props = true;
+        // Use _jsxSplit for elements with spread attributes.
+        // Record _getVarProps/_getConstProps BEFORE _jsxSplit to match SWC's
+        // encounter order (SWC processes call arguments before the call itself).
+        if !tracker.needs_get_var_props {
+            tracker.needs_get_var_props = true;
+            tracker.record_synthetic_import("_getVarProps");
+        }
+        if !tracker.needs_get_const_props {
+            tracker.needs_get_const_props = true;
+            tracker.record_synthetic_import("_getConstProps");
+        }
+        if !tracker.needs_jsx_split {
+            tracker.needs_jsx_split = true;
+            tracker.record_synthetic_import("_jsxSplit");
+        }
 
         // Build: _jsxSplit(tag, { ..._getVarProps(source) }, _getConstProps(source), children, flags, key)
         // For multiple spreads, use the first one (simplification)
@@ -2744,7 +2776,11 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         )
     } else {
         // Use _jsxSorted for normal elements
-        tracker.needs_jsx_sorted = true;
+        if !tracker.needs_jsx_sorted {
+            tracker.needs_jsx_sorted = true;
+            let jsx_name = if tracker.custom_jsx_source.is_some() { "_jsx" } else { "_jsxSorted" };
+            tracker.record_synthetic_import(jsx_name);
+        }
 
         // Build var_props object or null
         let var_props_arg = if var_props.is_empty() {
@@ -2857,8 +2893,10 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
     // Capture fragment span for dev mode location metadata
     let fragment_span_start = fragment.opening_fragment.span.start;
 
-    tracker.needs_jsx_sorted = true;
-    tracker.needs_fragment = true;
+    // DON'T set needs_jsx_sorted/needs_fragment flags before children processing.
+    // Let child elements record _jsxSorted naturally during their own transform,
+    // which places it in the correct encounter-order position (matching SWC's fold
+    // where children are processed before the parent Fragment).
 
     let tag = ctx.ast.expression_identifier(SPAN, "_Fragment");
 
@@ -2876,6 +2914,19 @@ pub(crate) fn transform_jsx_fragment_inner<'a>(
         key_prefix,
         false,
     );
+
+    // Record _jsxSorted and _Fragment AFTER children processing.
+    // If a child element already recorded _jsxSorted, these are no-ops (idempotent).
+    // If no child needed _jsxSorted (unlikely for fragments), this records it now.
+    if !tracker.needs_jsx_sorted {
+        tracker.needs_jsx_sorted = true;
+        let jsx_name = if tracker.custom_jsx_source.is_some() { "_jsx" } else { "_jsxSorted" };
+        tracker.record_synthetic_import(jsx_name);
+    }
+    if !tracker.needs_fragment {
+        tracker.needs_fragment = true;
+        tracker.record_synthetic_import("_Fragment");
+    }
 
     // Fragment has no props, no spread, no event handlers
     // static_listeners is always true for fragments
@@ -3161,7 +3212,10 @@ pub(crate) fn transform_jsx_children<'a>(
                                                     import_rewrite::build_wrap_prop_call(
                                                         signal_obj, ctx,
                                                     );
-                                                tracker.needs_wrap_prop = true;
+                                                if !tracker.needs_wrap_prop {
+                                                    tracker.needs_wrap_prop = true;
+                                                    tracker.record_synthetic_import("_wrapProp");
+                                                }
                                                 child_exprs.push(wrapped);
                                                 continue;
                                             }
@@ -3188,7 +3242,10 @@ pub(crate) fn transform_jsx_children<'a>(
                                                 import_rewrite::build_wrap_prop_call_named(
                                                     source_obj, &prop_name, ctx,
                                                 );
-                                            tracker.needs_wrap_prop = true;
+                                            if !tracker.needs_wrap_prop {
+                                                tracker.needs_wrap_prop = true;
+                                                tracker.record_synthetic_import("_wrapProp");
+                                            }
                                             child_exprs.push(wrapped);
                                             continue;
                                         }
@@ -3242,7 +3299,10 @@ pub(crate) fn transform_jsx_children<'a>(
                                                     ctx,
                                                     props_param_name,
                                                 );
-                                            tracker.needs_fn_signal = true;
+                                            if !tracker.needs_fn_signal {
+                                                tracker.needs_fn_signal = true;
+                                                tracker.record_synthetic_import("_fnSignal");
+                                            }
                                             if !hoisted_stmts.iter().any(|(fc, _)| fc == &fn_code)
                                             {
                                                 hoisted_stmts.push((fn_code, str_code));
@@ -3357,7 +3417,11 @@ fn transform_jsx_element_custom_source<'a>(
     // Signal that we need the _jsx import (reuses needs_jsx_sorted flag --
     // the import emission in transform.rs will emit _jsx instead of _jsxSorted
     // when custom_jsx_source is set).
-    tracker.needs_jsx_sorted = true;
+    if !tracker.needs_jsx_sorted {
+        tracker.needs_jsx_sorted = true;
+        let jsx_name = if tracker.custom_jsx_source.is_some() { "_jsx" } else { "_jsxSorted" };
+        tracker.record_synthetic_import(jsx_name);
+    }
 
     let tag = build_tag_expression(&element.opening_element.name, ctx);
 

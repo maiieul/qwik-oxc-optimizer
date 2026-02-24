@@ -310,18 +310,11 @@ pub(crate) fn build_segment_code_with_hoisted(
         }
     }
 
-    // --- Phase 4: Lazy import declarations (const, not import statements) ---
-    for (hash, import_path) in &segment.child_lazy_imports {
-        parts.push(format!(
-            "const i_{} = () => import(\"{}\");",
-            hash, import_path
-        ));
-    }
-
-    // --- Phase 5: Hoisted function declarations (filtered per-segment) ---
+    // --- Phase 4: Hoisted function declarations (filtered per-segment) ---
     // Only inject _hf* declarations that this segment's body actually references.
     // SWC injects ALL extra_top_items then relies on DCE to remove unused ones.
     // We filter upfront since OXC has no DCE.
+    // NOTE: SWC puts hoisted stmts BEFORE lazy imports in entry segments.
     for (fn_code, str_code) in hoisted_stmts {
         // Extract variable name from "const _hfN = ..." pattern
         if let Some(var_name) = fn_code
@@ -337,6 +330,14 @@ pub(crate) fn build_segment_code_with_hoisted(
             parts.push(fn_code.clone());
             parts.push(str_code.clone());
         }
+    }
+
+    // --- Phase 5: Lazy import declarations (const, not import statements) ---
+    for (hash, import_path) in &segment.child_lazy_imports {
+        parts.push(format!(
+            "const i_{} = () => import(\"{}\");",
+            hash, import_path
+        ));
     }
 
     // --- Phase 6: Capture restoration + export ---

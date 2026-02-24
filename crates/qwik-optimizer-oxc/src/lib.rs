@@ -164,8 +164,9 @@ pub fn transform_modules(
 
         let emit_result = emit::emit_module(&program, source_in_arena, &emit_options, &input.path);
 
-        // Prepend hoisted function declarations between imports and module body
+        // Prepend hoisted function declarations after synthetic framework imports
         let hoisted_stmts: Vec<(String, String)> = qwik_transform.hoisted_function_stmts().to_vec();
+        let synthetic_import_count = qwik_transform.synthetic_import_count();
         // Only inject _hf* into entry module when the entry module code actually
         // references them. For inline/hoist strategies, the component body stays in the
         // entry module. For segment strategy, _hf* usually go into segment files
@@ -191,21 +192,39 @@ pub fn transform_modules(
                 hoisted_code.push('\n');
             }
             let code = &emit_result.code;
-            let mut last_import_end = 0;
+            // Find the injection point: after the Nth import line where N = synthetic_import_count.
+            // This ensures hoisted _hf* stmts go AFTER synthetic framework imports but BEFORE
+            // _Fragment, non-dollar, and user imports (matching SWC's encounter-order output).
+            let mut import_count = 0;
+            let mut injection_point = 0;
             let mut pos = 0;
             for line in code.lines() {
                 let line_end = pos + line.len() + 1; // +1 for \n
                 if line.starts_with("import ") {
-                    last_import_end = line_end.min(code.len());
+                    import_count += 1;
+                    if import_count <= synthetic_import_count {
+                        injection_point = line_end.min(code.len());
+                    }
                 }
                 pos = line_end;
             }
-            if last_import_end > 0 {
+            // Fallback: if no synthetic imports found, inject after last import
+            if injection_point == 0 {
+                pos = 0;
+                for line in code.lines() {
+                    let line_end = pos + line.len() + 1;
+                    if line.starts_with("import ") {
+                        injection_point = line_end.min(code.len());
+                    }
+                    pos = line_end;
+                }
+            }
+            if injection_point > 0 {
                 format!(
                     "{}{}{}",
-                    &code[..last_import_end],
+                    &code[..injection_point],
                     hoisted_code,
-                    &code[last_import_end..]
+                    &code[injection_point..]
                 )
             } else {
                 format!("{}{}", hoisted_code, code)

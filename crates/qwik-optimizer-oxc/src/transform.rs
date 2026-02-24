@@ -130,6 +130,22 @@ pub(crate) struct ImportTracker {
     /// Source code for computing line/column from byte offsets (dev mode only).
     /// Stored as a String reference to avoid lifetime issues.
     pub jsx_dev_source_code: Option<String>,
+
+    /// Records the order in which synthetic imports are first encountered during traversal.
+    /// Used to emit imports in SWC's encounter order (BTreeMap<Id> by SyntaxContext)
+    /// instead of alphabetical order. Each entry is an import name like "componentQrl",
+    /// "_wrapProp", "_jsxSorted", etc. Duplicates are prevented by the record method.
+    pub synthetic_import_order: Vec<String>,
+}
+
+impl ImportTracker {
+    /// Record a synthetic import name in encounter order.
+    /// Only records on first encounter (deduplicates).
+    pub fn record_synthetic_import(&mut self, name: &str) {
+        if !self.synthetic_import_order.iter().any(|n| n == name) {
+            self.synthetic_import_order.push(name.to_string());
+        }
+    }
 }
 
 /// The core Qwik transform traversal state.
@@ -194,6 +210,11 @@ pub(crate) struct QwikTransform {
     /// finalize_segments for names that are in module_level_decls but NOT
     /// in exported_local_names.
     auto_exports: HashSet<String>,
+
+    /// Number of synthetic framework imports in the entry module (set in exit_program).
+    /// Used by lib.rs to inject hoisted _hf* stmts after the correct number of imports
+    /// (after synthetic imports, before _Fragment/non-dollar/user imports).
+    synthetic_import_count: usize,
 
     /// Original source code, used for extracting JSX lambda body code by span.
     source_code: String,
@@ -447,6 +468,7 @@ impl QwikTransform {
             pending_segment_qrl_imports: Vec::new(),
             custom_jsx_import_source: None,
             auto_exports: HashSet::new(),
+            synthetic_import_count: 0,
             source_code: source_code.to_string(),
             source_comments: Vec::new(),
             jsx_event_replacements: HashMap::new(),
@@ -496,6 +518,13 @@ impl QwikTransform {
     /// E.g., ("const _hf0 = (p0)=>p0.value;", "const _hf0_str = \"p0.value\";")
     pub fn hoisted_function_stmts(&self) -> &[(String, String)] {
         &self.hoisted_function_stmts
+    }
+
+    /// Get the number of synthetic framework imports emitted in exit_program.
+    /// Used by lib.rs to inject hoisted stmts after synthetic imports but
+    /// before _Fragment/non-dollar/user imports.
+    pub fn synthetic_import_count(&self) -> usize {
+        self.synthetic_import_count
     }
 
     /// Get the set of span starts for stripped segments.
@@ -990,6 +1019,27 @@ impl QwikTransform {
             _ => false,
         };
 
+        // Record Qrl-suffixed import name (componentQrl, etc.) during enter.
+        // SWC encounters the dollar call name FIRST (fold enters call expression),
+        // then folds the body (recording JSX imports), then wraps with qrl/inlinedQrl.
+        // So: componentQrl is recorded in ENTER, inlinedQrl/qrl in EXIT.
+        if let DollarCallKind::Named(name) = &kind {
+            let qrl_name = words::dollar_to_qrl_name(name);
+            if self.dollar_call_stack.is_empty() {
+                // Top-level $-call: Qrl import goes to main module
+                if !self.import_tracker.qrl_imports.contains(&qrl_name) {
+                    self.import_tracker.record_synthetic_import(&qrl_name);
+                    self.import_tracker.qrl_imports.push(qrl_name);
+                }
+            } else {
+                // Nested $-call: Qrl import goes to parent segment, not main module
+                let parent_display_name = self.dollar_call_stack.last().unwrap().clone();
+                self.import_tracker.record_synthetic_import(&qrl_name);
+                self.pending_segment_qrl_imports
+                    .push((parent_display_name, qrl_name));
+            }
+        }
+
         if !will_be_stripped {
             let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
                 || matches!(
@@ -997,6 +1047,8 @@ impl QwikTransform {
                     crate::types::EntryStrategy::Hoist
                 );
 
+            // Set the flags (needed for downstream logic), but defer
+            // record_synthetic_import to exit_expression for correct encounter order.
             if is_inline {
                 self.import_tracker.needs_inlined_qrl = true;
             } else {
@@ -1004,21 +1056,6 @@ impl QwikTransform {
                 self.import_tracker
                     .lazy_imports
                     .push((segment_hash.clone(), import_path));
-            }
-        }
-
-        if let DollarCallKind::Named(name) = kind {
-            let qrl_name = words::dollar_to_qrl_name(name);
-            if self.dollar_call_stack.is_empty() {
-                // Top-level $-call: Qrl import goes to main module
-                if !self.import_tracker.qrl_imports.contains(&qrl_name) {
-                    self.import_tracker.qrl_imports.push(qrl_name);
-                }
-            } else {
-                // Nested $-call: Qrl import goes to parent segment, not main module
-                let parent_display_name = self.dollar_call_stack.last().unwrap().clone();
-                self.pending_segment_qrl_imports
-                    .push((parent_display_name, qrl_name));
             }
         }
 
@@ -1086,6 +1123,8 @@ impl QwikTransform {
                     crate::types::EntryStrategy::Hoist
                 );
 
+            // Set flags but defer record_synthetic_import to exit_expression
+            // for correct encounter order matching SWC.
             if is_inline {
                 self.import_tracker.needs_inlined_qrl = true;
             } else {
@@ -1907,11 +1946,13 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 if self.dollar_call_stack.is_empty() {
                     // Top-level: Qrl import goes to main module
                     if !self.import_tracker.qrl_imports.contains(&qrl_name) {
+                        self.import_tracker.record_synthetic_import(&qrl_name);
                         self.import_tracker.qrl_imports.push(qrl_name);
                     }
                 } else {
                     // Nested: Qrl import goes to parent segment
                     let parent_display_name = self.dollar_call_stack.last().unwrap().clone();
+                    self.import_tracker.record_synthetic_import(&qrl_name);
                     self.pending_segment_qrl_imports
                         .push((parent_display_name, qrl_name));
                 }
@@ -1941,7 +1982,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     );
                     if info.needs_transform {
                         if info.rest_name.is_some() {
-                            self.import_tracker.needs_rest_props = true;
+                            if !self.import_tracker.needs_rest_props {
+                                self.import_tracker.needs_rest_props = true;
+                                self.import_tracker.record_synthetic_import("_restProps");
+                            }
                         }
                         self.active_props_info = Some(info);
                     } else if name == "component$" {
@@ -2249,7 +2293,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             if info.needs_transform {
                 // Parameter destructuring: ({ data }) => ...
                 if info.rest_name.is_some() {
-                    self.import_tracker.needs_rest_props = true;
+                    if !self.import_tracker.needs_rest_props {
+                        self.import_tracker.needs_rest_props = true;
+                        self.import_tracker.record_synthetic_import("_restProps");
+                    }
                 }
                 self.active_props_info = Some(info);
             } else if let Some(ref param_name) = info.props_param_name {
@@ -2307,7 +2354,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
                     // 2. If rest pattern: insert const rest = _restProps(_rawProps, [...])
                     if let Some(ref rest_name) = info.rest_name {
-                        self.import_tracker.needs_rest_props = true;
+                        if !self.import_tracker.needs_rest_props {
+                            self.import_tracker.needs_rest_props = true;
+                            self.import_tracker.record_synthetic_import("_restProps");
+                        }
                         let excluded_keys: Vec<String> =
                             info.prop_keys.iter().map(|(key, _)| key.clone()).collect();
                         let rest_stmt = props_destructuring::build_rest_props_declaration(
@@ -2358,7 +2408,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
                         // If rest pattern: insert const rest = _restProps(props, [...])
                         if let Some(ref rest_name) = body_info.rest_name {
-                            self.import_tracker.needs_rest_props = true;
+                            if !self.import_tracker.needs_rest_props {
+                                self.import_tracker.needs_rest_props = true;
+                                self.import_tracker.record_synthetic_import("_restProps");
+                            }
                             let excluded_keys: Vec<String> =
                                 body_info.prop_keys.iter().map(|(key, _)| key.clone()).collect();
                             let rest_stmt = props_destructuring::build_rest_props_declaration(
@@ -2942,7 +2995,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             );
                     let inside_dollar_body = !self.capture_stack.is_empty();
                     if !(is_segment_strategy && inside_dollar_body) {
-                        self.import_tracker.needs_qrl_sync = true;
+                        if !self.import_tracker.needs_qrl_sync {
+                            self.import_tracker.needs_qrl_sync = true;
+                            self.import_tracker.record_synthetic_import("_qrlSync");
+                        }
                     }
 
                     *expr = replacement;
@@ -3050,7 +3106,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
                             // If rest pattern: insert `const rest = _restProps(props, [...])`
                             if let Some(ref rest_name) = body_info.rest_name {
-                                self.import_tracker.needs_rest_props = true;
+                                if !self.import_tracker.needs_rest_props {
+                                    self.import_tracker.needs_rest_props = true;
+                                    self.import_tracker.record_synthetic_import("_restProps");
+                                }
                                 let excluded_keys: Vec<String> =
                                     body_info.prop_keys.iter().map(|(key, _)| key.clone()).collect();
                                 let rest_stmt = props_destructuring::build_rest_props_declaration(
@@ -3381,7 +3440,26 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     crate::types::EntryStrategy::Hoist
                 );
             if !is_top_level_dollar_call && !capture_result.capture_names.is_empty() && is_inline {
-                self.import_tracker.needs_captures = true;
+                if !self.import_tracker.needs_captures {
+                    self.import_tracker.needs_captures = true;
+                    self.import_tracker.record_synthetic_import("_captures");
+                }
+            }
+
+            // Deferred recording of inlinedQrl/qrl import (from enter_call_expression).
+            // SWC records qrl/inlinedQrl AFTER folding the body, so JSX imports
+            // (_jsxSorted, _wrapProp, etc.) appear before it in encounter order.
+            // The flags (needs_inlined_qrl/needs_qrl) were set in enter; we only
+            // record the encounter order here in exit for correct positioning.
+            let is_stripped_segment = self.stripped_segments.contains(&call.span.start);
+            if !is_stripped_segment {
+                if is_inline {
+                    let name = if self.is_dev_mode() { "inlinedQrlDEV" } else { "inlinedQrl" };
+                    self.import_tracker.record_synthetic_import(name);
+                } else {
+                    let name = if self.is_dev_mode() { "qrlDEV" } else { "qrl" };
+                    self.import_tracker.record_synthetic_import(name);
+                }
             }
 
             let segment_info = self
@@ -3435,7 +3513,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             }
 
             let replacement = if is_stripped {
-                self.import_tracker.needs_noop_qrl = true;
+                if !self.import_tracker.needs_noop_qrl {
+                    self.import_tracker.needs_noop_qrl = true;
+                    let name = if self.is_dev_mode() { "_noopQrlDEV" } else { "_noopQrl" };
+                    self.import_tracker.record_synthetic_import(name);
+                }
                 let noop_meta = self.make_noop_dev_meta(&segment_info.display_name);
                 import_rewrite::build_noop_qrl_call(
                     &segment_info.name,
@@ -3535,13 +3617,6 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
     fn exit_program(&mut self, program: &mut Program<'a>, ctx: &mut TraverseCtx<'a, ()>) {
         let core_module = &self.options.core_module;
 
-        // Determine if we're in inline/hoist mode (segments stay in entry module)
-        let is_inline = entry_strategy::should_inline(&self.options.entry_strategy)
-            || matches!(
-                self.options.entry_strategy,
-                crate::types::EntryStrategy::Hoist
-            );
-
         // ---------------------------------------------------------------
         // Phase 1: Swap out old body and separate into categories
         // ---------------------------------------------------------------
@@ -3610,127 +3685,117 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         let referenced_idents = collect_referenced_idents(&non_import_stmts);
 
         // ---------------------------------------------------------------
-        // Phase 3: Build synthetic framework import statements
+        // Phase 3: Build synthetic framework import statements in encounter order
         // ---------------------------------------------------------------
-        // These are framework imports from import_tracker (componentQrl, qrl,
-        // _jsxSorted, etc.) Each entry is (local_name, statement).
+        // SWC uses BTreeMap<Id> where Id = (JsWord, SyntaxContext). SyntaxContext
+        // values increase monotonically in encounter order during compilation,
+        // so the effective output order follows traversal encounter order, NOT
+        // alphabetical. We match this by using synthetic_import_order which
+        // records the first-encounter order of each import during traversal.
+        //
+        // _Fragment is EXCLUDED from this list -- it gets emitted separately
+        // AFTER hoisted _hf* stmts and lazy imports (matching SWC's extra_top_items).
 
-        // 3a: Qrl-suffixed imports (componentQrl, useStylesQrl, etc.)
-        // Skip locally-defined Qrl functions (they're module-level exports, not framework imports).
+        let mut emitted_names: std::collections::HashSet<String> = std::collections::HashSet::new();
         let mut synthetic_imports: std::vec::Vec<(&str, Statement<'a>)> = std::vec::Vec::new();
-        for qrl_name in &self.import_tracker.qrl_imports {
-            if self.collected.module_level_decls.contains(qrl_name.as_str()) {
-                continue; // Locally-defined Qrl function, not a framework import
-            }
-            let stmt = import_rewrite::build_named_import(qrl_name, core_module, ctx);
-            synthetic_imports.push((qrl_name.as_str(), stmt));
-        }
 
-        // For inline strategy, add segment-level Qrl-suffixed imports too
-        if is_inline {
-            let mut emitted_qrl_names: std::collections::HashSet<String> =
-                self.import_tracker.qrl_imports.iter().cloned().collect();
-            for (_parent_name, qrl_name) in &self.pending_segment_qrl_imports {
-                if self.collected.module_level_decls.contains(qrl_name.as_str()) {
-                    continue; // Locally-defined Qrl function
+        // Build a lookup of locally-defined names to skip
+        let module_level_decls = &self.collected.module_level_decls;
+
+        for import_name in &self.import_tracker.synthetic_import_order {
+            let name = import_name.as_str();
+
+            // Skip _Fragment -- emitted separately after hoisted stmts
+            if name == "_Fragment" {
+                continue;
+            }
+
+            // Skip locally-defined Qrl functions
+            if module_level_decls.contains(name) {
+                continue;
+            }
+
+            // Skip duplicates (pending_segment_qrl_imports may duplicate qrl_imports)
+            if !emitted_names.insert(name.to_string()) {
+                continue;
+            }
+
+            // Build the import statement based on the name
+            let (local_name, stmt): (&str, Statement<'a>) = match name {
+                "_jsx" => {
+                    if let Some(ref source) = self.import_tracker.custom_jsx_source {
+                        let jsx_runtime_source = format!("{}/jsx-runtime", source);
+                        let s = import_rewrite::build_aliased_import(
+                            "jsx", "_jsx", &jsx_runtime_source, ctx,
+                        );
+                        ("_jsx", s)
+                    } else {
+                        continue; // custom_jsx_source not set, skip
+                    }
                 }
-                if emitted_qrl_names.insert(qrl_name.clone()) {
-                    let stmt =
-                        import_rewrite::build_named_import(qrl_name, core_module, ctx);
-                    synthetic_imports.push(("_segment_qrl", stmt));
+                "_jsxSorted" => {
+                    let s = import_rewrite::build_named_import("_jsxSorted", core_module, ctx);
+                    ("_jsxSorted", s)
                 }
-            }
+                "_jsxSplit" => {
+                    let s = import_rewrite::build_named_import("_jsxSplit", core_module, ctx);
+                    ("_jsxSplit", s)
+                }
+                "_getVarProps" => {
+                    let s = import_rewrite::build_named_import("_getVarProps", core_module, ctx);
+                    ("_getVarProps", s)
+                }
+                "_getConstProps" => {
+                    let s = import_rewrite::build_named_import("_getConstProps", core_module, ctx);
+                    ("_getConstProps", s)
+                }
+                "_wrapProp" => {
+                    let s = import_rewrite::build_named_import("_wrapProp", core_module, ctx);
+                    ("_wrapProp", s)
+                }
+                "_fnSignal" => {
+                    let s = import_rewrite::build_named_import("_fnSignal", core_module, ctx);
+                    ("_fnSignal", s)
+                }
+                "_val" => {
+                    let s = import_rewrite::build_named_import("_val", core_module, ctx);
+                    ("_val", s)
+                }
+                "_chk" => {
+                    let s = import_rewrite::build_named_import("_chk", core_module, ctx);
+                    ("_chk", s)
+                }
+                "_captures" => {
+                    let s = import_rewrite::build_named_import("_captures", core_module, ctx);
+                    ("_captures", s)
+                }
+                "_restProps" => {
+                    let s = import_rewrite::build_named_import("_restProps", core_module, ctx);
+                    ("_restProps", s)
+                }
+                "_qrlSync" => {
+                    let s = import_rewrite::build_named_import("_qrlSync", core_module, ctx);
+                    ("_qrlSync", s)
+                }
+                "qrl" | "qrlDEV" | "inlinedQrl" | "inlinedQrlDEV"
+                | "_noopQrl" | "_noopQrlDEV" | "_regSymbol" => {
+                    let s = import_rewrite::build_named_import(name, core_module, ctx);
+                    (name, s)
+                }
+                _ => {
+                    // Qrl-suffixed import (componentQrl, useStylesQrl, etc.)
+                    // or segment-level qrl import
+                    let s = import_rewrite::build_named_import(name, core_module, ctx);
+                    (name, s)
+                }
+            };
+
+            synthetic_imports.push((local_name, stmt));
         }
 
-        // 3b: Other framework imports (qrl/qrlDEV, inlinedQrl/inlinedQrlDEV, _captures, etc.)
-        let is_dev = self.is_dev_mode();
-        if self.import_tracker.needs_qrl {
-            let name = if is_dev { "qrlDEV" } else { "qrl" };
-            let stmt = import_rewrite::build_named_import(name, core_module, ctx);
-            synthetic_imports.push((name, stmt));
-        }
-        if self.import_tracker.needs_inlined_qrl {
-            let name = if is_dev { "inlinedQrlDEV" } else { "inlinedQrl" };
-            let stmt = import_rewrite::build_named_import(name, core_module, ctx);
-            synthetic_imports.push((name, stmt));
-        }
-        if self.import_tracker.needs_captures {
-            let stmt = import_rewrite::build_named_import("_captures", core_module, ctx);
-            synthetic_imports.push(("_captures", stmt));
-        }
-        if self.import_tracker.needs_rest_props {
-            let stmt = import_rewrite::build_named_import("_restProps", core_module, ctx);
-            synthetic_imports.push(("_restProps", stmt));
-        }
-        if self.import_tracker.needs_jsx_sorted {
-            if let Some(ref source) = self.import_tracker.custom_jsx_source {
-                let jsx_runtime_source = format!("{}/jsx-runtime", source);
-                let stmt = import_rewrite::build_aliased_import(
-                    "jsx",
-                    "_jsx",
-                    &jsx_runtime_source,
-                    ctx,
-                );
-                synthetic_imports.push(("_jsx", stmt));
-            } else {
-                let stmt = import_rewrite::build_named_import("_jsxSorted", core_module, ctx);
-                synthetic_imports.push(("_jsxSorted", stmt));
-            }
-        }
-        if self.import_tracker.needs_get_var_props {
-            let stmt = import_rewrite::build_named_import("_getVarProps", core_module, ctx);
-            synthetic_imports.push(("_getVarProps", stmt));
-        }
-        if self.import_tracker.needs_get_const_props {
-            let stmt = import_rewrite::build_named_import("_getConstProps", core_module, ctx);
-            synthetic_imports.push(("_getConstProps", stmt));
-        }
-        if self.import_tracker.needs_jsx_split {
-            let stmt = import_rewrite::build_named_import("_jsxSplit", core_module, ctx);
-            synthetic_imports.push(("_jsxSplit", stmt));
-        }
-        if self.import_tracker.needs_wrap_prop {
-            let stmt = import_rewrite::build_named_import("_wrapProp", core_module, ctx);
-            synthetic_imports.push(("_wrapProp", stmt));
-        }
-        if self.import_tracker.needs_fn_signal {
-            let stmt = import_rewrite::build_named_import("_fnSignal", core_module, ctx);
-            synthetic_imports.push(("_fnSignal", stmt));
-        }
-        if self.import_tracker.needs_val {
-            let stmt = import_rewrite::build_named_import("_val", core_module, ctx);
-            synthetic_imports.push(("_val", stmt));
-        }
-        if self.import_tracker.needs_chk {
-            let stmt = import_rewrite::build_named_import("_chk", core_module, ctx);
-            synthetic_imports.push(("_chk", stmt));
-        }
-        if self.import_tracker.needs_noop_qrl {
-            let name = if is_dev { "_noopQrlDEV" } else { "_noopQrl" };
-            let stmt = import_rewrite::build_named_import(name, core_module, ctx);
-            synthetic_imports.push((name, stmt));
-        }
-        if self.import_tracker.needs_qrl_sync {
-            let stmt = import_rewrite::build_named_import("_qrlSync", core_module, ctx);
-            synthetic_imports.push(("_qrlSync", stmt));
-        }
-        if self.import_tracker.needs_fragment {
-            let stmt = import_rewrite::build_aliased_import(
-                "Fragment",
-                "_Fragment",
-                "@qwik.dev/core/jsx-runtime",
-                ctx,
-            );
-            synthetic_imports.push(("_Fragment", stmt));
-        }
-
-        // 3c: Build lazy import declarations (const i_XXX = () => import(...))
-        // Sort by import path to match SWC's BTreeMap ordering (alphabetical by key).
-        // Filter to only include lazy imports whose identifier is actually referenced
-        // in the entry module body. With QRL hoisting, event handler lazy imports
-        // may only be referenced inside segment bodies, not the entry module.
-        // Sort lazy imports by hash (first element) to match SWC's BTreeMap<Id> ordering
-        // where keys are i_{hash} identifiers. BTreeMap sorts alphabetically by key.
+        // 3b: Build lazy import declarations (const i_XXX = () => import(...))
+        // Sort lazy imports by hash to match SWC's BTreeMap<Id> ordering.
+        // Filter to only include lazy imports whose identifier is actually referenced.
         self.import_tracker.lazy_imports.sort_by(|a, b| a.0.cmp(&b.0));
         let mut lazy_imports: std::vec::Vec<Statement<'a>> = std::vec::Vec::new();
         for (hash, import_path) in &self.import_tracker.lazy_imports {
@@ -3743,35 +3808,8 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         // ---------------------------------------------------------------
-        // Phase 4: Sort and filter synthetic imports
+        // Phase 4: Filter synthetic imports (encounter order preserved)
         // ---------------------------------------------------------------
-        // SWC emits imports from two sources:
-        // 1. User-derived Qrl-suffixed imports (componentQrl, etc.) -- from ensure_import
-        // 2. Framework-internal synthetic imports (_jsxSorted, inlinedQrl, etc.) -- from ensure_import
-        // Both go through ensure_import which uses a BTreeMap<Id>, so the final
-        // order is alphabetical by local name. However, Qrl-suffixed user imports
-        // always come first because SWC processes them during fold_module_item
-        // (before synthetic imports are added in fold_jsx_opening_element).
-        //
-        // Our approach: sort the Qrl-suffixed imports (step 3a) separately from the
-        // framework-internal imports (step 3b), maintaining the Qrl-first ordering.
-        // Within each group, sort alphabetically.
-
-        // Split: qrl_imports (componentQrl, etc.) are added first (indices 0..qrl_count)
-        let qrl_count = self.import_tracker.qrl_imports.len();
-        let (mut qrl_group, mut framework_group): (Vec<_>, Vec<_>) = synthetic_imports
-            .into_iter()
-            .enumerate()
-            .partition::<Vec<_>, _>(|(i, _)| *i < qrl_count);
-        // Sort each group by name
-        qrl_group.sort_by(|a, b| (a.1).0.cmp((b.1).0));
-        framework_group.sort_by(|a, b| (a.1).0.cmp((b.1).0));
-        let synthetic_imports: Vec<_> = qrl_group
-            .into_iter()
-            .chain(framework_group)
-            .map(|(_, item)| item)
-            .collect();
-
         // For segment strategy, many framework imports (e.g., _jsxSorted,
         // _wrapProp, _fnSignal) are only used inside segment bodies that
         // become separate files. Remove them from the entry module.
@@ -3780,6 +3818,9 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             .filter(|(name, _stmt)| referenced_idents.contains(*name))
             .map(|(_name, stmt)| stmt)
             .collect();
+
+        // Store count for lib.rs hoisted stmts injection positioning
+        self.synthetic_import_count = filtered_synthetic.len();
 
         // ---------------------------------------------------------------
         // Phase 5: Collect and filter non-dollar Qwik core specifiers
@@ -3875,21 +3916,41 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         // ---------------------------------------------------------------
         // Phase 7: Assemble body in SWC order
         // ---------------------------------------------------------------
-        // SWC order:
-        // 1. Synthetic framework imports (componentQrl, qrl, etc.) - filtered
+        // SWC order (matched from golden snapshots):
+        // 1. Synthetic framework imports (encounter order, WITHOUT _Fragment)
         // 2. Lazy import declarations (const i_XXX = ...)
-        // 3. Non-dollar Qwik core specifiers (useStore, mutable, etc.) - merged
-        // 4. Original non-Qwik imports (filtered)
-        // 5. Original non-import code (exports, declarations, etc.)
+        //    [hoisted _hf* stmts injected here by lib.rs post-emission]
+        // 3. _Fragment import (from jsx-runtime) -- AFTER hoisted stmts
+        // 4. Non-dollar Qwik core specifiers (useStore, mutable, etc.) - merged
+        // 5. Original non-Qwik imports (filtered)
+        // 6. Non-import code (exports, declarations, etc.)
+        // 7. _auto_ exports
+
+        // Build _Fragment import if needed (separate from synthetic imports)
+        let fragment_import: Option<Statement<'a>> = if self.import_tracker.needs_fragment {
+            if referenced_idents.contains("_Fragment") {
+                Some(import_rewrite::build_aliased_import(
+                    "Fragment",
+                    "_Fragment",
+                    "@qwik.dev/core/jsx-runtime",
+                    ctx,
+                ))
+            } else {
+                None
+            }
+        } else {
+            None
+        };
 
         let total_capacity = filtered_synthetic.len()
             + lazy_imports.len()
+            + if fragment_import.is_some() { 1 } else { 0 }
             + non_dollar_imports.len()
             + filtered_non_qwik_imports.len()
             + non_import_stmts.len();
         let mut new_body = ctx.ast.vec_with_capacity(total_capacity);
 
-        // 1: Filtered synthetic framework imports
+        // 1: Filtered synthetic framework imports (encounter order)
         for stmt in filtered_synthetic {
             new_body.push(stmt);
         }
@@ -3899,17 +3960,25 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
             new_body.push(stmt);
         }
 
-        // 3: Non-dollar Qwik core specifiers (merged by source)
+        // 3: _Fragment import (after lazy imports, before non-dollar imports)
+        // In the emitted code, hoisted _hf* stmts will be injected by lib.rs
+        // between synthetic imports (step 1) and this point, so _Fragment
+        // naturally ends up after hoisted stmts.
+        if let Some(stmt) = fragment_import {
+            new_body.push(stmt);
+        }
+
+        // 4: Non-dollar Qwik core specifiers (merged by source)
         for stmt in non_dollar_imports {
             new_body.push(stmt);
         }
 
-        // 4: Filtered non-Qwik user imports
+        // 5: Filtered non-Qwik user imports
         for stmt in filtered_non_qwik_imports {
             new_body.push(stmt);
         }
 
-        // 5: Non-import code (exports, declarations, expressions)
+        // 6: Non-import code (exports, declarations, expressions)
         for stmt in non_import_stmts {
             new_body.push(stmt);
         }
