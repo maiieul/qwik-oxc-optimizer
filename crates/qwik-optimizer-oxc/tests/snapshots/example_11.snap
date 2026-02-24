@@ -54,7 +54,7 @@ export const Header_component_XXXXXXXXXXXX = () => {
 {
   "origin": "project/test.tsx",
   "name": "Header_component_XXXXXXXXXXXX",
-  "entry": "entry_segments",
+  "entry": null,
   "displayName": "test.tsx_Header_component",
   "hash": "XXXXXXXXXXXX",
   "canonicalFilename": "test.tsx_Header_component_XXXXXXXXXXXX",
@@ -75,7 +75,7 @@ export const Header_component_Header_onClick_XXXXXXXXXXXX = (ev) => dep3(ev);
 {
   "origin": "project/test.tsx",
   "name": "Header_component_Header_onClick_XXXXXXXXXXXX",
-  "entry": "entry_segments",
+  "entry": null,
   "displayName": "test.tsx_Header_component_Header_onClick",
   "hash": "XXXXXXXXXXXX",
   "canonicalFilename": "test.tsx_Header_component_Header_onClick_XXXXXXXXXXXX",
@@ -102,7 +102,7 @@ export const App_component_XXXXXXXXXXXX = () => {
 {
   "origin": "project/test.tsx",
   "name": "App_component_XXXXXXXXXXXX",
-  "entry": "entry_segments",
+  "entry": null,
   "displayName": "test.tsx_App_component",
   "hash": "XXXXXXXXXXXX",
   "canonicalFilename": "test.tsx_App_component_XXXXXXXXXXXX",
