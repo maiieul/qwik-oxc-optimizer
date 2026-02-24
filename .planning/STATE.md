@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 14 in progress. 85 exact matches (81 from Plans 01+03 + 4 new from Plan 02 spread props fixes). Remaining plan: ctx_kind/diagnostics (Plan 04).
+**Current focus:** Phase 14 COMPLETE. 86 exact matches (85 from Plans 01-03 + 1 new from Plan 04 C05 diagnostic). Phases 15-18 optional.
 
 ## Current Position
 
 Phase: 14 of 18 (Final Parity)
-Plan: 3 of 4 in phase 14 (Plans 01, 02, 03 complete; Plan 04 remaining)
-Status: In progress
-Last activity: 2026-02-24 - Completed 14-02-PLAN.md
+Plan: 4 of 4 in phase 14 (ALL COMPLETE)
+Status: Phase complete
+Last activity: 2026-02-24 - Completed 14-04-PLAN.md
 
-Progress: [████████████████████████████████] 40/? plans
+Progress: [████████████████████████████████] 41/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 40
+- Total plans completed: 41
 - Average duration: 19min
-- Total execution time: 15.98 hours
+- Total execution time: 16.90 hours
 
 **By Phase:**
 
@@ -40,11 +40,11 @@ Progress: [███████████████████████
 | 11-auto-export-rename | 1/1 | 13min | 13min |
 | 12-signal-wrapping-gaps | 6/6 | 72min | 12min |
 | 13-captures-dce | 4/4 | 79min | 20min |
-| 14-final-parity | 3/4 | 139min | 46min |
+| 14-final-parity | 4/4 | 194min | 49min |
 
 **Recent Trend:**
-- Last 5 plans: 13-04 (7min), 14-01 (45min), 14-03 (19min), 14-02 (75min)
-- Trend: 14-02 required extensive iterative algorithm discovery (7 attempts) for single-spread const_props. Two sessions needed due to context exhaustion.
+- Last 5 plans: 14-01 (45min), 14-03 (19min), 14-02 (75min), 14-04 (55min)
+- Trend: 14-04 required SWC investigation for JSXProp classification logic. Two sessions due to context exhaustion.
 
 *Updated after each plan completion*
 
@@ -219,11 +219,14 @@ Recent decisions affecting current work:
 - [14-02]: const_after entries referencing spread source reclassified to var_after (prevents double-counting)
 - [14-02]: _createElement detection: single spread + user key + spread source NOT component's props param
 - [14-02]: code_move.rs body_code.contains() extended for _createElement segment import emission
+- [14-04]: JSXProp classification uses element type (native vs component) not attribute name -- matches SWC transpile_jsx:true code path
+- [14-04]: C02 diagnostics keep highlights:null (matches SWC golden); only C03 gets highlight spans
+- [14-04]: C05 emitted in enter_call_expression for exported $-suffixed calls missing Qrl counterpart
+- [14-04]: Highlight span formula: lo/hi = OXC offset + 1, startCol = 0-based col + 1, endCol = 0-based col at exclusive end (no +1)
 
 ### Pending Todos
 
-Phase 14 in progress. Plans 01, 02, 03 complete. Plan 04 remaining.
-- Phase 14: Cosmetic & small fixes (import ordering, spread props, metadata) → ~28 new exact matches
+Phase 14 COMPLETE. All 4 plans executed.
 - Phase 15: Signal wrapping & JSX flags (~20 tests)
 - Phase 16: DCE & captures (~25 tests)
 - Phase 17: Hoist strategy (14 tests, architectural)
@@ -239,14 +242,14 @@ Phases 15-18 are optional depending on shipping needs.
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
 - All phase-level gaps RESOLVED through phases 1-13
-- Remaining 77 snapshot diffs (post-Phase 14 Plan 02):
+- Remaining 76 snapshot diffs (post-Phase 14 Plan 04):
   - ACCEPTED (aesthetic): SHORTHAND ~8 tests (OXC limitation), LINE_WRAP ~21 tests
   - IMPORT_ORDER: ~36 tests (remaining have other category diffs too)
   - SPREAD_PROPS: RESOLVED (4 tests now exact matches, remaining spread diffs are OXC comment formatting)
   - ENTRY_FIELD: RESOLVED (all 4 tests now exact matches)
   - DEV_MODE: path diffs resolved, remaining diffs are JSX_FLAGS/HOIST
   - FILE_EXT: RESOLVED (preserve_filenames extension fix)
-  - CTX_KIND/DIAGNOSTIC: 3 tests (targeted for Phase 14 Plan 04)
+  - CTX_KIND/DIAGNOSTIC: RESOLVED (JSXProp variant, C03 highlights, C05 emission -- 1 new exact match)
   - SIGNAL_WRAP: 11 tests (Phase 15)
   - JSX_FLAGS: 17 tests (Phase 15)
   - DCE: 19 tests (Phase 16)
@@ -259,5 +262,5 @@ Phases 15-18 are optional depending on shipping needs.
 ## Session Continuity
 
 Last session: 2026-02-24
-Stopped at: Completed 14-02-PLAN.md (spread props fixes)
+Stopped at: Completed 14-04-PLAN.md (Phase 14 complete)
 Resume file: None
