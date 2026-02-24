@@ -565,6 +565,10 @@ pub(crate) struct SegmentData {
 
     /// Whether this segment needs a qrl import (has child $()-calls).
     pub needs_qrl_import: bool,
+
+    /// Stack context names at the time of segment creation.
+    /// Used by Smart/Component entry strategies to compute entry field.
+    pub stack_ctxt: Vec<String>,
 }
 
 /// Per-module options derived from TransformModulesOptions.

@@ -363,9 +363,13 @@ pub fn transform_modules(
                     (String::new(), None)
                 };
 
+                // SWC: is_entry is true when entry field is None (segment is its own entry point).
+                // When entry is Some(...), the segment is grouped into that entry, not a standalone entry.
+                let is_entry = segment_analysis.entry.is_none();
+
                 let segment_module = TransformModule {
                     path: seg_path,
-                    is_entry: true,
+                    is_entry,
                     code: segment_code,
                     map: segment_map,
                     segment: Some(segment_analysis),
@@ -426,21 +430,34 @@ fn rel_dir(path: &str) -> String {
 /// Compute the `entry` field for a segment based on the entry strategy.
 ///
 /// Mirrors SWC's `EntryPolicy::get_entry_for_sym()`:
-/// - Inline/Hoist/Single: `Some("entry_segments")`
-/// - Segment: `None`
-/// - Smart: context-dependent (top-level => None, nested => origin + "_entry_" + root)
-/// - Component: context-dependent (no context => "entry_segments", has context => origin + "_entry_" + root)
+/// - Inline/Hoist: `Some("entry_segments")`
+/// - Single: `Some("entry_segments")`
+/// - Segment/Hook: `None`
+/// - Smart: non-function segments (event handlers) or "event$" without captures => None,
+///          top-level functions (empty stack_ctxt) => None,
+///          nested functions => origin + "_entry_" + root context name
+/// - Component: no context => "entry_segments", has context => origin + "_entry_" + root
 fn compute_entry_field(
     strategy: &EntryStrategy,
     origin: &str,
     stack_ctxt: &[String],
+    ctx_kind: &CtxKind,
+    ctx_name: &str,
+    has_captures: bool,
 ) -> Option<String> {
     match strategy {
         EntryStrategy::Inline | EntryStrategy::Hoist => Some("entry_segments".to_string()),
         EntryStrategy::Single => Some("entry_segments".to_string()),
         EntryStrategy::Segment | EntryStrategy::Hook => None,
         EntryStrategy::Smart => {
-            // Smart strategy: top-level QRLs get None, nested get component-based entry
+            // SWC: if scoped_idents.is_empty() && (ctx_kind != Function || ctx_name == "event$")
+            // Event handlers (non-function) or "event$" function, without captures -> None
+            if !has_captures
+                && (matches!(ctx_kind, CtxKind::EventHandler) || ctx_name == "event$")
+            {
+                return None;
+            }
+            // Top-level QRLs (empty stack_ctxt) get None, nested get component-based entry
             if let Some(root) = stack_ctxt.first() {
                 Some(format!("{}_entry_{}", origin, root))
             } else {
@@ -471,17 +488,15 @@ fn segment_data_to_analysis(
     let ext = output_extension(origin_path, transpile_ts, transpile_jsx);
 
     // Compute entry field from strategy.
-    // For Smart/Component strategies, we need the stack context (parent segment names).
-    // Since we don't have the full stack_ctxt here, we use the segment's parent
-    // to approximate the root context name.
+    // For Smart/Component strategies, stack_ctxt contains the scope names at segment creation.
+    // Event handlers without captures get None for Smart strategy (SWC behavior).
     let entry = compute_entry_field(
         entry_strategy,
         &normalized_origin,
-        // For Smart/Component, the root context is approximated from parent
-        // SWC uses stack_ctxt which contains all scope names. We don't have that here,
-        // but segments store parent which is the closest enclosing segment name.
-        // For now, use an empty slice for Segment strategy (returns None anyway).
-        &[],
+        &seg.stack_ctxt,
+        &seg.ctx_kind,
+        &seg.ctx_name,
+        seg.captures,
     );
 
     SegmentAnalysis {

@@ -1012,6 +1012,7 @@ impl QwikTransform {
             body_code: String::new(),   // Populated in exit_expression for segment strategy
             child_lazy_imports: vec![], // Populated by finalize_segments
             needs_qrl_import: false,    // Populated by finalize_segments
+            stack_ctxt: self.stack_ctxt.clone(),
         };
 
         let will_be_stripped = match kind {
@@ -1112,6 +1113,7 @@ impl QwikTransform {
             body_code: String::new(),
             child_lazy_imports: vec![],
             needs_qrl_import: false,
+            stack_ctxt: self.stack_ctxt.clone(),
         };
 
         let will_be_stripped = self.should_strip_ctx_name(ctx_name);
