@@ -2,7 +2,7 @@
 
 ## Overview
 
-This roadmap drives the OXC optimizer toward functional parity with the SWC golden reference across 162 test cases. Phases 1-6 follow an initial cascade hypothesis: naming fixes clear the most diff noise first, metadata is simple plumbing, bugs must be fixed before features, features fix their own missing imports as side effects, JSX is localized, and import ordering is a clean final pass. Phases 7-9 are gap closure phases added after the v1.0 milestone audit. Phase 9 achieved 62/162 exact matches with 100 diffs remaining. Phases 10-14 target the remaining actionable gaps. Phase 12 (originally "Remaining Incremental Fixes") was split into 3 focused phases after a post-Phase 11 audit revealed the scope was ~2x larger than estimated: signal wrapping (12), captures+DCE (13), final small categories (14).
+This roadmap drives the OXC optimizer toward functional parity with the SWC golden reference across 162 test cases. Phases 1-6 follow an initial cascade hypothesis: naming fixes clear the most diff noise first, metadata is simple plumbing, bugs must be fixed before features, features fix their own missing imports as side effects, JSX is localized, and import ordering is a clean final pass. Phases 7-9 are gap closure phases added after the v1.0 milestone audit. Phase 9 achieved 62/162 exact matches with 100 diffs remaining. Phases 10-13 target the remaining actionable gaps. Phase 12 (originally "Remaining Incremental Fixes") was split into 3 focused phases after a post-Phase 11 audit revealed the scope was ~2x larger than estimated: signal wrapping (12), captures+DCE (13), final small categories (14). After Phase 13 (72/162 exact with formatting fix), a fresh audit of the remaining 90 diffs split the original Phase 14 into 5 focused phases: cosmetic+small fixes (14), signal/JSX flags (15), DCE+captures (16), hoist strategy (17), and remaining edge cases (18).
 
 **Aesthetic diff policy:** Purely aesthetic diffs (OXC codegen shorthand `{x: x}` -> `{x}` auto-conversion, line wrapping differences, whitespace) are accepted as known OXC codegen limitations and do NOT count against parity. Success is measured by semantic/behavioral parity, not byte-identical output.
 
@@ -29,7 +29,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 11: Auto Export Rename** - Implement _auto_ prefix for segment import re-exports
 - [x] **Phase 12: Signal Wrapping Gaps** - Fix _fnSignal and _wrapProp wrapping across ~25 tests
 - [x] **Phase 13: Captures & DCE** - Fix captures edge cases and dead code elimination across ~26 tests
-- [ ] **Phase 14: Final Parity** - Fix ctxKind, entry field, dev mode, file ext, JSX import source, spread props, misc across ~15 tests
+- [ ] **Phase 14: Cosmetic & Small Fixes** - Fix import ordering, spread props placement, entry field, dev mode, file ext, ctxKind, diagnostics (~28 new exact matches)
+- [ ] **Phase 15: Signal Wrapping & JSX Flags** - Fix remaining _fnSignal/_wrapProp edge cases and JSX immutability flag mismatches (~20 tests)
+- [ ] **Phase 16: DCE & Captures** - Fix dead code elimination and remaining capture edge cases (~25 tests)
+- [ ] **Phase 17: Hoist Strategy** - Implement SWC-style QRL callback hoisting to top-level named functions (14 tests)
+- [ ] **Phase 18: JSX Import & Remaining** - Fix JSX import sources, TS enum handling, conflict renaming, misc edge cases (~18 tests)
 
 ## Phase Details
 
@@ -236,25 +240,70 @@ Plans:
 - [x] 13-03-PLAN.md — Implement segment body DCE: unused declaration stripping, if(false) elimination, invalid_decl removal
 - [x] 13-04-PLAN.md — Fix remaining DCE (inline strategy, const-fold), final regression check and phase audit
 
-### Phase 14: Final Parity
-**Goal**: Fix all remaining small-category semantic diffs — ctxKind, entry field, dev mode, file extensions, JSX import source, spread props
+### Phase 14: Cosmetic & Small Fixes
+**Goal**: Fix import ordering (biggest cosmetic category), spread props placement, and small metadata/config fixes to maximize exact matches with minimal risk
 **Depends on**: Phase 13 (all major categories must be resolved first)
 **Aesthetic diff policy**: Purely aesthetic diffs (shorthand, line wrapping, whitespace) are accepted — only semantic/behavioral differences count
 **Success Criteria** (what must be TRUE):
-  1. ctxKind correctly classifies JSX prop events (~3 tests)
-  2. Entry field edge cases resolved (~6 tests)
-  3. Dev mode file path format matches SWC (~3 tests)
-  4. File extension handling matches SWC (~2 tests)
-  5. JSX import source and rename handling resolved (~2 tests)
-  6. Spread props ordering matches SWC (~3 tests)
-  7. All remaining semantic diffs resolved — only aesthetic OXC codegen differences remain
+  1. Import ordering in segment modules matches SWC across all tests (~44 tests affected)
+  2. Spread props: _getConstProps spread into var_props object (not separate 3rd arg), _createElement used for simple spreads (~11 tests)
+  3. Entry field metadata correctly populated (~4 tests)
+  4. Dev mode file path format matches SWC (~4 tests)
+  5. File extension handling matches SWC (~2 tests)
+  6. ctxKind correctly classifies JSX prop events (~1 test)
+  7. Diagnostic highlight spans populated (~2 tests)
+  8. ~28 new exact matches (72 → ~100/162)
+**Plans**: TBD
+
+### Phase 15: Signal Wrapping & JSX Flags
+**Goal**: Fix remaining _fnSignal/_wrapProp wrapping edge cases and JSX immutability flag mismatches
+**Depends on**: Phase 14 (cosmetic fixes clear noise, making semantic diffs easier to isolate)
+**Aesthetic diff policy**: Purely aesthetic diffs (shorthand, line wrapping, whitespace) are accepted — only semantic/behavioral differences count
+**Success Criteria** (what must be TRUE):
+  1. Remaining _fnSignal/_wrapProp wrapping gaps resolved (~11 tests)
+  2. JSX immutability flags match SWC for remaining mismatches (~17 tests)
+  3. No regressions in existing exact-match tests
+**Plans**: TBD
+
+### Phase 16: DCE & Captures
+**Goal**: Fix dead code elimination gaps and remaining capture edge cases
+**Depends on**: Phase 15 (signal wrapping affects what code is considered "used")
+**Aesthetic diff policy**: Purely aesthetic diffs (shorthand, line wrapping, whitespace) are accepted — only semantic/behavioral differences count
+**Success Criteria** (what must be TRUE):
+  1. isServer/isBrowser branch stripping in entry modules (~5 tests)
+  2. TS enum value inlining and _regSymbol stripping (~6 tests)
+  3. Unused import/declaration elimination (~8 tests)
+  4. Remaining capture variable edge cases resolved (~10 tests)
+  5. No regressions in existing exact-match tests
+**Plans**: TBD
+
+### Phase 17: Hoist Strategy
+**Goal**: Implement SWC-style QRL callback hoisting to top-level named functions
+**Depends on**: Phase 16 (DCE and captures must be stable before hoisting restructures code)
+**Aesthetic diff policy**: Purely aesthetic diffs (shorthand, line wrapping, whitespace) are accepted — only semantic/behavioral differences count
+**Success Criteria** (what must be TRUE):
+  1. Inlined QRL callbacks hoisted to top-level named function declarations matching SWC pattern (~14 tests)
+  2. Separate segment files created for hoisted callbacks where SWC does so
+  3. No regressions in existing exact-match tests
+**Plans**: TBD
+
+### Phase 18: JSX Import & Remaining
+**Goal**: Fix JSX import sources, TS enum handling, conflict renaming, and remaining miscellaneous edge cases
+**Depends on**: Phase 17 (all major structural work complete)
+**Aesthetic diff policy**: Purely aesthetic diffs (shorthand, line wrapping, whitespace) are accepted — only semantic/behavioral differences count
+**Success Criteria** (what must be TRUE):
+  1. JSX import sources match SWC (correct module paths for qwikify, serverAuth, jsx/jsxs) (~7 tests)
+  2. TS enum _auto_ export handling and value inlining (~3 tests)
+  3. Identifier conflict renaming with Qwik imports (~1 test)
+  4. Remaining miscellaneous edge cases resolved (~7 tests)
+  5. All actionable semantic diffs resolved — only unfixable OXC codegen aesthetic differences remain
 **Plans**: TBD
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> ... -> 9 -> 10 -> 11 -> 12 -> 13 -> 14
-(Subject to reassessment after each phase -- see Overview)
+Phases execute in numeric order: 1 -> 2 -> ... -> 13 -> 14 -> 15 -> 16 -> 17 -> 18
+(Subject to reassessment after each phase -- see Overview. Phases 15-18 are optional depending on shipping needs.)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -270,5 +319,9 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 9 -> 10 -> 11 -> 12 -> 13 -> 1
 | 10. Captures Mechanism | 1/1 | Complete | 2026-02-23 |
 | 11. Auto Export Rename | 1/1 | Complete | 2026-02-23 |
 | 12. Signal Wrapping Gaps | 6/6 | Complete | 2026-02-23 |
-| 13. Captures & DCE | 4/4 | Complete (67/162 exact) | 2026-02-24 |
-| 14. Final Parity | 0/? | Not started | -- |
+| 13. Captures & DCE | 4/4 | Complete (72/162 exact) | 2026-02-24 |
+| 14. Cosmetic & Small Fixes | 0/? | Not started | -- |
+| 15. Signal Wrapping & JSX Flags | 0/? | Not started | -- |
+| 16. DCE & Captures | 0/? | Not started | -- |
+| 17. Hoist Strategy | 0/? | Not started | -- |
+| 18. JSX Import & Remaining | 0/? | Not started | -- |

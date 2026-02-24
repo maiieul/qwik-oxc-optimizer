@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 13 complete. 67 exact matches (up from 63 pre-Phase 13). Phase 14 planning next.
+**Current focus:** Phase 13 complete. 72 exact matches (67 from Phase 13 + 5 from hash-before-oxfmt formatting fix). Phase 14 (Cosmetic & Small Fixes) planning next.
 
 ## Current Position
 
-Phase: 13 of 14 (Captures & DCE)
+Phase: 13 of 18 (Captures & DCE)
 Plan: 4 of 4 in phase 13
 Status: Phase complete
-Last activity: 2026-02-24 - Completed 13-04-PLAN.md
+Last activity: 2026-02-24 - Completed 13-04-PLAN.md, roadmap expanded (14→18 phases)
 
 Progress: [███████████████████████████████] 37/? plans
 
@@ -207,7 +207,13 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-Phase 13 complete. Phase 14 planning needed for remaining 95 diffs.
+Phase 13 complete. Roadmap expanded: original Phase 14 split into 5 phases (14-18) after fresh audit of 90 remaining diffs.
+- Phase 14: Cosmetic & small fixes (import ordering, spread props, metadata) → ~28 new exact matches
+- Phase 15: Signal wrapping & JSX flags (~20 tests)
+- Phase 16: DCE & captures (~25 tests)
+- Phase 17: Hoist strategy (14 tests, architectural)
+- Phase 18: JSX import & remaining (~18 tests)
+Phases 15-18 are optional depending on shipping needs.
 
 ### Blockers/Concerns
 
@@ -218,16 +224,19 @@ Phase 13 complete. Phase 14 planning needed for remaining 95 diffs.
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
 - All phase-level gaps RESOLVED through phases 1-13
-- Remaining 95 snapshot diffs (post-Phase 13):
-  - ACCEPTED (aesthetic): OXC codegen shorthand (~60+ tests), line wrapping (~15 tests)
-  - Import ordering (~15 tests)
-  - Signal wrapping gaps (~10 tests)
-  - JSX flags (~7 tests)
-  - Spread props (~7 tests)
-  - Capture/scope edge cases (~8 tests)
-  - Entry field/dev mode/misc (~10 tests)
-  - Pre-transformed inlinedQrl tests (3 tests)
-  - Const-fold (2 tests -- SWC MinifyMode::Simplify)
+- Remaining 90 snapshot diffs (post-Phase 13 + formatting fix):
+  - ACCEPTED (aesthetic): SHORTHAND ~8 tests (OXC limitation), LINE_WRAP ~21 tests
+  - IMPORT_ORDER: 44 tests (cosmetic, targeted for Phase 14)
+  - SPREAD_PROPS: 11 tests (targeted for Phase 14)
+  - ENTRY_FIELD/DEV_MODE/FILE_EXT/CTX_KIND/DIAGNOSTIC: 13 tests (targeted for Phase 14)
+  - SIGNAL_WRAP: 11 tests (Phase 15)
+  - JSX_FLAGS: 17 tests (Phase 15)
+  - DCE: 19 tests (Phase 16)
+  - CAPTURES: ~10 tests (Phase 16)
+  - HOIST: 14 tests (Phase 17)
+  - JSX_IMPORT: 7 tests (Phase 18)
+  - OTHER: 13 tests (Phase 18)
+  See: .planning/phases/14-final-parity/diff-audit.md for full per-test breakdown
 
 ## Session Continuity
 
