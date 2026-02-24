@@ -468,22 +468,43 @@ pub(crate) fn rewrite_props_references<'a>(
         }
 
         Expression::ArrayExpression(arr) => {
-            for elem in arr.elements.iter_mut() {
-                match elem {
-                    ArrayExpressionElement::SpreadElement(spread) => {
-                        rewrite_props_references(
-                            &mut spread.argument,
-                            prop_map,
-                            raw_props_name,
-                            prop_defaults,
-                            ctx,
-                        );
+            for i in 0..arr.elements.len() {
+                match &arr.elements[i] {
+                    ArrayExpressionElement::SpreadElement(_) => {
+                        if let ArrayExpressionElement::SpreadElement(spread) = &mut arr.elements[i] {
+                            rewrite_props_references(
+                                &mut spread.argument,
+                                prop_map,
+                                raw_props_name,
+                                prop_defaults,
+                                ctx,
+                            );
+                        }
                     }
                     ArrayExpressionElement::Elision(_) => {}
-                    _ => {
-                        if let Some(e) = array_element_as_expression_mut(elem) {
-                            rewrite_props_references(e, prop_map, raw_props_name, prop_defaults, ctx);
+                    ArrayExpressionElement::Identifier(ident) => {
+                        // Handle identifier elements in arrays: check if they match a prop alias
+                        // and replace with _rawProps.propName member expression.
+                        let name = ident.name.as_str().to_string();
+                        if let Some((_, original_key)) = prop_map.iter().find(|(local, _)| *local == name) {
+                            if let Some(default_code) = prop_defaults.get(&name) {
+                                if let Some(coalesce) =
+                                    build_nullish_coalesce(raw_props_name, original_key, default_code, ctx)
+                                {
+                                    arr.elements[i] = ArrayExpressionElement::from(coalesce);
+                                    continue;
+                                }
+                            }
+                            let obj = ctx.ast.expression_identifier(SPAN, ctx.ast.atom(raw_props_name));
+                            let prop_name_ident = ctx.ast.identifier_name(SPAN, ctx.ast.atom(original_key.as_str()));
+                            let member = ctx.ast.static_member_expression(SPAN, obj, prop_name_ident, false);
+                            let member_expr = Expression::StaticMemberExpression(ctx.ast.alloc(member));
+                            arr.elements[i] = ArrayExpressionElement::from(member_expr);
                         }
+                    }
+                    _ => {
+                        // Other ArrayExpressionElement variants (CallExpression, etc.)
+                        // are not common in capture arrays; skip for now.
                     }
                 }
             }
@@ -769,22 +790,6 @@ fn rewrite_call_arguments<'a>(
                 arguments[i] = Argument::from(expr);
             }
         }
-    }
-}
-
-/// Helper: Try to get a mutable Expression reference from an ArrayExpressionElement.
-/// ArrayExpressionElement inherits Expression variants via inherit_variants!.
-fn array_element_as_expression_mut<'b, 'a>(
-    elem: &'b mut ArrayExpressionElement<'a>,
-) -> Option<&'b mut Expression<'a>> {
-    match elem {
-        ArrayExpressionElement::Identifier(ident) => {
-            let _ = ident;
-            None
-        }
-        ArrayExpressionElement::SpreadElement(_) => None,
-        ArrayExpressionElement::Elision(_) => None,
-        _ => None,
     }
 }
 

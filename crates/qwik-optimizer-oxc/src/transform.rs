@@ -2045,6 +2045,18 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 frame.insert(name);
             }
         }
+        // When inside a $()-body capture frame, collect nested function params
+        // as body_local_decls so they are excluded from captures. SWC's scope
+        // analysis naturally handles this; OXC's simplified approach needs explicit
+        // tracking of nested function/arrow parameters.
+        if !self.capture_stack.is_empty() {
+            for param in &func.params.items {
+                self.collect_binding_pattern_names(&param.pattern);
+            }
+            if let Some(rest) = &func.params.rest {
+                self.collect_binding_pattern_names(&rest.rest.argument);
+            }
+        }
         // Save and set root_jsx_mode for function bodies (mirrors SWC fold_fn_expr)
         self.root_jsx_mode_stack.push(self.root_jsx_mode);
         self.root_jsx_mode = true;
@@ -2080,9 +2092,20 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
 
     fn enter_arrow_function_expression(
         &mut self,
-        _arrow: &mut ArrowFunctionExpression<'a>,
+        arrow: &mut ArrowFunctionExpression<'a>,
         _ctx: &mut TraverseCtx<'a, ()>,
     ) {
+        // When inside a $()-body capture frame, collect nested arrow params
+        // as body_local_decls so they are excluded from captures. This prevents
+        // parameters like `({ aaa }) => aaa` from leaking into parent captures.
+        if !self.capture_stack.is_empty() {
+            for param in &arrow.params.items {
+                self.collect_binding_pattern_names(&param.pattern);
+            }
+            if let Some(rest) = &arrow.params.rest {
+                self.collect_binding_pattern_names(&rest.rest.argument);
+            }
+        }
         self.root_jsx_mode_stack.push(self.root_jsx_mode);
         self.root_jsx_mode = true;
     }
@@ -3028,6 +3051,11 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         .map(|s| s.name.clone());
 
                     if let Some(parent_name) = component_segment_name {
+                        // Collect child segment span starts that need body code updates
+                        let mut segments_needing_body_update: Vec<u32> = Vec::new();
+                        // Collect (segment_name, reclassified_capture_names) for QRL fixup
+                        let mut reclassified_segments: Vec<(String, Vec<String>)> = Vec::new();
+
                         for seg in self.segments.iter_mut() {
                             if seg.parent.as_ref() != Some(&parent_name) || seg.capture_names.is_empty()
                             {
@@ -3044,8 +3072,40 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                             });
                             if needs_rawprops && !seg.capture_names.contains(&info.raw_props_name) {
                                 seg.capture_names.insert(0, info.raw_props_name.clone());
+                                // Mark this segment's body code for prop alias replacement
+                                segments_needing_body_update.push(seg.span.0);
                             }
+                            seg.capture_names.sort();
                             seg.captures = !seg.capture_names.is_empty();
+                            // Record reclassified captures for QRL fixup
+                            reclassified_segments.push((seg.name.clone(), seg.capture_names.clone()));
+                        }
+
+                        // Post-process segment body codes: replace prop alias references
+                        // with _rawProps.propName to match SWC's output. The body code was
+                        // serialized before props destructuring rewrite, so it still has
+                        // original prop names (e.g., `{foo}` instead of `{_rawProps.foo}`).
+                        for (span_start, body_code) in self.segment_body_codes.iter_mut() {
+                            if segments_needing_body_update.contains(span_start) {
+                                for (original_key, local_alias) in &info.prop_keys {
+                                    let replacement = format!("{}.{}", info.raw_props_name, original_key);
+                                    *body_code = replace_identifier_in_body(body_code, local_alias, &replacement);
+                                }
+                            }
+                        }
+
+                        // Fix QRL capture arrays in the component body AST.
+                        // After props rewriting, the QRL calls have member expressions
+                        // like [_rawProps.foo] instead of [_rawProps]. Rebuild the captures
+                        // array to match the reclassified capture_names.
+                        if !reclassified_segments.is_empty() {
+                            if let Some(Argument::ArrowFunctionExpression(arrow)) = call.arguments.first_mut() {
+                                fix_qrl_captures_in_body(
+                                    &mut arrow.body.statements,
+                                    &reclassified_segments,
+                                    ctx,
+                                );
+                            }
                         }
                     }
                 }
@@ -5472,6 +5532,145 @@ fn replace_identifier_in_body(code: &str, old_name: &str, new_name: &str) -> Str
 /// Check if a character is a valid identifier character (alphanumeric or underscore or $).
 fn is_ident_char_body(c: char) -> bool {
     c.is_alphanumeric() || c == '_' || c == '$'
+}
+
+/// Fix QRL capture arrays in a component body after props reclassification.
+///
+/// After props destructuring rewrite converts `foo` -> `_rawProps.foo` in the body,
+/// QRL calls like `qrl(import, "name", [_rawProps.foo, arg0])` have member expressions
+/// instead of plain identifiers. This function finds those QRL calls by matching
+/// segment names and rebuilds their capture arrays to use the reclassified
+/// capture names (e.g., `[_rawProps, arg0]` or just `[_rawProps]`).
+fn fix_qrl_captures_in_body<'a>(
+    stmts: &mut oxc::allocator::Vec<'a, Statement<'a>>,
+    reclassified: &[(String, Vec<String>)], // (segment_name, capture_names)
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    for stmt in stmts.iter_mut() {
+        fix_qrl_captures_in_stmt(stmt, reclassified, ctx);
+    }
+}
+
+fn fix_qrl_captures_in_stmt<'a>(
+    stmt: &mut Statement<'a>,
+    reclassified: &[(String, Vec<String>)],
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    match stmt {
+        Statement::ReturnStatement(ret) => {
+            if let Some(ref mut expr) = ret.argument {
+                fix_qrl_captures_in_expr(expr, reclassified, ctx);
+            }
+        }
+        Statement::ExpressionStatement(expr_stmt) => {
+            fix_qrl_captures_in_expr(&mut expr_stmt.expression, reclassified, ctx);
+        }
+        Statement::VariableDeclaration(decl) => {
+            for declarator in decl.declarations.iter_mut() {
+                if let Some(ref mut init) = declarator.init {
+                    fix_qrl_captures_in_expr(init, reclassified, ctx);
+                }
+            }
+        }
+        Statement::IfStatement(if_stmt) => {
+            fix_qrl_captures_in_stmt(&mut if_stmt.consequent, reclassified, ctx);
+            if let Some(ref mut alt) = if_stmt.alternate {
+                fix_qrl_captures_in_stmt(alt, reclassified, ctx);
+            }
+        }
+        Statement::BlockStatement(block) => {
+            fix_qrl_captures_in_body(&mut block.body, reclassified, ctx);
+        }
+        _ => {}
+    }
+}
+
+fn fix_qrl_captures_in_expr<'a>(
+    expr: &mut Expression<'a>,
+    reclassified: &[(String, Vec<String>)],
+    ctx: &mut TraverseCtx<'a, ()>,
+) {
+    match expr {
+        Expression::CallExpression(call) => {
+            // Check if this is a qrl/inlinedQrl call with a segment name matching a reclassified segment
+            let is_qrl_call = match &call.callee {
+                Expression::Identifier(id) => {
+                    let name = id.name.as_str();
+                    name == "qrl" || name == "qrlDEV" || name == "inlinedQrl" || name == "inlinedQrlDEV"
+                }
+                _ => false,
+            };
+
+            if is_qrl_call && call.arguments.len() >= 3 {
+                // The segment name is in the 2nd argument (string literal)
+                let seg_name = match &call.arguments[1] {
+                    Argument::StringLiteral(s) => Some(s.value.as_str().to_string()),
+                    _ => None,
+                };
+
+                if let Some(ref name) = seg_name {
+                    if let Some((_, capture_names)) = reclassified.iter().find(|(sn, _)| sn == name) {
+                        // Rebuild the captures array (3rd argument)
+                        let mut elements = ctx.ast.vec_with_capacity(capture_names.len());
+                        for cap_name in capture_names {
+                            let ident = ctx.ast.expression_identifier(
+                                SPAN,
+                                ctx.ast.atom(cap_name.as_str()),
+                            );
+                            elements.push(ArrayExpressionElement::from(ident));
+                        }
+                        let new_array = ctx.ast.expression_array(SPAN, elements);
+                        call.arguments[2] = Argument::from(new_array);
+                    }
+                }
+            }
+
+            // Recurse into call arguments for nested QRL calls (e.g., useTaskQrl(inlinedQrl(...)))
+            for arg in call.arguments.iter_mut() {
+                match arg {
+                    Argument::CallExpression(inner_call) => {
+                        // Recurse by wrapping in Expression
+                        // Actually, arguments are Argument, not Expression. Handle inline.
+                        let is_inner_qrl = match &inner_call.callee {
+                            Expression::Identifier(id) => {
+                                let n = id.name.as_str();
+                                n == "qrl" || n == "qrlDEV" || n == "inlinedQrl" || n == "inlinedQrlDEV"
+                            }
+                            _ => false,
+                        };
+                        if is_inner_qrl && inner_call.arguments.len() >= 3 {
+                            let inner_seg_name = match &inner_call.arguments[1] {
+                                Argument::StringLiteral(s) => Some(s.value.as_str().to_string()),
+                                _ => None,
+                            };
+                            if let Some(ref name) = inner_seg_name {
+                                if let Some((_, capture_names)) = reclassified.iter().find(|(sn, _)| sn == name) {
+                                    let mut elements = ctx.ast.vec_with_capacity(capture_names.len());
+                                    for cap_name in capture_names {
+                                        let ident = ctx.ast.expression_identifier(
+                                            SPAN,
+                                            ctx.ast.atom(cap_name.as_str()),
+                                        );
+                                        elements.push(ArrayExpressionElement::from(ident));
+                                    }
+                                    let new_array = ctx.ast.expression_array(SPAN, elements);
+                                    inner_call.arguments[2] = Argument::from(new_array);
+                                }
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+            }
+        }
+        // Recurse into PURE comment wrappers and other expression types
+        Expression::SequenceExpression(seq) => {
+            for e in seq.expressions.iter_mut() {
+                fix_qrl_captures_in_expr(e, reclassified, ctx);
+            }
+        }
+        _ => {}
+    }
 }
 
 /// Only `component$` produces a side-effect-free wrapper (`componentQrl`).
