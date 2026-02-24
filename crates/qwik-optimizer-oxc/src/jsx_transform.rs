@@ -252,6 +252,50 @@ fn is_const_event_handler(
     }
 }
 
+/// Check if an expression tree contains a reference to a specific identifier name.
+/// Used to determine if a var_prop value references the spread source, which affects
+/// whether _getConstProps goes in the 2nd arg (as spread) or 3rd arg (bare call).
+fn expr_contains_ident(expr: &Expression<'_>, name: &str) -> bool {
+    match expr {
+        Expression::Identifier(ident) => ident.name.as_str() == name,
+        Expression::CallExpression(call) => {
+            expr_contains_ident(&call.callee, name)
+                || call
+                    .arguments
+                    .iter()
+                    .any(|arg| match arg {
+                        Argument::SpreadElement(spread) => expr_contains_ident(&spread.argument, name),
+                        _ => {
+                            if let Some(expr) = arg.as_expression() {
+                                expr_contains_ident(expr, name)
+                            } else {
+                                false
+                            }
+                        }
+                    })
+        }
+        Expression::ArrayExpression(arr) => arr.elements.iter().any(|el| match el {
+            ArrayExpressionElement::SpreadElement(spread) => expr_contains_ident(&spread.argument, name),
+            _ => {
+                if let Some(expr) = el.as_expression() {
+                    expr_contains_ident(expr, name)
+                } else {
+                    false
+                }
+            }
+        }),
+        Expression::StaticMemberExpression(member) => expr_contains_ident(&member.object, name),
+        Expression::ComputedMemberExpression(member) => {
+            expr_contains_ident(&member.object, name) || expr_contains_ident(&member.expression, name)
+        }
+        Expression::ObjectExpression(obj) => obj.properties.iter().any(|prop| match prop {
+            ObjectPropertyKind::ObjectProperty(p) => expr_contains_ident(&p.value, name),
+            ObjectPropertyKind::SpreadProperty(s) => expr_contains_ident(&s.argument, name),
+        }),
+        _ => false,
+    }
+}
+
 /// Check if a child expression is immutable for JSX flag computation.
 ///
 /// This determines whether a child expression breaks `static_subtree`.
@@ -2585,7 +2629,10 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         } else {
             ctx.ast.expression_identifier(SPAN, "undefined")
         };
-        // Extract spread source name for creating multiple identifier references
+        // Extract spread source name for creating multiple identifier references.
+        // Track whether the source was an identifier (vs member expression) to decide
+        // whether to use _getVarProps/_getConstProps splitting.
+        let spread_source_is_ident = matches!(&spread_source, Expression::Identifier(_));
         let spread_source_name: String = if let Expression::Identifier(ref ident) = spread_source {
             ident.name.as_str().to_string()
         } else {
@@ -2615,21 +2662,29 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         let mut all_before: Vec<(String, Expression<'a>)> = Vec::new();
         let mut all_after: Vec<(String, Expression<'a>)> = Vec::new();
 
-        // Drain const_props before spread
+        // Drain const_props and var_props relative to spread position
         let const_before: Vec<_> = const_props.drain(..const_insert_at.min(const_props.len())).collect();
-        // Drain var_props before spread
         let var_before: Vec<_> = var_props.drain(..var_insert_at.min(var_props.len())).collect();
-        // Remaining are "after spread"
         let const_after: Vec<_> = const_props.drain(..).collect();
         let var_after: Vec<_> = var_props.drain(..).collect();
 
-        // Interleave: const_props_before first (they appear before var_props_before in source
-        // since const props like string literals are processed before event handlers),
-        // then var_props_before. Similarly for after.
-        all_before.extend(const_before);
-        all_before.extend(var_before);
-        all_after.extend(const_after);
-        all_after.extend(var_after);
+        // For multi-spread: all explicit props (const + var) go together in the var_props
+        // object because _getConstProps is inlined as spread.
+        // For single-spread: const and var are separated — const_props may go to the
+        // 3rd arg or inline as _getConstProps spread, while var_props go in 2nd arg.
+        // We track explicit_const separately for single-spread to use later.
+        let explicit_const: Vec<(String, Expression<'a>)>;
+        if has_multiple_spreads {
+            all_before.extend(const_before.into_iter().chain(var_before));
+            all_after.extend(const_after.into_iter().chain(var_after));
+            explicit_const = Vec::new(); // not used for multi-spread
+        } else {
+            // Single spread: const_before goes into 2nd arg (before spread), but
+            // const_after is kept separate for potential 3rd arg placement.
+            all_before.extend(const_before.into_iter().chain(var_before));
+            all_after.extend(var_after);
+            explicit_const = const_after;
+        }
 
         let total_props = all_before.len() + all_after.len() + 2 + if has_multiple_spreads { 1 + spread_args.len() } else { 0 };
         let mut var_obj_props = ctx.ast.vec_with_capacity(total_props);
@@ -2703,36 +2758,185 @@ pub(crate) fn transform_jsx_element_inner<'a>(
                 var_obj_props.push(build_var_prop(&name, value, ctx));
             }
 
-            // Add remaining spread args as spreads
+            // Add remaining spread args as spreads.
+            // If the extra spread source is the same identifier as the first spread
+            // source, wrap it in _getVarProps(). Otherwise, use raw spread.
+            let mut all_same_source = spread_source_is_ident;
             for extra_spread in spread_args {
-                var_obj_props.push(
-                    ctx.ast
-                        .object_property_kind_spread_property(SPAN, extra_spread),
-                );
+                let is_same_source = spread_source_is_ident
+                    && matches!(&extra_spread, Expression::Identifier(ident) if ident.name.as_str() == spread_source_name);
+                if !is_same_source {
+                    all_same_source = false;
+                }
+                if is_same_source {
+                    // Wrap in _getVarProps(source)
+                    let get_var_callee2 = ctx.ast.expression_identifier(SPAN, "_getVarProps");
+                    let mut get_var_args2 = ctx.ast.vec_with_capacity(1);
+                    get_var_args2.push(Argument::from(extra_spread));
+                    let get_var_call2 = ctx.ast.expression_call(
+                        SPAN,
+                        get_var_callee2,
+                        None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                        get_var_args2,
+                        false,
+                    );
+                    var_obj_props.push(
+                        ctx.ast.object_property_kind_spread_property(SPAN, get_var_call2),
+                    );
+                } else {
+                    var_obj_props.push(
+                        ctx.ast.object_property_kind_spread_property(SPAN, extra_spread),
+                    );
+                }
             }
 
-            // const_props arg is null for multiple spreads
-            ctx.ast.expression_null_literal(SPAN)
+            // const_props arg: when ALL spreads are the same identifier source,
+            // emit _getConstProps(source) as bare call for 3rd arg.
+            // When spreads have different sources, use null (SWC already inlined
+            // _getConstProps as spread in the 2nd arg object above).
+            if all_same_source {
+                let get_const_callee = ctx.ast.expression_identifier(SPAN, "_getConstProps");
+                let mut get_const_args = ctx.ast.vec_with_capacity(1);
+                get_const_args.push(Argument::from(
+                    ctx.ast.expression_identifier(SPAN, ctx.ast.atom(&spread_source_name)),
+                ));
+                ctx.ast.expression_call(
+                    SPAN,
+                    get_const_callee,
+                    None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                    get_const_args,
+                    false,
+                )
+            } else {
+                ctx.ast.expression_null_literal(SPAN)
+            }
         } else {
-            // Single spread: _getConstProps(source) is the separate const_props argument
-            let get_const_callee = ctx.ast.expression_identifier(SPAN, "_getConstProps");
-            let mut get_const_args = ctx.ast.vec_with_capacity(1);
-            get_const_args.push(Argument::from(
-                ctx.ast.expression_identifier(SPAN, ctx.ast.atom(&spread_source_name)),
-            ));
-
-            // Add explicit props that appeared AFTER the spread
-            for (name, value) in all_after {
-                var_obj_props.push(build_var_prop(&name, value, ctx));
+            // In spread elements, reclassify const_after entries that reference
+            // the spread source as var props (2nd arg). SWC treats QRLs with
+            // captures referencing the spread source as var_props for _jsxSplit,
+            // even though is_const_event_handler returns true for them.
+            let mut remaining_const: Vec<(String, Expression<'a>)> = Vec::new();
+            for (name, value) in explicit_const {
+                if expr_contains_ident(&value, &spread_source_name) {
+                    all_after.push((name, value));
+                } else {
+                    remaining_const.push((name, value));
+                }
             }
+            let explicit_const = remaining_const;
 
-            ctx.ast.expression_call(
-                SPAN,
-                get_const_callee,
-                None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
-                get_const_args,
-                false,
-            )
+            // Placement of _getConstProps depends on:
+            //   A) Whether explicit const_after exists (after reclassification)
+            //   B) Whether var_after has _fnSignal wrapping that references the spread source
+            //
+            // SWC algorithm:
+            // - If const_after non-empty OR var_after references spread source:
+            //   Put ..._getConstProps(source) in 2nd arg (before var_after)
+            //   3rd = { ...const_after } or null
+            // - If const_after empty AND var_after doesn't reference spread source:
+            //   3rd = _getConstProps(source) [bare call]
+            let has_explicit_const = !explicit_const.is_empty();
+
+            // Check if any var_after expression uses _fnSignal wrapping that
+            // references the spread source. _fnSignal's deps array contains the
+            // spread source, requiring const props to be available before evaluation.
+            // Other expressions (plain identifiers, qrl captures) don't need this.
+            let var_after_has_fn_signal_with_source = all_after.iter().any(|(_, value)| {
+                if let Expression::CallExpression(call) = value {
+                    if let Expression::Identifier(callee) = &call.callee {
+                        if callee.name.as_str() == "_fnSignal" {
+                            return call.arguments.iter().any(|arg| {
+                                if let Some(expr) = arg.as_expression() {
+                                    expr_contains_ident(expr, &spread_source_name)
+                                } else {
+                                    false
+                                }
+                            });
+                        }
+                    }
+                }
+                false
+            });
+
+            let has_var_after = !all_after.is_empty();
+            let put_const_in_second = (has_explicit_const && has_var_after) || var_after_has_fn_signal_with_source;
+
+            if put_const_in_second {
+                // _getConstProps goes in 2nd arg as spread
+                let get_const_callee = ctx.ast.expression_identifier(SPAN, "_getConstProps");
+                let mut get_const_args = ctx.ast.vec_with_capacity(1);
+                get_const_args.push(Argument::from(
+                    ctx.ast.expression_identifier(SPAN, ctx.ast.atom(&spread_source_name)),
+                ));
+                let get_const_call = ctx.ast.expression_call(
+                    SPAN,
+                    get_const_callee,
+                    None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                    get_const_args,
+                    false,
+                );
+                var_obj_props.push(
+                    ctx.ast.object_property_kind_spread_property(SPAN, get_const_call),
+                );
+
+                // Add explicit var_props after the spread
+                for (name, value) in all_after {
+                    var_obj_props.push(build_var_prop(&name, value, ctx));
+                }
+
+                // 3rd arg: explicit const props as object, or null
+                if has_explicit_const {
+                    let mut const_obj_props = ctx.ast.vec_with_capacity(explicit_const.len());
+                    for (name, value) in explicit_const {
+                        const_obj_props.push(build_var_prop(&name, value, ctx));
+                    }
+                    ctx.ast.expression_object(SPAN, const_obj_props)
+                } else {
+                    ctx.ast.expression_null_literal(SPAN)
+                }
+            } else if has_explicit_const {
+                // const_after only (no var_after reference to source)
+                // Build 3rd arg: { ..._getConstProps(source), ...explicit_const }
+                let mut const_obj_props = ctx.ast.vec_with_capacity(explicit_const.len() + 1);
+                let get_const_callee = ctx.ast.expression_identifier(SPAN, "_getConstProps");
+                let mut get_const_args = ctx.ast.vec_with_capacity(1);
+                get_const_args.push(Argument::from(
+                    ctx.ast.expression_identifier(SPAN, ctx.ast.atom(&spread_source_name)),
+                ));
+                let get_const_call = ctx.ast.expression_call(
+                    SPAN,
+                    get_const_callee,
+                    None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                    get_const_args,
+                    false,
+                );
+                const_obj_props.push(
+                    ctx.ast.object_property_kind_spread_property(SPAN, get_const_call),
+                );
+                for (name, value) in explicit_const {
+                    const_obj_props.push(build_var_prop(&name, value, ctx));
+                }
+                ctx.ast.expression_object(SPAN, const_obj_props)
+            } else {
+                // No explicit const, no source reference in var_after
+                // Add var_after props to 2nd arg
+                for (name, value) in all_after {
+                    var_obj_props.push(build_var_prop(&name, value, ctx));
+                }
+                // 3rd = bare _getConstProps call
+                let get_const_callee = ctx.ast.expression_identifier(SPAN, "_getConstProps");
+                let mut get_const_args = ctx.ast.vec_with_capacity(1);
+                get_const_args.push(Argument::from(
+                    ctx.ast.expression_identifier(SPAN, ctx.ast.atom(&spread_source_name)),
+                ));
+                ctx.ast.expression_call(
+                    SPAN,
+                    get_const_callee,
+                    None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                    get_const_args,
+                    false,
+                )
+            }
         };
 
         let var_props_expr = ctx.ast.expression_object(SPAN, var_obj_props);
