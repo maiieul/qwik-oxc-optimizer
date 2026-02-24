@@ -208,6 +208,15 @@ pub(crate) fn build_segment_code_with_hoisted(
             assertion: Vec::new(),
         });
     }
+    if body_code.contains("_createElement") {
+        imports.push(SegmentImportEntry {
+            local_name: "_createElement".to_string(),
+            source: core.clone(),
+            kind: ImportKind::Named,
+            imported_name: Some("createElement".to_string()),
+            assertion: Vec::new(),
+        });
+    }
     if body_code.contains("_restProps") {
         imports.push(SegmentImportEntry {
             local_name: "_restProps".to_string(),

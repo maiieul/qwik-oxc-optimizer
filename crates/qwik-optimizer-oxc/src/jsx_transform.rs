@@ -2588,6 +2588,75 @@ pub(crate) fn transform_jsx_element_inner<'a>(
         tracker.jsx_mutable = true;
     }
 
+    // Check for _createElement path before building key_expr, since _createElement
+    // consumes the key_value differently (as a property, not a separate argument).
+    if has_spread && key_value.is_some() {
+        // SWC uses _createElement(tag, { ...source, ...props, key }) when:
+        //   - There's a single spread source
+        //   - The spread source is NOT the component's props parameter
+        //   - The element has a user-provided key
+        let spread_source_is_props_param = spread_args.first().map_or(false, |s| {
+            if let Expression::Identifier(ident) = s {
+                props_param_name.is_some_and(|p| p == ident.name.as_str())
+            } else {
+                false
+            }
+        });
+        let use_create_element = spread_args.len() == 1 && !spread_source_is_props_param;
+
+        if use_create_element {
+            if !tracker.needs_create_element {
+                tracker.needs_create_element = true;
+                tracker.record_synthetic_import("createElement");
+            }
+
+            let spread_source = spread_args.remove(0);
+            let user_key = key_value.unwrap();
+
+            // Build props object: { ...source, ...explicit_props, key: keyValue }
+            let total = 1 + var_props.len() + const_props.len() + 1;
+            let mut obj_props = ctx.ast.vec_with_capacity(total);
+
+            // Raw spread of source
+            obj_props.push(ctx.ast.object_property_kind_spread_property(SPAN, spread_source));
+
+            // Add all explicit props (both var and const) in source order
+            for (name, value) in const_props.into_iter().chain(var_props) {
+                let key = if name.contains(':') || name.contains('-') || name.contains('$') {
+                    let atom = ctx.ast.atom(&name);
+                    PropertyKey::from(ctx.ast.expression_string_literal(SPAN, atom, None))
+                } else {
+                    ctx.ast.property_key_static_identifier(SPAN, ctx.ast.atom(&name))
+                };
+                obj_props.push(ctx.ast.object_property_kind_object_property(
+                    SPAN, PropertyKind::Init, key, value, false, false, false,
+                ));
+            }
+
+            // Add key property
+            let key_prop_key = ctx.ast.property_key_static_identifier(SPAN, ctx.ast.atom("key"));
+            obj_props.push(ctx.ast.object_property_kind_object_property(
+                SPAN, PropertyKind::Init, key_prop_key, user_key, false, false, false,
+            ));
+
+            let props_obj = ctx.ast.expression_object(SPAN, obj_props);
+
+            let callee = ctx.ast.expression_identifier(SPAN, "_createElement");
+            let mut arguments = ctx.ast.vec_with_capacity(2);
+            arguments.push(Argument::from(tag));
+            arguments.push(Argument::from(props_obj));
+
+            return ctx.ast.expression_call_with_pure(
+                SPAN,
+                callee,
+                None::<oxc::allocator::Box<'a, TSTypeParameterInstantiation<'a>>>,
+                arguments,
+                false,
+                true,
+            );
+        }
+    }
+
     // Generate key: component tags (is_fn) and root elements (root_jsx_mode) get keys,
     // nested native elements get null (mirrors SWC's should_emit_key = is_fn || root_jsx_mode)
     let should_emit_key = is_fn || root_jsx_mode;

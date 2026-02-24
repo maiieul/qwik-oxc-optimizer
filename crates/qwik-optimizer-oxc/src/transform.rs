@@ -88,6 +88,9 @@ pub(crate) struct ImportTracker {
     /// Whether the module needs `import { _qrlSync }` from core (sync$ calls).
     pub needs_qrl_sync: bool,
 
+    /// Whether the module needs `import { createElement as _createElement }` from core.
+    pub needs_create_element: bool,
+
     /// Custom JSX import source for `import { jsx as _jsx }` from `{source}/jsx-runtime`.
     /// When Some, `_jsx` is used instead of `_jsxSorted` for JSX transform output.
     pub custom_jsx_source: Option<String>,
@@ -3742,6 +3745,10 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 "_jsxSplit" => {
                     let s = import_rewrite::build_named_import("_jsxSplit", core_module, ctx);
                     ("_jsxSplit", s)
+                }
+                "createElement" => {
+                    let s = import_rewrite::build_aliased_import("createElement", "_createElement", core_module, ctx);
+                    ("_createElement", s)
                 }
                 "_getVarProps" => {
                     let s = import_rewrite::build_named_import("_getVarProps", core_module, ctx);
