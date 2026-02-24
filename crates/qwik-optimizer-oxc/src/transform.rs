@@ -3202,6 +3202,29 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                     filtered_captures.push(name.clone());
                 }
             }
+            // For non-top-level $() calls, filter captures to only include identifiers
+            // that are actually declared in an enclosing scope. This matches SWC's
+            // scope-aware capture analysis which only captures variables from enclosing
+            // scopes, not unresolved/global identifiers (e.g., `children` used in JSX
+            // without being declared anywhere). This is the same filtering applied to
+            // JSX event handler captures (lines ~1267-1291).
+            let filtered_captures = if !is_top_level_dollar_call && !self.capture_stack.is_empty() {
+                let all_parent_decls: HashSet<String> = self
+                    .capture_stack
+                    .iter()
+                    .flat_map(|(_, decls)| decls.iter().cloned())
+                    .collect();
+                filtered_captures
+                    .into_iter()
+                    .filter(|name| {
+                        all_parent_decls.contains(name)
+                            || self.collected.module_level_decls.contains(name)
+                    })
+                    .collect()
+            } else {
+                filtered_captures
+            };
+
             let capture_result = collector::CaptureAnalysisResult {
                 capture_names: filtered_captures,
                 reemitted_imports: capture_result.reemitted_imports,
