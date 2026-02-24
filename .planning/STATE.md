@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 14 in progress. 81 exact matches (77 from Plan 01 + 4 new from Plan 03 entry/metadata fixes + 3 collateral). Remaining plans: spread props, ctx_kind/diagnostics.
+**Current focus:** Phase 14 in progress. 85 exact matches (81 from Plans 01+03 + 4 new from Plan 02 spread props fixes). Remaining plan: ctx_kind/diagnostics (Plan 04).
 
 ## Current Position
 
 Phase: 14 of 18 (Final Parity)
-Plan: 3 of 4 in phase 14 (Plans 01, 03 complete; Plans 02, 04 remaining)
+Plan: 3 of 4 in phase 14 (Plans 01, 02, 03 complete; Plan 04 remaining)
 Status: In progress
-Last activity: 2026-02-24 - Completed 14-03-PLAN.md
+Last activity: 2026-02-24 - Completed 14-02-PLAN.md
 
-Progress: [████████████████████████████████] 39/? plans
+Progress: [████████████████████████████████] 40/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 39
-- Average duration: 18min
-- Total execution time: 14.73 hours
+- Total plans completed: 40
+- Average duration: 19min
+- Total execution time: 15.98 hours
 
 **By Phase:**
 
@@ -40,11 +40,11 @@ Progress: [███████████████████████
 | 11-auto-export-rename | 1/1 | 13min | 13min |
 | 12-signal-wrapping-gaps | 6/6 | 72min | 12min |
 | 13-captures-dce | 4/4 | 79min | 20min |
-| 14-final-parity | 2/4 | 64min | 32min |
+| 14-final-parity | 3/4 | 139min | 46min |
 
 **Recent Trend:**
-- Last 5 plans: 13-03 (12min), 13-04 (7min), 14-01 (45min), 14-03 (19min)
-- Trend: 14-03 was straightforward metadata/config fixes with 3 deviations from incorrect plan assumptions.
+- Last 5 plans: 13-04 (7min), 14-01 (45min), 14-03 (19min), 14-02 (75min)
+- Trend: 14-02 required extensive iterative algorithm discovery (7 attempts) for single-spread const_props. Two sessions needed due to context exhaustion.
 
 *Updated after each plan completion*
 
@@ -214,10 +214,15 @@ Recent decisions affecting current work:
 - [14-03]: Smart strategy: event handlers without captures get None via scoped_idents.is_empty() check matching SWC
 - [14-03]: is_entry = entry.is_none() matching SWC parse.rs line 393 -- fixes Single/Smart strategy segment module classification
 - [14-03]: noop_dev_mode uses /hello/from/dev/ src_dir matching SWC dev_path override, other dev tests use /user/qwik/src/
+- [14-02]: Single-spread const_props algorithm: 3 cases based on (has_explicit_const && has_var_after) || var_after_has_fn_signal
+- [14-02]: const_before stays in 2nd arg (var_props object), const_after may go to 3rd depending on var_after presence
+- [14-02]: const_after entries referencing spread source reclassified to var_after (prevents double-counting)
+- [14-02]: _createElement detection: single spread + user key + spread source NOT component's props param
+- [14-02]: code_move.rs body_code.contains() extended for _createElement segment import emission
 
 ### Pending Todos
 
-Phase 14 in progress. Plans 01, 03 complete. Plans 02, 04 remaining.
+Phase 14 in progress. Plans 01, 02, 03 complete. Plan 04 remaining.
 - Phase 14: Cosmetic & small fixes (import ordering, spread props, metadata) → ~28 new exact matches
 - Phase 15: Signal wrapping & JSX flags (~20 tests)
 - Phase 16: DCE & captures (~25 tests)
@@ -234,10 +239,10 @@ Phases 15-18 are optional depending on shipping needs.
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
 - All phase-level gaps RESOLVED through phases 1-13
-- Remaining 81 snapshot diffs (post-Phase 14 Plan 03):
+- Remaining 77 snapshot diffs (post-Phase 14 Plan 02):
   - ACCEPTED (aesthetic): SHORTHAND ~8 tests (OXC limitation), LINE_WRAP ~21 tests
   - IMPORT_ORDER: ~36 tests (remaining have other category diffs too)
-  - SPREAD_PROPS: 11 tests (targeted for Phase 14 Plan 02)
+  - SPREAD_PROPS: RESOLVED (4 tests now exact matches, remaining spread diffs are OXC comment formatting)
   - ENTRY_FIELD: RESOLVED (all 4 tests now exact matches)
   - DEV_MODE: path diffs resolved, remaining diffs are JSX_FLAGS/HOIST
   - FILE_EXT: RESOLVED (preserve_filenames extension fix)
@@ -254,5 +259,5 @@ Phases 15-18 are optional depending on shipping needs.
 ## Session Continuity
 
 Last session: 2026-02-24
-Stopped at: Completed 14-03-PLAN.md (entry field, file extension, dev mode)
+Stopped at: Completed 14-02-PLAN.md (spread props fixes)
 Resume file: None
