@@ -339,6 +339,11 @@ pub enum CtxKind {
     /// Function context (e.g., $, component$, useTask$).
     #[serde(rename = "function")]
     Function,
+
+    /// JSX prop context: function expression in a $-suffixed JSX prop on a component element.
+    /// Serialized as "jSXProp" to match SWC's camelCase serialization of the JSX prefix.
+    #[serde(rename = "jSXProp")]
+    JSXProp,
 }
 
 /// A diagnostic message from the transformation process.

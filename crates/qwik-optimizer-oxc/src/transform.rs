@@ -1085,6 +1085,7 @@ impl QwikTransform {
         span: (u32, u32),
         ctx_name: &str,
         param_names: Vec<String>,
+        is_native_element: bool,
     ) -> SegmentData {
         let (display_name, full_display_name, segment_hash, segment_name) =
             self.register_context_name();
@@ -1092,8 +1093,14 @@ impl QwikTransform {
         let canonical_filename = self.build_canonical_filename(&display_name, &segment_hash);
         let import_path = self.build_segment_import_path(&canonical_filename);
 
-        // attribute name pattern. This includes onClick$, onInput$, custom$, etc.
-        let ctx_kind = crate::types::CtxKind::EventHandler;
+        // On native HTML elements, $-suffixed attributes are event handlers.
+        // On component elements, they are JSX prop functions (matching SWC's
+        // handle_jsx_props_obj which uses is_fn=true → JSXProp for components).
+        let ctx_kind = if is_native_element {
+            crate::types::CtxKind::EventHandler
+        } else {
+            crate::types::CtxKind::JSXProp
+        };
         // Parent uses segment_stack (segment name WITH hash), matching SWC
         let parent = self.segment_stack.last().cloned();
 
@@ -1293,7 +1300,7 @@ impl QwikTransform {
                                 };
 
                                 let seg =
-                                    self.record_jsx_event_segment(span, &ctx_name, param_names);
+                                    self.record_jsx_event_segment(span, &ctx_name, param_names, is_native_element);
                                 let seg_span_0 = seg.span.0;
                                 let capture_result = collector::compute_captures(
                                     &body_ident_refs,
