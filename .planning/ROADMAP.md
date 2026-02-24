@@ -326,7 +326,7 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 13 -> 14 -> 15 -> 16 -> 17 -> 
 | 11. Auto Export Rename | 1/1 | Complete | 2026-02-23 |
 | 12. Signal Wrapping Gaps | 6/6 | Complete | 2026-02-23 |
 | 13. Captures & DCE | 4/4 | Complete (72/162 exact) | 2026-02-24 |
-| 14. Cosmetic & Small Fixes | 0/4 | Not started | -- |
+| 14. Cosmetic & Small Fixes | 4/4 | Complete (86/162 exact) | 2026-02-24 |
 | 15. Signal Wrapping & JSX Flags | 0/? | Not started | -- |
 | 16. DCE & Captures | 0/? | Not started | -- |
 | 17. Hoist Strategy | 0/? | Not started | -- |
