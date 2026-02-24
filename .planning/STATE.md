@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 14 in progress. 77 exact matches (72 from Phase 13 + 5 from Plan 01 import ordering). Remaining plans: spread props, metadata, small fixes.
+**Current focus:** Phase 14 in progress. 81 exact matches (77 from Plan 01 + 4 new from Plan 03 entry/metadata fixes + 3 collateral). Remaining plans: spread props, ctx_kind/diagnostics.
 
 ## Current Position
 
 Phase: 14 of 18 (Final Parity)
-Plan: 1 of 4 in phase 14
+Plan: 3 of 4 in phase 14 (Plans 01, 03 complete; Plans 02, 04 remaining)
 Status: In progress
-Last activity: 2026-02-24 - Completed 14-01-PLAN.md
+Last activity: 2026-02-24 - Completed 14-03-PLAN.md
 
-Progress: [████████████████████████████████] 38/? plans
+Progress: [████████████████████████████████] 39/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 38
+- Total plans completed: 39
 - Average duration: 18min
-- Total execution time: 14.42 hours
+- Total execution time: 14.73 hours
 
 **By Phase:**
 
@@ -40,11 +40,11 @@ Progress: [███████████████████████
 | 11-auto-export-rename | 1/1 | 13min | 13min |
 | 12-signal-wrapping-gaps | 6/6 | 72min | 12min |
 | 13-captures-dce | 4/4 | 79min | 20min |
-| 14-final-parity | 1/4 | 45min | 45min |
+| 14-final-parity | 2/4 | 64min | 32min |
 
 **Recent Trend:**
-- Last 5 plans: 13-02 (15min), 13-03 (12min), 13-04 (7min), 14-01 (45min)
-- Trend: 14-01 was complex import ordering restructure involving 4 files and encounter-order analysis.
+- Last 5 plans: 13-03 (12min), 13-04 (7min), 14-01 (45min), 14-03 (19min)
+- Trend: 14-03 was straightforward metadata/config fixes with 3 deviations from incorrect plan assumptions.
 
 *Updated after each plan completion*
 
@@ -210,10 +210,14 @@ Recent decisions affecting current work:
 - [14-01]: Fragment transform_jsx_fragment_inner defers _jsxSorted recording to after transform_jsx_children -- lets child elements record at correct position
 - [14-01]: _getVarProps/_getConstProps recorded before _jsxSplit (SWC processes call arguments before the call itself)
 - [14-01]: synthetic_import_count tracks framework import count for lib.rs hoisted _hf* stmt injection positioning
+- [14-03]: SWC PerSegmentStrategy returns None (not entry_segments) -- corrected 3 incorrect golden snapshots
+- [14-03]: Smart strategy: event handlers without captures get None via scoped_idents.is_empty() check matching SWC
+- [14-03]: is_entry = entry.is_none() matching SWC parse.rs line 393 -- fixes Single/Smart strategy segment module classification
+- [14-03]: noop_dev_mode uses /hello/from/dev/ src_dir matching SWC dev_path override, other dev tests use /user/qwik/src/
 
 ### Pending Todos
 
-Phase 14 in progress. Plan 01 (import ordering) complete. Plans 02-04 remaining.
+Phase 14 in progress. Plans 01, 03 complete. Plans 02, 04 remaining.
 - Phase 14: Cosmetic & small fixes (import ordering, spread props, metadata) → ~28 new exact matches
 - Phase 15: Signal wrapping & JSX flags (~20 tests)
 - Phase 16: DCE & captures (~25 tests)
@@ -230,11 +234,14 @@ Phases 15-18 are optional depending on shipping needs.
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
 - All phase-level gaps RESOLVED through phases 1-13
-- Remaining 85 snapshot diffs (post-Phase 14 Plan 01):
+- Remaining 81 snapshot diffs (post-Phase 14 Plan 03):
   - ACCEPTED (aesthetic): SHORTHAND ~8 tests (OXC limitation), LINE_WRAP ~21 tests
-  - IMPORT_ORDER: ~39 tests (5 fixed by Plan 01, remaining have other category diffs too)
+  - IMPORT_ORDER: ~36 tests (remaining have other category diffs too)
   - SPREAD_PROPS: 11 tests (targeted for Phase 14 Plan 02)
-  - ENTRY_FIELD/DEV_MODE/FILE_EXT/CTX_KIND/DIAGNOSTIC: 13 tests (targeted for Phase 14)
+  - ENTRY_FIELD: RESOLVED (all 4 tests now exact matches)
+  - DEV_MODE: path diffs resolved, remaining diffs are JSX_FLAGS/HOIST
+  - FILE_EXT: RESOLVED (preserve_filenames extension fix)
+  - CTX_KIND/DIAGNOSTIC: 3 tests (targeted for Phase 14 Plan 04)
   - SIGNAL_WRAP: 11 tests (Phase 15)
   - JSX_FLAGS: 17 tests (Phase 15)
   - DCE: 19 tests (Phase 16)
@@ -247,5 +254,5 @@ Phases 15-18 are optional depending on shipping needs.
 ## Session Continuity
 
 Last session: 2026-02-24
-Stopped at: Completed 14-01-PLAN.md (import ordering)
+Stopped at: Completed 14-03-PLAN.md (entry field, file extension, dev mode)
 Resume file: None
