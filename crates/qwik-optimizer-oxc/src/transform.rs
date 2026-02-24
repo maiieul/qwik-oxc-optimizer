@@ -3291,6 +3291,48 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 .collect();
             needed_imports.extend(module_decl_imports);
 
+            // C03 diagnostics: detect when $() first argument is NOT a function
+            // expression but captures local identifiers. SWC emits C03 "Qrl($) scope
+            // is not a function, but it's capturing local identifiers: <names>"
+            // and clears captures instead of serializing them.
+            let first_arg_is_function = call
+                .arguments
+                .first()
+                .is_some_and(|arg| {
+                    matches!(
+                        arg,
+                        Argument::ArrowFunctionExpression(_)
+                            | Argument::FunctionExpression(_)
+                    )
+                });
+            let capture_result = if !first_arg_is_function
+                && !capture_result.capture_names.is_empty()
+                && !is_top_level_dollar_call
+            {
+                // Emit C03 diagnostic for each captured variable
+                let names_str = capture_result.capture_names.join(", ");
+                self.diagnostics.push(crate::types::Diagnostic {
+                    scope: "optimizer".to_string(),
+                    category: crate::types::DiagnosticCategory::Error,
+                    code: Some("C03".to_string()),
+                    file: self.filename.clone(),
+                    message: format!(
+                        "Qrl($) scope is not a function, but it's capturing local identifiers: {}",
+                        names_str
+                    ),
+                    highlights: None,
+                    suggestions: None,
+                });
+                // Clear captures -- non-function expressions don't get captures
+                collector::CaptureAnalysisResult {
+                    capture_names: vec![],
+                    reemitted_imports: capture_result.reemitted_imports,
+                    diagnostics: capture_result.diagnostics,
+                }
+            } else {
+                capture_result
+            };
+
             if let Some(seg) = self
                 .segments
                 .iter_mut()
