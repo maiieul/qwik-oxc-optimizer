@@ -252,26 +252,40 @@ fn render_snapshot_output(output: &SnapshotOutput) -> String {
     s
 }
 
-/// Collect segment hashes from a rendered snapshot and replace every occurrence
-/// with a fixed XXXXXXXXXXXX placeholder. This keeps snapshots comparable across
-/// hash algorithm changes and different segment ordering between optimizers.
-fn replace_hashes(snapshot: &str) -> String {
+/// Replace real hashes with XXXXXXXXXXXX in a SnapshotOutput before oxfmt runs,
+/// so formatting decisions are made with the same placeholder widths as the golden
+/// snapshots (which were formatted by format-snapshot-code-blocks.mjs after hash
+/// replacement).
+fn replace_hashes_in_output(output: &mut SnapshotOutput) {
     let hash_re = regex_lite::Regex::new(r#""hash":\s*"([A-Za-z0-9_-]+)""#).unwrap();
     let mut hashes: Vec<String> = Vec::new();
     let mut seen = std::collections::HashSet::new();
 
-    for cap in hash_re.captures_iter(snapshot) {
-        let hash = cap[1].to_string();
-        if seen.insert(hash.clone()) {
-            hashes.push(hash);
+    for module in &output.modules {
+        if let Some(ref json) = module.segment_json {
+            for cap in hash_re.captures_iter(json) {
+                let hash = cap[1].to_string();
+                if seen.insert(hash.clone()) {
+                    hashes.push(hash);
+                }
+            }
         }
     }
 
-    let mut result = snapshot.to_string();
-    for hash in &hashes {
-        result = result.replace(hash.as_str(), "XXXXXXXXXXXX");
+    if hashes.is_empty() {
+        return;
     }
-    result
+
+    for hash in &hashes {
+        for module in &mut output.modules {
+            module.code = module.code.replace(hash.as_str(), "XXXXXXXXXXXX");
+            module.path = module.path.replace(hash.as_str(), "XXXXXXXXXXXX");
+            if let Some(ref mut json) = module.segment_json {
+                *json = json.replace(hash.as_str(), "XXXXXXXXXXXX");
+            }
+        }
+        output.diagnostics_json = output.diagnostics_json.replace(hash.as_str(), "XXXXXXXXXXXX");
+    }
 }
 
 #[derive(Debug)]
@@ -547,11 +561,19 @@ fn snapshot_all_transforms() {
         });
     }
 
+    // Replace hashes BEFORE oxfmt so formatting decisions use the same
+    // XXXXXXXXXXXX placeholder widths as the golden (SWC) snapshots.
+    for case in &mut cases {
+        if let SnapshotCaseData::Output(ref mut output) = case.data {
+            replace_hashes_in_output(output);
+        }
+    }
+
     bulk_oxfmt_snapshot_cases(&mut cases);
 
     for case in cases {
         let output = match &case.data {
-            SnapshotCaseData::Output(output) => replace_hashes(&render_snapshot_output(output)),
+            SnapshotCaseData::Output(output) => render_snapshot_output(output),
             SnapshotCaseData::Error(error) => error.clone(),
         };
         insta::with_settings!({prepend_module_to_snapshot => false}, {
