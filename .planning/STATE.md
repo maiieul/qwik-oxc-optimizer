@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 13 captures & DCE. Plans 01-03 complete (props reclassification, const literal inlining, scope-aware capture filtering, C03 diagnostics, segment body DCE).
+**Current focus:** Phase 13 complete. 67 exact matches (up from 63 pre-Phase 13). Phase 14 planning next.
 
 ## Current Position
 
 Phase: 13 of 14 (Captures & DCE)
-Plan: 3 of 4 in phase 13
-Status: In progress
-Last activity: 2026-02-24 - Completed 13-03-PLAN.md
+Plan: 4 of 4 in phase 13
+Status: Phase complete
+Last activity: 2026-02-24 - Completed 13-04-PLAN.md
 
-Progress: [██████████████████████████████] 36/? plans
+Progress: [███████████████████████████████] 37/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 36
-- Average duration: 19min
-- Total execution time: 13.55 hours
+- Total plans completed: 37
+- Average duration: 18min
+- Total execution time: 13.67 hours
 
 **By Phase:**
 
@@ -39,11 +39,11 @@ Progress: [███████████████████████
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
 | 12-signal-wrapping-gaps | 6/6 | 72min | 12min |
-| 13-captures-dce | 3/4 | 72min | 24min |
+| 13-captures-dce | 4/4 | 79min | 20min |
 
 **Recent Trend:**
-- Last 5 plans: 12-06 (21min), 13-01 (45min), 13-02 (15min), 13-03 (12min)
-- Trend: Phase 13 plans getting faster. DCE pipeline implemented efficiently via parse-transform-reserialize pattern.
+- Last 5 plans: 13-01 (45min), 13-02 (15min), 13-03 (12min), 13-04 (7min)
+- Trend: Phase 13 plans getting faster. Final plan was pure verification.
 
 *Updated after each plan completion*
 
@@ -201,10 +201,13 @@ Recent decisions affecting current work:
 - [13-03]: Conservative destructuring DCE: keep destructuring patterns when init is not a simple identifier (safer than SWC which removes them)
 - [13-03]: example_props_optimization constant-folding sub-issue documented as pre-existing signal wrapping difference, not DCE
 - [13-03]: JSX reference collection uses as_expression() for JSXExpression (OXC inherit_variants macro flattens Expression into JSXExpression)
+- [13-04]: isBrowser/isServer DCE already working in inline strategy via const_replace VisitMut recursion -- no code changes needed
+- [13-04]: Const literal propagation deferred to Phase 14 (minor 2-5 line diffs per test)
+- [13-04]: Destructured const chain folding deferred to Phase 14 (complex SWC MinifyMode::Simplify feature)
 
 ### Pending Todos
 
-Phase 13 plan 04 remaining (final captures/DCE work, remaining diffs).
+Phase 13 complete. Phase 14 planning needed for remaining 95 diffs.
 
 ### Blockers/Concerns
 
@@ -214,14 +217,20 @@ Phase 13 plan 04 remaining (final captures/DCE work, remaining diffs).
 - BUG-04 (segment ordering) RESOLVED -- span-based sort before output iteration
 - BUG-05 (test fixture) RESOLVED -- real 1074-line qwik-router bundle
 - BUG-06 (source comments) RESOLVED -- temporary Program + build() for comment-preserving segment body codegen
-- All phase-level gaps RESOLVED through phases 1-10
-- Remaining snapshot diffs (post-Phase 11):
-  - ACCEPTED (aesthetic): OXC codegen shorthand auto-detection (~60+ tests), line wrapping (~15 tests)
-  - Phase 12: _fnSignal wrapping gaps (~10 tests), DCE (~5 tests), ctxKind/entry field/misc (~10 tests)
-  - Pre-transformed inlinedQrl tests (3 tests) -- OXC doesn't extract segments from pre-transformed code
+- All phase-level gaps RESOLVED through phases 1-13
+- Remaining 95 snapshot diffs (post-Phase 13):
+  - ACCEPTED (aesthetic): OXC codegen shorthand (~60+ tests), line wrapping (~15 tests)
+  - Import ordering (~15 tests)
+  - Signal wrapping gaps (~10 tests)
+  - JSX flags (~7 tests)
+  - Spread props (~7 tests)
+  - Capture/scope edge cases (~8 tests)
+  - Entry field/dev mode/misc (~10 tests)
+  - Pre-transformed inlinedQrl tests (3 tests)
+  - Const-fold (2 tests -- SWC MinifyMode::Simplify)
 
 ## Session Continuity
 
 Last session: 2026-02-24
-Stopped at: Completed 13-03-PLAN.md
+Stopped at: Completed 13-04-PLAN.md (Phase 13 complete)
 Resume file: None
