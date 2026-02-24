@@ -1949,6 +1949,41 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
         }
 
         let Some(kind) = kind else {
+            // C05: Check for $-suffixed exported functions without Qrl counterpart.
+            // SWC's marker_functions includes both core imports AND local exports ending with $.
+            // When a $-call is NOT a core import but IS a local export, SWC checks for the
+            // corresponding Qrl export. If not found, it emits C05 "MissingQrlImplementation".
+            if let Expression::Identifier(ident) = &call.callee {
+                let name = ident.name.as_str();
+                if name.ends_with('$') && !name.starts_with('_') {
+                    // Check if this function is exported from the same file
+                    let is_exported = self.collected.exported_local_names.contains(name)
+                        || self.collected.module_exports.iter().any(|e| e.name == name);
+                    if is_exported {
+                        let qrl_name = crate::words::dollar_to_qrl_name(name);
+                        let has_qrl_export = self.collected.exported_local_names.contains(&qrl_name)
+                            || self.collected.module_exports.iter().any(|e| e.name == qrl_name);
+                        if !has_qrl_export {
+                            self.diagnostics.push(crate::types::Diagnostic {
+                                scope: "optimizer".to_string(),
+                                category: crate::types::DiagnosticCategory::Error,
+                                code: Some("C05".to_string()),
+                                file: self.filename.clone(),
+                                message: format!(
+                                    "Found '{}' but did not find the corresponding '{}' exported in the same file. Please check that it is exported and spelled correctly",
+                                    name, qrl_name
+                                ),
+                                highlights: Some(vec![compute_highlight_from_span(
+                                    &self.source_code,
+                                    ident.span.start,
+                                    ident.span.end,
+                                )]),
+                                suggestions: None,
+                            });
+                        }
+                    }
+                }
+            }
             return;
         };
 
@@ -3404,8 +3439,18 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                 && !capture_result.capture_names.is_empty()
                 && !is_top_level_dollar_call
             {
-                // Emit C03 diagnostic for each captured variable
+                // Emit C03 diagnostic for each captured variable.
+                // The highlight span is the first argument (the non-function expression).
                 let names_str = capture_result.capture_names.join(", ");
+                let highlights = call.arguments.first().map(|arg| {
+                    use oxc::span::GetSpan;
+                    let arg_span = arg.span();
+                    vec![compute_highlight_from_span(
+                        &self.source_code,
+                        arg_span.start,
+                        arg_span.end,
+                    )]
+                });
                 self.diagnostics.push(crate::types::Diagnostic {
                     scope: "optimizer".to_string(),
                     category: crate::types::DiagnosticCategory::Error,
@@ -3415,7 +3460,7 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                         "Qrl($) scope is not a function, but it's capturing local identifiers: {}",
                         names_str
                     ),
-                    highlights: None,
+                    highlights,
                     suggestions: None,
                 });
                 // Clear captures -- non-function expressions don't get captures
@@ -7328,4 +7373,43 @@ fn get_literal_string(expr: &Expression<'_>) -> Option<String> {
         }
         _ => None,
     }
+}
+
+/// Compute a diagnostic highlight SourceLocation from OXC 0-based byte offsets.
+///
+/// Converts OXC 0-based spans to SWC-compatible SourceLocation format:
+/// - lo/hi: 1-based byte offsets (OXC offset + 1)
+/// - startLine/endLine: 1-based line numbers
+/// - startCol: 1-based column (0-based col + 1)
+/// - endCol: 0-based column at the exclusive end position (SWC's exclusive hi
+///   cancels with the 1-based adjustment, per SWC's SourceLocation::from)
+fn compute_highlight_from_span(source: &str, lo: u32, hi: u32) -> crate::types::SourceLocation {
+    let (start_line, start_col_0) = byte_offset_to_line_col(source, lo as usize);
+    let (end_line, end_col_0) = byte_offset_to_line_col(source, hi as usize);
+    crate::types::SourceLocation {
+        lo: lo + 1,
+        hi: hi + 1,
+        start_line,
+        start_col: start_col_0 + 1,
+        end_line,
+        end_col: end_col_0,
+    }
+}
+
+/// Convert a 0-based byte offset in source to (1-based line, 0-based column).
+fn byte_offset_to_line_col(source: &str, offset: usize) -> (u32, u32) {
+    let mut line = 1u32;
+    let mut col = 0u32;
+    for (i, ch) in source.char_indices() {
+        if i >= offset {
+            break;
+        }
+        if ch == '\n' {
+            line += 1;
+            col = 0;
+        } else {
+            col += 1;
+        }
+    }
+    (line, col)
 }
