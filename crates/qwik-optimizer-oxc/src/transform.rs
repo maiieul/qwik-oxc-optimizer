@@ -282,6 +282,12 @@ pub(crate) struct QwikTransform {
     /// lambdas inside loops. Consumed during replace_jsx_element_handlers for
     /// q:p/q:ps attribute injection at the correct element level.
     iter_var_usage_by_handler: HashMap<u32, Vec<String>>,
+
+    /// Map from component$ call span.start to the set of function/class declaration
+    /// names that should be forcibly removed from the component's segment body code.
+    /// These are the names from the component's `invalid_decl_stack` frame (C02 names).
+    /// SWC removes these declarations from the component body during its transform.
+    component_invalid_decls: HashMap<u32, HashSet<String>>,
 }
 
 /// Info needed to build a qrl()/inlinedQrl() call for a JSX event handler.
@@ -460,6 +466,7 @@ impl QwikTransform {
             jsx_key_prefix,
             pending_loop_qrl_hoists: Vec::new(),
             iter_var_usage_by_handler: HashMap::new(),
+            component_invalid_decls: HashMap::new(),
         }
     }
 
@@ -477,6 +484,11 @@ impl QwikTransform {
     /// Each entry is (span_start, body_code_string).
     pub fn take_segment_body_codes(&mut self) -> Vec<(u32, String)> {
         std::mem::take(&mut self.segment_body_codes)
+    }
+
+    /// Get the map of component span_start -> invalid decl names to force-remove.
+    pub fn component_invalid_decls(&self) -> &HashMap<u32, HashSet<String>> {
+        &self.component_invalid_decls
     }
 
     /// Get the hoisted function declarations for _fnSignal.
@@ -3161,6 +3173,18 @@ impl<'a> Traverse<'a, ()> for QwikTransform {
                                 );
                             }
                         }
+                    }
+                }
+            }
+
+            // For component$ exits, capture the invalid_decl names (function/class declarations)
+            // from this scope BEFORE popping. These will be used by segment body DCE to
+            // force-remove these declarations from the component's body code (matching SWC).
+            if is_component_exit {
+                if let Some(frame) = self.invalid_decl_stack.last() {
+                    if !frame.is_empty() {
+                        self.component_invalid_decls
+                            .insert(call.span.start, frame.clone());
                     }
                 }
             }
@@ -6129,6 +6153,1052 @@ fn rewrite_expr_body_destr<'a>(
             }
         }
         _ => {}
+    }
+}
+
+// =============================================================================
+// Segment body DCE (Dead Code Elimination)
+// =============================================================================
+
+/// Apply dead code elimination to a segment body code string.
+///
+/// This implements SWC's MinifyMode::Simplify behavior for segment bodies:
+/// - Strip unused const/let/var declarations (convert to expression statements if init has side effects)
+/// - Remove unused function/class declarations
+/// - Eliminate if(false) branches
+/// - Fold simple constant arithmetic expressions (e.g., `1 + 2` -> `3`)
+/// - Optionally force-remove named function/class declarations (for invalid_decl_stack C02 names)
+///
+/// The function parses the body code by wrapping it as `var __body__ = <body_code>`,
+/// transforms the AST, and re-serializes.
+pub(crate) fn apply_segment_body_dce(
+    body_code: &str,
+    force_remove_names: Option<&HashSet<String>>,
+) -> String {
+    // Quick check: skip if body code is trivial (no declarations or if statements)
+    let needs_dce = body_code.contains("const ")
+        || body_code.contains("let ")
+        || body_code.contains("var ")
+        || body_code.contains("function ")
+        || body_code.contains("class ")
+        || body_code.contains("if ")
+        || body_code.contains("if(")
+        || body_code.contains("try ")
+        || body_code.contains("try{")
+        || force_remove_names.map_or(false, |s| !s.is_empty());
+    if !needs_dce {
+        return body_code.to_string();
+    }
+
+    let alloc = oxc::allocator::Allocator::default();
+    let parse_source = format!("var __body__ = {}", body_code);
+    let source_ref = alloc.alloc_str(&parse_source);
+
+    let parser = oxc::parser::Parser::new(&alloc, source_ref, oxc::span::SourceType::tsx());
+    let mut parse_result = parser.parse();
+
+    if !parse_result.errors.is_empty() || parse_result.program.body.is_empty() {
+        return body_code.to_string();
+    }
+
+    // Extract the arrow/function expression from `var __body__ = <expr>`
+    let Some(Statement::VariableDeclaration(var_decl)) = parse_result.program.body.first_mut() else {
+        return body_code.to_string();
+    };
+    let Some(ref mut declarator) = var_decl.declarations.first_mut() else {
+        return body_code.to_string();
+    };
+    let Some(ref mut init_expr) = declarator.init else {
+        return body_code.to_string();
+    };
+
+    // Get the body statements from the arrow/function expression
+    let body_stmts = match init_expr {
+        Expression::ArrowFunctionExpression(arrow) => &mut arrow.body.statements,
+        Expression::FunctionExpression(func) => {
+            if let Some(ref mut body) = func.body {
+                &mut body.statements
+            } else {
+                return body_code.to_string();
+            }
+        }
+        _ => return body_code.to_string(),
+    };
+
+    let changed = apply_dce_to_statements(body_stmts, force_remove_names, &alloc);
+
+    if !changed {
+        return body_code.to_string();
+    }
+
+    // Re-serialize the modified expression
+    let codegen_result = oxc::codegen::Codegen::new().build(&parse_result.program);
+    let full_code = codegen_result.code;
+
+    // Extract the expression part from "var __body__ = <expr>;\n"
+    let prefix = "var __body__ = ";
+    if let Some(rest) = full_code.strip_prefix(prefix) {
+        // Strip trailing ";\n"
+        let trimmed = rest.trim_end();
+        let result = if let Some(stripped) = trimmed.strip_suffix(';') {
+            stripped
+        } else {
+            trimmed
+        };
+        result.to_string()
+    } else {
+        body_code.to_string()
+    }
+}
+
+/// Apply DCE to a list of statements. Returns true if any changes were made.
+/// This is recursive -- it descends into nested function/arrow bodies to find
+/// if(false) branches and unused declarations in nested scopes.
+fn apply_dce_to_statements<'a>(
+    stmts: &mut oxc::allocator::Vec<'a, Statement<'a>>,
+    force_remove_names: Option<&HashSet<String>>,
+    alloc: &'a oxc::allocator::Allocator,
+) -> bool {
+    let mut changed = false;
+
+    // Pass 1: Recursively process nested function/arrow bodies for if(false) elimination
+    for stmt in stmts.iter_mut() {
+        changed |= apply_dce_recursive_into_stmt(stmt, alloc);
+    }
+
+    // Pass 2: Collect all referenced identifiers in this scope
+    let referenced = collect_all_references_in_stmts(stmts);
+
+    // Pass 3: Determine which statements to remove/transform
+    // We collect actions, then apply them in reverse order to preserve indices
+    let mut actions: Vec<(usize, DceAction)> = Vec::new();
+
+    for (i, stmt) in stmts.iter().enumerate() {
+        match stmt {
+            // const x = expr; / let x = expr;
+            Statement::VariableDeclaration(decl) => {
+                if let Some(action) = check_unused_var_decl(decl, &referenced, force_remove_names) {
+                    actions.push((i, action));
+                }
+            }
+            // function f() {}
+            Statement::FunctionDeclaration(func) => {
+                if let Some(ref id) = func.id {
+                    let name = id.name.as_str();
+                    let force_remove = force_remove_names.map_or(false, |s| s.contains(name));
+                    if force_remove || !referenced.contains(name) {
+                        actions.push((i, DceAction::Remove));
+                        continue;
+                    }
+                }
+            }
+            // class C {}
+            Statement::ClassDeclaration(class) => {
+                if let Some(ref id) = class.id {
+                    let name = id.name.as_str();
+                    let force_remove = force_remove_names.map_or(false, |s| s.contains(name));
+                    if force_remove || !referenced.contains(name) {
+                        // Check if class has side-effectful computed properties
+                        if force_remove || !class_has_side_effects(class) {
+                            actions.push((i, DceAction::Remove));
+                            continue;
+                        }
+                    }
+                }
+            }
+            // if (false) { ... }
+            Statement::IfStatement(if_stmt) => {
+                if let Some(test_val) = eval_bool_literal(&if_stmt.test) {
+                    if !test_val {
+                        // if(false) -- remove entirely or replace with else branch
+                        if if_stmt.alternate.is_some() {
+                            actions.push((i, DceAction::ReplaceWithAlternate));
+                        } else {
+                            actions.push((i, DceAction::Remove));
+                        }
+                    } else {
+                        // if(true) -- replace with consequent
+                        actions.push((i, DceAction::ReplaceWithConsequent));
+                    }
+                }
+            }
+            // try {} catch (e) {} -- remove if both try and catch are empty/trivial
+            Statement::TryStatement(try_stmt) => {
+                if try_block_is_empty(try_stmt) {
+                    actions.push((i, DceAction::Remove));
+                }
+            }
+            _ => {}
+        }
+    }
+
+    if actions.is_empty() {
+        return changed;
+    }
+
+    // Apply actions - rebuild the statement list
+    let mut action_map: HashMap<usize, DceAction> = actions.into_iter().collect();
+    let all_stmts: Vec<Statement<'_>> = stmts.drain(..).collect();
+    let mut result: Vec<Statement<'_>> = Vec::new();
+
+    for (i, stmt) in all_stmts.into_iter().enumerate() {
+        if let Some(action) = action_map.remove(&i) {
+            match action {
+                DceAction::Remove => {
+                    // Drop the statement
+                }
+                DceAction::ConvertToExprStmt => {
+                    // Convert `const x = expr;` to `expr;`
+                    if let Statement::VariableDeclaration(mut decl) = stmt {
+                        if let Some(mut declarator) = decl.declarations.pop() {
+                            if let Some(init) = declarator.init.take() {
+                                result.push(Statement::ExpressionStatement(
+                                    oxc::allocator::Box::new_in(
+                                        ExpressionStatement {
+                                            span: SPAN,
+                                            expression: init,
+                                        },
+                                        alloc,
+                                    ),
+                                ));
+                            }
+                        }
+                    }
+                }
+                DceAction::ReplaceWithAlternate => {
+                    if let Statement::IfStatement(mut if_stmt) = stmt {
+                        if let Some(alternate) = if_stmt.alternate.take() {
+                            if let Statement::BlockStatement(block) = alternate {
+                                for s in block.unbox().body.into_iter() {
+                                    result.push(s);
+                                }
+                            } else {
+                                result.push(alternate);
+                            }
+                        }
+                    }
+                }
+                DceAction::ReplaceWithConsequent => {
+                    if let Statement::IfStatement(if_stmt) = stmt {
+                        let consequent = if_stmt.unbox().consequent;
+                        if let Statement::BlockStatement(block) = consequent {
+                            for s in block.unbox().body.into_iter() {
+                                result.push(s);
+                            }
+                        } else {
+                            result.push(consequent);
+                        }
+                    }
+                }
+                DceAction::StripUnusedDeclarators(keep_indices) => {
+                    // Keep only the declarators at the specified indices
+                    if let Statement::VariableDeclaration(mut decl) = stmt {
+                        let all_declarators: Vec<_> = decl.declarations.drain(..).collect();
+                        for (idx, d) in all_declarators.into_iter().enumerate() {
+                            if keep_indices.contains(&idx) {
+                                decl.declarations.push(d);
+                            }
+                        }
+                        if !decl.declarations.is_empty() {
+                            result.push(Statement::VariableDeclaration(decl));
+                        }
+                    }
+                }
+            }
+        } else {
+            result.push(stmt);
+        }
+    }
+
+    for stmt in result {
+        stmts.push(stmt);
+    }
+
+    true
+}
+
+/// DCE action to apply to a statement.
+enum DceAction {
+    /// Remove the statement entirely.
+    Remove,
+    /// Convert `const x = expr;` to `expr;` (keep init as expression statement).
+    ConvertToExprStmt,
+    /// Replace if(false){...}else{alt} with alt block contents.
+    ReplaceWithAlternate,
+    /// Replace if(true){consequent} with consequent block contents.
+    ReplaceWithConsequent,
+    /// Keep only specific declarators in a multi-declarator var/let/const.
+    StripUnusedDeclarators(Vec<usize>),
+}
+
+/// Check if a variable declaration has unused bindings and determine the DCE action.
+fn check_unused_var_decl(
+    decl: &VariableDeclaration<'_>,
+    referenced: &HashSet<String>,
+    force_remove_names: Option<&HashSet<String>>,
+) -> Option<DceAction> {
+    let declarators = &decl.declarations;
+
+    if declarators.len() == 1 {
+        let d = &declarators[0];
+        let names = collect_binding_names(&d.id);
+        if names.is_empty() {
+            return None;
+        }
+
+        let any_referenced = names.iter().any(|n| referenced.contains(n.as_str()));
+        let force_remove = force_remove_names
+            .map_or(false, |s| names.iter().any(|n| s.contains(n.as_str())));
+
+        if !force_remove && any_referenced {
+            return None; // Binding is used, keep it
+        }
+
+        // Check if this is a destructuring pattern (object/array).
+        // Destructuring access itself is a side effect (property access/iterator protocol).
+        // SWC keeps destructured patterns when the init could have side effects:
+        //   - `const { a, b } = this;` -- kept (destructuring `this` = property access)
+        //   - `let [x, ...y] = stuff;` -- kept (iterator protocol on `stuff`)
+        // Only simple identifier bindings get converted to expression statements.
+        let is_destructuring = matches!(
+            d.id,
+            BindingPattern::ObjectPattern(_) | BindingPattern::ArrayPattern(_)
+        );
+
+        // Binding is unused -- check if init has side effects
+        match &d.init {
+            None => Some(DceAction::Remove), // `let x;` -- safe to remove
+            Some(init) => {
+                if init_is_side_effect_free(init) {
+                    Some(DceAction::Remove)
+                } else if is_destructuring {
+                    // Destructuring patterns with side-effectful init: keep as-is.
+                    // The destructuring access (property access, iterator) is itself
+                    // a side effect that SWC preserves.
+                    None
+                } else {
+                    // Simple binding with side-effectful init: convert to expression
+                    Some(DceAction::ConvertToExprStmt)
+                }
+            }
+        }
+    } else {
+        // Multi-declarator: `let x = 1, y;`
+        // Check each declarator individually
+        let mut keep_indices = Vec::new();
+        let mut any_removed = false;
+
+        for (idx, d) in declarators.iter().enumerate() {
+            let names = collect_binding_names(&d.id);
+            let any_referenced = names.iter().any(|n| referenced.contains(n.as_str()));
+            let force_remove = force_remove_names
+                .map_or(false, |s| names.iter().any(|n| s.contains(n.as_str())));
+
+            if force_remove || !any_referenced {
+                // Check if init has side effects -- if so, we need to keep it somehow
+                // For simplicity, if any declarator in a multi-decl has side effects, keep it
+                match &d.init {
+                    None => {
+                        any_removed = true;
+                    }
+                    Some(init) => {
+                        if init_is_side_effect_free(init) {
+                            any_removed = true;
+                        } else {
+                            keep_indices.push(idx); // Has side effects, keep
+                        }
+                    }
+                }
+            } else {
+                keep_indices.push(idx);
+            }
+        }
+
+        if any_removed {
+            if keep_indices.is_empty() {
+                Some(DceAction::Remove)
+            } else {
+                Some(DceAction::StripUnusedDeclarators(keep_indices))
+            }
+        } else {
+            None
+        }
+    }
+}
+
+/// Collect binding names from a BindingPatternKind.
+fn collect_binding_names(kind: &BindingPattern<'_>) -> Vec<String> {
+    let mut names = Vec::new();
+    collect_binding_names_inner(kind, &mut names);
+    names
+}
+
+fn collect_binding_names_inner(kind: &BindingPattern<'_>, names: &mut Vec<String>) {
+    match kind {
+        BindingPattern::BindingIdentifier(id) => {
+            names.push(id.name.to_string());
+        }
+        BindingPattern::ObjectPattern(obj) => {
+            for prop in &obj.properties {
+                collect_binding_names_inner(&prop.value, names);
+            }
+            if let Some(ref rest) = obj.rest {
+                collect_binding_names_inner(&rest.argument, names);
+            }
+        }
+        BindingPattern::ArrayPattern(arr) => {
+            for elem in arr.elements.iter().flatten() {
+                collect_binding_names_inner(elem, names);
+            }
+            if let Some(ref rest) = arr.rest {
+                collect_binding_names_inner(&rest.argument, names);
+            }
+        }
+        BindingPattern::AssignmentPattern(assign) => {
+            collect_binding_names_inner(&assign.left, names);
+        }
+    }
+}
+
+/// Check if an expression initializer is side-effect-free.
+/// Conservative: only returns true for literals, identifiers, and simple expressions
+/// that definitely cannot have side effects.
+fn init_is_side_effect_free(expr: &Expression<'_>) -> bool {
+    match expr {
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_) => true,
+        Expression::Identifier(_) => false, // Could be a getter
+        Expression::UnaryExpression(unary) => init_is_side_effect_free(&unary.argument),
+        // Member access can have side effects (getters)
+        Expression::StaticMemberExpression(_) | Expression::ComputedMemberExpression(_) => false,
+        // Binary expressions: the operands could be getters
+        Expression::BinaryExpression(bin) => {
+            init_is_side_effect_free(&bin.left) && init_is_side_effect_free(&bin.right)
+        }
+        // Call expressions always have side effects
+        Expression::CallExpression(_) => false,
+        // Object/array literals can have computed keys or spread elements
+        Expression::ObjectExpression(_) | Expression::ArrayExpression(_) => false,
+        // Template literals can have expressions with side effects
+        Expression::TemplateLiteral(_) => false,
+        // Arrow/function expressions are safe (they don't execute)
+        Expression::ArrowFunctionExpression(_) | Expression::FunctionExpression(_) => true,
+        // `this` is side-effect-free
+        Expression::ThisExpression(_) => false, // Could be undefined in strict mode, but SWC keeps it
+        _ => false, // Conservative default
+    }
+}
+
+/// Check if a class declaration has side-effectful features.
+/// Classes with computed property names, decorators, or property initializers
+/// that reference external values are considered side-effectful.
+fn class_has_side_effects(class: &Class<'_>) -> bool {
+    for element in &class.body.body {
+        match element {
+            ClassElement::PropertyDefinition(prop) => {
+                // Instance property with initializer = side effect (runs at instantiation)
+                // But computed key = side effect at class definition time
+                if prop.computed {
+                    return true;
+                }
+                if prop.value.is_some() {
+                    return true;
+                }
+            }
+            ClassElement::StaticBlock(_) => return true,
+            _ => {}
+        }
+    }
+    false
+}
+
+/// Evaluate an if-statement test to a boolean literal value.
+/// Returns Some(true/false) for BooleanLiteral or !true/!false.
+fn eval_bool_literal(expr: &Expression<'_>) -> Option<bool> {
+    match expr {
+        Expression::BooleanLiteral(lit) => Some(lit.value),
+        Expression::UnaryExpression(unary) if unary.operator == oxc::ast::ast::UnaryOperator::LogicalNot => {
+            eval_bool_literal(&unary.argument).map(|v| !v)
+        }
+        Expression::NumericLiteral(lit) => {
+            // `if (0)` is false, `if (1)` is true
+            Some(lit.value != 0.0)
+        }
+        _ => None,
+    }
+}
+
+/// Check if a try statement is empty (both try block and catch handler are empty/trivial).
+fn try_block_is_empty(try_stmt: &TryStatement<'_>) -> bool {
+    // Try block must be empty
+    if !try_stmt.block.body.is_empty() {
+        return false;
+    }
+    // If there's a catch handler, its body must be empty
+    if let Some(ref handler) = try_stmt.handler {
+        if !handler.body.body.is_empty() {
+            return false;
+        }
+    }
+    // If there's a finally block, it must be empty
+    if let Some(ref finalizer) = try_stmt.finalizer {
+        if !finalizer.body.is_empty() {
+            return false;
+        }
+    }
+    true
+}
+
+/// Recursively descend into nested function/arrow bodies within a statement
+/// to apply if(false) elimination and other DCE.
+fn apply_dce_recursive_into_stmt<'a>(
+    stmt: &mut Statement<'a>,
+    alloc: &'a oxc::allocator::Allocator,
+) -> bool {
+    match stmt {
+        Statement::ExpressionStatement(expr_stmt) => {
+            apply_dce_recursive_into_expr(&mut expr_stmt.expression, alloc)
+        }
+        Statement::ReturnStatement(ret) => {
+            if let Some(ref mut expr) = ret.argument {
+                apply_dce_recursive_into_expr(expr, alloc)
+            } else {
+                false
+            }
+        }
+        Statement::VariableDeclaration(decl) => {
+            let mut changed = false;
+            for d in decl.declarations.iter_mut() {
+                if let Some(ref mut init) = d.init {
+                    changed |= apply_dce_recursive_into_expr(init, alloc);
+                }
+            }
+            changed
+        }
+        _ => false,
+    }
+}
+
+/// Recursively descend into expressions to find nested arrow/function bodies
+/// and apply DCE (especially if(false) elimination).
+fn apply_dce_recursive_into_expr<'a>(
+    expr: &mut Expression<'a>,
+    alloc: &'a oxc::allocator::Allocator,
+) -> bool {
+    match expr {
+        Expression::ArrowFunctionExpression(arrow) => {
+            apply_dce_to_statements(&mut arrow.body.statements, None, alloc)
+        }
+        Expression::FunctionExpression(func) => {
+            if let Some(ref mut body) = func.body {
+                apply_dce_to_statements(&mut body.statements, None, alloc)
+            } else {
+                false
+            }
+        }
+        Expression::CallExpression(call) => {
+            let mut changed = false;
+            for arg in call.arguments.iter_mut() {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        changed |= apply_dce_recursive_into_expr(&mut spread.argument, alloc);
+                    }
+                    _ => {
+                        changed |= apply_dce_recursive_into_expr(arg.to_expression_mut(), alloc);
+                    }
+                }
+            }
+            changed
+        }
+        Expression::SequenceExpression(seq) => {
+            let mut changed = false;
+            for e in seq.expressions.iter_mut() {
+                changed |= apply_dce_recursive_into_expr(e, alloc);
+            }
+            changed
+        }
+        Expression::ConditionalExpression(cond) => {
+            let mut changed = false;
+            changed |= apply_dce_recursive_into_expr(&mut cond.consequent, alloc);
+            changed |= apply_dce_recursive_into_expr(&mut cond.alternate, alloc);
+            changed
+        }
+        _ => false,
+    }
+}
+
+/// Collect all referenced identifier names in a list of statements.
+/// This scans all IdentifierReference nodes (not binding sites).
+fn collect_all_references_in_stmts(stmts: &oxc::allocator::Vec<'_, Statement<'_>>) -> HashSet<String> {
+    let mut refs = HashSet::new();
+    for stmt in stmts.iter() {
+        collect_refs_in_stmt(stmt, &mut refs);
+    }
+    refs
+}
+
+fn collect_refs_in_stmt(stmt: &Statement<'_>, refs: &mut HashSet<String>) {
+    match stmt {
+        Statement::ExpressionStatement(expr_stmt) => {
+            collect_refs_in_expr(&expr_stmt.expression, refs);
+        }
+        Statement::VariableDeclaration(decl) => {
+            for d in &decl.declarations {
+                if let Some(ref init) = d.init {
+                    collect_refs_in_expr(init, refs);
+                }
+                // Also collect refs from destructuring patterns' defaults
+                collect_refs_in_binding_pattern(&d.id, refs);
+            }
+        }
+        Statement::ReturnStatement(ret) => {
+            if let Some(ref expr) = ret.argument {
+                collect_refs_in_expr(expr, refs);
+            }
+        }
+        Statement::IfStatement(if_stmt) => {
+            collect_refs_in_expr(&if_stmt.test, refs);
+            collect_refs_in_stmt(&if_stmt.consequent, refs);
+            if let Some(ref alt) = if_stmt.alternate {
+                collect_refs_in_stmt(alt, refs);
+            }
+        }
+        Statement::BlockStatement(block) => {
+            for s in &block.body {
+                collect_refs_in_stmt(s, refs);
+            }
+        }
+        Statement::ForStatement(for_stmt) => {
+            if let Some(ref init) = for_stmt.init {
+                match init {
+                    ForStatementInit::VariableDeclaration(decl) => {
+                        for d in &decl.declarations {
+                            if let Some(ref init_expr) = d.init {
+                                collect_refs_in_expr(init_expr, refs);
+                            }
+                        }
+                    }
+                    _ => {
+                        collect_refs_in_expr(init.to_expression(), refs);
+                    }
+                }
+            }
+            if let Some(ref test) = for_stmt.test {
+                collect_refs_in_expr(test, refs);
+            }
+            if let Some(ref update) = for_stmt.update {
+                collect_refs_in_expr(update, refs);
+            }
+            collect_refs_in_stmt(&for_stmt.body, refs);
+        }
+        Statement::ForInStatement(for_in) => {
+            collect_refs_in_expr(&for_in.right, refs);
+            collect_refs_in_stmt(&for_in.body, refs);
+        }
+        Statement::ForOfStatement(for_of) => {
+            collect_refs_in_expr(&for_of.right, refs);
+            collect_refs_in_stmt(&for_of.body, refs);
+        }
+        Statement::WhileStatement(while_stmt) => {
+            collect_refs_in_expr(&while_stmt.test, refs);
+            collect_refs_in_stmt(&while_stmt.body, refs);
+        }
+        Statement::DoWhileStatement(do_while) => {
+            collect_refs_in_stmt(&do_while.body, refs);
+            collect_refs_in_expr(&do_while.test, refs);
+        }
+        Statement::FunctionDeclaration(func) => {
+            // Collect refs from function body
+            if let Some(ref body) = func.body {
+                for s in &body.statements {
+                    collect_refs_in_stmt(s, refs);
+                }
+            }
+        }
+        Statement::ClassDeclaration(class) => {
+            collect_refs_in_class(class, refs);
+        }
+        Statement::TryStatement(try_stmt) => {
+            for s in &try_stmt.block.body {
+                collect_refs_in_stmt(s, refs);
+            }
+            if let Some(ref handler) = try_stmt.handler {
+                for s in &handler.body.body {
+                    collect_refs_in_stmt(s, refs);
+                }
+            }
+            if let Some(ref finalizer) = try_stmt.finalizer {
+                for s in &finalizer.body {
+                    collect_refs_in_stmt(s, refs);
+                }
+            }
+        }
+        Statement::ThrowStatement(throw_stmt) => {
+            collect_refs_in_expr(&throw_stmt.argument, refs);
+        }
+        Statement::SwitchStatement(switch_stmt) => {
+            collect_refs_in_expr(&switch_stmt.discriminant, refs);
+            for case in &switch_stmt.cases {
+                if let Some(ref test) = case.test {
+                    collect_refs_in_expr(test, refs);
+                }
+                for s in &case.consequent {
+                    collect_refs_in_stmt(s, refs);
+                }
+            }
+        }
+        Statement::LabeledStatement(labeled) => {
+            collect_refs_in_stmt(&labeled.body, refs);
+        }
+        _ => {}
+    }
+}
+
+fn collect_refs_in_expr(expr: &Expression<'_>, refs: &mut HashSet<String>) {
+    match expr {
+        Expression::Identifier(id) => {
+            refs.insert(id.name.to_string());
+        }
+        Expression::CallExpression(call) => {
+            collect_refs_in_expr(&call.callee, refs);
+            for arg in &call.arguments {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        collect_refs_in_expr(&spread.argument, refs);
+                    }
+                    _ => {
+                        collect_refs_in_expr(arg.to_expression(), refs);
+                    }
+                }
+            }
+        }
+        Expression::StaticMemberExpression(member) => {
+            collect_refs_in_expr(&member.object, refs);
+        }
+        Expression::ComputedMemberExpression(member) => {
+            collect_refs_in_expr(&member.object, refs);
+            collect_refs_in_expr(&member.expression, refs);
+        }
+        Expression::BinaryExpression(bin) => {
+            collect_refs_in_expr(&bin.left, refs);
+            collect_refs_in_expr(&bin.right, refs);
+        }
+        Expression::LogicalExpression(log) => {
+            collect_refs_in_expr(&log.left, refs);
+            collect_refs_in_expr(&log.right, refs);
+        }
+        Expression::UnaryExpression(unary) => {
+            collect_refs_in_expr(&unary.argument, refs);
+        }
+        Expression::UpdateExpression(update) => {
+            collect_refs_in_simple_assignment_target(&update.argument, refs);
+        }
+        Expression::ConditionalExpression(cond) => {
+            collect_refs_in_expr(&cond.test, refs);
+            collect_refs_in_expr(&cond.consequent, refs);
+            collect_refs_in_expr(&cond.alternate, refs);
+        }
+        Expression::AssignmentExpression(assign) => {
+            collect_refs_in_assignment_target(&assign.left, refs);
+            collect_refs_in_expr(&assign.right, refs);
+        }
+        Expression::SequenceExpression(seq) => {
+            for e in &seq.expressions {
+                collect_refs_in_expr(e, refs);
+            }
+        }
+        Expression::ObjectExpression(obj) => {
+            for prop in &obj.properties {
+                match prop {
+                    ObjectPropertyKind::ObjectProperty(p) => {
+                        if p.computed {
+                            collect_refs_in_expr(&p.key.to_expression(), refs);
+                        }
+                        collect_refs_in_expr(&p.value, refs);
+                    }
+                    ObjectPropertyKind::SpreadProperty(spread) => {
+                        collect_refs_in_expr(&spread.argument, refs);
+                    }
+                }
+            }
+        }
+        Expression::ArrayExpression(arr) => {
+            for elem in &arr.elements {
+                match elem {
+                    ArrayExpressionElement::SpreadElement(spread) => {
+                        collect_refs_in_expr(&spread.argument, refs);
+                    }
+                    ArrayExpressionElement::Elision(_) => {}
+                    _ => {
+                        collect_refs_in_expr(elem.to_expression(), refs);
+                    }
+                }
+            }
+        }
+        Expression::ArrowFunctionExpression(arrow) => {
+            for s in &arrow.body.statements {
+                collect_refs_in_stmt(s, refs);
+            }
+        }
+        Expression::FunctionExpression(func) => {
+            if let Some(ref body) = func.body {
+                for s in &body.statements {
+                    collect_refs_in_stmt(s, refs);
+                }
+            }
+        }
+        Expression::TemplateLiteral(tmpl) => {
+            for e in &tmpl.expressions {
+                collect_refs_in_expr(e, refs);
+            }
+        }
+        Expression::TaggedTemplateExpression(tagged) => {
+            collect_refs_in_expr(&tagged.tag, refs);
+            for e in &tagged.quasi.expressions {
+                collect_refs_in_expr(e, refs);
+            }
+        }
+        Expression::NewExpression(new_expr) => {
+            collect_refs_in_expr(&new_expr.callee, refs);
+            for arg in &new_expr.arguments {
+                match arg {
+                    Argument::SpreadElement(spread) => {
+                        collect_refs_in_expr(&spread.argument, refs);
+                    }
+                    _ => {
+                        collect_refs_in_expr(arg.to_expression(), refs);
+                    }
+                }
+            }
+        }
+        Expression::AwaitExpression(await_expr) => {
+            collect_refs_in_expr(&await_expr.argument, refs);
+        }
+        Expression::YieldExpression(yield_expr) => {
+            if let Some(ref arg) = yield_expr.argument {
+                collect_refs_in_expr(arg, refs);
+            }
+        }
+        Expression::ParenthesizedExpression(paren) => {
+            collect_refs_in_expr(&paren.expression, refs);
+        }
+        Expression::ClassExpression(class) => {
+            collect_refs_in_class(class, refs);
+        }
+        Expression::ChainExpression(chain) => {
+            match &chain.expression {
+                ChainElement::CallExpression(call) => {
+                    collect_refs_in_expr(&call.callee, refs);
+                    for arg in &call.arguments {
+                        match arg {
+                            Argument::SpreadElement(spread) => {
+                                collect_refs_in_expr(&spread.argument, refs);
+                            }
+                            _ => {
+                                collect_refs_in_expr(arg.to_expression(), refs);
+                            }
+                        }
+                    }
+                }
+                ChainElement::StaticMemberExpression(member) => {
+                    collect_refs_in_expr(&member.object, refs);
+                }
+                ChainElement::ComputedMemberExpression(member) => {
+                    collect_refs_in_expr(&member.object, refs);
+                    collect_refs_in_expr(&member.expression, refs);
+                }
+                ChainElement::PrivateFieldExpression(pfe) => {
+                    collect_refs_in_expr(&pfe.object, refs);
+                }
+                _ => {}
+            }
+        }
+        // JSX expressions -- walk into children and attributes
+        Expression::JSXElement(jsx) => {
+            collect_refs_in_jsx_element(jsx, refs);
+        }
+        Expression::JSXFragment(frag) => {
+            for child in &frag.children {
+                collect_refs_in_jsx_child(child, refs);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn collect_refs_in_jsx_element(jsx: &JSXElement<'_>, refs: &mut HashSet<String>) {
+    // Collect refs from opening element tag name and attributes
+    if let JSXElementName::Identifier(id) = &jsx.opening_element.name {
+        // Only add if starts with uppercase (component reference)
+        if id.name.as_str().chars().next().map_or(false, |c| c.is_uppercase()) {
+            refs.insert(id.name.to_string());
+        }
+    }
+    if let JSXElementName::IdentifierReference(id) = &jsx.opening_element.name {
+        refs.insert(id.name.to_string());
+    }
+    for attr in &jsx.opening_element.attributes {
+        match attr {
+            JSXAttributeItem::Attribute(a) => {
+                if let Some(ref val) = a.value {
+                    match val {
+                        JSXAttributeValue::ExpressionContainer(container) => {
+                            if let Some(expr) = container.expression.as_expression() {
+                                collect_refs_in_expr(expr, refs);
+                            }
+                        }
+                        JSXAttributeValue::Element(el) => {
+                            collect_refs_in_jsx_element(el, refs);
+                        }
+                        JSXAttributeValue::Fragment(frag) => {
+                            for child in &frag.children {
+                                collect_refs_in_jsx_child(child, refs);
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            JSXAttributeItem::SpreadAttribute(spread) => {
+                collect_refs_in_expr(&spread.argument, refs);
+            }
+        }
+    }
+    // Children
+    for child in &jsx.children {
+        collect_refs_in_jsx_child(child, refs);
+    }
+}
+
+fn collect_refs_in_jsx_child(child: &JSXChild<'_>, refs: &mut HashSet<String>) {
+    match child {
+        JSXChild::ExpressionContainer(container) => {
+            if let Some(expr) = container.expression.as_expression() {
+                collect_refs_in_expr(expr, refs);
+            }
+        }
+        JSXChild::Element(el) => {
+            collect_refs_in_jsx_element(el, refs);
+        }
+        JSXChild::Fragment(frag) => {
+            for c in &frag.children {
+                collect_refs_in_jsx_child(c, refs);
+            }
+        }
+        JSXChild::Spread(spread) => {
+            collect_refs_in_expr(&spread.expression, refs);
+        }
+        _ => {} // Text, empty
+    }
+}
+
+fn collect_refs_in_class(class: &Class<'_>, refs: &mut HashSet<String>) {
+    if let Some(ref super_class) = class.super_class {
+        collect_refs_in_expr(super_class, refs);
+    }
+    for element in &class.body.body {
+        match element {
+            ClassElement::MethodDefinition(method) => {
+                if method.computed {
+                    collect_refs_in_expr(&method.key.to_expression(), refs);
+                }
+                if let Some(ref body) = method.value.body {
+                    for s in &body.statements {
+                        collect_refs_in_stmt(s, refs);
+                    }
+                }
+            }
+            ClassElement::PropertyDefinition(prop) => {
+                if prop.computed {
+                    collect_refs_in_expr(&prop.key.to_expression(), refs);
+                }
+                if let Some(ref val) = prop.value {
+                    collect_refs_in_expr(val, refs);
+                }
+            }
+            ClassElement::StaticBlock(block) => {
+                for s in &block.body {
+                    collect_refs_in_stmt(s, refs);
+                }
+            }
+            ClassElement::AccessorProperty(prop) => {
+                if prop.computed {
+                    collect_refs_in_expr(&prop.key.to_expression(), refs);
+                }
+                if let Some(ref val) = prop.value {
+                    collect_refs_in_expr(val, refs);
+                }
+            }
+            ClassElement::TSIndexSignature(_) => {}
+        }
+    }
+}
+
+fn collect_refs_in_assignment_target(target: &AssignmentTarget<'_>, refs: &mut HashSet<String>) {
+    match target {
+        AssignmentTarget::AssignmentTargetIdentifier(id) => {
+            refs.insert(id.name.to_string());
+        }
+        AssignmentTarget::StaticMemberExpression(member) => {
+            collect_refs_in_expr(&member.object, refs);
+        }
+        AssignmentTarget::ComputedMemberExpression(member) => {
+            collect_refs_in_expr(&member.object, refs);
+            collect_refs_in_expr(&member.expression, refs);
+        }
+        _ => {}
+    }
+}
+
+fn collect_refs_in_simple_assignment_target(target: &SimpleAssignmentTarget<'_>, refs: &mut HashSet<String>) {
+    match target {
+        SimpleAssignmentTarget::AssignmentTargetIdentifier(id) => {
+            refs.insert(id.name.to_string());
+        }
+        SimpleAssignmentTarget::StaticMemberExpression(member) => {
+            collect_refs_in_expr(&member.object, refs);
+        }
+        SimpleAssignmentTarget::ComputedMemberExpression(member) => {
+            collect_refs_in_expr(&member.object, refs);
+            collect_refs_in_expr(&member.expression, refs);
+        }
+        SimpleAssignmentTarget::PrivateFieldExpression(pfe) => {
+            collect_refs_in_expr(&pfe.object, refs);
+        }
+        _ => {}
+    }
+}
+
+fn collect_refs_in_binding_pattern(kind: &BindingPattern<'_>, refs: &mut HashSet<String>) {
+    match kind {
+        BindingPattern::ObjectPattern(obj) => {
+            for prop in &obj.properties {
+                if prop.computed {
+                    collect_refs_in_expr(&prop.key.to_expression(), refs);
+                }
+                collect_refs_in_binding_pattern(&prop.value, refs);
+            }
+            if let Some(ref rest) = obj.rest {
+                collect_refs_in_binding_pattern(&rest.argument, refs);
+            }
+        }
+        BindingPattern::ArrayPattern(arr) => {
+            for elem in arr.elements.iter().flatten() {
+                collect_refs_in_binding_pattern(elem, refs);
+            }
+            if let Some(ref rest) = arr.rest {
+                collect_refs_in_binding_pattern(&rest.argument, refs);
+            }
+        }
+        BindingPattern::AssignmentPattern(assign) => {
+            collect_refs_in_binding_pattern(&assign.left, refs);
+            collect_refs_in_expr(&assign.right, refs);
+        }
+        BindingPattern::BindingIdentifier(_) => {}
     }
 }
 

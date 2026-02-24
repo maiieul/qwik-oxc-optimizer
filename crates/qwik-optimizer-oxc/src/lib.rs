@@ -243,13 +243,37 @@ pub fn transform_modules(
         all_modules.push(main_module);
 
         let auto_exports = qwik_transform.auto_exports().clone();
-        let body_codes = qwik_transform.take_segment_body_codes();
+        let component_invalid_decls = qwik_transform.component_invalid_decls().clone();
+        let mut body_codes = qwik_transform.take_segment_body_codes();
+
+        // Apply segment body DCE (dead code elimination) to match SWC's MinifyMode::Simplify.
+        // Strips unused declarations, eliminates if(false) branches, and removes
+        // function/class declarations tracked as invalid (C02 diagnostics) from component bodies.
+        if matches!(transform_options.minify, MinifyMode::Simplify) {
+            for (span_start, body_code) in body_codes.iter_mut() {
+                let force_remove = component_invalid_decls.get(span_start);
+                *body_code = transform::apply_segment_body_dce(body_code, force_remove);
+            }
+        }
+
         // Sort segments by source span position (ascending) for consistent output order.
         // SWC's fold processes nodes top-down in source order, while OXC's traverse
         // visitor exits inner nodes before outer ones, producing a different insertion order.
         // Sorting by span.0 (start position) restores source order to match SWC.
         let mut segments = qwik_transform.extracted_segments().to_vec();
         segments.sort_by_key(|seg| seg.span.0);
+
+        // After DCE, filter out segment needed_imports that are no longer referenced
+        // in the body code. DCE may have removed dead branches that referenced some imports.
+        if matches!(transform_options.minify, MinifyMode::Simplify) {
+            for seg in segments.iter_mut() {
+                if let Some((_, body_code)) = body_codes.iter().find(|(s, _)| *s == seg.span.0) {
+                    seg.needed_imports.retain(|imp| {
+                        imp.specifiers.iter().any(|spec| body_code.contains(spec.as_str()))
+                    });
+                }
+            }
+        }
         let stripped_spans = qwik_transform.stripped_segments();
         let custom_jsx_src = qwik_transform.custom_jsx_import_source().map(|s| s.to_string());
 
