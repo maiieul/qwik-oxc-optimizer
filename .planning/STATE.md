@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 12 gap closure complete. All 6 plans executed.
+**Current focus:** Phase 13 captures & DCE. Plan 01 complete (props reclassification + const literal inlining).
 
 ## Current Position
 
-Phase: 12 of 14 (Signal Wrapping Gaps)
-Plan: 6 of 6 in phase 12
-Status: Phase complete
-Last activity: 2026-02-23 - Completed 12-06-PLAN.md
+Phase: 13 of 14 (Captures & DCE)
+Plan: 1 of 4 in phase 13
+Status: In progress
+Last activity: 2026-02-24 - Completed 13-01-PLAN.md
 
-Progress: [██████████████████████████████] 33/? plans
+Progress: [██████████████████████████████] 34/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 33
+- Total plans completed: 34
 - Average duration: 19min
-- Total execution time: 12.3 hours
+- Total execution time: 13.1 hours
 
 **By Phase:**
 
@@ -39,10 +39,11 @@ Progress: [███████████████████████
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
 | 12-signal-wrapping-gaps | 6/6 | 72min | 12min |
+| 13-captures-dce | 1/4 | 45min | 45min |
 
 **Recent Trend:**
-- Last 5 plans: 12-02 (5min), 12-03 (3min), 12-04 (14min), 12-05 (19min), 12-06 (21min)
-- Trend: Phase 12 complete. Plan 06 added inline component _rawProps rewrite with _fnSignal wrapping.
+- Last 5 plans: 12-04 (14min), 12-05 (19min), 12-06 (21min), 13-01 (45min)
+- Trend: Phase 13 started. Plan 01 was complex due to plan premise correction (SWC captures _rawProps, not individual props).
 
 *Updated after each plan completion*
 
@@ -185,10 +186,17 @@ Recent decisions affecting current work:
 - [12-06]: has_destructured_raw_props bypass extended: covers both _rawProps and named props params (body destructuring case)
 - [12-06]: Identifier branch in collect_reactive_deps_inner uses props_param_name.unwrap_or("_rawProps") instead of hardcoded _rawProps
 - [12-06]: Hoisted _hf* functions injected into entry module when entry code references var_name (enables segment strategy inline components)
+- [13-01]: Plan premise was wrong: SWC captures _rawProps (not individual props). Existing reclassification direction was correct.
+- [13-01]: Nested function/arrow params tracked as body_local_decls in enter hooks to prevent capture leaks
+- [13-01]: Segment body codes post-processed after reclassification to replace prop aliases with _rawProps.propName
+- [13-01]: QRL capture arrays rebuilt via fix_qrl_captures_in_body after reclassification
+- [13-01]: Const literal inlining only in child segments (not parent component body) -- DCE deferred
+- [13-01]: Const literal filtering also applies to reemitted_imports when local const shadows module import
+- [13-01]: ArrayExpression elements in props_destructuring handled via index-based iteration (array_element_as_expression_mut was broken)
 
 ### Pending Todos
 
-Phase 12 complete. No pending plans.
+Phase 13 plans 02-04 remaining.
 
 ### Blockers/Concerns
 
@@ -206,6 +214,6 @@ Phase 12 complete. No pending plans.
 
 ## Session Continuity
 
-Last session: 2026-02-23
-Stopped at: Completed 12-06-PLAN.md (Phase 12 complete)
+Last session: 2026-02-24
+Stopped at: Completed 13-01-PLAN.md
 Resume file: None
