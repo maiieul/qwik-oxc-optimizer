@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Semantic/behavioral parity with the SWC optimizer across all 162 test cases. Purely aesthetic diffs (OXC codegen shorthand, line wrapping, whitespace) are accepted.
-**Current focus:** Phase 13 captures & DCE. Plans 01-02 complete (props reclassification, const literal inlining, scope-aware capture filtering, C03 diagnostics).
+**Current focus:** Phase 13 captures & DCE. Plans 01-03 complete (props reclassification, const literal inlining, scope-aware capture filtering, C03 diagnostics, segment body DCE).
 
 ## Current Position
 
 Phase: 13 of 14 (Captures & DCE)
-Plan: 2 of 4 in phase 13
+Plan: 3 of 4 in phase 13
 Status: In progress
-Last activity: 2026-02-24 - Completed 13-02-PLAN.md
+Last activity: 2026-02-24 - Completed 13-03-PLAN.md
 
-Progress: [██████████████████████████████] 35/? plans
+Progress: [██████████████████████████████] 36/? plans
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 35
+- Total plans completed: 36
 - Average duration: 19min
-- Total execution time: 13.35 hours
+- Total execution time: 13.55 hours
 
 **By Phase:**
 
@@ -39,11 +39,11 @@ Progress: [███████████████████████
 | 10-captures-mechanism | 1/1 | 13min | 13min |
 | 11-auto-export-rename | 1/1 | 13min | 13min |
 | 12-signal-wrapping-gaps | 6/6 | 72min | 12min |
-| 13-captures-dce | 2/4 | 60min | 30min |
+| 13-captures-dce | 3/4 | 72min | 24min |
 
 **Recent Trend:**
-- Last 5 plans: 12-05 (19min), 12-06 (21min), 13-01 (45min), 13-02 (15min)
-- Trend: Phase 13 plan 02 faster than plan 01. Scope-aware capture filtering and C03 diagnostics.
+- Last 5 plans: 12-06 (21min), 13-01 (45min), 13-02 (15min), 13-03 (12min)
+- Trend: Phase 13 plans getting faster. DCE pipeline implemented efficiently via parse-transform-reserialize pattern.
 
 *Updated after each plan completion*
 
@@ -197,10 +197,14 @@ Recent decisions affecting current work:
 - [13-02]: C03 diagnostic emitted for non-function $() arguments that capture local identifiers (clears captures)
 - [13-02]: Hoist strategy segment extraction deferred -- requires Hoist infrastructure, not capture changes
 - [13-02]: _fnSignal wrapping for `results[i]` in loops is Phase 12 scope, not capture issue
+- [13-03]: Combined Task 1 (DCE) and Task 2 (invalid_decl removal) into single commit since force_remove_names is integral to apply_segment_body_dce signature
+- [13-03]: Conservative destructuring DCE: keep destructuring patterns when init is not a simple identifier (safer than SWC which removes them)
+- [13-03]: example_props_optimization constant-folding sub-issue documented as pre-existing signal wrapping difference, not DCE
+- [13-03]: JSX reference collection uses as_expression() for JSXExpression (OXC inherit_variants macro flattens Expression into JSXExpression)
 
 ### Pending Todos
 
-Phase 13 plans 03-04 remaining (DCE: unused declarations, if(false) elimination, invalid declaration removal).
+Phase 13 plan 04 remaining (final captures/DCE work, remaining diffs).
 
 ### Blockers/Concerns
 
@@ -219,5 +223,5 @@ Phase 13 plans 03-04 remaining (DCE: unused declarations, if(false) elimination,
 ## Session Continuity
 
 Last session: 2026-02-24
-Stopped at: Completed 13-02-PLAN.md
+Stopped at: Completed 13-03-PLAN.md
 Resume file: None
