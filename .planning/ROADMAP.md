@@ -4,9 +4,9 @@
 
 This roadmap drives the OXC optimizer toward functional parity with the SWC golden reference across 162 test cases. Phases 1-6 follow an initial cascade hypothesis: naming fixes clear the most diff noise first, metadata is simple plumbing, bugs must be fixed before features, features fix their own missing imports as side effects, JSX is localized, and import ordering is a clean final pass. Phases 7-9 are gap closure phases added after the v1.0 milestone audit. Phase 9 achieved 62/162 exact matches with 100 diffs remaining. Phases 10-14 target the remaining actionable gaps. Phase 12 (originally "Remaining Incremental Fixes") was split into 3 focused phases after a post-Phase 11 audit revealed the scope was ~2x larger than estimated: signal wrapping (12), captures+DCE (13), final small categories (14).
 
-**Aesthetic diff policy:** Purely aesthetic diffs (OXC codegen shorthand `{x: x}` → `{x}` auto-conversion, line wrapping differences, whitespace) are accepted as known OXC codegen limitations and do NOT count against parity. Success is measured by semantic/behavioral parity, not byte-identical output.
+**Aesthetic diff policy:** Purely aesthetic diffs (OXC codegen shorthand `{x: x}` -> `{x}` auto-conversion, line wrapping differences, whitespace) are accepted as known OXC codegen limitations and do NOT count against parity. Success is measured by semantic/behavioral parity, not byte-identical output.
 
-**Adaptive replanning:** After each phase completes, reassess the remaining diff landscape. The phase ordering is a starting hypothesis — real diffs may reveal that some later-phase work is trivially fixable earlier, or that phases are entangled differently than expected. Reorder, merge, or split remaining phases based on what the snapshot diffs actually show after each phase lands.
+**Adaptive replanning:** After each phase completes, reassess the remaining diff landscape. The phase ordering is a starting hypothesis -- real diffs may reveal that some later-phase work is trivially fixable earlier, or that phases are entangled differently than expected. Reorder, merge, or split remaining phases based on what the snapshot diffs actually show after each phase lands.
 
 ## Phases
 
@@ -28,7 +28,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 10: Captures Mechanism** - Implement _captures[N] array access pattern for extracted segments
 - [x] **Phase 11: Auto Export Rename** - Implement _auto_ prefix for segment import re-exports
 - [x] **Phase 12: Signal Wrapping Gaps** - Fix _fnSignal and _wrapProp wrapping across ~25 tests
-- [ ] **Phase 13: Captures & DCE** - Fix captures edge cases and dead code elimination across ~20 tests
+- [ ] **Phase 13: Captures & DCE** - Fix captures edge cases and dead code elimination across ~26 tests
 - [ ] **Phase 14: Final Parity** - Fix ctxKind, entry field, dev mode, file ext, JSX import source, spread props, misc across ~15 tests
 
 ## Phase Details
@@ -154,7 +154,7 @@ Plans:
   3. Event handlers inside loops that use iteration variables have `static_listeners=false` (flag bit 0 cleared), eliminating 19 OXC=3/SWC=0 and OXC=1/SWC=0 mismatches
   4. `q:p` and `q:ps` iteration variable props injected into var_props for all 18 missing cases
   5. `_rawProps` override applies to `useResource$` and other hooks (not just `component$`), fixing 1 paramNames mismatch
-  6. JSX flag mismatches reduced from 108 to ≤15
+  6. JSX flag mismatches reduced from 108 to <=15
 **Plans**: 3 plans
 
 Plans:
@@ -225,10 +225,16 @@ Plans:
 **Depends on**: Phase 12 (wrapping fixes may cascade-resolve some capture diffs)
 **Aesthetic diff policy**: Purely aesthetic diffs (shorthand, line wrapping, whitespace) are accepted — only semantic/behavioral differences count
 **Success Criteria** (what must be TRUE):
-  1. Remaining captures edge cases resolved (~19 tests, reduced by Phase 12 cascade)
-  2. DCE matches SWC for unused const/if(false)/function/class patterns (~10-15 tests)
+  1. Remaining captures edge cases resolved (~17 tests, reduced by Phase 12 cascade)
+  2. DCE matches SWC for unused const/if(false)/function/class patterns (~9 tests)
   3. No regressions in existing exact-match tests
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 13-01-PLAN.md — Fix props destructuring capture propagation: nested segments capture individual prop names instead of _rawProps
+- [ ] 13-02-PLAN.md — Fix nested scope captures, outer loop var capture, capture ordering, and remaining capture edge cases
+- [ ] 13-03-PLAN.md — Implement segment body DCE: unused declaration stripping, if(false) elimination, invalid_decl removal
+- [ ] 13-04-PLAN.md — Fix remaining DCE (inline strategy, const-fold), final regression check and phase audit
 
 ### Phase 14: Final Parity
 **Goal**: Fix all remaining small-category semantic diffs — ctxKind, entry field, dev mode, file extensions, JSX import source, spread props
@@ -264,5 +270,5 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 9 -> 10 -> 11 -> 12 -> 13 -> 1
 | 10. Captures Mechanism | 1/1 | Complete | 2026-02-23 |
 | 11. Auto Export Rename | 1/1 | Complete | 2026-02-23 |
 | 12. Signal Wrapping Gaps | 6/6 | Complete | 2026-02-23 |
-| 13. Captures & DCE | 0/? | Not started | — |
-| 14. Final Parity | 0/? | Not started | — |
+| 13. Captures & DCE | 0/4 | Not started | -- |
+| 14. Final Parity | 0/? | Not started | -- |
